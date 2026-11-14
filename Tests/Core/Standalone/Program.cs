@@ -10,8 +10,9 @@ internal static class Program
         failures += Run("PCG32 golden vectors and replay", Pcg32GoldenTests.RunAll);
         failures += Run("GameClock five-day calendar", GameClockGoldenTests.RunAll);
         failures += Run("GameState snapshot invariants", GameStateSnapshotGoldenTests.RunAll);
+        failures += Run("Ledger checked Int64 and append invariants", LedgerGoldenTests.RunAll);
         Console.WriteLine(failures == 0
-            ? "PASS: all 3 Core golden suites."
+            ? "PASS: all 4 Core golden suites."
             : "FAIL: " + failures + " Core golden suite(s).");
         return failures == 0 ? 0 : 1;
     }
