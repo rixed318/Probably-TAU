@@ -1,0 +1,36 @@
+name: QA offline regression
+
+on:
+  push:
+    branches: [feature/save-6]
+  pull_request:
+    paths:
+      - 'Tests/QA/**'
+      - 'Runtime/Core/Pcg32.cs'
+      - '.github/workflows/qa-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pcg32-oracle:
+    name: Python PCG32 oracle (not C# or Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python syntax check
+        run: python3 -m py_compile Tests/QA/test_pcg32_contract.py
+      - name: Independent reference tests
+        run: python3 Tests/QA/test_pcg32_contract.py
+      - name: Optional Core source-pattern audit (not execution)
+        shell: bash
+        run: |
+          if [[ -f Runtime/Core/Pcg32.cs ]]; then
+            python3 Tests/QA/test_pcg32_contract.py --core-source Runtime/Core/Pcg32.cs
+          else
+            echo 'SKIP source-pattern audit: Core C# file is absent in this branch.'
+          fi
