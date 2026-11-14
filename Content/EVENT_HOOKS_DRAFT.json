@@ -1,0 +1,140 @@
+{
+  "$comment": "PROPOSED declarative fixtures; fictional narrative only; not executable Core API. Runtime ownership: Core. C0-v2 + NPC N0 review required.",
+  "schemaVersion": "event-hooks-draft-0.1",
+  "runtimeReady": false,
+  "dayIndexBase": 0,
+  "moneyWireFormat": "signed Int64 decimal string kopecks",
+  "definitions": [
+    {
+      "definitionId": "E02",
+      "dueDayIndex": 1,
+      "dispatch": "content",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "presentEvent",
+          "definitionId": "E02"
+        }
+      ],
+      "fallbackDefinitionId": "E02"
+    },
+    {
+      "definitionId": "E03",
+      "dueDayIndex": 1,
+      "dispatch": "content",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "presentEvent",
+          "definitionId": "E03"
+        }
+      ],
+      "fallbackDefinitionId": "E03"
+    },
+    {
+      "definitionId": "E09",
+      "dueDayIndex": 4,
+      "dispatch": "settlement-report-only",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "showSettlementReport",
+          "reportForDayIndex": 4
+        }
+      ],
+      "fallbackDefinitionId": "E09"
+    },
+    {
+      "definitionId": "PARTNER_REVENUE_ONSITE",
+      "dueDayIndex": 4,
+      "dispatch": "core-earned-income-intent",
+      "condition": {
+        "op": "all",
+        "items": [
+          {
+            "op": "flagEquals",
+            "key": "PARTNER",
+            "value": "onsite"
+          },
+          {
+            "op": "factExists",
+            "factId": "E03_mentor_paid"
+          },
+          {
+            "op": "factExists",
+            "factId": "E07_delivered"
+          },
+          {
+            "op": "dayIndexAtLeast",
+            "value": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "proposeEarnedIncome",
+          "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
+          "postingKeyTemplate": "earned/{earnedId}",
+          "deltaKopecks": "12000000"
+        }
+      ],
+      "fallbackDefinitionId": null
+    },
+    {
+      "definitionId": "PARTNER_REVENUE_REMOTE",
+      "dueDayIndex": 4,
+      "dispatch": "core-earned-income-intent",
+      "condition": {
+        "op": "all",
+        "items": [
+          {
+            "op": "flagEquals",
+            "key": "PARTNER",
+            "value": "remote"
+          },
+          {
+            "op": "factExists",
+            "factId": "E03_mentor_paid"
+          },
+          {
+            "op": "factExists",
+            "factId": "E07_delivered"
+          },
+          {
+            "op": "dayIndexAtLeast",
+            "value": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "proposeEarnedIncome",
+          "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
+          "postingKeyTemplate": "earned/{earnedId}",
+          "deltaKopecks": "9000000"
+        }
+      ],
+      "fallbackDefinitionId": null
+    }
+  ],
+  "instanceContract": {
+    "instanceId": "Core-assigned stable unique ID per scheduled occurrence; never equal to definitionId by assumption",
+    "definitionId": "Immutable content lookup key",
+    "receiptKey": "Core-owned instanceId/resolutionKind",
+    "postingKey": "Core ledger enforces unique earnedId and posting key after delivery; never post from content",
+    "queueOrdering": "Not specified here; N0/C0 disagreement awaiting 01/02 resolution",
+    "sameDayChildren": "Not specified here; Core decides reject/defer"
+  },
+  "notes": [
+    "E02 and E03 share dayIndex=1; no content phase/priority imposed",
+    "E09 is presentation of Core settlement, not a second billing instruction",
+    "Conditional revenue requires actual delivery, not signature, and Core verifies eligibility before posting",
+    "Int64 wire amounts are decimal strings, not JSON numbers; runtime DTO adapter pending"
+  ]
+}
