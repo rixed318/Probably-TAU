@@ -135,3 +135,25 @@ python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
 **Test status:** NOT RUN — GitHub connector can edit source but cannot execute Node. Run `node --test prototypes/ui-day-one/test-fixtures.cjs` on actual checkout; QA 05 should confirm. Browser/Unity tests NOT RUN. No claim of passed tests.
 
 **Next:** QA 05 to run Node tests, 00 to review PR #12. Later work: approved direction A / 320×180 controlled sample assets, without bulk generation or real-person marks.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-14 · Issue #5 (canonical Day 01 read-model fixture)
+
+**One bounded task:** created a separate **immutable, display-only** Day 01 fixture from Content PR #11 `content-draft-0.2`, without modifying the legacy one-case mock gateway, GameState, ledger, Core, or any gameplay commands.
+
+**New files:**
+- `prototypes/ui-day-one/day01-read-model.cjs`: DayIndex 0, opening 200000000 kopecks (2 000 000 fictional ₽), C0 five metrics (Q=52, S=48, M=50, E=45, R=47), DOC-01/02/03 mapped to distinct NPCs/visits, shared requested room Л-204 DayIndex 3 14:00–17:00, and inspection alternatives. Conditional partner income 12000000 kopecks is **not credited on signing** (`recognizedRevenueKopecks="0"`; earliest index 4). Source amounts are **canonical decimal strings** at this UI boundary, converted to BigInt for display; no float-based financial logic.
+- `prototypes/ui-day-one/test-day01-read-model.cjs`: six Node built-in regression tests for calendar/metrics, distinct documents and slot, exact amounts, conditional revenue, formatting/Int64 boundaries, and immutable isolation from old mock.
+
+**Commits (feature/ui-5):** `df1414738c18d82614b5314841c60fe79133dc98` (fixture), `fa75843d92a379ce80ffa1902c7547d57a47acda` (tests), `e0f090a275258b5246031d84efb0e74caef7455b` (thousands-separator correction), `d324b4267a0609051d9ebcbfbd4dfb3846204123` (avoid running browser-only legacy fixture inside Node). This handoff follows as a separate commit.
+
+**Validation:** fetched GitHub sources and manually reviewed mapping against real Content PR #11 JSON. **Node tests NOT RUN** in this tool session; no runtime execution or green claim. QA 05 must run:
+```sh
+node --test prototypes/ui-day-one/test-day01-read-model.cjs
+node --test prototypes/ui-day-one/test-fixtures.cjs
+```
+No Unity compile, PlayMode, image generation or browser visual checks performed.
+
+**Boundary / next:** fixture is not wired into `fixtures.js` or a live C0 API. Content PR #11 remains draft; its monetary authoring JSON currently uses numeric values, while UI fixture deliberately uses decimal-string money wire values. Once Content 04 finalizes a schema and Core publishes read models, replace this static fixture with an adapter and add integration checks. PR #12 remains Draft; **no merge to main**.
