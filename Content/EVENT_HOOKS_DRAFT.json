@@ -1,5 +1,5 @@
 {
-  "$comment": "PROPOSED declarative fixtures; fictional narrative only; not executable Core API. Runtime ownership: Core. C0-v2 + NPC N0 review required.",
+  "$comment": "PROPOSED declarative content fixtures; fictional narrative only, not executable Core API. Scheduling semantics aligned for feature development with coordinator ADR-C0-002 (PR #17); actual runtime DTO and integration remain pending.",
   "schemaVersion": "event-hooks-draft-0.1",
   "runtimeReady": false,
   "dayIndexBase": 0,
@@ -124,17 +124,20 @@
     }
   ],
   "instanceContract": {
-    "instanceId": "Core-assigned stable unique ID per scheduled occurrence; never equal to definitionId by assumption",
-    "definitionId": "Immutable content lookup key",
-    "receiptKey": "Core-owned instanceId/resolutionKind",
-    "postingKey": "Core ledger enforces unique earnedId and posting key after delivery; never post from content",
-    "queueOrdering": "Not specified here; N0/C0 disagreement awaiting 01/02 resolution",
-    "sameDayChildren": "Not specified here; Core decides reject/defer"
+    "instanceId": "Core-owned stable unique ID per scheduled occurrence; distinct from reusable definitionId; persisted immutable and used as StableEventId",
+    "definitionId": "Immutable content lookup key; multiple scheduled instances may reference one definition",
+    "priority": "Core persists signed Int32 priority per occurrence; when definition omits priority Core assigns 0 once at scheduling time, never recalculates on load",
+    "receiptKey": "Core-owned durable instanceId/resolutionKind; replay must not reapply effects",
+    "postingKey": "Core ledger enforces unique earnedId and posting key after verified delivery; content only proposes income",
+    "queueOrdering": "Core due outcomes: dueDayIndex ascending, priority descending, instanceId ascending (ordinal case-sensitive); neither phase nor creationOrdinal is a tie-break",
+    "dueSnapshot": "Core freezes eligible due instances at start of due-outcomes stage after project ticks",
+    "sameDayChildren": "During closing DayIndex n, new child with dueDayIndex <= n rejects entire prepared transaction atomically; persisted overdue instances remain eligible"
   },
   "notes": [
-    "E02 and E03 share dayIndex=1; no content phase/priority imposed",
+    "E02 and E03 share DayIndex=1; content does not assign priority, Core default 0 applies once at scheduling; stable instanceId breaks ties",
     "E09 is presentation of Core settlement, not a second billing instruction",
     "Conditional revenue requires actual delivery, not signature, and Core verifies eligibility before posting",
-    "Int64 wire amounts are decimal strings, not JSON numbers; runtime DTO adapter pending"
+    "Int64 wire amounts are decimal strings, not JSON numbers; runtime DTO adapter pending",
+    "ADR-C0-002 is approved for feature development only (PR #17); not merged, not a finalized runtime DTO"
   ]
 }
