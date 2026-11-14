@@ -85,6 +85,13 @@ class OracleTests(unittest.TestCase):
         for pattern in patterns:
             with self.subTest(pattern=pattern):
                 self.assertRegex(source, pattern)
+        # Checked C# compilation must retain deliberate 64→32 truncation.
+        # This regression caught Core PR #9's real .NET 8 failure in run 43630164245.
+        # It is a source guard only; the Core .NET runner verifies semantics.
+        self.assertRegex(
+            source,
+            r'unchecked\s*\(\s*\(uint\)\s*\(\s*\(\s*\(oldState\s*>>\s*18\)',
+        )
         self.assertNotIn("UnityEngine", source)
 
 
