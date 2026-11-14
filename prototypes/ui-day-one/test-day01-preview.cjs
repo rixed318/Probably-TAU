@@ -50,3 +50,16 @@ test("renderer does not use HTML injection or mutate gateway", () => {
   assert.doesNotMatch(source, /innerHTML|outerHTML|eval\s*\(/);
   assert.doesNotMatch(source, /\.execute\s*\(|createGateway|GameState|LedgerService/);
 });
+
+test("keyboard skip link reaches a focusable document heading with visible focus", () => {
+  assert.match(html, /<a class="skip-link" href="#day01-documents-heading">Перейти к документам<\/a>/);
+  assert.match(html, /<h2 id="day01-documents-heading" tabindex="-1">/);
+  assert.match(html, /\.skip-link:focus-visible\s*\{[^}]*top:\s*\.5rem/);
+  assert.match(html, /:focus-visible\s*\{[^}]*outline:\s*3px/);
+});
+
+test("preview has narrow-screen layout, readable wrapping and reduced-motion guard", () => {
+  assert.match(html, /@media \(max-width: 480px\)/);
+  assert.match(html, /overflow-wrap:\s*anywhere/);
+  assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
+});
