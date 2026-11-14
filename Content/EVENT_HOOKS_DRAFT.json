@@ -131,13 +131,16 @@
     "postingKey": "Core ledger enforces unique earnedId and posting key after verified delivery; content only proposes income",
     "queueOrdering": "Core due outcomes: dueDayIndex ascending, priority descending, instanceId ascending (ordinal case-sensitive); neither phase nor creationOrdinal is a tie-break",
     "dueSnapshot": "Core freezes eligible due instances at start of due-outcomes stage after project ticks",
-    "sameDayChildren": "During closing DayIndex n, new child with dueDayIndex <= n rejects entire prepared transaction atomically; persisted overdue instances remain eligible"
+    "sameDayChildren": "During closing DayIndex n, new child with dueDayIndex <= n rejects entire prepared transaction atomically; persisted overdue instances remain eligible",
+    "earnedIncomeSourceInstanceId": "For PARTNER_REVENUE_ONSITE and PARTNER_REVENUE_REMOTE, {sourceInstanceId} is the same canonical Core-owned stable instanceId of the original D01_PARTNER agreement occurrence (not the revenue branch, event definition, or retry); immutable across Save/Load; Core validates provenance and prevents duplicate earnedId/postingKey."
   },
   "notes": [
     "E02 and E03 share DayIndex=1; content does not assign priority, Core default 0 applies once at scheduling; stable instanceId breaks ties",
     "E09 is presentation of Core settlement, not a second billing instruction",
     "Conditional revenue requires actual delivery, not signature, and Core verifies eligibility before posting",
     "Int64 wire amounts are decimal strings, not JSON numbers; runtime DTO adapter pending",
-    "ADR-C0-002 is approved for feature development only (PR #17); not merged, not a finalized runtime DTO"
+    "ADR-C0-002 is approved for feature development only (PR #17); not merged, not a finalized runtime DTO",
+    "NPC 02 review (PR #11): E03_mentor_paid and E07_delivered are durable Core-verified fact IDs, not free-text predicates; exact fact emission/ownership awaits Core adapter and NPC agreement.",
+    "Onsite and remote branches share partner/{sourceInstanceId}/delivery intentionally: one agreement occurrence can earn income only once even if flags/branches are replayed; Core owns deduplication."
   ]
 }
