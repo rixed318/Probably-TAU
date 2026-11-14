@@ -149,3 +149,19 @@
 **Tests:** standalone `GameStateSnapshotGoldenTests.RunAll()` checks metrics, cash, duplicate IDs, pending/completed overlap, input alias isolation, read-only collection, exact PCG replay and invalid increment. **C# execution NOT RUN; Unity Editor NOT RUN** (dotnet/csc/mcs/Unity unavailable). Source reviewed statically only.
 
 **Next:** request QA #10 and NPC #16 feedback on IDs and pending-event snapshot semantics; then implement a complete receipt and ledger-aware domain snapshot in a separate bounded pass, before SaveService integration. PR #9 stays Draft; no merge/main changes.
+
+
+## 11. AutoDev 01 — standalone .NET 8 golden runner and GitHub Actions (14.11.2026, 23:04+04)
+
+**Issue:** #2. **Scope:** one bounded test-infrastructure increment; no new public Core APIs, no changes to C0/ADR-C0-002, no Unity project, no economy logic, no other subsystem changes.
+
+**Committed files in feature/core-2:**
+- `Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj`: dependency-free net8.0 executable, explicit compilation of actual `Runtime/Core/*.cs` and `Tests/Core/*GoldenTests.cs`, overflow checks and warnings-as-errors.
+- `Tests/Core/Standalone/Program.cs`: invokes `Pcg32GoldenTests.RunAll()`, `GameClockGoldenTests.RunAll()`, `GameStateSnapshotGoldenTests.RunAll()` independently, logs pass/fail per suite, exits nonzero if any fails.
+- `.github/workflows/core-dotnet.yml`: minimal-permission GitHub Actions for feature/core-2 pushes, relevant PR changes, manual dispatch; installs .NET 8 and runs actual Core C# source via `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`.
+
+**GitHub commits:** `61caa27c76cf0841d19c194afb93e171d130708a` (project), `9cb15729b2beb9863b0d882ca005380b5d843489` (runner), `7532f2deee08af84fe31d632101e27b735ecdbcf` (workflow). This handoff update follows separately.
+
+**Verification:** GitHub accepted the source and workflow commits. Initial PR-associated workflow query for `7532f2de` returned **zero runs**; **C# compile and golden tests NOT YET VERIFIED**, do not claim success. The independent QA Python workflow success is not a C# build. Unity Editor/Unity EditMode **NOT RUN**. Follow up by querying GitHub Actions for the latest branch commit and inspecting the job logs; if CI fails, fix only the failing Core test infrastructure in this branch.
+
+**Next:** once real .NET 8 compile and all three suites pass, begin a bounded append-only Ledger invariant implementation under #3, followed by atomic CommandProcessor/AdvanceDay. Keep PR #9 Draft; no merge to main.
