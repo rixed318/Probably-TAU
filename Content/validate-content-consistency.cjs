@@ -26,9 +26,20 @@ function validateCrossFile(spec,hooks){
   if(!choice||!effect){errors.push(`${mode}: missing choice/effect`);continue;}
   if(!/^(0|[1-9][0-9]*)$/.test(effect.deltaKopecks)||BigInt(effect.deltaKopecks)!==BigInt(choice.conditionalRevenueKopecks))errors.push(`${mode}: revenue mismatch`);
   if(d.dueDayIndex!==choice.revenueEarliestDayIndex||d.dueDayIndex<spec.opening.weeklySettlementFirstClosingDayIndex)errors.push(`${mode}: premature recognition`);
-  const condition=JSON.stringify(d.condition);
-  for(const fact of choice.requirements)if(!condition.includes(JSON.stringify(fact)))errors.push(`${mode}: missing required fact ${fact}`);
-  if(!condition.includes(JSON.stringify(mode)))errors.push(`${mode}: missing branch flag`);
+  // Match typed AST nodes exactly; substring searches can be fooled by unrelated values.
+  const conditions=[];
+  function walkCondition(node){
+    if(!node||typeof node!=="object")return;
+    if(node.op==="all"||node.op==="any"){
+      if(Array.isArray(node.items))node.items.forEach(walkCondition);
+    }else conditions.push(node);
+  }
+  walkCondition(d.condition);
+  for(const fact of choice.requirements)
+    if(!conditions.some(c=>c.op==="factExists"&&c.factId===fact))
+      errors.push(`${mode}: missing required fact ${fact}`);
+  if(!conditions.some(c=>c.op==="flagEquals"&&c.key==="PARTNER"&&c.value===mode))
+    errors.push(`${mode}: missing branch flag`);
   if(!effect.earnedIdTemplate?.includes("{sourceInstanceId}")||effect.postingKeyTemplate!=="earned/{earnedId}")errors.push(`${mode}: unstable posting template`);
   postingTemplates.add(effect.postingKeyTemplate);
  }
@@ -45,6 +56,14 @@ s=clone(spec);s.day1.visits.find(v=>v.id==="D01_PARTNER").choices.find(c=>c.flag
 assert.ok(validateCrossFile(s,hooks).length>0,"revenue drift must fail");
 let h=clone(hooks);h.definitions.find(d=>d.definitionId==="PARTNER_REVENUE_ONSITE").condition.items=h.definitions.find(d=>d.definitionId==="PARTNER_REVENUE_ONSITE").condition.items.filter(x=>x.factId!=="E07_delivered");
 assert.ok(validateCrossFile(spec,h).length>0,"missing delivery fact must fail");
+h=clone(hooks);h.definitions.find(d=>d.definitionId==="PARTNER_REVENUE_ONSITE").condition.items
+  .find(c=>c.op==="factExists"&&c.factId==="E07_delivered").factId="E07_delivered_fake";
+assert.ok(validateCrossFile(spec,h).some(e=>e.includes("missing required fact E07_delivered")),
+  "similar-looking fact ID must fail");
+h=clone(hooks);h.definitions.find(d=>d.definitionId==="PARTNER_REVENUE_REMOTE").condition.items
+  .find(c=>c.op==="flagEquals").key="OTHER_PARTNER";
+assert.ok(validateCrossFile(spec,h).some(e=>e.includes("missing branch flag")),
+  "wrong flag key must fail even with matching value");
 h=clone(hooks);h.definitions.find(d=>d.definitionId==="E09").effects.push({type:"proposeEarnedIncome"});
 assert.ok(validateCrossFile(spec,h).length>0,"E09 double posting must fail");
-console.log("PASS: 5 cross-file fixture/negative checks");
+console.log("PASS: 7 cross-file fixture/negative checks");
