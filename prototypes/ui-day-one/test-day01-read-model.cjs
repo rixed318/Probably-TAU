@@ -57,7 +57,9 @@ test("read-model is deeply immutable and separate from legacy gateway", () => {
   assert.throws(() => { model.documents[0].amountKopecks = "0"; }, TypeError);
   assert.throws(() => { model.documents.push({}); }, TypeError);
   assert.equal(model.documents.length, 3);
-  const legacy = require("./fixtures.js");
-  assert.equal(typeof legacy, "object");
-  assert.equal(typeof legacy.TAU_UI_MOCK, "undefined"); // legacy exports via window only
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const legacySource = fs.readFileSync(path.join(__dirname, "fixtures.js"), "utf8");
+  assert.match(legacySource, /TAU_UI_MOCK/);
+  assert.doesNotMatch(legacySource, /day01-read-model/); // not wired into legacy gateway
 });
