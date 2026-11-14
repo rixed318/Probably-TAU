@@ -53,3 +53,21 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Tests:** added 16 standalone assertions including partner onsite eligible at DayIndex 4 only after both facts, remote exclusion, case sensitivity, missing fact, invalid nodes and negative day. **NOT RUN**: C# compile, golden tests and Unity EditMode (no dotnet/csc/mcs available in this execution environment). Source creation via GitHub confirmed; no claim of passing C# tests. Run `EventConditionGoldenTests.RunAll()` via a real .NET test runner once QA/Core establishes one.
 
 **Dependencies / BLOCKED:** Full EventDirector still requires Core scheduled-event instance/transaction/receipt API and canonical earned-income source key. JSON-to-AST parsing/validation is deliberately not included; coordinate schema with Content 04. ADR-C0-002 PR #17 remains unmerged and applies only to feature development. Next bounded task: add a standalone .NET test runner or JSON schema adapter once Core/QA test infrastructure and Content schema are confirmed.
+
+
+## AutoDev 02 — standalone .NET 8 NPC golden test runner (2026-11-15)
+
+**One bounded task (#4):** add a self-contained .NET 8 executable project that compiles the **real** existing NPC condition evaluator and its 16 standalone golden assertions, plus a minimal GitHub Actions job to run it on the NPC branch. No new gameplay logic, Core API, GameState, ledger, event queue or content data were modified.
+
+**Files added:**
+- `Tests/Npc/Standalone/NpcConditionGolden.csproj` — explicit compile links to `Runtime/Npc/EventConditionEvaluator.cs` and `Tests/Npc/EventConditionGoldenTests.cs`; net8.0 executable, warnings-as-errors, no external NuGet test framework.
+- `Tests/Npc/Standalone/Program.cs` — invokes `EventConditionGoldenTests.RunAll()`, exits nonzero on exception and prints failure details.
+- `.github/workflows/npc-conditions.yml` — read-only checkout, .NET 8 setup, `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` on feature branch / PR paths.
+
+**Commits:** project `bd1a5aefca8064a4906273ac4368361b20ea7158`; runner `38410ee3986c8e0f036b9c25d8ac20edfa994785`; workflow `060ec23fe63f19461d9bf2fccf114e8af2e5f559`. Handoff update committed separately.
+
+**Verification:** GitHub accepted all three file writes; source paths and referenced classes were read directly from feature/npc-4. **NOT RUN:** local dotnet/C# compile and tests (dotnet/csc/mcs unavailable); Unity tests. GitHub workflow result **NOT VERIFIED** at time of handoff: no associated PR-triggered run was returned for workflow commit. Do not claim passing assertions until GitHub Actions shows a successful run. Manual command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**BLOCKED for full EventDirector:** still no concrete Core scheduled-event instance/transaction/receipt API; canonical earned-income source ID needs Core/Content agreement. Independent condition evaluator and its test runner can proceed without those dependencies. PR #16 remains Draft; no merge/main changes.
+
+**Next:** inspect GitHub Actions logs and fix any actual C# compile/test failures in NPC-owned files. Once green, request QA 05 to include the runner in integration CI; avoid duplicating Core's own test runner.
