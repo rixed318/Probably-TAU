@@ -1,7 +1,7 @@
 "use strict";
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { model, formatRub, getDocument, getSummary } = require("./day01-read-model.cjs");
+const { model, formatRub, getDocument, getSummary, getRoomConflictNotice } = require("./day01-read-model.cjs");
 
 test("canonical DayIndex and five C0 metrics", () => {
   assert.equal(model.dayIndex, 0);
@@ -62,4 +62,20 @@ test("read-model is deeply immutable and separate from legacy gateway", () => {
   const legacySource = fs.readFileSync(path.join(__dirname, "fixtures.js"), "utf8");
   assert.match(legacySource, /TAU_UI_MOCK/);
   assert.doesNotMatch(legacySource, /day01-read-model/); // not wired into legacy gateway
+});
+
+
+test("room collision is visible without treating requests as reservations", () => {
+  const notices = getRoomConflictNotice();
+  assert.equal(notices.length, 1);
+  assert.deepEqual(notices[0].documentIds, ["DOC-01", "DOC-02", "DOC-03"]);
+  assert.equal(notices[0].room, "Л-204");
+  assert.equal(notices[0].slotDayIndex, 3);
+  assert.equal(notices[0].slot, "14:00-17:00");
+  assert.equal(notices[0].status, "unresolved-requests");
+  assert.match(notices[0].message, /Ни одна не является подтверждённой бронью/);
+  assert.equal(Object.isFrozen(notices[0].documentIds), true);
+  assert.throws(() => { notices[0].documentIds.push("DOC-04"); }, TypeError);
+  for (const doc of model.documents) assert.equal(doc.roomStatus, "request-not-booking");
+  assert.equal(getSummary().openingBalance, "2 000 000 ₽");
 });
