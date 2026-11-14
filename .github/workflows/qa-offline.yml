@@ -26,14 +26,16 @@ jobs:
         run: python3 -m py_compile Tests/QA/test_pcg32_contract.py
       - name: Independent reference tests
         run: python3 Tests/QA/test_pcg32_contract.py
-      - name: Optional Core source-pattern audit (not execution)
-        shell: bash
-        run: |
-          if [[ -f Runtime/Core/Pcg32.cs ]]; then
-            python3 Tests/QA/test_pcg32_contract.py --core-source Runtime/Core/Pcg32.cs
-          else
-            echo 'SKIP source-pattern audit: Core C# file is absent in this branch.'
-          fi
+      - name: Checkout actual Core branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: feature/core-2
+          path: core-source
+          persist-credentials: false
+      - name: Record actual Core revision
+        run: git -C core-source rev-parse HEAD
+      - name: Audit real Core C# PCG32 source (not C# execution)
+        run: python3 Tests/QA/test_pcg32_contract.py --core-source core-source/Runtime/Core/Pcg32.cs
 
   cross-branch-offline:
     name: UI and Content static regression (not integration)
