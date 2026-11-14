@@ -119,3 +119,18 @@
 **Верификация:** reference vector независимо пересчитан Python 3 с маской 64-bit и совпал с опубликованной последовательностью PCG. Это **не** исполнение C# тестов: в текущей среде `dotnet`, `csc`, `mcs`, Unity Editor не найдены; компиляция C#/Unity и `RunAll()` = **NOT RUN**. Не считать Issue #2 выполненным.
 
 **Ограничения/следующее:** named-stream derivation, сериализуемый RandomState DTO, commit/rollback RNG и публичный IRandomSource ещё не реализованы. В следующем Core проходе подготовить GameClock либо typed RandomState/streams согласно C0-v2, не менять публичные API без ADR. Чату 05 — подключить `Pcg32GoldenTests.RunAll()` к реальному тестовому раннеру после появления среды и проверить golden vector на C#.
+
+
+## 9. AutoDev 01 — GameClock calendar helpers (14.11.2026, second pass)
+
+**Scope:** one independent C0-v2 Issue #2 task: pure calendar calculations, without state mutation or `AdvanceDay` orchestration. `main` and other subsystem files unchanged.
+
+**Files:** `Runtime/Core/GameClock.cs` and `Tests/Core/GameClockGoldenTests.cs`.
+
+**Commits:** `c7abc5804ea95fdd9870d0cec54a3e2897deccb2` (GameClock) and `5d138aefbeac6d64d4a143543f26e8784ff1662f` (standalone tests). Handoff commit follows separately.
+
+**Contract:** `DayIndex` is zero-based; `DayNumber=DayIndex+1`; `WeekIndex=DayIndex/5`; `WeekDayIndex=DayIndex%5`; settlement days are 4,9,14,...; `NextWeekSettlementDayIndex` includes the current day when it is a closing day. Invalid negative days raise `ArgumentOutOfRangeException`; calculations that exceed `Int32` raise `OverflowException`. `GameClock` is a stateless utility, not a second mutable clock owner. Campaign phase, command deduplication, and end-day processing remain unimplemented.
+
+**Verification:** Reviewed formulas against C0-v2 section 5 and added a standalone `RunAll()` suite covering DayIndex 0..999, first two weekly closings, negative inputs and overflow boundaries. **C# tests NOT RUN**, Unity Editor tests **NOT RUN**; no claim of compilation. No new packages. QA 05 should invoke `GameClockGoldenTests.RunAll()` when a C# test environment becomes available.
+
+**Next:** typed `GameClockState` and integration into `GameState`/CommandProcessor only after coordinating public DTO layout with QA 05. Do not treat these helpers as `AdvanceDay` implementation or close Issue #2.
