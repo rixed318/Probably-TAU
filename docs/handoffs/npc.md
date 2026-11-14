@@ -40,3 +40,16 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Checks performed:** manual source-to-source comparison of N0, ADR-C0-002, Content event hooks, and Core GameStateSnapshotDto retrieved via GitHub. **NOT RUN:** C# compile, unit tests, Unity Editor, EventDirector integration; this task changed documentation only.
 
 **BLOCKED for EventDirector:** concrete Core scheduled-event DTO/transaction ports and receipt APIs are missing. **Next bounded task:** independent pure-C# typed condition evaluator + deterministic negative tests (no GameState, ledger, RNG, scheduler), with actual C# execution only when a runner is available.
+
+
+## AutoDev 02 — pure typed condition evaluator (2026-11-14, 23:39 UTC+4)
+
+**One scoped task (#4):** implemented an independent pure C# condition AST and deterministic read-only evaluator matching the six operators currently proposed in Content PR #11: `always`, `all`, `any`, `flagEquals`, `factExists`, `dayIndexAtLeast`. This is **not** a runtime JSON adapter and does not claim the draft schema is approved. Code: `Runtime/Npc/EventConditionEvaluator.cs`; standalone tests: `Tests/Npc/EventConditionGoldenTests.cs`.
+
+**Commits:** implementation `de5e5e9ddd410531499501f9b0f786cc8e0b5765`; tests `9dfd666f57f45a99aabd0db462e2a3d381889389`; handoff commit follows. All on `feature/npc-4`; PR #16 stays Draft. No main changes or merges.
+
+**Behavior:** exact ordinal flag comparisons, missing flags/facts evaluate false, nonempty all/any groups, invalid/negative day or null context rejected, short-circuit boolean groups, no RNG, GameState, ledger, scheduler or Unity dependency. Factory methods enforce valid AST nodes; caller supplies read-only state facts/flags. The evaluator does not generate or mutate receipts, earned income, or event IDs.
+
+**Tests:** added 16 standalone assertions including partner onsite eligible at DayIndex 4 only after both facts, remote exclusion, case sensitivity, missing fact, invalid nodes and negative day. **NOT RUN**: C# compile, golden tests and Unity EditMode (no dotnet/csc/mcs available in this execution environment). Source creation via GitHub confirmed; no claim of passing C# tests. Run `EventConditionGoldenTests.RunAll()` via a real .NET test runner once QA/Core establishes one.
+
+**Dependencies / BLOCKED:** Full EventDirector still requires Core scheduled-event instance/transaction/receipt API and canonical earned-income source key. JSON-to-AST parsing/validation is deliberately not included; coordinate schema with Content 04. ADR-C0-002 PR #17 remains unmerged and applies only to feature development. Next bounded task: add a standalone .NET test runner or JSON schema adapter once Core/QA test infrastructure and Content schema are confirmed.
