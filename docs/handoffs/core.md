@@ -192,3 +192,5 @@
 **Verification:** previous Core .NET 8 workflow run [43638320521](https://github.com/rixed318/Probably-TAU/actions/runs/43638320521) succeeded for the earlier three-suite code. The newly added Ledger suite must be evaluated on a **new** workflow run; do not inherit old PASS. Unity Editor/EditMode NOT RUN.
 
 **Next:** verify new Core .NET run; address real failures if any. Then implement atomic command transaction/receipt layer, integrating ledger and GameState only after QA #10 review. No main write, merge or Issue closure.
+
+**CI follow-up (verified):** [Core .NET run 43647817751](https://github.com/rixed318/Probably-TAU/actions/runs/43647817751), triggered by code commit `72abba2a`, is **completed / success**. The job's `Compile and run all Core golden suites` step completed successfully with the fourth Ledger suite registered. This verifies the standalone .NET 8 runner, not Unity compilation/EditMode nor cross-branch integration. The workflow job's displayed name still says 'three golden suites' (cosmetic stale label), while Program.cs actually invokes four.
