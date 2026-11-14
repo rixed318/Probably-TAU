@@ -1,7 +1,7 @@
 {
   "$comment": "Draft narrative/content schema for review only. NOT an executable Unity asset or approved Core API. Every financial metric, person, institution subunit, and room in this file is FICTIONAL; not actual TAU data.",
   "meta": {
-    "specVersion": "content-draft-0.1",
+    "specVersion": "content-draft-0.2",
     "ownerChat": "04",
     "issues": [
       1,
@@ -10,8 +10,13 @@
     "status": "PROPOSED",
     "runtimeReady": false,
     "currency": "fictional RUB",
-    "moneyStorage": "integer kopecks (long; requires Core approval)",
-    "locale": "ru-RU"
+    "moneyStorage": "signed Int64 kopecks; all financial effects via Core ledger (C0-v2)",
+    "locale": "ru-RU",
+    "dayIndexConvention": "DayIndex is zero-based; displayDay = dayIndex + 1; legacy day fields are display labels only",
+    "weeklySettlementClosingDayIndexes": [
+      4,
+      9
+    ]
   },
   "opening": {
     "day": 1,
@@ -25,7 +30,10 @@
     "weeklyRevenueKopecks": 34000000,
     "weeklyObligationKopecks": 40000000,
     "fictionalRoom": "Л-204",
-    "collisionSlot": "day04/14:00-17:00"
+    "collisionSlot": "day04/14:00-17:00",
+    "dayIndex": 0,
+    "weeklySettlementFirstClosingDayIndex": 4,
+    "weeklyRevenueRecognition": "forecast only until Core EndDay settlement"
   },
   "fictionalNpcs": [
     {
@@ -56,7 +64,8 @@
         "seats": 35,
         "room": "Л-204",
         "day": 4,
-        "slot": "14:00-17:00"
+        "slot": "14:00-17:00",
+        "dayIndex": 3
       },
       "inspection": "check_seat_map",
       "revealed": {
@@ -72,7 +81,8 @@
         "room": "Л-204",
         "day": 4,
         "slot": "14:00-17:00",
-        "status": "request-not-booking"
+        "status": "request-not-booking",
+        "dayIndex": 3
       },
       "inspection": "check_room_calendar",
       "revealed": {
@@ -87,7 +97,8 @@
         "conditionalRevenueKopecks": 12000000,
         "room": "Л-204",
         "day": 4,
-        "slot": "14:00-17:00"
+        "slot": "14:00-17:00",
+        "dayIndex": 3
       },
       "inspection": "check_contract_appendix",
       "revealed": {
@@ -244,7 +255,9 @@
             "requirements": [
               "E03_mentor_paid",
               "E07_delivered"
-            ]
+            ],
+            "revenueEarliestDayIndex": 4,
+            "revenueRecognition": "conditional on delivered service and unique Core ledger posting; not at signing"
           },
           {
             "id": "PARTNER-2",
@@ -263,7 +276,9 @@
             "requirements": [
               "E03_mentor_paid",
               "E07_delivered"
-            ]
+            ],
+            "revenueEarliestDayIndex": 4,
+            "revenueRecognition": "conditional on delivered service and unique Core ledger posting; not at signing"
           },
           {
             "id": "PARTNER-3",
@@ -311,7 +326,8 @@
       "mandatoryNextId": "E02",
       "noWeeklyBilling": true,
       "cliffhanger": "На приём записались двое. Оба уверены, что их уже поддержали."
-    }
+    },
+    "dayIndex": 0
   },
   "eventManifest": [
     {
@@ -330,7 +346,9 @@
         "E05",
         "E06",
         "E07"
-      ]
+      ],
+      "dayIndex": 1,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E03",
@@ -347,7 +365,9 @@
       "feeds": [
         "E05",
         "E07"
-      ]
+      ],
+      "dayIndex": 1,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E04",
@@ -366,7 +386,9 @@
       "feeds": [
         "E08",
         "E11"
-      ]
+      ],
+      "dayIndex": 2,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E05",
@@ -383,7 +405,9 @@
       "feeds": [
         "E06",
         "E07"
-      ]
+      ],
+      "dayIndex": 2,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E06",
@@ -404,7 +428,9 @@
       "feeds": [
         "E08",
         "E13"
-      ]
+      ],
+      "dayIndex": 3,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E07",
@@ -423,7 +449,9 @@
       "feeds": [
         "E09",
         "E10"
-      ]
+      ],
+      "dayIndex": 3,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E08",
@@ -440,7 +468,9 @@
         "E10",
         "E12",
         "E14"
-      ]
+      ],
+      "dayIndex": 4,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E09",
@@ -454,7 +484,9 @@
       "fallback": "always",
       "feeds": [
         "E10"
-      ]
+      ],
+      "dayIndex": 4,
+      "triggerPhase": "EndDay-settlement"
     },
     {
       "id": "E10",
@@ -470,7 +502,9 @@
       "feeds": [
         "P02",
         "E12"
-      ]
+      ],
+      "dayIndex": 5,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E11",
@@ -486,7 +520,9 @@
       "feeds": [
         "E13",
         "E14"
-      ]
+      ],
+      "dayIndex": 6,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E12",
@@ -502,7 +538,9 @@
       "feeds": [
         "E13",
         "E14"
-      ]
+      ],
+      "dayIndex": 7,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E13",
@@ -517,7 +555,9 @@
       "fallback": "no prior achievements",
       "feeds": [
         "E14"
-      ]
+      ],
+      "dayIndex": 8,
+      "triggerPhase": "scheduled-content"
     },
     {
       "id": "E14",
@@ -532,7 +572,9 @@
       "fallback": "always",
       "feeds": [
         "CHAPTER2_HOOK"
-      ]
+      ],
+      "dayIndex": 9,
+      "triggerPhase": "scheduled-content"
     }
   ],
   "projects": [
@@ -557,7 +599,8 @@
       "launchCostAlternativeKopecks": 21000000,
       "requiredFullEndDaysAfterLaunch": 3,
       "upkeepKopecks": 1500000,
-      "upkeepRule": "first full workweek after completed"
+      "upkeepRule": "first full workweek after completed",
+      "progressClock": "3 full completed EndDay transitions strictly after launch dayIndex; launch day close does not count"
     }
   ],
   "validationRules": [
@@ -569,6 +612,9 @@
     "event fallback exists for reject-all path",
     "one key plot visit per day",
     "flags use content aliases pending Core contract approval",
-    "all results deterministic for same state and saved RNG"
+    "all results deterministic for same state and saved RNG",
+    "DayIndex is zero-based for Core: day1=0, E02=1, E09=4, E14=9; legacy day fields are UI display labels",
+    "weekly settlement occurs once at closing DayIndex 4,9,... and conditional partner revenue is posted once only after delivery",
+    "all financial amounts use signed Int64 kopecks; no float and no cash credit at partner contract signing"
   ]
 }
