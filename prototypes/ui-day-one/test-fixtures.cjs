@@ -51,7 +51,9 @@ test("approve clarified quote then show canned ledger and day 2", async () => {
   assert.equal(end.report.balance, "1 255 000 ₽");
   assert.equal(end.report.ledger.length, 2);
   const again = await gateway.execute(cmd("AdvanceDay"));
-  assert.equal(again.report.balance, end.report.balance);
+  assert.equal(again.ok, false);
+  assert.match(again.error, /уже завершён/);
+  assert.equal((await gateway.queryDashboard()).budget, "1 290 000 ₽");
   const next = await gateway.execute(cmd("ShowDayTwo"));
   assert.equal(next.view.dayTwo, true);
   assert.equal(next.view.budget, "1 255 000 ₽");
@@ -76,4 +78,39 @@ test("defer retains a pending deadline in the mock read model", async () => {
   assert.equal((await gateway.execute(cmd("InspectDocument"))).ok, false);
   const end = await gateway.execute(cmd("AdvanceDay"));
   assert.equal(end.report.balance, "1 465 000 ₽");
+});
+
+
+test("ShowDayTwo requires a successful AdvanceDay, not merely a decision", async () => {
+  const gateway = newGateway();
+  assert.equal((await gateway.execute(cmd("ShowDayTwo"))).ok, false);
+  await gateway.execute(cmd("ApproveProposal"));
+  const premature = await gateway.execute(cmd("ShowDayTwo"));
+  assert.equal(premature.ok, false);
+  assert.match(premature.error, /Сначала завершите день/);
+  assert.equal((await gateway.queryDashboard()).dayTwo, false);
+  const end = await gateway.execute(cmd("AdvanceDay"));
+  assert.equal(end.ok, true);
+  assert.equal(end.report.balance, "1 225 000 ₽");
+  assert.equal((await gateway.execute(cmd("AdvanceDay"))).ok, false);
+  assert.equal((await gateway.execute(cmd("RejectProposal"))).ok, false);
+  const next = await gateway.execute(cmd("ShowDayTwo"));
+  assert.equal(next.ok, true);
+  assert.equal(next.view.budget, end.report.balance);
+  assert.equal((await gateway.execute(cmd("ShowDayTwo"))).ok, false);
+});
+
+test("each resolved branch advances exactly once", async () => {
+  for (const decision of ["ApproveProposal", "RejectProposal", "DeferProposal"]) {
+    const gateway = newGateway();
+    assert.equal((await gateway.execute(cmd(decision))).ok, true);
+    assert.equal((await gateway.execute(cmd("ShowDayTwo"))).ok, false);
+    const first = await gateway.execute(cmd("AdvanceDay"));
+    assert.equal(first.ok, true);
+    assert.equal((await gateway.execute(cmd("AdvanceDay"))).ok, false);
+    assert.equal((await gateway.execute(cmd("InspectDocument"))).ok, false);
+    const next = await gateway.execute(cmd("ShowDayTwo"));
+    assert.equal(next.ok, true);
+    assert.equal(next.view.budget, first.report.balance);
+  }
 });
