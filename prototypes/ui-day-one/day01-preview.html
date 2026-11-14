@@ -7,18 +7,25 @@
   <style>
     :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #171c21; color: #f3f0e7; }
     body { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .skip-link { position: absolute; left: 1rem; top: -5rem; padding: .65rem 1rem; background: #f3f0e7; color: #171c21; z-index: 10; }
+    .skip-link:focus-visible { top: .5rem; }
+    :focus-visible { outline: 3px solid #f2c77f; outline-offset: 4px; }
+    #day01-documents-heading { scroll-margin-top: 1rem; }
     .muted { color: #b9c4c5; }
     .notice { border: 2px solid #d5aa6b; padding: 1rem; border-radius: .5rem; margin: 1.5rem 0; }
     .notice h2 { margin-top: 0; }
     .documents { display: grid; gap: 1rem; }
     .document { border: 1px solid #73858c; padding: 1rem; border-radius: .5rem; background: #253039; }
     .document h3 { margin: 0 0 .5rem; }
-    .document p { margin: .25rem 0; }
+    .document p { margin: .25rem 0; overflow-wrap: anywhere; }
+    @media (max-width: 480px) { body { margin: 1rem auto; } .notice, .document { padding: .75rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
   <script defer src="./day01-read-model.cjs"></script>
   <script defer src="./day01-preview.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#day01-documents-heading">Перейти к документам</a>
   <header>
     <h1>День 01 — три документа</h1>
     <p class="muted">Вымышленный игровой сценарий · только просмотр данных · не игровая сессия</p>
@@ -27,7 +34,7 @@
   <main>
     <section id="day01-conflicts" aria-label="Конфликты заявок" aria-live="polite"></section>
     <section aria-labelledby="day01-documents-heading">
-      <h2 id="day01-documents-heading">Документы на рассмотрении</h2>
+      <h2 id="day01-documents-heading" tabindex="-1">Документы на рассмотрении</h2>
       <div id="day01-documents" class="documents"></div>
     </section>
   </main>
