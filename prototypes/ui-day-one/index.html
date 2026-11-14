@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>ТАУ: Президент Академии — UI prototype</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./fixtures.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="ТАУ: Президент Академии">
+        <div class="brand-mark" aria-hidden="true">Т<span>А</span>У</div>
+        <div><strong>ПРЕЗИДЕНТ АКАДЕМИИ</strong><small>ПРОТОТИП ПЕРВОГО ДНЯ · ВЫМЫШЛЕННЫЙ СЦЕНАРИЙ</small></div>
+      </div>
+      <div class="top-metrics" aria-label="Показатели академии">
+        <div class="metric"><span>ИГРОВАЯ ДАТА</span><strong id="hud-date">—</strong></div>
+        <div class="metric metric-budget"><span>РЕЗЕРВ БЮДЖЕТА</span><strong id="hud-budget">—</strong></div>
+        <div class="metric"><span>ДОВЕРИЕ СОТРУДНИКОВ</span><strong id="hud-reputation">—</strong></div>
+      </div>
+      <button class="button button-outline button-small" id="help-button" type="button" aria-label="Показать управление">? Помощь</button>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar sidebar-left" aria-label="Календарь и текущие задачи">
+        <div class="sidebar-heading"><span>01 / РАСПОРЯДОК</span><span class="tiny-line"></span></div>
+        <section class="day-card">
+          <p class="eyebrow">ПЕРВЫЙ РАБОЧИЙ ДЕНЬ</p>
+          <div class="day-number" id="day-number">01</div>
+          <strong id="weekday">Вторник, 1 сентября</strong>
+          <span class="day-time" id="clock">09:20</span>
+        </section>
+        <section class="paperwork">
+          <h2>На повестке</h2>
+          <div class="task active"><span class="task-dot"></span><div><strong>Разобрать заявку</strong><small id="task-description">Компьютерный класс</small></div></div>
+          <div class="task"><span class="task-dot muted"></span><div><strong>Проверить расчёты</strong><small>Доступно в документе</small></div></div>
+          <div class="task"><span class="task-dot muted"></span><div><strong>Подвести итоги</strong><small>После принятия решения</small></div></div>
+        </section>
+        <section class="sidebar-note">
+          <div class="note-pin"></div>
+          <p class="eyebrow">ЗАПИСКА СЕКРЕТАРЯ</p>
+          <p>«Бюджет ограничен. Самая удобная подпись не всегда самая правильная».</p>
+          <small>Только художественный игровой сценарий.</small>
+        </section>
+      </aside>
+
+      <main class="main-area">
+        <div class="stage-label"><span class="stage-status-dot"></span> КАБИНЕТ ПРЕЗИДЕНТА <span class="stage-meta">ТАУ / УСЛОВНЫЙ ИГРОВОЙ МИР</span></div>
+        <section class="office-scene" aria-label="Стилизованный двухмерный кабинет">
+          <div class="wall-texture"></div>
+          <div class="window-frame" aria-hidden="true"><div class="window-sky"><div class="cloud"></div></div><div class="window-bars"></div><div class="curtain"></div></div>
+          <div class="wall-emblem" aria-hidden="true"><span>✦</span><strong>АКАДЕМИЯ</strong><small>УПРАВЛЕНИЯ</small></div>
+          <div class="shelf" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="clock-face" aria-hidden="true"></div>
+          <div class="guest" id="guest-illustration" aria-hidden="true">
+            <div class="guest-shadow"></div><div class="guest-body"></div><div class="guest-shirt"></div><div class="guest-neck"></div><div class="guest-head"></div><div class="guest-hair"></div>
+          </div>
+          <div class="plant" aria-hidden="true"><span class="plant-leaf a"></span><span class="plant-leaf b"></span><span class="plant-leaf c"></span><span class="plant-leaf d"></span><span class="plant-pot"></span></div>
+          <div class="desk" aria-hidden="true"><div class="desktop"></div><div class="desk-front"><span class="desk-logo">✦</span></div></div>
+          <button class="document-hotspot" id="scene-document" type="button" title="Открыть заявку"><span class="paper-stack"></span><span>ОТКРЫТЬ ЗАЯВКУ</span></button>
+          <div class="scene-vignette"></div>
+        </section>
+        <section class="dialogue-panel" aria-label="Диалог с посетителем">
+          <div class="dialogue-identity"><div class="avatar">АД</div><div><span class="eyebrow">СЕЙЧАС НА ПРИЁМЕ</span><h1 id="visitor-name">—</h1><small id="visitor-role">—</small></div></div>
+          <div class="dialogue-copy"><p id="visitor-quote">—</p><span id="dialogue-context">Выслушайте просьбу и изучите заявку.</span></div>
+          <button class="button button-gold" id="open-document" type="button">Изучить заявку <span aria-hidden="true">↗</span></button>
+        </section>
+        <div class="bottom-strip"><div class="tip"><span aria-hidden="true">i</span><span id="status-explanation">Решение ещё не принято.</span></div><button class="button button-primary" id="end-day" type="button" disabled>Завершить день →</button></div>
+      </main>
+
+      <aside class="sidebar sidebar-right" aria-label="Приёмная и показатели">
+        <div class="sidebar-heading"><span>02 / ПРИЁМНАЯ</span><span class="tiny-line"></span></div>
+        <section class="queue-panel">
+          <h2>Очередь посетителей</h2>
+          <div class="queue-person"><div class="queue-avatar">01</div><div><strong id="queue-name">—</strong><small id="queue-role">—</small></div><span class="queue-status" id="queue-status">В КАБИНЕТЕ</span></div>
+          <div class="queue-person waiting"><div class="queue-avatar">02</div><div><strong>Представитель студсовета</strong><small>Следующий игровой день</small></div></div>
+        </section>
+        <section class="status-panel">
+          <div class="status-heading"><span>СРОЧНОСТЬ ЗАЯВКИ</span><strong id="deadline-label">—</strong></div>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+          <p id="deadline-note">—</p>
+          <button class="link-button" id="quick-document" type="button">Открыть досье ↗</button>
+        </section>
+        <section class="status-panel">
+          <h2>Интересы сторон</h2>
+          <div id="faction-list" class="factions"></div>
+          <small class="panel-footnote">Показатели иллюстративны. Не данные реальной ТАУ.</small>
+        </section>
+        <section class="right-bottom-note">ИЗМЕНЕНИЯ ПОЯВЛЯЮТСЯ ТОЛЬКО ПОСЛЕ ОТВЕТА ИГРОВОЙ СИСТЕМЫ</section>
+      </aside>
+    </div>
+    <footer class="footer"><span>PROBABLY-TAU · UI / ISSUE #5</span><span>Без Unity Core · mock-сценарий · оригинальная графика CSS</span><span>ESC — ЗАКРЫТЬ ОКНО</span></footer>
+  </div>
+
+  <dialog class="document-dialog" id="document-dialog" aria-labelledby="document-title">
+    <div class="dialog-shell">
+      <header class="dialog-head"><div><span class="eyebrow">ВХОДЯЩИЙ ДОКУМЕНТ / ДЕЛО № TAU-001</span><h2 id="document-title">—</h2></div><button class="close-button" id="document-close" type="button" aria-label="Закрыть документ">×</button></header>
+      <div class="document-content">
+        <nav class="document-tabs" aria-label="Разделы документа">
+          <button type="button" class="tab active" data-tab="overview" aria-selected="true">Содержание</button>
+          <button type="button" class="tab" data-tab="evidence" aria-selected="false">Проверка</button>
+          <button type="button" class="tab" data-tab="history" aria-selected="false">История</button>
+        </nav>
+        <div class="document-paper" id="document-paper">
+          <div class="paper-heading"><span>ВНУТРЕННЯЯ ЗАЯВКА</span><span class="ink-stamp" id="paper-stamp">НА РАССМОТРЕНИИ</span></div>
+          <section class="tab-section" data-section="overview">
+            <h3 id="paper-title">—</h3><div class="paper-line"></div>
+            <div class="paper-fields"><div><small>ЗАЯВИТЕЛЬ</small><strong id="paper-author">—</strong></div><div><small>ЗАПРАШИВАЕМАЯ СУММА</small><strong id="paper-amount">—</strong></div><div><small>СРОК</small><strong id="paper-deadline">—</strong></div><div><small>ТИП ОБРАЩЕНИЯ</small><strong>Инфраструктура</strong></div></div>
+            <p id="paper-description">—</p><div class="document-warning" id="document-warning">—</div>
+          </section>
+          <section class="tab-section" data-section="evidence" hidden>
+            <h3>Сверка и уточнения</h3><p>Перед подписанием можно запросить дополнительные сведения. В настоящей игре проверка выполняется Core; здесь ответ заранее подготовлен.</p>
+            <ul class="facts-list" id="facts-list"></ul>
+            <button class="button button-ink" id="inspect-button" type="button">Проверить смету</button>
+            <button class="button button-paper" id="clarify-button" type="button">Запросить уточнение</button>
+            <small id="evidence-help">Проверка не была выполнена.</small>
+          </section>
+          <section class="tab-section" data-section="history" hidden>
+            <h3>Журнал обращения</h3><ul class="history-list" id="history-list"></ul>
+          </section>
+          <div class="signature"><span>ПОДПИСЬ ПРЕЗИДЕНТА</span><span class="signature-line"></span><span>ПРОЕКТ РЕШЕНИЯ</span></div>
+        </div>
+        <aside class="decision-rail">
+          <p class="eyebrow">ВАШЕ РЕШЕНИЕ</p><h3>От имени академии</h3><p id="decision-help">Изучите факты и выберите действие.</p>
+          <button class="button button-approve" type="button" id="approve-button">Согласовать заявку</button>
+          <button class="button button-reject" type="button" id="reject-button">Отклонить</button>
+          <button class="button button-defer" type="button" id="defer-button">Отложить до завтра</button>
+          <div class="decision-disclaimer"><strong>Важно</strong><p>Все расходы и изменения репутации — только ответы mock-gateway. UI ничего не рассчитывает.</p></div>
+        </aside>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="report-dialog" id="report-dialog" aria-labelledby="report-title">
+    <div class="report-sheet">
+      <div class="report-topline"><span>КОНЕЦ РАБОЧЕГО ДНЯ</span><span>ВНУТРЕННИЙ ОТЧЁТ · MOCK</span></div>
+      <div class="report-ornament" aria-hidden="true">✦</div>
+      <h2 id="report-title">Итоги дня</h2><p class="report-subtitle" id="report-summary">—</p>
+      <div class="report-metrics"><div><small>БЮДЖЕТ В НАЧАЛЕ</small><strong>1 500 000 ₽</strong></div><div><small>БЮДЖЕТ В КОНЦЕ</small><strong id="report-balance">—</strong></div></div>
+      <h3>Откуда изменения</h3><div class="ledger-rows" id="report-ledger"></div>
+      <h3>Решение и последствия</h3><p id="report-consequence">—</p>
+      <div class="report-footer"><span>Это игровая демонстрация. Не отчёт реальной ТАУ.</span><button type="button" class="button button-primary" id="next-day-button">Посмотреть день 2 →</button></div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
