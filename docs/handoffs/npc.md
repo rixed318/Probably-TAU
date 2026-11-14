@@ -27,3 +27,16 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Checks:** manual comparison of N0 proposal with C0-v2 and ADR-C0-001; no executable source changed. **NOT RUN:** C# compilation, Unity tests, event-scheduler integration tests. No claim of successful runtime validation.
 - **BLOCKED:** executable EventDirector awaits Core 01's confirmation of stableEventId (= instanceId?), priority ownership/default, snapshot boundary and child due<=n policy; typed Content predicates remain outstanding. No alternate Core/GameState/ledger created.
 - **Next bounded increment:** independent read-only manifest validator for event IDs, dayIndex, feeds and phase aliases (must not sort or execute events); request Content 04 review. No merge to main.
+
+
+## AutoDev 02 — ADR-C0-002 reconciliation + typed AST review (2026-11-14)
+
+**One scoped task completed:** updated `docs/proposals/NPC_EVENT_SCHEDULING_N0.md` to match coordinator-approved-for-feature-work ADR-C0-002 in Draft PR #17. N0 now consistently uses `dueDayIndex ASC → priority DESC → instanceId ASC` (ordinal), persisted Int32 priority defaulted once to 0, due-stage snapshot after project ticks, and atomic rejection of new children due<=closing day. Removed stale advice to sort E02/E03 by creationOrdinal. Existing overdue items remain eligible; E09 is report-only.
+
+**Review of Content PR #11:** typed AST (`always/all/any/flagEquals/factExists/dayIndexAtLeast`) is suitable for a pure, read-only evaluator, not a runtime-approved wire schema. Partner income must be gated by durable `E03_mentor_paid`, `E07_delivered`, DayIndex>=4 and a unique earned receipt. **Risk to resolve with 01/04:** both onsite/remote branches share `partner/{sourceInstanceId}/delivery` earnedId template; if each branch uses a distinct source instance, exactly-once revenue is not guaranteed. Require a canonical agreement source ID and Core ledger deduplication before wiring.
+
+**GitHub commit:** `d761ccaa03b848a29513c907672b63e50af69d17` (N0 documentation). This handoff is committed separately on the same `feature/npc-4` branch. PR #16 stays Draft; no merge/main changes.
+
+**Checks performed:** manual source-to-source comparison of N0, ADR-C0-002, Content event hooks, and Core GameStateSnapshotDto retrieved via GitHub. **NOT RUN:** C# compile, unit tests, Unity Editor, EventDirector integration; this task changed documentation only.
+
+**BLOCKED for EventDirector:** concrete Core scheduled-event DTO/transaction ports and receipt APIs are missing. **Next bounded task:** independent pure-C# typed condition evaluator + deterministic negative tests (no GameState, ledger, RNG, scheduler), with actual C# execution only when a runner is available.
