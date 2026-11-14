@@ -1,7 +1,7 @@
 {
   "$comment": "Draft narrative/content schema for review only. NOT an executable Unity asset or approved Core API. Every financial metric, person, institution subunit, and room in this file is FICTIONAL; not actual TAU data.",
   "meta": {
-    "specVersion": "content-draft-0.2",
+    "specVersion": "content-draft-0.3",
     "ownerChat": "04",
     "issues": [
       1,
@@ -10,7 +10,7 @@
     "status": "PROPOSED",
     "runtimeReady": false,
     "currency": "fictional RUB",
-    "moneyStorage": "signed Int64 kopecks; all financial effects via Core ledger (C0-v2)",
+    "moneyStorage": "all *Kopecks fields are canonical signed Int64 decimal strings in fictional kopecks; never JSON numbers; Core ledger only",
     "locale": "ru-RU",
     "dayIndexConvention": "DayIndex is zero-based; displayDay = dayIndex + 1; legacy day fields are display labels only",
     "weeklySettlementClosingDayIndexes": [
@@ -20,15 +20,15 @@
   },
   "opening": {
     "day": 1,
-    "budgetKopecks": 200000000,
+    "budgetKopecks": "200000000",
     "quality": 52,
     "students": 48,
     "staff": 50,
     "employers": 45,
     "public": 47,
     "inspectionTokens": 2,
-    "weeklyRevenueKopecks": 34000000,
-    "weeklyObligationKopecks": 40000000,
+    "weeklyRevenueKopecks": "34000000",
+    "weeklyObligationKopecks": "40000000",
     "fictionalRoom": "Л-204",
     "collisionSlot": "day04/14:00-17:00",
     "dayIndex": 0,
@@ -60,7 +60,7 @@
       "id": "DOC-01",
       "type": "procurement_request",
       "visible": {
-        "amountKopecks": 22000000,
+        "amountKopecks": "22000000",
         "seats": 35,
         "room": "Л-204",
         "day": 4,
@@ -70,14 +70,14 @@
       "inspection": "check_seat_map",
       "revealed": {
         "realSeats": 20,
-        "phasedPriceKopecks": 16000000
+        "phasedPriceKopecks": "16000000"
       }
     },
     {
       "id": "DOC-02",
       "type": "student_project_proposal",
       "visible": {
-        "amountKopecks": 6500000,
+        "amountKopecks": "6500000",
         "room": "Л-204",
         "day": 4,
         "slot": "14:00-17:00",
@@ -87,14 +87,14 @@
       "inspection": "check_room_calendar",
       "revealed": {
         "roomReserved": false,
-        "mobilePriceKopecks": 3500000
+        "mobilePriceKopecks": "3500000"
       }
     },
     {
       "id": "DOC-03",
       "type": "partner_offer",
       "visible": {
-        "conditionalRevenueKopecks": 12000000,
+        "conditionalRevenueKopecks": "12000000",
         "room": "Л-204",
         "day": 4,
         "slot": "14:00-17:00",
@@ -102,9 +102,9 @@
       },
       "inspection": "check_contract_appendix",
       "revealed": {
-        "onsiteMentorCostKopecks": 4000000,
-        "remoteMentorCostKopecks": 2500000,
-        "remoteConditionalRevenueKopecks": 9000000
+        "onsiteMentorCostKopecks": "4000000",
+        "remoteMentorCostKopecks": "2500000",
+        "remoteConditionalRevenueKopecks": "9000000"
       }
     }
   ],
@@ -132,7 +132,7 @@
             "effects": [
               {
                 "metric": "budget",
-                "deltaKopecks": -22000000
+                "deltaKopecks": "-22000000"
               },
               {
                 "metric": "Q",
@@ -153,7 +153,7 @@
             "effects": [
               {
                 "metric": "budget",
-                "deltaKopecks": -16000000
+                "deltaKopecks": "-16000000"
               },
               {
                 "metric": "Q",
@@ -192,7 +192,7 @@
             "effects": [
               {
                 "metric": "budget",
-                "deltaKopecks": -6500000
+                "deltaKopecks": "-6500000"
               },
               {
                 "metric": "S",
@@ -212,7 +212,7 @@
             "effects": [
               {
                 "metric": "budget",
-                "deltaKopecks": -3500000
+                "deltaKopecks": "-3500000"
               },
               {
                 "metric": "S",
@@ -250,7 +250,7 @@
                 "delta": 2
               }
             ],
-            "conditionalRevenueKopecks": 12000000,
+            "conditionalRevenueKopecks": "12000000",
             "revenueEarliestDay": 5,
             "requirements": [
               "E03_mentor_paid",
@@ -271,7 +271,7 @@
                 "delta": 1
               }
             ],
-            "conditionalRevenueKopecks": 9000000,
+            "conditionalRevenueKopecks": "9000000",
             "revenueEarliestDay": 5,
             "requirements": [
               "E03_mentor_paid",
@@ -587,7 +587,7 @@
         "E04-E"
       ],
       "launchCostAlreadyPaidOnChoice": true,
-      "upkeepKopecks": 1200000,
+      "upkeepKopecks": "1200000",
       "upkeepRule": "first full workweek after operational",
       "completeOnlyIf": "real installation slot resolved"
     },
@@ -595,10 +595,10 @@
       "id": "P02",
       "title": "Мастерская реальных задач",
       "unlockBy": "E10 completed",
-      "launchCostStandardKopecks": 18000000,
-      "launchCostAlternativeKopecks": 21000000,
+      "launchCostStandardKopecks": "18000000",
+      "launchCostAlternativeKopecks": "21000000",
       "requiredFullEndDaysAfterLaunch": 3,
-      "upkeepKopecks": 1500000,
+      "upkeepKopecks": "1500000",
       "upkeepRule": "first full workweek after completed",
       "progressClock": "3 full completed EndDay transitions strictly after launch dayIndex; launch day close does not count"
     }
@@ -615,6 +615,6 @@
     "all results deterministic for same state and saved RNG",
     "DayIndex is zero-based for Core: day1=0, E02=1, E09=4, E14=9; legacy day fields are UI display labels",
     "weekly settlement occurs once at closing DayIndex 4,9,... and conditional partner revenue is posted once only after delivery",
-    "all financial amounts use signed Int64 kopecks; no float and no cash credit at partner contract signing"
+    "all *Kopecks amounts are canonical signed Int64 decimal strings (no JSON numbers/float), with no cash credit at partner contract signing"
   ]
 }
