@@ -71,3 +71,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **BLOCKED for full EventDirector:** still no concrete Core scheduled-event instance/transaction/receipt API; canonical earned-income source ID needs Core/Content agreement. Independent condition evaluator and its test runner can proceed without those dependencies. PR #16 remains Draft; no merge/main changes.
 
 **Next:** inspect GitHub Actions logs and fix any actual C# compile/test failures in NPC-owned files. Once green, request QA 05 to include the runner in integration CI; avoid duplicating Core's own test runner.
+
+
+## AutoDev 02 — condition evaluator regression expansion (2026-11-15)
+
+**One scoped task (#4):** expanded the existing `Tests/Npc/EventConditionGoldenTests.cs` without changing runtime logic or adding dependencies. Tests now cover nested all/any with the exact day-index boundary and int.MaxValue, defensive copying of AST child arrays and read-only exposed children, no mutation of caller-provided facts/flags, null context rejection, null group rejection, and canonical flag identifier/value validation. Source commit: `45e04bfb4b5aa369bbd3aad6e8d64ae05262e079`, on `feature/npc-4`.
+
+**Baseline verified:** the preceding GitHub Actions NPC condition golden tests run `43642594836` completed **success** on previous branch head `308e6053`; it ran actual .NET 8 C# code. This does **not** prove the new regression assertions pass. A new run on the updated head must be checked and reported separately.
+
+**Dependencies:** Core PR #9 still exposes only a partial GameState snapshot (pending/completed string IDs), not a concrete event-instance DTO, atomic command/ledger ports or EventDirector adapter. Content PR #11 has draft typed predicates and canonical partner agreement source ID, but runtime schema integration is still pending. ADR-C0-002 in PR #17 governs ordering for feature implementation only. No Core/GameState/ledger/scheduler edits, no main merge.
+
+**Next bounded task:** if the new GitHub CI passes, consider a separate deterministic read-only Content AST adapter/validator with explicit failure on unknown op/shape; do not create an alternative scheduler.
