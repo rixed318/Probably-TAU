@@ -170,3 +170,26 @@ No Unity compile, PlayMode, image generation or browser visual checks performed.
 **Regression added:** assert one shared unresolved request collision, three document IDs, DayIndex 3 and exact time, explicit not-booked status, frozen output and unchanged opening balance. Existing six tests remain. **NOT RUN:** Node.js tests, browser and Unity. GitHub connector can inspect/edit source but does not execute Node. QA 05 should run `node --test prototypes/ui-day-one/test-day01-read-model.cjs` and `node --test prototypes/ui-day-one/test-fixtures.cjs` on actual checkout and attach CI logs. No production integration or Unity API claim.
 
 **Next:** after QA test evidence and Core read-model contract, render this conflict notice in an accessible UI card; no independent room booking rules in UI. Art Direction A / 320×180 stays approved as planning basis, no generated PNG or production sprite approval in this pass. No merge to main.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-15 · Issue #5 (standalone canonical Day 01 preview)
+
+**One bounded task:** added a **separate read-only browser preview** for the existing canonical Day 01 fixture, including an accessible room-conflict notice and all three document requests. The legacy one-document `index.html` / `fixtures.js` / `app.js` prototype remains untouched; the preview neither reserves rooms nor issues commands/ledger postings.
+
+**Branch:** `feature/ui-5`; **Draft PR:** #12.
+**Commits:** `88f2acfbd227205d21e5dfceec53531a8e8e9e22` (HTML), `1aaea562249f42a0b88d76e7c1d2233dd6bd2332` (browser renderer), `5d1aee784592a9466637c77ee0ce2f37fd961c0d` (Node regression tests); this handoff update follows.
+**Files:** `prototypes/ui-day-one/day01-preview.html`, `day01-preview.js`, `test-day01-preview.cjs`, `docs/handoffs/ui.md`.
+
+**UX:** separate page shows DayIndex 0, fictional starting balance, three fictional visitors/documents and unresolved shared room Л-204 DayIndex 3 14:00–17:00; `role=status` for conflict; no confirmed booking inferred; conditional partner revenue explicitly labelled future/unposted. Content remains editable DOM text (no baked-in image); uses `textContent` and `createElement`, not `innerHTML`. The page loads `day01-read-model.cjs` directly in browser; it does not load the legacy mock gateway. HTML uses neutral original styling and no third-party brand assets.
+
+**Validation:** reviewed actual GitHub fixture and Content PR #11 v0.3 against the preview. New tests cover standalone script isolation, three requests/conflict, no premature partner revenue, and source-level unsafe HTML/command checks. **NOT RUN:** Node tests, browser visual checks, Unity/C# compile; GitHub connector edits source but does not execute Node. QA 05 should run:
+```sh
+node --test prototypes/ui-day-one/test-day01-preview.cjs
+node --test prototypes/ui-day-one/test-day01-read-model.cjs
+node --test prototypes/ui-day-one/test-fixtures.cjs
+```
+Open `prototypes/ui-day-one/day01-preview.html` through a static HTTP server to visually verify text layout, keyboard zoom, and conflict announcement. The preview is **not** Unity UI Toolkit or an approved runtime adapter.
+
+**Next:** QA evidence + manual accessibility/browser smoke; only after concrete Core read models, connect the presentation adapter. No GameState/Core/Content changes, no generated art, no merge to main.
