@@ -157,3 +157,16 @@ node --test prototypes/ui-day-one/test-fixtures.cjs
 No Unity compile, PlayMode, image generation or browser visual checks performed.
 
 **Boundary / next:** fixture is not wired into `fixtures.js` or a live C0 API. Content PR #11 remains draft; its monetary authoring JSON currently uses numeric values, while UI fixture deliberately uses decimal-string money wire values. Once Content 04 finalizes a schema and Core publishes read models, replace this static fixture with an adapter and add integration checks. PR #12 remains Draft; **no merge to main**.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-14 · Issue #5 (read-only room conflict evidence)
+
+**One bounded task:** the existing canonical Day 01 display-only fixture now marks all DOC-01/02/03 room slots as `request-not-booking` and exposes `getRoomConflictNotice()` to show the shared Л-204 DayIndex 3, 14:00–17:00 collision. The method groups immutable requests by room/day/time, returns a frozen, human-readable UI notice with all three document IDs and does not reserve the room, mutate state, credit money, or infer a decision. The legacy `fixtures.js` gateway, Core and Content remain unchanged.
+
+**Branch:** `feature/ui-5`; **Draft PR:** #12. **Commits:** `98241013fc5fa02841c052c86443bcc054459254` (fixture), `9528229fb6516b6cf710d5713a65743e18f525f2` (test), plus handoff commit. **Files:** `prototypes/ui-day-one/day01-read-model.cjs`, `prototypes/ui-day-one/test-day01-read-model.cjs`, `docs/handoffs/ui.md`.
+
+**Regression added:** assert one shared unresolved request collision, three document IDs, DayIndex 3 and exact time, explicit not-booked status, frozen output and unchanged opening balance. Existing six tests remain. **NOT RUN:** Node.js tests, browser and Unity. GitHub connector can inspect/edit source but does not execute Node. QA 05 should run `node --test prototypes/ui-day-one/test-day01-read-model.cjs` and `node --test prototypes/ui-day-one/test-fixtures.cjs` on actual checkout and attach CI logs. No production integration or Unity API claim.
+
+**Next:** after QA test evidence and Core read-model contract, render this conflict notice in an accessible UI card; no independent room booking rules in UI. Art Direction A / 320×180 stays approved as planning basis, no generated PNG or production sprite approval in this pass. No merge to main.
