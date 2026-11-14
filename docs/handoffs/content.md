@@ -123,3 +123,16 @@
 - **Actually verified:** fetched both new GitHub blobs and parsed hook JSON; static assertions in isolated JS tool runtime passed for 8 required metadata fields, comparator/default/snapshot/child semantics, E09 report-only, and two conditional-income definitions. **NOT RUN:** `node Content/validate-event-hooks.cjs` in checkout, negative cases through Node CLI, C# compilation, Unity tests, or end-to-end scheduler. Do not interpret static inspection as a green Node run.
 - **Remaining BLOCKED integration:** Core's complete event instance DTO and command transaction API, NPC adapter and verified C#/Unity test environment. ADR-C0-002 is approved for feature work only; PR #17 is not merged. Ask NPC 02 to review `E03_mentor_paid` / `E07_delivered` typed fact IDs and `partner/{sourceInstanceId}/delivery` posting identity before runtime implementation.
 - **Next content step:** once NPC 02 responds, resolve any concrete fact-ID drift with a bounded fixture/validator change; otherwise expand cross-file consistency tests without altering Core or the approved ordering. PR #11 stays Draft; no merge/main writes.
+
+
+## AutoDev 04 — typed AST cross-file guard (15.11.2026, 02:43 +04)
+
+**One bounded task (Issue #7):** strengthen the existing cross-file content drift validator to check exact typed predicate nodes, not incidental substrings in serialized condition JSON. This addresses the NPC 02 review that `E03_mentor_paid` / `E07_delivered` must be durable typed facts, not free-text matches. No change to event fixtures, storyline, amounts, DayIndex, Core, NPC or EventDirector.
+
+- File: `Content/validate-content-consistency.cjs`. Replaced `JSON.stringify(condition).includes(...)` checks with traversal of `all`/`any` groups and exact `factExists.factId` and `flagEquals.key/value` matching.
+- Added two deterministic negative mutations: near-match `E07_delivered_fake` must fail, and correct `remote` flag value under wrong key `OTHER_PARTNER` must fail. Updated expected check count from 5 to 7.
+- Code commit: `90be31ae93260efef9ca976278a90b0fbeacdb12`; handoff commit follows this entry.
+- **Actually verified:** fetched the latest committed Content and Hook JSON through GitHub; isolated JS assertions for both partner modes confirm both exact fact IDs, correct PARTNER flag key/value, and rejection of similar fact ID / wrong flag key (2 branches x 4 checks). This is **not** execution of the full Node CLI script.
+- **NOT RUN:** `node Content/validate-content-consistency.cjs` in a real checkout, other Node validators, C# or Unity compilation, EventDirector integration. QA 05 should run the real CLI on the feature branch and report logs.
+- **BLOCKED for runtime integration:** typed fact emission/provenance and canonical agreement source instance remain Core/NPC-owned, as stated by NPC 02 review in PR #11. ADR-C0-002 PR #17 permits feature work only, not main merge.
+- **Next:** review QA test logs and NPC 02's concrete fact-emission adapter when available. PR #11 stays Draft; no main changes or merges.
