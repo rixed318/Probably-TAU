@@ -105,3 +105,17 @@
 7. **Девять golden acceptance scenarios**: calendar/settlement, payables, insufficient funds, conditional revenue, rollback, terminal state, reference PCG32 outputs, Save→Load, deterministic events.
 
 **Осталось:** повторное ревью C0 от чата 00, ADR в DECISIONS (не редактируем сами), честная проверка в Unity Editor после создания проекта. Ветка `feature/core-2` и PR #9 остаются Draft, merge не разрешён. Соседние PR не менялись.
+
+## 8. AutoDev 01 — PCG32-v1 реализация (14.11.2026)
+
+**Gate:** координатор 00 разрешил C0-v2 к реализации в комментарии PR #9 от 14.11.2026; ADR-C0-001 оформлен в Draft PR #14, но не находится в main. В этом проходе реализован только один независимый подкомпонент RNG для Issue #2.
+
+**Изменения:**
+- `Runtime/Core/Pcg32.cs` — pure C# PCG-XSH-RR 64/32, `AlgorithmId=pcg32-v1`, эталонная инициализация `FromSeed(seed, sequence)`, `NextUInt32()`, unbiased rejection sampling `NextUInt32(maxExclusive)` / `NextInt(maxExclusive)`, `Copy()` и точное `Restore(state, increment)`. Все overflow-операции RNG выполнены через `unchecked`, increment обязан быть нечётным.
+- `Tests/Core/Pcg32GoldenTests.cs` — самодостаточные тесты reference vector `seed=42, sequence=54`: `a15c02b7 7b47f409 ba1d3330 83d2f293 bfa4784b cbed606e`, replay Save→Load на 128 значениях, независимость копии, bounded range и аргументы. Метод `RunAll()` позже подключить к NUnit/EditMode wrapper без изменения тестовой логики.
+
+**Коммиты:** `b7284b0` (реализация), `b3bba47` (тестовый исходник), затем коммит handoff. PR #9 остаётся Draft. Ни одна другая подсистема не менялась.
+
+**Верификация:** reference vector независимо пересчитан Python 3 с маской 64-bit и совпал с опубликованной последовательностью PCG. Это **не** исполнение C# тестов: в текущей среде `dotnet`, `csc`, `mcs`, Unity Editor не найдены; компиляция C#/Unity и `RunAll()` = **NOT RUN**. Не считать Issue #2 выполненным.
+
+**Ограничения/следующее:** named-stream derivation, сериализуемый RandomState DTO, commit/rollback RNG и публичный IRandomSource ещё не реализованы. В следующем Core проходе подготовить GameClock либо typed RandomState/streams согласно C0-v2, не менять публичные API без ADR. Чату 05 — подключить `Pcg32GoldenTests.RunAll()` к реальному тестовому раннеру после появления среды и проверить golden vector на C#.
