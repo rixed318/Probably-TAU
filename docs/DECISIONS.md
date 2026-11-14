@@ -28,3 +28,24 @@
 
 ## Процесс
 Новое решение: дата, ID, контекст, варианты, принятое решение, последствия, ссылки на PR/Issue. Не редактировать исторические решения задним числом без пометки о замене.
+
+## Gate C0 — утверждено координатором 00 для разработки в feature-ветках (14.11.2026)
+
+**ADR-C0-001. Статус: APPROVED FOR IMPLEMENTATION; merge в main отдельно требует разрешения владельца.**  
+Контракт: [CORE_CONTRACTS_C0.md v2](https://github.com/rixed318/Probably-TAU/blob/0ca7802c3b54169b73eba7ac261b62dfd1245e26/docs/proposals/CORE_CONTRACTS_C0.md), PR #9. В случае расхождения с предварительным GDD/ARCHITECTURE этот ADR приоритетнее; требуется их последующая синхронизация.
+
+**Принятые решения C0-01..C0-10:**
+1. Unity 6.3 LTS (реальная проверка Editor обязательна), `unity/` и asmdef Core (без UnityEngine), Economy, Application, Tests. До появления Editor допускается pure-C# реализация с честной пометкой об отсутствии проверки Unity.
+2. GameState v1 — единственный mutable владелец; Q/S/M/E/R (0–100) в одном источнике, где Q=EducationQuality, S=StudentSatisfaction, M=StaffMorale, E=EmployerTrust, R=PublicReputation. Budget отдельно. Не создавать второе mutable ReputationState. Пятая группа из первоначального GDD (абитуриенты/родители) не входит в первый vertical slice.
+3. Команды с CommandId, fingerprint, ExpectedRevision/ExpectedDayIndex, валидируемое prepare + атомарный commit; повтор команды без повторных эффектов, доменные события только после commit.
+4. Дискретный GameClock: DayIndex начинается с 0, DayNumber=DayIndex+1, 5 рабочих дней на неделю; платежи при закрытии индексов 4/9/14…; обработка Finished запрещает дополнительный игровой день.
+5. Канонический AdvanceDay: finalize → tick projects → обработка scheduled due outcomes → начисление earned income и обязательств через ledger → metrics + terminal check → новая очередь ТОЛЬКО если не terminal → отчёт/атомарный commit → checkpoint request. Дедлайны до закрытия дня, tie-break детерминированный; новых due<=n событий внутри этого же перехода не запускать рекурсивно.
+6. Money — checked signed Int64 **в копейках**. Ledger append-only; уникальные posting/due keys; CurrentBalance = OpeningBalance + Σ ledger delta. Никакого float/double для денежных правил.
+7. v1 financial policy: добровольный расход без остатка Reject(InsufficientFunds); обязательный платёж при нехватке средств отражается как payable с предупреждением, но не как отрицательный cash. Овердрафт и частичные выплаты вне текущей версии; банкротство/лимиты задолженности — отдельное контентное решение.
+8. PCG32-v1 с зафиксированной реализацией и golden vector; именованные потоки; seed + внутренние состояния сохраняются; UI/read-only queries RNG не расходуют.
+9. Domain GameState.SchemaVersion, SaveEnvelope.schemaVersion, ContentVersion и buildVersion независимы. Core владеет snapshot DTO и валидацией, QA/Save — envelope, IO, backup, migration. Save→Load не переигрывает доменные события, платежи или случайность.
+10. Типизированные placeholders Events/Documents/Visitors/Projects/Inventory получают владельческие схемы через следующие согласованные PR. Их отсутствие не блокирует разработку Core. UI использует immutable read models, а контент — стабильные definition IDs.
+
+**Acceptance:** девять golden tests GT-01..GT-09 из PR #9 плюс требования QA PR #10. Первые реализационные PR остаются Draft до compile/tests/review; любая смена общих публичных контрактов требует повторного ADR. Ни один PR автоматически не сливать. Чат 02 начинает код после появления согласованных реальных Core интерфейсов, а предварительные интерфейсы может проектировать сейчас. Чат 03 продолжает UI/art на mocks, чат 05 — тестовый каркас и сериализацию после DTO.
+
+**Техническая оговорка:** финальные C# signatures — обязательство чата 01 реализовать и зафиксировать в PR, а не уже существующие типы. Нынешняя спецификация пока не является доказательством компиляции Unity.
