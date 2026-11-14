@@ -193,3 +193,20 @@ node --test prototypes/ui-day-one/test-fixtures.cjs
 Open `prototypes/ui-day-one/day01-preview.html` through a static HTTP server to visually verify text layout, keyboard zoom, and conflict announcement. The preview is **not** Unity UI Toolkit or an approved runtime adapter.
 
 **Next:** QA evidence + manual accessibility/browser smoke; only after concrete Core read models, connect the presentation adapter. No GameState/Core/Content changes, no generated art, no merge to main.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-15 · Issue #5 (keyboard/mobile Day 01 preview)
+
+**One bounded task:** improve keyboard and narrow-screen accessibility of the **standalone read-only** canonical Day 01 preview, without changing its data, scenario, gateway, game commands, finances, art or Core. The canonical Day01 fixture and legacy interactive \`index.html\` remain unchanged.
+
+**Branch:** \`feature/ui-5\`; **Draft PR:** #12.
+**Commits:** \`ba63888c5fcba077660e7b9ec914c3f11a1df84f\` (HTML/CSS), \`e02cc994073ab81a75b6d9a3c0a1d40b11e81e5d\` (two regression tests), plus this handoff update.
+**Files:** \`prototypes/ui-day-one/day01-preview.html\`, \`test-day01-preview.cjs\`, \`docs/handoffs/ui.md\`.
+
+**UX:** keyboard skip link to the documents heading; target is programmatically focusable (\`tabindex="-1"\`), visible \`:focus-visible\` outline and a focus-only skip link; narrow viewport padding and \`overflow-wrap\` for long text; reduced-motion CSS guard. The document title, labels, room conflict and finance values remain actual editable DOM text. No copyrighted images, logos, or new asset generation.
+
+**Tests:** two new Node \`node:test\` assertions inspect the actual HTML for the skip target/focus styling and narrow-screen/reduced-motion rules. GitHub files were fetched and source changes reviewed. **Node CLI NOT RUN in this tool session; browser keyboard/zoom/screen-reader checks NOT RUN; Unity/C# NOT RUN.** Run \`node --test prototypes/ui-day-one/test-day01-preview.cjs\`, then manually tab from top of \`day01-preview.html\` and activate the skip link; check 320px width and 200% zoom. No green test claim before execution.
+
+**Next:** QA 05 to verify Node and manual browser behavior; later UI Toolkit adapter after real Core read models and Unity scene. No merge to main.
