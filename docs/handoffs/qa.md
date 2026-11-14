@@ -132,3 +132,22 @@ Read README.md, AGENTS.md, docs/GDD.md, docs/ARCHITECTURE.md, docs/MECHANICS.md,
 Independent Core .NET 8 CI [run 43630164245](https://github.com/rixed318/Probably-TAU/actions/runs/43630164245) for PR #9 HEAD `0a64cc4a6a4f` **FAILED after successful C# compilation**. GameClock golden suite PASS; PCG32 and GameStateSnapshot suites FAIL with `System.OverflowException` in `Runtime/Core/Pcg32.cs:48`. The explicit `(uint)` narrowing of ulong in XSH-RR likely overflows under the standalone runner's checked arithmetic setting; algorithm requires an intentional unchecked 32-bit truncation, without relaxing checked financial arithmetic. Exact evidence and suggested scoped fix sent to Core PR #9 [QA comment](https://github.com/rixed318/Probably-TAU/pull/9#issuecomment-6883654163). **Core owner must fix/test in own branch; QA did not edit Core.**
 
 **Updated coordinator 00 blocker scoreboard:** (1) full domain GameState/ledger/receipts/payables not yet available for SaveService; (2) verified Core C# PCG32 checked-overflow regression in PR #9 (2/3 suites fail), and newly added QA Core-source audit still awaiting its own run; (3) Unity Editor/EditMode NOT RUN. **Next:** Core 01 fixes checked XSH-RR narrowing and reruns real .NET golden suites; QA 05 checks new QA Actions run and records exact pass/fail. All PRs remain Draft; no merge/main changes.
+
+
+## 2026-11-15 — AutoDev 05: PCG32 checked-narrowing regression guard (#8)
+
+**One bounded QA change:** added an explicit source-level regression assertion to the independent Python PCG32 oracle. The previous pattern audit matched the XSH-RR formula but did not require the crucial `unchecked((uint)...)` narrowing that caused actual checked .NET 8 Core CI failure [run 43630164245](https://github.com/rixed318/Probably-TAU/actions/runs/43630164245). This new guard prevents a QA green check when that exact protective cast is removed in future Core revisions.
+
+- **Commit:** `5f1622e4f74385c488c9ca6eb689e78354e3fc91` in `feature/save-6`, file `Tests/QA/test_pcg32_contract.py` only; no edits to Core or other role-owned files.
+- **Evidence before this change:** Core PR #9 latest head `ea91a3cd2bff` has the actual `unchecked((uint)...)` fix. Core .NET CI [run 43638320521](https://github.com/rixed318/Probably-TAU/actions/runs/43638320521) completed **success**. QA CI [run 43637058120](https://github.com/rixed318/Probably-TAU/actions/runs/43637058120) completed **success**, with both Python/Core-source-audit and UI/Content jobs green. These runs precede the new QA test commit; do not count them as proof the new guard passed.
+- **New test status at handoff write:** GitHub accepted the source commit; fresh QA workflow run for `5f1622e4` was not yet returned by the commit-run lookup. **New assertion NOT YET VERIFIED by CI**. It is a source-pattern guard, not a C# compile, Unity EditMode test or complete Save→Load replay.
+- **Next:** verify the QA workflow on the updated head; if failed, inspect the actual log and fix only the QA test. SaveService remains deferred until Core publishes full ledger, command receipts, payables and typed event queue.
+
+### Сводка для координатора 00 — 2026-11-15 01:58 UTC+4
+
+- **PR heads checked:** #9 Core `ea91a3cd2bff`; #10 QA before write `abcc92eb38fe`, new QA test `5f1622e4f743` and this handoff commit; #11 Content `4babe0023251`; #12 UI `581e178a83bd`; #14 ADR `ebdc4be28afd`; #17 ADR-C0-002 `bc9db999b419`. PRs #15/#16 also remain open; `main` unchanged by QA.
+- **Blocker 1:** complete stable Core domain snapshot with ledger, command fingerprint/outcome receipts, payables and typed scheduled instances is still missing; real SaveService/Save→Load replay cannot be integrated.
+- **Blocker 2:** the new QA checked-narrowing guard needs its own completed CI evidence; older green runs do not prove it.
+- **Blocker 3:** Unity Editor/EditMode and integrated gameplay tests remain **NOT RUN**.
+- **Recommended next step:** confirm new QA workflow success, then independently test the next Core Ledger/transaction slice and prepare persistence adapters only after the full DTO contract.
+- **Safety:** QA-only branch, no merge, no main mutation, no architecture approval or third-party IP authorization.
