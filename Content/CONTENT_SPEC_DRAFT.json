@@ -1,0 +1,574 @@
+{
+  "$comment": "Draft narrative/content schema for review only. NOT an executable Unity asset or approved Core API. Every financial metric, person, institution subunit, and room in this file is FICTIONAL; not actual TAU data.",
+  "meta": {
+    "specVersion": "content-draft-0.1",
+    "ownerChat": "04",
+    "issues": [
+      1,
+      7
+    ],
+    "status": "PROPOSED",
+    "runtimeReady": false,
+    "currency": "fictional RUB",
+    "moneyStorage": "integer kopecks (long; requires Core approval)",
+    "locale": "ru-RU"
+  },
+  "opening": {
+    "day": 1,
+    "budgetKopecks": 200000000,
+    "quality": 52,
+    "students": 48,
+    "staff": 50,
+    "employers": 45,
+    "public": 47,
+    "inspectionTokens": 2,
+    "weeklyRevenueKopecks": 34000000,
+    "weeklyObligationKopecks": 40000000,
+    "fictionalRoom": "Л-204",
+    "collisionSlot": "day04/14:00-17:00"
+  },
+  "fictionalNpcs": [
+    {
+      "id": "npc_irina_korneeva",
+      "role": "координатор цифровых дисциплин",
+      "motivation": "безотказные компьютеры",
+      "visitId": "D01_LAB"
+    },
+    {
+      "id": "npc_dasha_polynskaya",
+      "role": "студенческий организатор",
+      "motivation": "увидеть реальные проекты",
+      "visitId": "D01_STUDENT"
+    },
+    {
+      "id": "npc_mark_sviridov",
+      "role": "представитель вымышленной фирмы «Пульс Инжиниринг»",
+      "motivation": "найти стажёров",
+      "visitId": "D01_PARTNER"
+    }
+  ],
+  "documentTypes": [
+    {
+      "id": "DOC-01",
+      "type": "procurement_request",
+      "visible": {
+        "amountKopecks": 22000000,
+        "seats": 35,
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00"
+      },
+      "inspection": "check_seat_map",
+      "revealed": {
+        "realSeats": 20,
+        "phasedPriceKopecks": 16000000
+      }
+    },
+    {
+      "id": "DOC-02",
+      "type": "student_project_proposal",
+      "visible": {
+        "amountKopecks": 6500000,
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00",
+        "status": "request-not-booking"
+      },
+      "inspection": "check_room_calendar",
+      "revealed": {
+        "roomReserved": false,
+        "mobilePriceKopecks": 3500000
+      }
+    },
+    {
+      "id": "DOC-03",
+      "type": "partner_offer",
+      "visible": {
+        "conditionalRevenueKopecks": 12000000,
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00"
+      },
+      "inspection": "check_contract_appendix",
+      "revealed": {
+        "onsiteMentorCostKopecks": 4000000,
+        "remoteMentorCostKopecks": 2500000,
+        "remoteConditionalRevenueKopecks": 9000000
+      }
+    }
+  ],
+  "day1": {
+    "scriptedOrder": [
+      "D01_INTRO",
+      "D01_LAB",
+      "D01_STUDENT",
+      "D01_PARTNER",
+      "D01_CLASH_REVEAL",
+      "D01_ROOM",
+      "DAY_REPORT_01"
+    ],
+    "visits": [
+      {
+        "id": "D01_LAB",
+        "npcId": "npc_irina_korneeva",
+        "documentId": "DOC-01",
+        "choices": [
+          {
+            "id": "LAB-1",
+            "flag": {
+              "LAB": "full"
+            },
+            "effects": [
+              {
+                "metric": "budget",
+                "deltaKopecks": -22000000
+              },
+              {
+                "metric": "Q",
+                "delta": 3
+              },
+              {
+                "metric": "M",
+                "delta": 2
+              }
+            ]
+          },
+          {
+            "id": "LAB-2",
+            "condition": "inspected:DOC-01",
+            "flag": {
+              "LAB": "phased"
+            },
+            "effects": [
+              {
+                "metric": "budget",
+                "deltaKopecks": -16000000
+              },
+              {
+                "metric": "Q",
+                "delta": 2
+              },
+              {
+                "metric": "M",
+                "delta": 1
+              }
+            ]
+          },
+          {
+            "id": "LAB-3",
+            "flag": {
+              "LAB": "hold"
+            },
+            "effects": [
+              {
+                "metric": "M",
+                "delta": -1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "D01_STUDENT",
+        "npcId": "npc_dasha_polynskaya",
+        "documentId": "DOC-02",
+        "choices": [
+          {
+            "id": "STUDENT-1",
+            "flag": {
+              "STUDENT": "full"
+            },
+            "effects": [
+              {
+                "metric": "budget",
+                "deltaKopecks": -6500000
+              },
+              {
+                "metric": "S",
+                "delta": 3
+              },
+              {
+                "metric": "R",
+                "delta": 1
+              }
+            ]
+          },
+          {
+            "id": "STUDENT-2",
+            "flag": {
+              "STUDENT": "mobile"
+            },
+            "effects": [
+              {
+                "metric": "budget",
+                "deltaKopecks": -3500000
+              },
+              {
+                "metric": "S",
+                "delta": 1
+              }
+            ]
+          },
+          {
+            "id": "STUDENT-3",
+            "flag": {
+              "STUDENT": "hold"
+            },
+            "effects": [
+              {
+                "metric": "S",
+                "delta": -2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "D01_PARTNER",
+        "npcId": "npc_mark_sviridov",
+        "documentId": "DOC-03",
+        "choices": [
+          {
+            "id": "PARTNER-1",
+            "flag": {
+              "PARTNER": "onsite"
+            },
+            "effects": [
+              {
+                "metric": "E",
+                "delta": 2
+              }
+            ],
+            "conditionalRevenueKopecks": 12000000,
+            "revenueEarliestDay": 5,
+            "requirements": [
+              "E03_mentor_paid",
+              "E07_delivered"
+            ]
+          },
+          {
+            "id": "PARTNER-2",
+            "condition": "inspected:DOC-03",
+            "flag": {
+              "PARTNER": "remote"
+            },
+            "effects": [
+              {
+                "metric": "E",
+                "delta": 1
+              }
+            ],
+            "conditionalRevenueKopecks": 9000000,
+            "revenueEarliestDay": 5,
+            "requirements": [
+              "E03_mentor_paid",
+              "E07_delivered"
+            ]
+          },
+          {
+            "id": "PARTNER-3",
+            "flag": {
+              "PARTNER": "decline"
+            },
+            "effects": [
+              {
+                "metric": "E",
+                "delta": -2
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "roomClaimPredicate": "LAB in [full,phased] + STUDENT==full + PARTNER==onsite (each counts as 1)",
+    "roomChoices": {
+      "ifMultiple": [
+        {
+          "id": "ROOM-1",
+          "priority": "lab"
+        },
+        {
+          "id": "ROOM-2",
+          "priority": "student"
+        },
+        {
+          "id": "ROOM-3",
+          "priority": "partner"
+        },
+        {
+          "id": "ROOM-4",
+          "priority": "unresolved"
+        }
+      ],
+      "ifAtMostOne": [
+        {
+          "id": "ROOM-AUTO",
+          "priority": "only-request-or-none"
+        }
+      ]
+    },
+    "endOfDay": {
+      "mandatoryNextId": "E02",
+      "noWeeklyBilling": true,
+      "cliffhanger": "На приём записались двое. Оба уверены, что их уже поддержали."
+    }
+  },
+  "eventManifest": [
+    {
+      "id": "E02",
+      "day": 2,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E02-A",
+        "E02-B",
+        "E02-C",
+        "E02-D"
+      ],
+      "fallback": "0-1 room claim",
+      "feeds": [
+        "E05",
+        "E06",
+        "E07"
+      ]
+    },
+    {
+      "id": "E03",
+      "day": 2,
+      "kind": "desk_task",
+      "required": true,
+      "choices": [
+        "E03-A",
+        "E03-B",
+        "E03-C",
+        "E03-D"
+      ],
+      "fallback": "PARTNER=decline",
+      "feeds": [
+        "E05",
+        "E07"
+      ]
+    },
+    {
+      "id": "E04",
+      "day": 3,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E04-A",
+        "E04-B",
+        "E04-C",
+        "E04-D",
+        "E04-E",
+        "E04-F"
+      ],
+      "fallback": "LAB=hold",
+      "feeds": [
+        "E08",
+        "E11"
+      ]
+    },
+    {
+      "id": "E05",
+      "day": 3,
+      "kind": "desk_task",
+      "required": true,
+      "choices": [
+        "E05-A",
+        "E05-B",
+        "E05-C",
+        "E05-D"
+      ],
+      "fallback": "room already resolved",
+      "feeds": [
+        "E06",
+        "E07"
+      ]
+    },
+    {
+      "id": "E06",
+      "day": 4,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E06-A",
+        "E06-B",
+        "E06-C",
+        "E06-D",
+        "E06-E",
+        "E06-F",
+        "E06-G",
+        "E06-H"
+      ],
+      "fallback": "STUDENT=hold",
+      "feeds": [
+        "E08",
+        "E13"
+      ]
+    },
+    {
+      "id": "E07",
+      "day": 4,
+      "kind": "desk_task",
+      "required": true,
+      "choices": [
+        "E07-A",
+        "E07-B",
+        "E07-C",
+        "E07-D",
+        "E07-E",
+        "E07-F"
+      ],
+      "fallback": "PARTNER=decline",
+      "feeds": [
+        "E09",
+        "E10"
+      ]
+    },
+    {
+      "id": "E08",
+      "day": 5,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E08-A",
+        "E08-B",
+        "E08-C"
+      ],
+      "fallback": "always",
+      "feeds": [
+        "E10",
+        "E12",
+        "E14"
+      ]
+    },
+    {
+      "id": "E09",
+      "day": 5,
+      "kind": "endday_finance",
+      "required": true,
+      "choices": [
+        "E09-A",
+        "E09-B"
+      ],
+      "fallback": "always",
+      "feeds": [
+        "E10"
+      ]
+    },
+    {
+      "id": "E10",
+      "day": 6,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E10-A",
+        "E10-B",
+        "E10-C"
+      ],
+      "fallback": "no partner delivery",
+      "feeds": [
+        "P02",
+        "E12"
+      ]
+    },
+    {
+      "id": "E11",
+      "day": 7,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E11-A",
+        "E11-B",
+        "E11-C"
+      ],
+      "fallback": "P01 delayed/hold",
+      "feeds": [
+        "E13",
+        "E14"
+      ]
+    },
+    {
+      "id": "E12",
+      "day": 8,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E12-A",
+        "E12-B",
+        "E12-C"
+      ],
+      "fallback": "all outcomes possible",
+      "feeds": [
+        "E13",
+        "E14"
+      ]
+    },
+    {
+      "id": "E13",
+      "day": 9,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E13-A",
+        "E13-B",
+        "E13-C"
+      ],
+      "fallback": "no prior achievements",
+      "feeds": [
+        "E14"
+      ]
+    },
+    {
+      "id": "E14",
+      "day": 10,
+      "kind": "key_visit",
+      "required": true,
+      "choices": [
+        "E14-A",
+        "E14-B",
+        "E14-C"
+      ],
+      "fallback": "always",
+      "feeds": [
+        "CHAPTER2_HOOK"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "P01",
+      "title": "20 работающих мест",
+      "launchChoices": [
+        "LAB-1",
+        "LAB-2",
+        "E04-E"
+      ],
+      "launchCostAlreadyPaidOnChoice": true,
+      "upkeepKopecks": 1200000,
+      "upkeepRule": "first full workweek after operational",
+      "completeOnlyIf": "real installation slot resolved"
+    },
+    {
+      "id": "P02",
+      "title": "Мастерская реальных задач",
+      "unlockBy": "E10 completed",
+      "launchCostStandardKopecks": 18000000,
+      "launchCostAlternativeKopecks": 21000000,
+      "requiredFullEndDaysAfterLaunch": 3,
+      "upkeepKopecks": 1500000,
+      "upkeepRule": "first full workweek after completed"
+    }
+  ],
+  "validationRules": [
+    "no two visit choices per same visit",
+    "inspections cost at most 2 tokens in Normal and cannot be re-charged",
+    "all money changes through atomic ledger with idempotency key",
+    "no partner revenue before delivered event and day5",
+    "no simultaneous on-site activities in occupied room without funded alternative",
+    "event fallback exists for reject-all path",
+    "one key plot visit per day",
+    "flags use content aliases pending Core contract approval",
+    "all results deterministic for same state and saved RNG"
+  ]
+}
