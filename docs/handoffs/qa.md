@@ -155,3 +155,21 @@ Independent Core .NET 8 CI [run 43630164245](https://github.com/rixed318/Probabl
 
 ### Post-handoff CI verification (same QA task)
 GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/actions/runs/43645584031), triggered by QA test commit `5f1622e4f74385c488c9ca6eb689e78354e3fc91`, subsequently reached **completed / success**. This is now real CI evidence that the new checked-narrowing source assertion passed against the Core branch checked out by the QA workflow; it does **not** prove Unity Editor or integration tests. Earlier 'NOT YET VERIFIED' statement above records the state at the initial handoff write, not the final result.
+
+
+## 2026-11-15 — AutoDev 05: independent Core Ledger .NET QA gate (#8)
+
+**One bounded QA task:** added a read-only `core-ledger-regression` job to the existing QA offline workflow. The job checks out the actual `feature/core-2` into `core/`, prints its full Git SHA, installs .NET 8, and runs `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`. Core's current runner explicitly calls **four** suites including `LedgerGoldenTests.RunAll()`, which checks checked Int64 arithmetic, posting uniqueness, overdraft rejection and immutability. This is independent cross-branch regression coverage, **not** a Unity Editor build, SaveService or merged integration test.
+
+- **QA-owned workflow commit:** `eb7cd6c84f6321c06607cc82e7a0b36a49b75476` in `feature/save-6`; changed `.github/workflows/qa-offline.yml` only.
+- **Evidence:** actual Core source `Runtime/Core/LedgerSnapshot.cs`, `Tests/Core/LedgerGoldenTests.cs` and runner `Tests/Core/Standalone/Program.cs` inspected via GitHub. PR #9 Core HEAD `7844ab6ace3f55ec778d92c2431554fa28702109` at inspection. QA branch prior HEAD `18d31596b13e6de3649f10b412afd6458c73b7ea`.
+- **Execution:** GitHub accepted the workflow commit. Immediate commit-workflow lookup returned **zero runs**, so the new job result is **NOT VERIFIED**. Local `dotnet` absent; `git ls-remote` failed with DNS `Could not resolve host: github.com`. Consequently no new C# test execution is claimed from this run. Earlier Core CI green results are not proof of this newly added QA job. Unity Editor/EditMode: **NOT RUN**.
+- **Scope/safety:** no changes to Core source, no alternative GameState, no dependencies or secrets in QA code, `contents: read`, checkout `persist-credentials: false`, no `main` writes or merges. PR #10 remains Draft.
+
+### Сводка для координатора 00 — 2026-11-15 03:35 UTC+4
+
+- **Latest PR heads observed:** #9 Core `7844ab6ace3f`, #10 QA `18d31596b13e` before new QA workflow `eb7cd6c84f63` and this handoff, #11 Content `fe29d7617149`, #12 UI `003acfde7ab6`, #14 C0 ADR `ebdc4be28afd`, #17 ADR-C0-002 `bc9db999b419`. #15 and #16 remain open; all checked PRs Draft, no merges. `main` README/AGENTS/CHAT_WORKFLOW reviewed; QA did not modify main.
+- **Blocker 1:** complete stable Core GameState snapshot with ledger integration, command fingerprint/outcome receipts, payables and typed scheduled instances is still absent; real SaveService and Save→Load replay remain deferred.
+- **Blocker 2:** new QA .NET ledger regression workflow needs a completed Actions run; no green claim before log verification.
+- **Blocker 3:** Unity Editor / EditMode and integrated gameplay tests remain **NOT RUN**.
+- **Recommended next step:** inspect QA workflow run triggered by `eb7cd6c84f63` and record actual Core SHA and four-suite pass/fail. If green, request Core 01 complete transaction/snapshot contracts before persistence implementation.
