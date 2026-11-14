@@ -151,3 +151,7 @@ Independent Core .NET 8 CI [run 43630164245](https://github.com/rixed318/Probabl
 - **Blocker 3:** Unity Editor/EditMode and integrated gameplay tests remain **NOT RUN**.
 - **Recommended next step:** confirm new QA workflow success, then independently test the next Core Ledger/transaction slice and prepare persistence adapters only after the full DTO contract.
 - **Safety:** QA-only branch, no merge, no main mutation, no architecture approval or third-party IP authorization.
+
+
+### Post-handoff CI verification (same QA task)
+GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/actions/runs/43645584031), triggered by QA test commit `5f1622e4f74385c488c9ca6eb689e78354e3fc91`, subsequently reached **completed / success**. This is now real CI evidence that the new checked-narrowing source assertion passed against the Core branch checked out by the QA workflow; it does **not** prove Unity Editor or integration tests. Earlier 'NOT YET VERIFIED' statement above records the state at the initial handoff write, not the final result.
