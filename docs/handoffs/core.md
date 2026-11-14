@@ -165,3 +165,14 @@
 **Verification:** GitHub accepted the source and workflow commits. Initial PR-associated workflow query for `7532f2de` returned **zero runs**; **C# compile and golden tests NOT YET VERIFIED**, do not claim success. The independent QA Python workflow success is not a C# build. Unity Editor/Unity EditMode **NOT RUN**. Follow up by querying GitHub Actions for the latest branch commit and inspecting the job logs; if CI fails, fix only the failing Core test infrastructure in this branch.
 
 **Next:** once real .NET 8 compile and all three suites pass, begin a bounded append-only Ledger invariant implementation under #3, followed by atomic CommandProcessor/AdvanceDay. Keep PR #9 Draft; no merge to main.
+
+
+## 12. AutoDev 01 — checked .NET 8 PCG32 overflow regression (15.11.2026)
+
+**Issue:** #2. **Scope:** one minimal corrective Core change, no contract change, no Unity scaffold, no changes to other roles. QA 05 independently confirmed real GitHub Actions [run 43630164245](https://github.com/rixed318/Probably-TAU/actions/runs/43630164245) failed: GameClock PASS, PCG32 and GameStateSnapshot FAIL with `System.OverflowException` at `Runtime/Core/Pcg32.cs:48`. The runner uses `CheckForOverflowUnderflow=true`.
+
+**Root cause and fix:** PCG-XSH-RR 64/32 intentionally discards upper bits of its 64-bit xorshifted intermediate when converting to `uint`. Under checked compilation, the implicit project-wide checked context made the explicit `(uint)` cast throw for large values. In `Pcg32.NextUInt32()`, changed **only** this narrowing conversion to `unchecked((uint)(...))`. The existing `unchecked` state transition remains unchanged; checked overflow protection remains enabled project-wide, including future money calculations. The existing published PCG32 golden vector, 128-step Save→Load replay, and GameStateSnapshot PCG replay serve as regression cases in the three-suite runner.
+
+**Commit:** `1c51de1bfbd0b135a8d6f2a7f60a2e2b924c1703` in `feature/core-2`. **Validation at commit time:** GitHub source write succeeded; actual .NET 8 workflow result must be queried on the latest branch commit. Unity Editor/EditMode NOT RUN. If CI still fails, inspect real job logs and make a separate bounded correction; do not declare green without a completed success run.
+
+**Next:** verify Core .NET 8 workflow on this branch; then implement a bounded append-only Ledger invariant under Issue #3 (checked Int64, unique posting IDs, balance = opening + sum ledger), before CommandProcessor. PR #9 remains Draft, no merge to main or Issue closure.
