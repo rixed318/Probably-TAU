@@ -162,8 +162,10 @@
           if(command.type==="ShowDayTwo") {
             if(!reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите день."});
             var report = reports[current];
+            var staffTrust = views[current].staffTrust;
+            var factions = views[current].factions;
             current="dayTwo";
-            return Promise.resolve({ok:true,view:Object.assign({},views.dayTwo,{budget:report.balance,staffTrust:views[command.from || "approved"].staffTrust||views.approved.staffTrust})});
+            return Promise.resolve({ok:true,view:Object.assign({},views.dayTwo,{budget:report.balance,staffTrust:staffTrust,factions:factions})});
           }
           if(command.documentId!=="TAU-001") return Promise.resolve({ok:false,error:"Заявка не найдена."});
           var next = paths[current] && paths[current][command.type];
