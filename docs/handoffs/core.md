@@ -134,3 +134,18 @@
 **Verification:** Reviewed formulas against C0-v2 section 5 and added a standalone `RunAll()` suite covering DayIndex 0..999, first two weekly closings, negative inputs and overflow boundaries. **C# tests NOT RUN**, Unity Editor tests **NOT RUN**; no claim of compilation. No new packages. QA 05 should invoke `GameClockGoldenTests.RunAll()` when a C# test environment becomes available.
 
 **Next:** typed `GameClockState` and integration into `GameState`/CommandProcessor only after coordinating public DTO layout with QA 05. Do not treat these helpers as `AdvanceDay` implementation or close Issue #2.
+
+
+## 10. AutoDev 01 — minimal GameState snapshot v1 slice (14.11.2026)
+
+**Scope:** one bounded implementation task for Issue #2, C0-v2; no Unity scaffold, no mutable GameState, no CommandProcessor, no ledger posting.
+
+**Files:** `Runtime/Core/GameStateSnapshotDto.cs`, `Tests/Core/GameStateSnapshotGoldenTests.cs`.
+**Commits:** `2044039ef8cf618c94a623c46b43888884a81c28` (DTO), `f92da3ae10cca5bb1ac710f55266c2f5348d7479` (tests), plus this handoff commit.
+**Contract:** immutable-at-public-boundary snapshot slice with SchemaVersion=1, revision, campaign/seed/difficulty/content, 0-based day and Finished, five 0..100 Q/S/M/E/R metrics, nonnegative Int64 opening/current cash, named PCG32 streams with exact state/increment, unique processed command IDs/day keys and pending/completed event IDs. Duplicate IDs and pending∩completed are rejected. Input lists are copied, and exposed as read-only collections. The snapshot has no IO and is not an active mutable session state.
+
+**Known incomplete:** this intentionally is NOT a full C0 GameState/Save wire format. Receipts currently contain IDs only (no canonical fingerprint/outcome); Economy ledger/obligations/payables, domain events, day reports, flags, and owner-specific typed section payloads are not implemented. Do NOT wire this directly as final SaveEnvelope. A future additive DTO revision or dedicated complete GameState snapshot is required; QA/00 must review layout before persistence integration. Constructor rejects invalid metric values (does not silently clamp); transactional metric delta clamping belongs to CommandProcessor.
+
+**Tests:** standalone `GameStateSnapshotGoldenTests.RunAll()` checks metrics, cash, duplicate IDs, pending/completed overlap, input alias isolation, read-only collection, exact PCG replay and invalid increment. **C# execution NOT RUN; Unity Editor NOT RUN** (dotnet/csc/mcs/Unity unavailable). Source reviewed statically only.
+
+**Next:** request QA #10 and NPC #16 feedback on IDs and pending-event snapshot semantics; then implement a complete receipt and ledger-aware domain snapshot in a separate bounded pass, before SaveService integration. PR #9 stays Draft; no merge/main changes.
