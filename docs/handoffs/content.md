@@ -4,7 +4,7 @@
 **Исполнитель:** чат 04 — геймдизайн/сценарии  
 **Ветка:** feature/content-7  
 **Issue:** [#7 — Content](https://github.com/rixed318/Probably-TAU/issues/7); связанный [#1 — первый день](https://github.com/rixed318/Probably-TAU/issues/1)  
-**PR:** открыть из этой ветки в main как DRAFT; координатор 00 утверждает содержание и отвечает за merge.  
+**PR:** [#11 — Первый день, 13 событий и баланс (DRAFT)](https://github.com/rixed318/Probably-TAU/pull/11); координатор 00 утверждает содержание и отвечает за merge.  
 **Status:** content proposal 0.1, не готовые Runtime/Unity assets.
 
 ## Что сделано
