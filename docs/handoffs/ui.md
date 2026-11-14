@@ -118,3 +118,20 @@ python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
 **Handoff to QA 05:** Run both commands in a checked-out `feature/ui-5` workspace and report exact failures; if all pass, consider including this offline art validator in the repository's CI after coordinator review.
 
 **Design note:** Owner selected Art Direction A and 320×180 in the separate planning discussion; this pass does not change G0 status or manifest asset approval because the corresponding sign-off has not yet been reconciled into GitHub. PR #11 remains draft narrative content. Do not bulk-generate or claim approved sprites. PR #12 remains Draft; no merge into main.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-14 · Issue #5 (day transition guard)
+
+**Scope:** mock-only day-transition regression. `ShowDayTwo` now requires successful `AdvanceDay`; `AdvanceDay` can succeed only once per gateway, and post-advance decisions/inspections are rejected. A fresh gateway still starts on day one. No GameState/Core or narrative content changes.
+
+**Commits:** `bbca200fe260a19b14a77aa4cfe53c00cd750dd0` (gateway), `36a0efca6cdba6927b080d91c227c40d7317f231` (tests), branch `feature/ui-5`, Draft PR #12.
+
+**Files:** `prototypes/ui-day-one/fixtures.js`, `prototypes/ui-day-one/test-fixtures.cjs`, this handoff.
+
+**Regression cases:** day-two before decision, after decision but before advance, after successful advance, duplicate AdvanceDay, no mutation after advance, approve/reject/defer path checks. Existing clarified ledger assertions retained. `dayAdvanced` is a private mock gateway flag, not an authoritative GameState property.
+
+**Test status:** NOT RUN — GitHub connector can edit source but cannot execute Node. Run `node --test prototypes/ui-day-one/test-fixtures.cjs` on actual checkout; QA 05 should confirm. Browser/Unity tests NOT RUN. No claim of passed tests.
+
+**Next:** QA 05 to run Node tests, 00 to review PR #12. Later work: approved direction A / 320×180 controlled sample assets, without bulk generation or real-person marks.
