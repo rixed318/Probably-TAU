@@ -5,7 +5,7 @@
 **Work branch:** feature/ui-5  
 **Base:** main (created from d673322cd9d0d366a27a57b81056504dfb26c731)  
 **State:** standalone interactive browser prototype + UI/UX proposal, waiting for coordinator 00 review.  
-**PR:** will be linked after submission; check branch history for latest commit.
+**PR:** https://github.com/rixed318/Probably-TAU/pull/12 (draft; do not merge without owner approval).
 
 ## Goal
 
