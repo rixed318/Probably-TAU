@@ -94,3 +94,27 @@ Files produced in this same UI branch:
 **Dependency handoff:** Chat 04 to review character roles/visual cues and blank document shells; coordinator 00 to approve one direction A/B/C and 320×180 world grid; Chat 01 to provide Unity scaffold later; QA 05 to run importer and visual tests. No official TAU logo/real person photograph approved.
 
 **Verification:** Static GitHub files verified, offline tool included; actual artist sample sprites, Unity import, browser PlayMode, legal approval and native raster checks not yet performed.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-14 · Issue #13 (manifest validator regression)
+
+**Single scoped task:** Add offline negative/positive regression coverage to the existing manifest validator, without changing manifest semantics, Core, Unity or the HTML prototype.
+
+**Commit:** `d47cbbc7c424c57f7d00eee9e313f00df22668ff` on `feature/ui-5`.  
+**New file:** `tools/art/test_validate_manifest.py` (8 Python stdlib `unittest` cases).
+
+Cases: current CSV valid; duplicate asset ID; missing P0 critical ID; wrong 320x180 world size; out-of-bounds anchor; approved asset without provenance; invalid Unity target; invalid frame count. The tests copy the real CSV into a temporary file, mutate one field per negative case and invoke the existing `validate(path)`; no production manifest or art data is modified.
+
+**Execution status:** NOT RUN. Attempted to download the three GitHub source files to a local Python runtime for executing the tests, but this execution container cannot resolve `raw.githubusercontent.com` (curl exit 6). The GitHub connector allowed writing the new test file but does not execute Python. Therefore **0/8 tests are claimed passed**. No Unity Editor, browser visual test or PNG QA performed. No assets generated.
+
+**Reproduction (Python 3.9+):**
+```sh
+python3 tools/art/validate_manifest.py
+python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
+```
+
+**Handoff to QA 05:** Run both commands in a checked-out `feature/ui-5` workspace and report exact failures; if all pass, consider including this offline art validator in the repository's CI after coordinator review.
+
+**Design note:** Owner selected Art Direction A and 320×180 in the separate planning discussion; this pass does not change G0 status or manifest asset approval because the corresponding sign-off has not yet been reconciled into GitHub. PR #11 remains draft narrative content. Do not bulk-generate or claim approved sprites. PR #12 remains Draft; no merge into main.
