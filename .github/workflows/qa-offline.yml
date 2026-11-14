@@ -34,3 +34,41 @@ jobs:
           else
             echo 'SKIP source-pattern audit: Core C# file is absent in this branch.'
           fi
+
+  cross-branch-offline:
+    name: UI and Content static regression (not integration)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout UI branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: feature/ui-5
+          path: ui
+          persist-credentials: false
+      - name: Checkout Content branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: feature/content-7
+          path: content
+          persist-credentials: false
+      - name: Record exact source revisions
+        shell: bash
+        run: |
+          echo "UI_SHA=$(git -C ui rev-parse HEAD)"
+          echo "CONTENT_SHA=$(git -C content rev-parse HEAD)"
+      - name: UI Node mock regression
+        run: node --test prototypes/ui-day-one/test-fixtures.cjs
+        working-directory: ui
+      - name: UI art manifest validation
+        run: python3 tools/art/validate_manifest.py
+        working-directory: ui
+      - name: UI art validator unit tests
+        run: python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
+        working-directory: ui
+      - name: Content typed event hooks validation
+        run: node Content/validate-event-hooks.cjs
+        working-directory: content
+      - name: Content cross-file consistency validation
+        run: node Content/validate-content-consistency.cjs
+        working-directory: content
