@@ -12,14 +12,16 @@ Define deterministic queue ordering, idempotency and boundaries for *scheduled c
 - A receipt is identified by stable `instanceId + resolutionKind` (or a Core-approved equivalent). Replaying a committed command or restoring a save must not emit a second receipt, metric effect, scheduled child, or ledger posting.
 - Scheduled financial effects are *intents*, not direct mutations: only Core Economy/Ledger posts checked Int64 kopecks with unique posting keys. NPC code never modifies cash, payables or metrics directly.
 
-## Canonical deterministic ordering
-For eligible events at the current closing `DayIndex = n`, Core takes a **fixed queue snapshot at transition start**. Order by:
-1. `dueDayIndex` ascending;
-2. `phase` in a **Core-owned explicit order** (never alphabetic; for v1 scheduled due outcomes only; `endday_finance` is a separate Core settlement phase);
-3. `creationOrdinal` ascending;
-4. `instanceId` ordinal, case-sensitive as final tie-break.
+## Reconciliation proposal N0 → C0-v2 (pending Core 01 / coordinator 00 review)
+**C0-v2 takes precedence.** The earlier N0 order (`dueDayIndex → phase → creationOrdinal → instanceId`) conflicts with C0-v2 and is **withdrawn as an implementation recommendation**. The proposed mapping below is **not a newly approved Core API**; see PR #16 discussion.
 
-Items with `dueDayIndex > n` remain queued. Any new item created during this transition with `dueDayIndex <= n` is **not executed recursively** in the same AdvanceDay. Its handling (reject invalid due date or defer to next transition) must be defined by Core before executable integration. No reliance on dictionary iteration, locale-sensitive sorting, `DateTime.Now`, `Guid.NewGuid`, or unseeded randomness.
+- **Stage/phase:** Core's existing AdvanceDay stages are `finalize → tick projects → due outcomes → ledger settlement → metrics/terminal`. Content `triggerPhase` is a routing alias, **not** a sort key in the due queue. E09's `EndDay-settlement` is presentation/report content, never a second financial executor.
+- **Due queue order:** `dueDayIndex ASC → priority DESC → stableEventId ASC` (ordinal, case-sensitive), matching C0-v2. Propose `stableEventId = instanceId` because one `definitionId` may have multiple instances. Core must explicitly confirm this interpretation. `creationOrdinal` remains useful for allocation/audit but **does not** break ties.
+- **Priority:** Core-owned persisted signed integer on a scheduled instance or a versioned definition mapping; defaulting to 0 is only a proposal pending Core confirmation. No priority inferred from JSON array order, visit kind, or `phase`.
+- **Snapshot boundary:** freeze due candidates **at the start of the due-outcomes stage, after project ticks**, before resolving the first due item; this differs from the old “transition start” wording. New child events with `dueDayIndex <= closing DayIndex` cannot execute recursively during that transition. Core must decide reject versus defer and receipt semantics.
+- **Invariant:** IDs, due day and priority must survive Save→Load. Never depend on dictionary iteration, locale-sensitive sorting, `DateTime.Now`, `Guid.NewGuid`, or unseeded randomness.
+
+**BLOCKED for runtime implementation:** Core 01 must approve stableEventId mapping, priority ownership/default, due-stage snapshot boundary and invalid child due-date policy; coordinator 00 must accept any public-contract change. Independent content ID/day validation is safe before that decision.
 
 ## Resolve / schedule transaction
 1. Read the immutable snapshot, select eligible candidates in stable order, and evaluate content predicates against the same documented phase snapshot.
@@ -40,7 +42,7 @@ Items with `dueDayIndex > n` remain queued. Any new item created during this tra
 | Test | Expected result |
 |---|---|
 | N0-01: same seed, content version, ordered commands | identical visitor IDs, queue order, branch outcomes, receipts |
-| N0-02: two events same due index, different creation ordinal | stable ordinal order independent of insertion/dictionary order |
+| N0-02: two events same due index, different priority or instanceId | C0 priority-descending then stable-ID-ascending order independent of insertion/dictionary order |
 | N0-03: same `CommandId` applied twice | one event resolution, one child schedule, one posting |
 | N0-04: rejected event due to invalid resources | no RNG draw committed, no state mutation |
 | N0-05: event schedules child due today | no recursive execution in same transition |
