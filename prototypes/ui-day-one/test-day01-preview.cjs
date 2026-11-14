@@ -1,0 +1,52 @@
+"use strict";
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const vm = require("node:vm");
+const { model, getSummary, getRoomConflictNotice, formatRub } = require("./day01-read-model.cjs");
+const source = fs.readFileSync(path.join(__dirname, "day01-preview.js"), "utf8");
+const html = fs.readFileSync(path.join(__dirname, "day01-preview.html"), "utf8");
+
+function element(tag) {
+  return {
+    tag, children: [], attributes: {}, textContent: "", className: "",
+    appendChild(child) { this.children.push(child); return child; },
+    replaceChildren() { this.children = []; },
+    setAttribute(key, value) { this.attributes[key] = value; }
+  };
+}
+function run() {
+  const nodes = Object.fromEntries(["day01-summary", "day01-conflicts", "day01-documents"].map(id => [id, element("div")]));
+  const document = { getElementById: id => nodes[id], createElement: element };
+  const window = { document, TAU_DAY01_READ_MODEL: { model, getSummary, getRoomConflictNotice, formatRub } };
+  vm.runInNewContext(source, { window, document }, { filename: "day01-preview.js" });
+  return nodes;
+}
+test("standalone page loads canonical fixture, not legacy mock gateway", () => {
+  assert.match(html, /src="\.\/day01-read-model\.cjs"/);
+  assert.match(html, /src="\.\/day01-preview\.js"/);
+  assert.doesNotMatch(html, /src="\.\/fixtures\.js"/);
+  assert.doesNotMatch(html, /src="\.\/app\.js"/);
+});
+test("renders one accessible conflict and three unconfirmed document requests", () => {
+  const nodes = run();
+  assert.match(nodes["day01-summary"].textContent, /2 000 000 ₽/);
+  assert.equal(nodes["day01-conflicts"].children.length, 1);
+  const alert = nodes["day01-conflicts"].children[0];
+  assert.equal(alert.attributes.role, "status");
+  assert.match(alert.children[1].textContent, /DOC-01, DOC-02, DOC-03/);
+  assert.match(alert.children[2].textContent, /Ни одна не является подтверждённой бронью/);
+  assert.equal(nodes["day01-documents"].children.length, 3);
+  assert.equal(nodes["day01-documents"].children.every(x => x.children.some(p => p.textContent.includes("Не подтверждено"))), true);
+});
+test("conditional partner income is labelled future and not credited", () => {
+  const nodes = run();
+  const partner = nodes["day01-documents"].children[2];
+  assert.match(partner.children.at(-1).textContent, /120 000 ₽.*не начислен/);
+  assert.equal(model.documents[2].recognizedRevenueKopecks, "0");
+});
+test("renderer does not use HTML injection or mutate gateway", () => {
+  assert.doesNotMatch(source, /innerHTML|outerHTML|eval\s*\(/);
+  assert.doesNotMatch(source, /\.execute\s*\(|createGateway|GameState|LedgerService/);
+});
