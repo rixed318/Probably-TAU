@@ -176,3 +176,19 @@
 **Commit:** `1c51de1bfbd0b135a8d6f2a7f60a2e2b924c1703` in `feature/core-2`. **Validation at commit time:** GitHub source write succeeded; actual .NET 8 workflow result must be queried on the latest branch commit. Unity Editor/EditMode NOT RUN. If CI still fails, inspect real job logs and make a separate bounded correction; do not declare green without a completed success run.
 
 **Next:** verify Core .NET 8 workflow on this branch; then implement a bounded append-only Ledger invariant under Issue #3 (checked Int64, unique posting IDs, balance = opening + sum ledger), before CommandProcessor. PR #9 remains Draft, no merge to main or Issue closure.
+
+
+## 13. AutoDev 01 — immutable Ledger snapshot slice (15.11.2026)
+
+**Scope:** one bounded Core/Economy prerequisite for Issue #3, approved Gate C0-v2 / ADR-C0-001. No CommandProcessor, GameState mutation, payable/obligation policy, settlement or Unity project. This is a pure C# *preparation* API; it must not be mistaken for a fully atomic domain transaction.
+
+**Files/commits:**
+- `Runtime/Core/LedgerSnapshot.cs` commit `0e330922`: immutable append-only ledger snapshot with stable posting/source IDs, checked signed Int64 kopecks, no zero-value entries, unique posting IDs, nonnegative cash. Constructor copies entries, validates every intermediate balance and detects overflow. `WithPosting` returns a fresh snapshot or throws without mutating the original.
+- `Tests/Core/LedgerGoldenTests.cs` commits `badfe830`, `746e67ce`: golden checks for balance arithmetic, input alias isolation, read-only entries, duplicate posting IDs, insufficient cash, checked overflow, invalid IDs/zero postings, and unchanged original after rejected append.
+- `Tests/Core/Standalone/Program.cs` commit `72abba2a`: registers fourth golden suite. Existing csproj glob includes all `Runtime/Core/*.cs` and `Tests/Core/*GoldenTests.cs` automatically.
+
+**Important boundaries:** The immutable LedgerSnapshot is NOT the owner of command-level commit, durable receipts, mandatory-payable handling, or idempotent replay of the same CommandId. A duplicate PostingId is rejected rather than silently re-applied; CommandProcessor will map duplicate commands to prior receipts. OpeningBalance is not a fabricated ledger posting. SaveEnvelope must not persist this alone as the full GameState.
+
+**Verification:** previous Core .NET 8 workflow run [43638320521](https://github.com/rixed318/Probably-TAU/actions/runs/43638320521) succeeded for the earlier three-suite code. The newly added Ledger suite must be evaluated on a **new** workflow run; do not inherit old PASS. Unity Editor/EditMode NOT RUN.
+
+**Next:** verify new Core .NET run; address real failures if any. Then implement atomic command transaction/receipt layer, integrating ledger and GameState only after QA #10 review. No main write, merge or Issue closure.
