@@ -12,6 +12,7 @@
   var dayAdvanced = false;
   var lastReport = null;
   var toastTimer = null;
+  var requestSerial = 0;
   function byId(id) { return document.getElementById(id); }
   function put(id, value) { var node = byId(id); if(node) node.textContent = value; }
   function empty(node) { while(node.firstChild) node.removeChild(node.firstChild); }
@@ -110,7 +111,7 @@
     if(!vm||vm.dayTwo) {showToast("Сценарий первого дня уже завершён.");return;}
     working=true; render(vm);
     try {
-      var result=await gateway.execute({type:type,documentId:"TAU-001",requestId:"ui-mock-001"});
+      var result=await gateway.execute({type:type,documentId:"TAU-001",requestId:"ui-mock-"+(++requestSerial)});
       if (!result.ok) {showToast(result.error||"Команда отклонена.");return;}
       if(result.view) render(result.view);
       if(["ApproveProposal","RejectProposal","DeferProposal"].indexOf(type)>=0){
