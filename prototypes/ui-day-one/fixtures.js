@@ -150,6 +150,7 @@
   window.TAU_UI_MOCK = {
     createGateway:function(){
       var current = "start";
+      var dayAdvanced = false;
       return {
         queryDashboard:function(){ return Promise.resolve(views[current]); },
         execute:function(command){
@@ -157,16 +158,19 @@
           if(current==="dayTwo") return Promise.resolve({ok:false,error:"День 2 не реализован в демонстрации."});
           if(command.type==="AdvanceDay") {
             if(!reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите рассмотрение заявки."});
+            if(dayAdvanced) return Promise.resolve({ok:false,error:"День уже завершён."});
+            dayAdvanced = true;
             return Promise.resolve({ok:true,view:views[current],report:reports[current]});
           }
           if(command.type==="ShowDayTwo") {
-            if(!reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите день."});
+            if(!dayAdvanced || !reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите день."});
             var report = reports[current];
             var staffTrust = views[current].staffTrust;
             var factions = views[current].factions;
             current="dayTwo";
             return Promise.resolve({ok:true,view:Object.assign({},views.dayTwo,{budget:report.balance,staffTrust:staffTrust,factions:factions})});
           }
+          if(dayAdvanced) return Promise.resolve({ok:false,error:"День завершён. Перейдите к следующему дню."});
           if(command.documentId!=="TAU-001") return Promise.resolve({ok:false,error:"Заявка не найдена."});
           var next = paths[current] && paths[current][command.type];
           if(!next) return Promise.resolve({ok:false,error:"Действие недоступно на текущем этапе."});
