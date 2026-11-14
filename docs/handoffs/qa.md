@@ -125,3 +125,10 @@ Read README.md, AGENTS.md, docs/GDD.md, docs/ARCHITECTURE.md, docs/MECHANICS.md,
 - **Blocker 3:** Unity Editor / EditMode integration tests remain **NOT RUN**.
 - **Recommended next step:** inspect new QA run (real Core source audit) and Core's own .NET CI logs; triage actual failures, then add targeted Save/Load tests only when Core publishes a complete snapshot contract.
 - **Safety:** PR #10 remains Draft. No merge, no `main` writes, no other branch mutation or shared architecture approval.
+
+
+### QA 05 — additional verified Core CI finding (2026-11-15)
+
+Independent Core .NET 8 CI [run 43630164245](https://github.com/rixed318/Probably-TAU/actions/runs/43630164245) for PR #9 HEAD `0a64cc4a6a4f` **FAILED after successful C# compilation**. GameClock golden suite PASS; PCG32 and GameStateSnapshot suites FAIL with `System.OverflowException` in `Runtime/Core/Pcg32.cs:48`. The explicit `(uint)` narrowing of ulong in XSH-RR likely overflows under the standalone runner's checked arithmetic setting; algorithm requires an intentional unchecked 32-bit truncation, without relaxing checked financial arithmetic. Exact evidence and suggested scoped fix sent to Core PR #9 [QA comment](https://github.com/rixed318/Probably-TAU/pull/9#issuecomment-6883654163). **Core owner must fix/test in own branch; QA did not edit Core.**
+
+**Updated coordinator 00 blocker scoreboard:** (1) full domain GameState/ledger/receipts/payables not yet available for SaveService; (2) verified Core C# PCG32 checked-overflow regression in PR #9 (2/3 suites fail), and newly added QA Core-source audit still awaiting its own run; (3) Unity Editor/EditMode NOT RUN. **Next:** Core 01 fixes checked XSH-RR narrowing and reruns real .NET golden suites; QA 05 checks new QA Actions run and records exact pass/fail. All PRs remain Draft; no merge/main changes.
