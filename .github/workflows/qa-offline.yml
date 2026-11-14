@@ -74,3 +74,24 @@ jobs:
       - name: Content cross-file consistency validation
         run: node Content/validate-content-consistency.cjs
         working-directory: content
+
+  core-ledger-regression:
+    name: Core ledger and snapshot .NET 8 regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout actual Core branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: feature/core-2
+          path: core
+          persist-credentials: false
+      - name: Record exact Core revision
+        run: git -C core rev-parse HEAD
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Compile and execute Core golden suites including Ledger
+        working-directory: core
+        run: dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release
