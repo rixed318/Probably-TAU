@@ -1,6 +1,6 @@
 # NPC/EventDirector — deterministic scheduling contract (proposal N0)
 
-**Status:** PROPOSED, non-executable design. Owner: Chat 02. Issue #4. Reviewed against Gate C0-v2 (PR #9) and ADR-C0-001 (PR #14), and Content PR #11 on 2026-11-14. This document does not add or override a Core API. All names/people/events in PR #11 are fictional game content, not statements about the real academy.
+**Status:** PROPOSED NPC design, with scheduling details adopted for feature implementation by ADR-C0-002 (PR #17, unmerged). Owner: Chat 02. Issue #4. Reviewed against Gate C0-v2 (PR #9) and ADR-C0-001 (PR #14), and Content PR #11 on 2026-11-14. This document does not add or override a Core API. All names/people/events in PR #11 are fictional game content, not statements about the real academy.
 
 ## Scope of this small increment
 Define deterministic queue ordering, idempotency and boundaries for *scheduled consequences*, so Chat 01 can implement AdvanceDay and Chat 04 can author content without conflicting ownership. No C# runtime is added while concrete Core GameState/CommandProcessor DTOs are unavailable.
@@ -12,16 +12,16 @@ Define deterministic queue ordering, idempotency and boundaries for *scheduled c
 - A receipt is identified by stable `instanceId + resolutionKind` (or a Core-approved equivalent). Replaying a committed command or restoring a save must not emit a second receipt, metric effect, scheduled child, or ledger posting.
 - Scheduled financial effects are *intents*, not direct mutations: only Core Economy/Ledger posts checked Int64 kopecks with unique posting keys. NPC code never modifies cash, payables or metrics directly.
 
-## Reconciliation proposal N0 → C0-v2 (pending Core 01 / coordinator 00 review)
-**C0-v2 takes precedence.** The earlier N0 order (`dueDayIndex → phase → creationOrdinal → instanceId`) conflicts with C0-v2 and is **withdrawn as an implementation recommendation**. The proposed mapping below is **not a newly approved Core API**; see PR #16 discussion.
+## Reconciliation N0 → C0-v2 (ADR-C0-002, PR #17)
+**C0-v2 takes precedence.** The earlier N0 order (`dueDayIndex → phase → creationOrdinal → instanceId`) conflicts with C0-v2 and is **withdrawn as an implementation recommendation**. The mapping below is approved for feature-branch implementation by ADR-C0-002 (PR #17), but the concrete Core C# API is still unavailable; this document does not define its signatures.
 
 - **Stage/phase:** Core's existing AdvanceDay stages are `finalize → tick projects → due outcomes → ledger settlement → metrics/terminal`. Content `triggerPhase` is a routing alias, **not** a sort key in the due queue. E09's `EndDay-settlement` is presentation/report content, never a second financial executor.
-- **Due queue order:** `dueDayIndex ASC → priority DESC → stableEventId ASC` (ordinal, case-sensitive), matching C0-v2. Propose `stableEventId = instanceId` because one `definitionId` may have multiple instances. Core must explicitly confirm this interpretation. `creationOrdinal` remains useful for allocation/audit but **does not** break ties.
-- **Priority:** Core-owned persisted signed integer on a scheduled instance or a versioned definition mapping; defaulting to 0 is only a proposal pending Core confirmation. No priority inferred from JSON array order, visit kind, or `phase`.
-- **Snapshot boundary:** freeze due candidates **at the start of the due-outcomes stage, after project ticks**, before resolving the first due item; this differs from the old “transition start” wording. New child events with `dueDayIndex <= closing DayIndex` cannot execute recursively during that transition. Core must decide reject versus defer and receipt semantics.
+- **Due queue order:** `dueDayIndex ASC → priority DESC → stableEventId ASC` (ordinal, case-sensitive), matching C0-v2. `StableEventId = instanceId` (one persisted unique ID per occurrence); a definition may have multiple instances. `creationOrdinal` remains useful for allocation/audit but **does not** break ties.
+- **Priority:** Core-owned persisted signed Int32 on each scheduled instance; if omitted in content, Core assigns 0 exactly once at scheduling, not on loading. No priority inferred from JSON array order, visit kind, or `phase`.
+- **Snapshot boundary:** freeze due candidates **at the start of the due-outcomes stage, after project ticks**, before resolving the first due item; this differs from the old “transition start” wording. Attempting to create a **new** child with `dueDayIndex <= closing DayIndex n` rejects the whole prepared transaction atomically (no partial ledger, receipts, RNG, or state changes). Existing overdue persisted events remain eligible.
 - **Invariant:** IDs, due day and priority must survive Save→Load. Never depend on dictionary iteration, locale-sensitive sorting, `DateTime.Now`, `Guid.NewGuid`, or unseeded randomness.
 
-**BLOCKED for runtime implementation:** Core 01 must approve stableEventId mapping, priority ownership/default, due-stage snapshot boundary and invalid child due-date policy; coordinator 00 must accept any public-contract change. Independent content ID/day validation is safe before that decision.
+**BLOCKED for EventDirector runtime implementation:** ADR-C0-002 settles scheduling semantics for feature work, but Core 01 has not published the concrete event-instance DTO, CommandProcessor and atomic transaction ports. The current GameStateSnapshotDto contains pending/completed string IDs only, not complete event instances. Independent typed-condition evaluation is possible once Content AST compatibility is reviewed.
 
 ## Resolve / schedule transaction
 1. Read the immutable snapshot, select eligible candidates in stable order, and evaluate content predicates against the same documented phase snapshot.
@@ -33,10 +33,18 @@ Define deterministic queue ordering, idempotency and boundaries for *scheduled c
 ## Content PR #11 compatibility notes
 - Day 01 = `DayIndex 0`; `E02/E03` have `dayIndex 1`; `E09` is closing `DayIndex 4` settlement; `E14` has `dayIndex 9`.
 - `eventManifest[].triggerPhase = "scheduled-content"` is a **content alias**, not a runtime enum. `E09` has `triggerPhase = "EndDay-settlement"` and must not become a normal NPC visit or an independent second weekly billing pass.
-- `E02` and `E03` both occur on DayIndex 1 but differ in kind; the content author must explicitly define scene/desk-task priority if one is required. Until then use deterministic `creationOrdinal`, not JSON object order.
-- `requirements` and `fallback` are currently human-readable strings. They are **not safe executable predicates**; typed condition AST/IDs require separate content-schema agreement with Chat 04 and coordinator 00.
+- `E02` and `E03` both occur on DayIndex 1 but differ in kind; the content author must explicitly define scene/desk-task priority if one is required. If no priority is specified, Core assigns persisted priority 0 and sorts by ordinal `instanceId`; `creationOrdinal` is audit-only and must never be a tie-break.
+- The legacy `requirements` and `fallback` strings in CONTENT_SPEC_DRAFT are not executable. Content PR #11 now includes a **proposed typed AST** (`always`, `all`, `any`, `flagEquals`, `factExists`, `dayIndexAtLeast`) in EVENT_HOOKS_DRAFT.json. It is structurally suitable for a pure read-only evaluator, but is not yet an approved runtime serialization API. Unknown operators, malformed nodes, missing flags/facts and invalid day indices must fail closed or return a documented false result; never silently award income.
 - `PARTNER-1/2` conditional revenue is **not** posted on contract signing. A future earned-income intent must require actual delivery, due index >= 4 and a unique Core ledger key. `E09` is not an authority to re-post Core's weekly income/obligation.
 - Current `budgetKopecks` values in Content draft are JSON numbers; before interoperable 64-bit wire format they must be serialized as decimal strings per C0-v2. This is a pending schema revision owned by Chat 04/05, not changed here.
+
+## Typed AST / earned-income review (2026-11-14)
+
+Reviewed `Content/EVENT_HOOKS_DRAFT.json` from PR #11 (HEAD `e7c6ad6d`) against ADR-C0-002. The AST operations are side-effect-free and can be evaluated with immutable `flags`, `facts`, and `dayIndex` inputs. `all`/`any` must short-circuit deterministically; node order must not consume RNG. `flagEquals(PARTNER, onsite|remote)` is mutually exclusive for a single canonical flag value. `factExists(E03_mentor_paid)` and `factExists(E07_delivered)` require durable, Core-verified fact IDs, not merely UI labels. Both partner-income branches additionally require `dayIndexAtLeast(4)` and delivery before earned-income intent; the evaluator only returns eligibility, never posts ledger entries.
+
+**Potential collision:** both partner branches use `earnedIdTemplate = partner/{sourceInstanceId}/delivery`. This is safe for mutually exclusive branches *only if* `sourceInstanceId` denotes the same stable agreement occurrence, and Core enforces uniqueness of `earnedId` and posting key across both branches. If the source is a separate scheduled revenue instance per branch, it could permit duplicate earnings. Content 04 and Core 01 must explicitly define source identity and require an exactly-once earned receipt before runtime wiring. `E09` remains report-only.
+
+**Status:** static source review only; no C# evaluator, compiler run or integration test in this increment. The new typed AST is still a proposal, not an approved wire contract.
 
 ## Proposed acceptance tests for future implementation
 | Test | Expected result |
@@ -53,8 +61,8 @@ Define deterministic queue ordering, idempotency and boundaries for *scheduled c
 **Not run:** these are acceptance specifications, not implemented tests.
 
 ## Integration blockers / decisions needed
-1. Core 01 must publish concrete GameState snapshot, CommandProcessor, scheduled-event and RNG stream interfaces, and define phase order / invalid due<=current behavior.
-2. Content 04 must replace string predicates with a typed schema and clarify E02/E03 priority and E09's presentation-only role.
+1. Core 01 must publish concrete scheduled-event instance, CommandProcessor, receipt and atomic transaction interfaces implementing ADR-C0-002; phase and invalid-child policy are already fixed for feature work.
+2. Content 04 must review the proposed typed AST and clarify canonical durable fact IDs and partner `sourceInstanceId` identity; legacy string predicates remain non-executable. E09 is report-only; E02/E03 default to persisted priority 0 unless explicit priority is introduced.
 3. QA 05 must cover receipt, queue and RNG serialization, including resume without duplicate effects.
 
-**Next executable increment:** implement pure-C# immutable event definition validator/adapter only after N0 fields and content condition schema are accepted; then EventDirector using Core-owned transaction ports. No Unity Editor or C# compiler execution claimed here.
+**Next independent increment:** implement a pure-C# typed condition evaluator with negative tests in NPC-owned code, no GameState/ledger/scheduler dependencies; do not claim runtime schema approval. EventDirector integration must wait for Core-owned transaction ports. No Unity Editor or C# compiler execution claimed here.
