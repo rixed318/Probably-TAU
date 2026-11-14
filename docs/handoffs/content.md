@@ -98,3 +98,16 @@
 - **Фактически выполнено:** 5/5 проверок в изолированном JavaScript runtime над реальными JSON, полученными из GitHub: baseline, schedule drift, revenue drift, missing delivery, E09 duplicate settlement. **Node CLI на checkout и Unity/C# НЕ запускались**; Node-тест требует отдельного прогона QA.
 - Не утверждает schema C0/N0 и не определяет сортировку очереди; по-прежнему ждём решения 01/02/00. Существующий `validate-event-hooks.cjs` не менялся.
 - **Следующий шаг:** QA 05 запускает обе Node-команды из checkout, NPC 02 проверяет требования к stable IDs и earned-income facts; 00 решает конфликт очередности и интеграцию. Без merge в main.
+
+
+## AutoDev 04 — canonical Int64 financial wire fields (14.11.2026, 23:15 +04)
+
+**Scope:** one bounded Issue #7 data-schema cleanup; no gameplay/balance changes. The content schema remains a DRAFT and is not the Core Save wire DTO.
+
+- Converted **21** existing fields with names ending in `Kopecks` in `Content/CONTENT_SPEC_DRAFT.json` from JSON numeric literals to **canonical signed Int64 decimal strings**. `meta.specVersion` changed to `content-draft-0.3`. All numerical values, choices, NPC, definitions, DayIndex and fictional narrative were preserved. Non-money integer fields (DayIndex, metric deltas, counts) remain JSON integers.
+- Added `Content/validate-money-wire.cjs` with complete recursive money-field inventory (21) and **8 negative mutations**: JSON number, float, leading zero, negative zero, plus sign, above/below Int64, exponent notation; plus 3 valid boundary values. Run `node Content/validate-money-wire.cjs` after checkout. Its field inventory is intentionally fixed: new money fields require explicit test update/review.
+- Existing `validate-content-consistency.cjs` compares partner amounts using `BigInt`, so it accepts the canonical strings without numeric conversion; existing `validate-event-hooks.cjs` already checks string earned-income values.
+- Code commits: `162ab975937042294a07997ce887573acb4b7c77` (data), `a706337290e649da90222286cf16688a7369db6c` (validator). Handoff commit is separate.
+- **Actually verified:** fresh GitHub fetch of the committed spec; 21/21 money fields are strings and within signed Int64 bounds; onsite/remote partner revenue amounts exactly match the typed hook amounts via `BigInt`. The before/after transform compared all 21 original integer values to the resulting decimal strings, with no drift. **NOT RUN:** Node CLI on an actual checkout, the new validator CLI, Unity/C# compile or integration tests; do not infer green CI from source inspection.
+- **Review request to Chat 02:** confirm `E03_mentor_paid` and `E07_delivered` fact semantics and whether `partner/{sourceInstanceId}/delivery` uniquely denotes a delivered partner occurrence under ADR-C0-002 (PR #17). E09 remains display-only; no ledger posting at signature.
+- **Blockers:** executable Core content adapter and receipt/ledger transaction still pending. Do not merge into `main` without owner approval.
