@@ -5,7 +5,7 @@
 **Ветка:** feature/core-2 (создана от main d673322cd9d0d366a27a57b81056504dfb26c731).  
 **Draft PR:** https://github.com/rixed318/Probably-TAU/pull/9  
 **Контрактный commit:** 4ccf57c08faca0518e2c8ceb8f5d0748eaea6dab.  
-**Статус:** AUDITED → C0 CONTRACTS PROPOSED → WAITING FOR COORDINATOR 00 REVIEW. **Код/Unity-проект ещё не созданы.**
+**Статус:** AUDITED → C0 CONTRACTS PROPOSED → **REVISIONS REQUESTED BY 00 → C0-v2 REVISION SUBMITTED FOR RE-REVIEW**. **Код/Unity-проект ещё не созданы.**
 
 ## 1. Что фактически сделано
 
@@ -26,8 +26,8 @@
 - EconomyService/LedgerService: money Int64 в копейках, append-only ledger, уникальный PostingId, due-key, задолженность.
 - PRNG: versioned PCG32-v1, именованные потоки, сохраняемый state, golden vectors.
 - CheckpointRequested после коммита AdvanceDay; file IO, миграции и SaveService в ответственности чата 05.
-- Конфликт порядка начислений между GDD §Г6 и ARCHITECTURE: предложен вариант ARCHITECTURE, должен подтвердить чат 00.
-- Открытая задача O-004: запрет/разрешение отрицательного баланса, обработка долга и частичных выплат.
+- Координатор 00 в PR #9 определил порядок: finalize → projects → due scheduled outcomes → due income/obligations → metrics/terminal → conditional next-day generation → report/commit/checkpoint. Эта последовательность внесена в C0-v2 и ожидает повторного Gate C0 review.
+- Для v1 по указанию координатора: добровольные расходы без cash отклоняются, обязательства без cash становятся payable без отрицательного cash; овердрафт/частичные выплаты вне v1. Внесены примеры для QA.
 
 **Пока это предложенные интерфейсы, не публичные типы в репозитории.**
 
@@ -88,4 +88,20 @@
 4. Недостаточно определено поведение кассового разрыва/задолженности; не кодировать догадки в экономику.
 5. Без реального Unity Editor нельзя правдиво считать #2 завершённым.
 
-**Следующий шаг:** координатор 00 читает и согласует https://github.com/rixed318/Probably-TAU/pull/9; после утверждения ЧАТ 01 переходит к реализации только в feature/core-2 и обновляет handoff с результатами реальных тестов.
+**Следующий шаг:** координатор 00 проводит **повторное** review обновлённого Gate C0-v2 в https://github.com/rixed318/Probably-TAU/pull/9; после утверждения ЧАТ 01 переходит к реализации только в feature/core-2 и обновляет handoff с результатами реальных тестов.
+
+## 7. Обновление по результатам review координатора 00 (14.11.2026)
+
+**Источник:** https://github.com/rixed318/Probably-TAU/pull/9#issuecomment-6877397075. Вердикт: REQUEST REVISIONS (не APPROVED). Смежные Draft PR: #10 (QA/Save), #11 (Content Day 01), #12 (UI); Issue #13 (AI pixel-art) принадлежит чату 03.
+
+**Новый C0-v2:** `docs/proposals/CORE_CONTRACTS_C0.md`, commit `1c8d8eaa0e8573a84a54fd8bdd7f5959bbe17460`. Внесено:
+
+1. **Один source of truth Q/S/M/E/R** (Q=EducationQuality; S=StudentSatisfaction; M=StaffMorale; E=EmployerTrust; R=PublicReputation). Отдельный mutable ReputationState не вводится; четыре группы отношений — read model из S/M/E/R, абитуриенты позднее.
+2. **EndDay-очерёдность 00**, single processed-day ID и durable effect/earned/due keys; project tick и deadlines до ledger, next-day generation только при nonterminal.
+3. **v1 cash policy:** voluntary reject, mandatory payable + warning, nonnegative cash, checked overflow.
+4. **DayNumber=DayIndex+1**; недельные проводки при closing n=4,9,14, то есть UI День 05/10/15.
+5. **Разные версии:** domain GameState.SchemaVersion, SaveEnvelope.schemaVersion, contentVersion, buildVersion; serialized receipts/ledger/RNG/due/effects без floating-point 64-bit conversions.
+6. **Proposed read models** для Dashboard/Finance/Calendar/Document/DayReport; чистые snapshot/restore ports для QA и инфраструктуры.
+7. **Девять golden acceptance scenarios**: calendar/settlement, payables, insufficient funds, conditional revenue, rollback, terminal state, reference PCG32 outputs, Save→Load, deterministic events.
+
+**Осталось:** повторное ревью C0 от чата 00, ADR в DECISIONS (не редактируем сами), честная проверка в Unity Editor после создания проекта. Ветка `feature/core-2` и PR #9 остаются Draft, merge не разрешён. Соседние PR не менялись.
