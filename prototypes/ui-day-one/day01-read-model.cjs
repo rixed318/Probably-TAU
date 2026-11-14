@@ -38,7 +38,7 @@
         id: "DOC-01", visitId: "D01_LAB", npcId: "npc_irina_korneeva",
         visitor: "Ирина Корнеева", role: "Координатор цифровых дисциплин",
         type: "procurement_request", title: "Оснащение компьютерного класса",
-        amountKopecks: "22000000", room: "Л-204", slotDayIndex: 3, slot: "14:00-17:00",
+        amountKopecks: "22000000", room: "Л-204", roomStatus: "request-not-booking", slotDayIndex: 3, slot: "14:00-17:00",
         inspectionId: "check_seat_map", revealed: { realSeats: 20, phasedPriceKopecks: "16000000" }
       },
       {
@@ -54,7 +54,7 @@
         visitor: "Марк Свиридов", role: "Представитель вымышленной фирмы «Пульс Инжиниринг»",
         type: "partner_offer", title: "Партнёрское предложение",
         conditionalRevenueKopecks: "12000000", recognizedRevenueKopecks: "0",
-        revenueEarliestDayIndex: 4, room: "Л-204", slotDayIndex: 3, slot: "14:00-17:00",
+        revenueEarliestDayIndex: 4, room: "Л-204", roomStatus: "request-not-booking", slotDayIndex: 3, slot: "14:00-17:00",
         inspectionId: "check_contract_appendix",
         revealed: {
           onsiteMentorCostKopecks: "4000000", remoteMentorCostKopecks: "2500000",
@@ -63,9 +63,28 @@
       }
     ]
   });
+  const getRoomConflictNotice = () => {
+    const requests = model.documents.filter((doc) => doc.roomStatus === "request-not-booking");
+    const key = (doc) => `${doc.room}|${doc.slotDayIndex}|${doc.slot}`;
+    const groups = new Map();
+    for (const doc of requests) {
+      const k = key(doc);
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(doc.id);
+    }
+    return freeze(Array.from(groups.values()).filter((ids) => ids.length > 1).map((ids) => ({
+      room: model.documents.find((doc) => doc.id === ids[0]).room,
+      slotDayIndex: model.documents.find((doc) => doc.id === ids[0]).slotDayIndex,
+      slot: model.documents.find((doc) => doc.id === ids[0]).slot,
+      documentIds: ids.slice(),
+      status: "unresolved-requests",
+      message: "Несколько заявок на одно время. Ни одна не является подтверждённой бронью."
+    })));
+  };
   const api = freeze({
     model,
     formatRub,
+    getRoomConflictNotice,
     getDocument(id) { return model.documents.find((doc) => doc.id === id) || null; },
     getSummary() {
       return freeze({
