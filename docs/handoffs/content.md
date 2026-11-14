@@ -87,3 +87,14 @@
 **Фактически выполнено:** 5/5 эквивалентных JS-проверок функций валидатора на тех же данных в изолированном JS runtime; **Node CLI на checkout, Unity/C# и интеграция не запускались**. Не считать их проверенными. Новые JSON поля — proposal, не утверждённый API. Текущий `CONTENT_SPEC_DRAFT.json` не заменён, миграция не проводилась.
 
 **BLOCKED на интеграцию:** разногласие Core C0-v2 vs NPC N0 по сортировке due queue; нужны конкретные Core GameState/EventDirector DTO и согласование 01/02/00. Не назначаем phase/priority для E02/E03 и не дублируем E09 settlement. Чат 02 должен дать review этого AST и шаблонов IDs. PR #11 остаётся Draft, `main` не изменён.
+
+
+## Автономный проход 04 — cross-file content drift guard (14.11.2026)
+
+**Одна ограниченная задача:** добавить независимую проверку согласованности двух уже существующих черновых JSON-файлов, не менять баланс/сюжет и не создавать Runtime EventDirector.
+
+- Добавлен `Content/validate-content-consistency.cjs` (Node.js без зависимостей): сверяет E02/E03/E09 `dueDayIndex` с `eventManifest`, zero-based DayIndex, E09 как только показ Core settlement, оба варианта партнёрского дохода с выборами первого дня, условие фактической поставки, одинаковый шаблон postingKey с `{sourceInstanceId}` в earnedId.
+- Коммит: `2c9479048191648cb5c92b24bd753657cd01bd8c`. Запуск в checkout: `node Content/validate-content-consistency.cjs`.
+- **Фактически выполнено:** 5/5 проверок в изолированном JavaScript runtime над реальными JSON, полученными из GitHub: baseline, schedule drift, revenue drift, missing delivery, E09 duplicate settlement. **Node CLI на checkout и Unity/C# НЕ запускались**; Node-тест требует отдельного прогона QA.
+- Не утверждает schema C0/N0 и не определяет сортировку очереди; по-прежнему ждём решения 01/02/00. Существующий `validate-event-hooks.cjs` не менялся.
+- **Следующий шаг:** QA 05 запускает обе Node-команды из checkout, NPC 02 проверяет требования к stable IDs и earned-income facts; 00 решает конфликт очередности и интеграцию. Без merge в main.
