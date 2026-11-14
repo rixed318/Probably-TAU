@@ -75,3 +75,15 @@
 **Проверено:** JSON.parse в JS, 13 уникальных ID, согласованность всех 13 `dayIndex=day-1`, E09=4, E14=9, 3 документа со слотом 3, 3 посетителя с тремя вариантами, partner earliest=4, целые денежные delta. **Не выполнялись:** Unity/C# компиляция, симуляция 27 маршрутов на реальном Core, тесты сохранения, полная финансовая регрессия.
 
 **Следующая зависимость:** ЧАТ 02 должен согласовать с 04 typed event hooks/conditions/ledger posting keys; не использовать `triggerPhase` или `revenueRecognition` как уже утверждённые C# enum/API. ЧАТ 03 должен использовать текстовые labels отдельно от `dayIndex`. **Gate C0 разрешён для разработки в feature-ветках через PR #14, но ещё не слит в main.**
+
+## Автономный проход 04 — typed event hooks proposal (14.11.2026)
+
+**Одна задача:** декларативные typed conditions/effects fixtures для E02/E03/E09 и условного партнёрского дохода, не Runtime API.
+
+- `Content/EVENT_HOOKS_DRAFT.json`: `definitionId` — неизменяемый ID определения; `instanceId` — отдельный стабильный Core-owned ID экземпляра; Core сохраняет receipts и контролирует ledger posting keys. Typed AST: `always`, `all`, `any`, `flagEquals`, `factExists`, `dayIndexAtLeast`. Effects: `presentEvent`, `showSettlementReport`, `proposeEarnedIncome`. Суммы дохода в Int64 decimal-string копейках; E02/E03 due=1, E09 due=4 и только отображает результат расчёта Core. Партнёрский доход возможен только после `E03_mentor_paid`, `E07_delivered`, не раньше dayIndex 4; уникальные `earnedId`/`postingKey` проверяет Core, не контент.
+- `Content/validate-event-hooks.cjs`: воспроизводимая статическая проверка структуры, duplicate definition ID, раннего дохода, повторного расчёта E09 и некорректной суммы. Запуск: `node Content/validate-event-hooks.cjs`.
+- Коммиты: `9732185499b2a3ccf436c1c5a97f2bda36cd03f8` (fixture), `0c99033a3b30510cf05e670da334e5d4b5aca11d` (validator).
+
+**Фактически выполнено:** 5/5 эквивалентных JS-проверок функций валидатора на тех же данных в изолированном JS runtime; **Node CLI на checkout, Unity/C# и интеграция не запускались**. Не считать их проверенными. Новые JSON поля — proposal, не утверждённый API. Текущий `CONTENT_SPEC_DRAFT.json` не заменён, миграция не проводилась.
+
+**BLOCKED на интеграцию:** разногласие Core C0-v2 vs NPC N0 по сортировке due queue; нужны конкретные Core GameState/EventDirector DTO и согласование 01/02/00. Не назначаем phase/priority для E02/E03 и не дублируем E09 settlement. Чат 02 должен дать review этого AST и шаблонов IDs. PR #11 остаётся Draft, `main` не изменён.
