@@ -47,7 +47,7 @@ namespace TAU.President.Core
         {
             ulong oldState = State;
             State = unchecked(oldState * Multiplier + Increment);
-            uint xorshifted = (uint)(((oldState >> 18) ^ oldState) >> 27);
+            uint xorshifted = unchecked((uint)(((oldState >> 18) ^ oldState) >> 27));
             int rotation = (int)(oldState >> 59);
             return (xorshifted >> rotation) |
                    (xorshifted << ((-rotation) & 31));
