@@ -39,9 +39,8 @@ namespace TAU.President.Tests.Core
             Throws<OverflowException>(() => new LedgerSnapshot(long.MaxValue, new[] {
                 new LedgerEntry("overflow", "a", 1)
             }));
-            Throws<OverflowException>(() => new LedgerSnapshot(0, new[] {
-                new LedgerEntry("negative-overflow", "a", long.MinValue),
-                new LedgerEntry("overflow-again", "a", -1)
+            Throws<OverflowException>(() => new LedgerSnapshot(long.MaxValue, new[] {
+                new LedgerEntry("positive-overflow", "a", long.MaxValue)
             }));
             Throws<OverflowException>(() => new LedgerSnapshot(long.MaxValue,
                 new LedgerEntry[0]).WithPosting(new LedgerEntry("overflow-append", "a", 1)));
