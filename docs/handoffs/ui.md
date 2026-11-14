@@ -72,3 +72,25 @@ These are scripted tests **provided but not executed in this remote connector en
 1. Chat 00 reviews UX direction and first-day flow in PR; leaves feedback without merging.
 2. Chat 01 publishes C0. UI adapter mapping is implemented only after approved stable contracts.
 3. UI team implements the same flow in real Unity Presentation assets once Unity project exists, then QA 05 checks against Issue #5 acceptance criteria.
+
+
+---
+
+## Art extension (Issue #13 · 2026-11-14)
+
+**Status:** Proposal awaiting owner / coordinator 00 sign-off; **do not bulk generate**.
+
+Files produced in this same UI branch:
+- docs/art/ART_BIBLE_V0_1.md — three directions, recommended Academic Noir, candidate 320×180 logical grid, 24-color scene palette, layered office, 3/4 orthographic, sprite resolutions, alpha/lighting/animations and first-day narrative content locks.
+- docs/art/ASSET_MANIFEST_D01.csv — **85 planned assets** (44 P0, 34 P1, 7 P2), four fictional characters, documents DOC-01/02/03, ROOM notification, report, furniture, props, HUD and 6 animation entries. All marked planned; no fake model/tool claims.
+- docs/art/PROMPTS_AND_REFERENCES.md — versioned shared ImageGen/Gemini prompts and master reference-sheet specification.
+- docs/art/PIPELINE.md — production selection, provenance, cleanup, quality, Unity import proposal, licensing/rights checks.
+- tools/art/validate_manifest.py — offline CSV schema, ID, size, frames, anchors and provenance validator (not executed in GitHub tool environment).
+
+**Content 04 binding:** Based on the *draft* PR #11 story, this supersedes the HTML prototype's old mock concept for art PLANNING only. Secretary Vera and three visitors (Irina/Dasha/Mark), three types DOC-01/02/03, triple room-slot clue Л-204 / Day 04 14:00–17:00, conditional partner revenue and room-conflict note. Content 04/00 still own approval of names/wardrobe/scene and terms; asset pipeline cannot declare story canonical.
+
+**UI status:** original browser prototype remains a separate mock of a single request; no attempt to rewrite economics or make it behave like 3-scripted-content day until future approved C0 and Content schema. This addition is only planning, not gameplay implementation.
+
+**Dependency handoff:** Chat 04 to review character roles/visual cues and blank document shells; coordinator 00 to approve one direction A/B/C and 320×180 world grid; Chat 01 to provide Unity scaffold later; QA 05 to run importer and visual tests. No official TAU logo/real person photograph approved.
+
+**Verification:** Static GitHub files verified, offline tool included; actual artist sample sprites, Unity import, browser PlayMode, legal approval and native raster checks not yet performed.
