@@ -124,6 +124,37 @@ namespace TAU.President.Tests.Core
                 Command("c4", "sha256:revision", long.MaxValue, new LedgerEntry("p6", "source", -1)));
             Assert(revisionOverflow.Status == FinancialCommandStatus.Rejected && revisionMax.ReceiptCount == 0);
 
+            // Canonical fingerprint v1: exact ordered payload, not a caller assertion.
+            var canonicalPostings = new LedgerEntry[] {
+                new LedgerEntry("verified-p1", "s1", -50),
+                new LedgerEntry("verified-p2", "s2", 10) };
+            string canonical = FinancialCommandFingerprint.Compute("verified-c1", 0, 0, canonicalPostings);
+            Assert(canonical.StartsWith("sha256:") && canonical.Length == 71);
+            Assert(canonical == FinancialCommandFingerprint.Compute("verified-c1", 0, 0, canonicalPostings));
+            Assert(canonical != FinancialCommandFingerprint.Compute("verified-c1", 0, 0,
+                new LedgerEntry[] { canonicalPostings[1], canonicalPostings[0] }));
+            Assert(canonical != FinancialCommandFingerprint.Compute("verified-c1", 0, 0,
+                new LedgerEntry[] { new LedgerEntry("verified-p1", "s1", -51), canonicalPostings[1] }));
+            Assert(canonical != FinancialCommandFingerprint.Compute("verified-c1", 1, 0, canonicalPostings));
+            Assert(canonical != FinancialCommandFingerprint.Compute("verified-c2", 0, 0, canonicalPostings));
+            var verified = new FinancialPostingCommand("verified-c1", canonical, 0, 0, canonicalPostings);
+            var verifiedResult = FinancialCommandFingerprint.ExecuteVerified(initial, verified);
+            Assert(verifiedResult.Status == FinancialCommandStatus.Committed);
+            Assert(verifiedResult.State.Ledger.CurrentBalanceKopecks == 960);
+            var verifiedReplay = FinancialCommandFingerprint.ExecuteVerified(verifiedResult.State, verified);
+            Assert(verifiedReplay.Status == FinancialCommandStatus.Replayed);
+            var forged = new FinancialPostingCommand("verified-c1", canonical, 0, 0,
+                new LedgerEntry[] { new LedgerEntry("verified-p1", "s1", -51), canonicalPostings[1] });
+            var forgedResult = FinancialCommandFingerprint.ExecuteVerified(verifiedResult.State, forged);
+            Assert(forgedResult.Status == FinancialCommandStatus.Rejected &&
+                forgedResult.Error == "InvalidCommandFingerprint" &&
+                Object.ReferenceEquals(forgedResult.State, verifiedResult.State));
+            Assert(verifiedResult.State.Ledger.CurrentBalanceKopecks == 960);
+            bool nullRejected = false;
+            try { FinancialCommandFingerprint.Compute("c", 0, 0, new LedgerEntry[] { null }); }
+            catch (ArgumentException) { nullRejected = true; }
+            Assert(nullRejected);
+
             var empty = FinancialCommandProcessor.Execute(initial,
                 Command("empty", "sha256:empty", 0));
             Assert(empty.Status == FinancialCommandStatus.Committed && empty.State.Revision == 1);
