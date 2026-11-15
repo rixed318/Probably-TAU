@@ -95,3 +95,20 @@ test("no-JavaScript fallback explains why documents are unavailable without exte
   assert.match(html, /локальный черновик без передачи данных на сервер/);
   assert.match(html, /<noscript>[\s\S]*?role="status"/);
 });
+
+
+test("document region signals busy before load and clears after successful rendering", () => {
+  assert.match(html, /id="day01-documents"[^>]*aria-busy="true"/);
+  const nodes = run();
+  assert.equal(nodes["day01-documents"].attributes["aria-busy"], "false");
+  assert.equal(nodes["day01-documents"].children.length, 3);
+});
+
+test("missing fixture and render failure clear aria-busy without partial cards", () => {
+  assert.match(source, /documents\.setAttribute\("aria-busy", "false"\)/);
+  const nodes = Object.fromEntries(["day01-summary", "day01-conflicts", "day01-documents"].map(id => [id, element("div")]));
+  const document = { getElementById: id => nodes[id], createElement: element };
+  vm.runInNewContext(source, { window: { document }, document }, { filename: "day01-preview.js" });
+  assert.equal(nodes["day01-documents"].attributes["aria-busy"], "false");
+  assert.equal(nodes["day01-documents"].children.length, 0);
+});
