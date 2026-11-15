@@ -110,3 +110,24 @@ jobs:
           # Fail closed if a Core refactor silently drops the fifth suite from the runner.
           grep -Fx 'PASS: Financial command atomic prepare/commit and replay' core-golden.log
           grep -Fx 'PASS: all 5 Core golden suites.' core-golden.log
+
+  npc-conditions-regression:
+    name: NPC standalone .NET 8 regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout NPC branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: feature/npc-4
+          path: npc
+          persist-credentials: false
+      - name: Record actual NPC revision
+        run: echo "NPC_SHA=$(git -C npc rev-parse HEAD)"
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Compile and run NPC golden assertions
+        working-directory: npc
+        run: dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release
