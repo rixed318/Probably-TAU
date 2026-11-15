@@ -63,3 +63,29 @@ test("preview has narrow-screen layout, readable wrapping and reduced-motion gua
   assert.match(html, /overflow-wrap:\s*anywhere/);
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
 });
+
+test("missing fixture shows an accessible error instead of an infinite loading message", () => {
+  const nodes = Object.fromEntries(["day01-summary", "day01-conflicts", "day01-documents"].map(id => [id, element("div")]));
+  nodes["day01-conflicts"].appendChild(element("p"));
+  nodes["day01-documents"].appendChild(element("article"));
+  const document = { getElementById: id => nodes[id], createElement: element };
+  vm.runInNewContext(source, { window: { document }, document }, { filename: "day01-preview.js" });
+  assert.equal(nodes["day01-summary"].attributes.role, "alert");
+  assert.match(nodes["day01-summary"].textContent, /Не удалось загрузить данные/);
+  assert.equal(nodes["day01-conflicts"].children.length, 0);
+  assert.equal(nodes["day01-documents"].children.length, 0);
+});
+
+test("broken read-model functions fail closed with an alert and no partial cards", () => {
+  const nodes = Object.fromEntries(["day01-summary", "day01-conflicts", "day01-documents"].map(id => [id, element("div")]));
+  const document = { getElementById: id => nodes[id], createElement: element };
+  const broken = {
+    getSummary: () => ({ dayNumber: "01", openingBalance: "2 000 000 ₽", documentCount: 3 }),
+    getRoomConflictNotice: () => { throw Error("corrupt fixture"); },
+    formatRub, model
+  };
+  vm.runInNewContext(source, { window: { document, TAU_DAY01_READ_MODEL: broken }, document }, { filename: "day01-preview.js" });
+  assert.equal(nodes["day01-summary"].attributes.role, "alert");
+  assert.equal(nodes["day01-conflicts"].children.length, 0);
+  assert.equal(nodes["day01-documents"].children.length, 0);
+});
