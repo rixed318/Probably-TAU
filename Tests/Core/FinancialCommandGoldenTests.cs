@@ -147,6 +147,23 @@ namespace TAU.President.Tests.Core
                 FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings));
             Assert(FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings) !=
                 FinancialCommandFingerprint.Compute("unicode-е", 0, 0, canonicalPostings));
+            // A player's machine locale must not alter persisted command identity.
+            var previousCulture = System.Globalization.CultureInfo.CurrentCulture;
+            try
+            {
+                foreach (string cultureName in new[] { "fr-FR", "tr-TR", "ar-SA" })
+                {
+                    System.Globalization.CultureInfo.CurrentCulture =
+                        System.Globalization.CultureInfo.GetCultureInfo(cultureName);
+                    Assert(FinancialCommandFingerprint.Compute("verified-c1", 0, 0,
+                        canonicalPostings) == canonical);
+                    Assert(FinancialCommandFingerprint.Compute("locale-negative", 17, 3,
+                        new LedgerEntry[] { new LedgerEntry("locale-p", "locale-s", -123456789) }) ==
+                        FinancialCommandFingerprint.Compute("locale-negative", 17, 3,
+                            new LedgerEntry[] { new LedgerEntry("locale-p", "locale-s", -123456789) }));
+                }
+            }
+            finally { System.Globalization.CultureInfo.CurrentCulture = previousCulture; }
             var verified = new FinancialPostingCommand("verified-c1", canonical, 0, 0, canonicalPostings);
             var verifiedResult = FinancialCommandFingerprint.ExecuteVerified(initial, verified);
             Assert(verifiedResult.Status == FinancialCommandStatus.Committed);
