@@ -291,3 +291,10 @@
 **Scope:** one bounded Issue #2 test-only change, no public API change. Added assertions to `Tests/Core/FinancialCommandGoldenTests.cs` that length-prefixed canonical fingerprint distinguishes different field boundaries (command ID vs posting ID) and different UTF-8 Unicode identifiers. Code commit: `32a5763c394119d3df1549a87bbca88be608189f`.
 
 **Verification:** prior GitHub Actions run [43701790337](https://github.com/rixed318/Probably-TAU/actions/runs/43701790337) completed successfully, but predates this change. New-head CI must be checked separately; Unity Editor/EditMode not run. No changes to `main`, no merge, no Issue closure. Next: verify current HEAD CI and continue integrated GameState/ledger work only after QA/00 contract review.
+
+
+## AutoDev 01 — 15.11.2026: locale-invariant financial fingerprint regression (#2)
+
+One bounded test-only change: `Tests/Core/FinancialCommandGoldenTests.cs` now compares canonical SHA-256 command fingerprints calculated under `fr-FR`, `tr-TR` and `ar-SA` against a baseline computed before culture switching, including negative Int64 delta, revision/day and Unicode identifiers. The test restores the original `CurrentCulture` in `finally`, preventing leakage into other golden tests. Commits `72c98f58`, `8edf5c0b`. No production API, approved Gate C0-v2, ADR or other subsystem changed.
+
+Previous HEAD `3f55e042` GitHub Actions run 43718143815 completed/success, but it **does not verify** these new test commits. Check the new commit workflow until completed before claiming success. Unity Editor/EditMode not run. Full durable GameState/Ledger/receipts/events and SaveService integration remain blocked on agreed snapshot shape and QA/00 review. PR #9 remains Draft; no main merge or Issue closure.
