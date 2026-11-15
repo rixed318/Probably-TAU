@@ -247,3 +247,24 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** QA CI checks moving feature-branch refs; its success does not prove simultaneous integration of all current PR heads at pinned SHAs.
 - **Recommended next step:** ask Core 01 to add a versioned **snapshot-only** extension for ledger/payables/receipts/event instances with deterministic round-trip golden tests, under the already-approved C0 and ADR-C0-002 rules; QA 05 can then implement isolated serialization/replay regression without inventing GameState or modifying Core.
 - **Safety:** no merge, no main writes, no edits to other role branches, no new shared contracts, no IP/logo approvals.
+
+
+## 2026-11-15 — AutoDev 05: independent regression triage, Core FinancialCommand (#6/#8)
+
+**One completed bounded task:** independently inspect real GitHub Actions results and diagnose a newly failing Core golden test. No Core code modified; no SaveService attempted. Read current `main` AGENTS/CHAT_WORKFLOW, PR #9/#10/#11/#12/#14/#16/#17, Issues #6/#8 and current QA workflow. QA PR #10 prior HEAD `761e8c3a7aae`; Core PR #9 HEAD `dfe85e3d330a`.
+
+**Verified CI evidence:**
+- QA run [43685184318](https://github.com/rixed318/Probably-TAU/actions/runs/43685184318) for QA HEAD `761e8c3a7aae`: **success, 3/3 jobs** (Python PCG32 oracle/source audit, cross-branch UI/Content static regression, Core Ledger/Snapshot .NET job). This is branch-local evidence at the Core SHA fetched by that run, **not** proof for newer Core HEAD.
+- Core run [43686861960](https://github.com/rixed318/Probably-TAU/actions/runs/43686861960) for Core HEAD `dfe85e3d330a`: **failure**. .NET compilation succeeded; PCG32, GameClock, GameStateSnapshot, Ledger suites PASS; FinancialCommand suite FAIL at `Tests/Core/FinancialCommandGoldenTests.cs:164`, assertion `encodingRejected`.
+- Inspected actual source `Tests/Core/FinancialCommandGoldenTests.cs` lines 158–174: line 160 defines `string malformed = "bad\\uD800";` (two backslashes in C# source), creating literal backslash-u text rather than an unpaired UTF-16 surrogate. This is the **likely test-fixture defect**, not yet a confirmed production encoding defect. Proposed single-backslash escaped surrogate or `(char)0xD800` and rerun CI; do not relax strict encoding requirements.
+- Precise QA report sent to [Core PR #9 comment](https://github.com/rixed318/Probably-TAU/pull/9#issuecomment-6891400294).
+- No local C#/Node/Python tests executed in this pass; no new test added. Unity Editor/EditMode **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-15 12:00 UTC+4
+
+- **Current PR HEADs:** #9 Core `dfe85e3d330a` (CI failed), #10 QA `761e8c3a7aae` before this handoff update (QA CI green), #11 Content `2f443045ccfb`, #12 UI `4a05a4a8a105`, #14 ADR `ebdc4be28afd`, #16 NPC `3f13fea10deb`, #17 ADR-C0-002 `bc9db999b419`. All inspected PRs Draft/open.
+- **Blocker 1:** Core FinancialCommand golden suite fails at line 164 on newer HEAD; likely invalid malformed UTF-16 test fixture. Fix in Core branch, rerun Core .NET CI.
+- **Blocker 2:** `GameStateSnapshotDto` is still a minimal slice; full ledger, payables, command fingerprints/outcomes and typed scheduled instances are not integrated into one durable snapshot. SaveService/Save→Load replay blocked.
+- **Blocker 3:** Unity Editor/EditMode and integrated gameplay build NOT RUN.
+- **Recommended next step:** Core 01 fixes malformed surrogate fixture, verifies all five suites on current HEAD; QA 05 checks resulting logs, then continues targeted financial receipts snapshot/replay test design once stable DTOs exist.
+- **Safety:** no `main` writes, no merge, no changes to foreign feature branches or architecture contracts.
