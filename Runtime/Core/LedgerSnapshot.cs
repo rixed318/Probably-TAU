@@ -74,5 +74,31 @@ namespace TAU.President.Core
             nextEntries.Add(entry);
             return new LedgerSnapshot(OpeningBalanceKopecks, nextEntries);
         }
+        /// <summary>
+        /// Prepares a whole ordered batch against the current ledger. All entries are
+        /// validated in order; any failure leaves this snapshot unchanged and publishes
+        /// no partial result. CommandProcessor remains responsible for committing it.
+        /// </summary>
+        public LedgerSnapshot WithPostings(IEnumerable<LedgerEntry> postings)
+        {
+            if (postings == null) throw new ArgumentNullException(nameof(postings));
+
+            var candidate = new List<LedgerEntry>(entries);
+            var seen = new HashSet<string>(postingIds, StringComparer.Ordinal);
+            long balance = CurrentBalanceKopecks;
+            foreach (var entry in postings)
+            {
+                if (entry == null)
+                    throw new ArgumentException("Null ledger entry.", nameof(postings));
+                if (!seen.Add(entry.PostingId))
+                    throw new ArgumentException("Duplicate posting ID: " + entry.PostingId, nameof(postings));
+                balance = checked(balance + entry.DeltaKopecks);
+                if (balance < 0)
+                    throw new InvalidOperationException("Insufficient cash for posting.");
+                candidate.Add(entry);
+            }
+            return new LedgerSnapshot(OpeningBalanceKopecks, candidate);
+        }
+
     }
 }
