@@ -84,7 +84,14 @@ namespace TAU.President.Core
         {
             if (state == null) throw new ArgumentNullException(nameof(state));
             if (command == null) throw new ArgumentNullException(nameof(command));
-            if (!StringComparer.Ordinal.Equals(Compute(command), command.Fingerprint))
+            string actual;
+            try { actual = Compute(command); }
+            catch (EncoderFallbackException)
+            {
+                return new FinancialCommandResult(state, null, FinancialCommandStatus.Rejected,
+                    "InvalidCommandEncoding");
+            }
+            if (!StringComparer.Ordinal.Equals(actual, command.Fingerprint))
                 return new FinancialCommandResult(state, null, FinancialCommandStatus.Rejected,
                     "InvalidCommandFingerprint");
             return FinancialCommandProcessor.Execute(state, command);
