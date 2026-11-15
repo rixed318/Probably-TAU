@@ -174,3 +174,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Commits:** runtime `b549209c7e9afaf283bccac9afb6e6e25032a7cc`; tests `31f2e0529745d8f850dd14d02f2620452e63eadc`; handoff update committed separately on `feature/npc-4` (PR #16 Draft). **Validation:** GitHub source write verified; .NET/Unity tests NOT RUN locally; GitHub Actions for this head must be verified before claiming success. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **BLOCKED for EventDirector:** Core scheduled instance/atomic transaction/receipt APIs and Content canonical earnedId/source identity still require integration; ADR-C0-002 PR #17 is feature-only. No main write or merge.
+
+
+## AutoDev 02 — nested boolean false-path regression (2026-11-15)
+
+**One bounded task (#4):** added four independent C# golden assertions for `all`/`any` combinations with absent facts, mutually exclusive partner flags, and nested boolean groups. Tests-only change in `Tests/Npc/EventConditionGoldenTests.cs`; no runtime logic, Core, GameState, ledger or scheduler modified.
+
+**Source commit:** `644be8a9bdb5f6c66762b106888e4e26ce502532` on `feature/npc-4`. This handoff is a separate commit; PR #16 remains Draft. No main write/merge.
+
+**Verification:** preceding HEAD `9ffbf1ff7bbf024fd6636ecda17a08b6afb8b0d7` has GitHub Actions success run [43721725550](https://github.com/rixed318/Probably-TAU/actions/runs/43721725550), which **does not** validate the newly added assertions. Local .NET SDK and Unity Editor unavailable, so new tests **NOT RUN locally**; CI for new HEAD not yet verified. Runner command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**BLOCKED for full EventDirector:** concrete Core scheduled-instance, atomic transaction and receipt APIs; Content canonical earnedId/source identity. ADR-C0-002 PR #17 is approved only for feature implementation. Next: check new-head CI, then prioritize integration dependency resolution rather than expanding redundant condition tests.
