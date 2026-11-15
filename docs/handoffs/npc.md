@@ -185,3 +185,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Verification:** preceding HEAD `9ffbf1ff7bbf024fd6636ecda17a08b6afb8b0d7` has GitHub Actions success run [43721725550](https://github.com/rixed318/Probably-TAU/actions/runs/43721725550), which **does not** validate the newly added assertions. Local .NET SDK and Unity Editor unavailable, so new tests **NOT RUN locally**; CI for new HEAD not yet verified. Runner command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **BLOCKED for full EventDirector:** concrete Core scheduled-instance, atomic transaction and receipt APIs; Content canonical earnedId/source identity. ADR-C0-002 PR #17 is approved only for feature implementation. Next: check new-head CI, then prioritize integration dependency resolution rather than expanding redundant condition tests.
+
+
+## AutoDev 02 — 2026-11-15: escaped control JSON regression (#4)
+
+- Scope: three standalone negative assertions in `Tests/Npc/EventConditionJsonGoldenTests.cs` for escaped NUL in `factId`, LF in `op`, and DEL in `value`; validates rejection after JSON decoding. No production API or Core changes.
+- Commits: `366d26a621598f9089de4b0d2f02d167856af443` (initial assertions), `162d6f2a470f838fad7d5ed1f0069ccda85fa729` (corrected C# JSON literals); this handoff commit follows. Branch `feature/npc-4`, PR #16 remains unmerged.
+- Validation: fetched changed test source from GitHub and manually inspected the corrected literals. NOT RUN: dotnet compile/golden assertions, Unity tests. CI for this HEAD not yet confirmed; no passing claim.
+- Dependencies: EventDirector remains BLOCKED on Core scheduled occurrence/atomic transaction/receipt APIs and canonical Content earnedId. No GameState, ledger, scheduler or merge introduced.
