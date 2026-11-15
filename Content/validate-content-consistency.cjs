@@ -166,7 +166,7 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E07: backward feed to E
 s=clone(spec);s.eventManifest.find(e=>e.id==="E10").feeds.push("P02");
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E10: duplicate feed P02")),
   "duplicate project feed must fail");
-s=clone(spec);s.eventManifest.find(e=>e.id==="E03").feeds.push("E02");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E02").feeds.push("E03");s.eventManifest.find(e=>e.id==="E03").feeds.push("E02");
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: cyclic feed")),
   "same-day two-event cycle E02 -> E03 -> E02 must fail");
 s=clone(spec);s.eventManifest.find(e=>e.id==="E05").feeds.push("E04");
