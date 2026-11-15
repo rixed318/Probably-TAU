@@ -48,6 +48,46 @@ namespace TAU.President.Tests.Core
             Throws<ArgumentOutOfRangeException>(() => new LedgerEntry("zero", "a", 0));
             Throws<ArgumentException>(() => new LedgerEntry(" ", "a", 1));
             Throws<ArgumentNullException>(() => initial.WithPosting(null));
+            
+            // A prepared batch must be all-or-nothing and preserve posting order.
+            var batch = initial.WithPostings(new[] {
+                new LedgerEntry("income/batch", "earned/batch", 2000),
+                new LedgerEntry("expense/batch", "request/batch", -1500)
+            });
+            Assert(batch.CurrentBalanceKopecks == 8800 && batch.Entries.Count == 4);
+            Assert(batch.Entries[2].PostingId == "income/batch");
+            Assert(batch.Entries[3].PostingId == "expense/batch");
+            Assert(initial.CurrentBalanceKopecks == 8300 && initial.Entries.Count == 2);
+            var emptyBatch = initial.WithPostings(new LedgerEntry[0]);
+            Assert(emptyBatch.CurrentBalanceKopecks == initial.CurrentBalanceKopecks);
+            Assert(emptyBatch.Entries.Count == initial.Entries.Count);
+            Throws<ArgumentNullException>(() => initial.WithPostings(null));
+            Throws<ArgumentException>(() => initial.WithPostings(new LedgerEntry[] { null }));
+            Throws<ArgumentException>(() => initial.WithPostings(new[] {
+                new LedgerEntry("new", "a", 1),
+                new LedgerEntry("new", "b", 1)
+            }));
+            Throws<ArgumentException>(() => initial.WithPostings(new[] {
+                new LedgerEntry("new", "a", 1),
+                new LedgerEntry("income/1", "b", 1)
+            }));
+            Throws<InvalidOperationException>(() => initial.WithPostings(new[] {
+                new LedgerEntry("income/temporary", "a", 100),
+                new LedgerEntry("expense/too-much", "b", -8501)
+            }));
+            Throws<InvalidOperationException>(() => initial.WithPostings(new[] {
+                new LedgerEntry("expense/first", "a", -8301),
+                new LedgerEntry("income/too-late", "b", 10000)
+            }));
+            Throws<OverflowException>(() => new LedgerSnapshot(long.MaxValue,
+                new LedgerEntry[0]).WithPostings(new[] {
+                    new LedgerEntry("first", "a", -1),
+                    new LedgerEntry("overflow", "b", 2)
+                }));
+            Assert(initial.CurrentBalanceKopecks == 8300 && initial.Entries.Count == 2);
+            Assert(initial.WithPosting(new LedgerEntry("income/temporary", "a", 1))
+                .CurrentBalanceKopecks == 8301);
+
         }
 
         private static void Assert(bool value)
