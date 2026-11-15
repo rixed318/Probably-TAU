@@ -47,9 +47,15 @@ namespace TAU.President.Npc
         }
         private static string Required(string value)
         {
-            if (string.IsNullOrWhiteSpace(value) || value != value.Trim())
+            if (string.IsNullOrWhiteSpace(value) || value != value.Trim() || HasControl(value))
                 throw new ArgumentException("Nonempty canonical value required.");
             return value;
+        }
+        private static bool HasControl(string value)
+        {
+            foreach (char ch in value)
+                if (char.IsControl(ch)) return true;
+            return false;
         }
     }
 
