@@ -209,3 +209,22 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** fresh QA CI run of the new fifth-suite guard needs verification (older QA run only tested four suites).
 - **Blocker 3:** Unity Editor/EditMode and integrated gameplay/save-load tests remain **NOT RUN**.
 - **Recommended next step:** check the fresh QA workflow run; if green, independently review Core transaction receipts and event instance DTO readiness before implementing persistence. Keep exact Core SHA and CI evidence. PR #10 remains Draft; no main writes, merges, contract approvals or IP/logo approvals.
+
+
+## 2026-11-15 08:40 UTC+4 — AutoDev 05: verify fifth-suite QA gate (#8)
+
+**One bounded QA task:** verified the previously unverified fifth-suite guard against the actual completed GitHub Actions run [43670550752](https://github.com/rixed318/Probably-TAU/actions/runs/43670550752) associated with QA HEAD `c200472d03fe306f094f43efc650815a2591061d`. GitHub returned **completed / success**. Inspected the workflow run's three jobs and individual step conclusions:
+- `Core ledger and snapshot .NET 8 regression (not Unity)`: **success**; `Install .NET 8 SDK` and `Compile and execute Core golden suites including Ledger` both **success**. The current QA workflow uses `set -euo pipefail`, `tee`, and exact-line `grep -Fx` for `PASS: Financial command atomic prepare/commit and replay` and `PASS: all 5 Core golden suites.`; a successful step therefore verifies that the fifth-suite guard was satisfied. No claim is made about unseen per-test stdout beyond those required lines.
+- `UI and Content static regression (not integration)`: **success**; UI Node, art manifest, art unit tests, content hooks and cross-file consistency steps all **success**.
+- `Python PCG32 oracle (not C# or Unity)`: **success**; Python syntax, reference test and Core source-pattern audit steps all **success**.
+
+**Scope:** independent moving-branch CI, not a pinned integration build. The run's checkout SHA values are emitted in the job logs but were not retrieved in this pass; current PR heads can differ from revisions tested by the earlier run. No new tests authored or source code changed; this is a verified CI evidence and handoff task. Unity Editor/EditMode **NOT RUN**. SaveService remains deferred until full stable persistable Core snapshot DTO.
+
+### Сводка для координатора 00 — 2026-11-15 08:40 UTC+4
+
+- **PR heads inspected:** #9 Core `ecc2ae5faef5`, #10 QA `c200472d03fe` before this documentation commit, #11 Content `70744e3dddc1`, #12 UI `b76e8f30c59a`, #14 ADR `ebdc4be28afd`, #17 ADR-C0-002 `bc9db999b419`; all these PRs remain open/Draft. `main` README, AGENTS.md, docs/CHAT_WORKFLOW.md and DECISIONS.md read; Issues #6/#8 reviewed. QA did not modify main.
+- **Blocker 1:** Core still lacks a confirmed complete persistable domain snapshot with ledger, command fingerprints/outcome receipts, payables and typed scheduled event instances; do not start production SaveService or claim Save→Load replay.
+- **Blocker 2:** Unity Editor/EditMode and integrated game/save-load tests **NOT RUN**.
+- **Blocker 3:** cross-branch QA follows moving feature refs; passing this run does not prove all latest PR heads jointly integrate.
+- **Recommended next step:** audit Core #9 snapshot/receipt fields against Save schema and prepare a narrow persistence contract test once fields exist; retain QA's fifth-suite gate and pin source SHAs before integration claims.
+- **Safety:** documentation-only QA feature branch, no merge, no main writes, no architectural or third-party IP approvals.
