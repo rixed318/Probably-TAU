@@ -137,6 +137,16 @@ namespace TAU.President.Tests.Core
                 new LedgerEntry[] { new LedgerEntry("verified-p1", "s1", -51), canonicalPostings[1] }));
             Assert(canonical != FinancialCommandFingerprint.Compute("verified-c1", 1, 0, canonicalPostings));
             Assert(canonical != FinancialCommandFingerprint.Compute("verified-c2", 0, 0, canonicalPostings));
+            // Length-prefixing must disambiguate adjacent field boundaries and preserve Unicode.
+            string boundaryA = FinancialCommandFingerprint.Compute("a", 0, 0,
+                new LedgerEntry[] { new LedgerEntry("bc", "d", 1) });
+            string boundaryB = FinancialCommandFingerprint.Compute("ab", 0, 0,
+                new LedgerEntry[] { new LedgerEntry("c", "d", 1) });
+            Assert(boundaryA != boundaryB);
+            Assert(FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings) ==
+                FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings));
+            Assert(FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings) !=
+                FinancialCommandFingerprint.Compute("unicode-е", 0, 0, canonicalPostings));
             var verified = new FinancialPostingCommand("verified-c1", canonical, 0, 0, canonicalPostings);
             var verifiedResult = FinancialCommandFingerprint.ExecuteVerified(initial, verified);
             Assert(verifiedResult.Status == FinancialCommandStatus.Committed);
