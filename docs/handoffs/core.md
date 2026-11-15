@@ -263,3 +263,10 @@
 - Code commits: `6a7e26b9`, `955ea70e`, `99471718`. No public C0 contract change; existing valid ASCII/UTF-8 fingerprints remain unchanged. Legacy `FinancialCommandProcessor.Execute` remains a provisional unverified boundary; integrations must use `ExecuteVerified`.
 
 **Verification:** GitHub Actions run for latest code must be checked separately; no Unity Editor/EditMode available. Do not claim success based on earlier green runs. **Remaining:** full GameState/EndDay, durable ledger/receipt/event DTO, payables and Unity integration. No merge/main/Issue closure.
+
+
+## AutoDev 01 — 15.11.2026: QA P0 strict UTF-8 fixture repair
+
+**One bounded task, Issue #2 / PR #9:** independently reviewed QA 05 finding in PR #9 comment 6891400294 and confirmed failing Core .NET run [43686861960](https://github.com/rixed318/Probably-TAU/actions/runs/43686861960) at `FinancialCommandGoldenTests.cs:164`. The fixture used `"bad\\uD800"` (literal backslash-u characters) rather than a malformed UTF-16 string, so the expected `EncoderFallbackException` could not be raised. Fixed the fixture to `"bad" + (char)0xD800` in commit `f64d32ac`, guaranteeing a genuine unpaired high surrogate independent of C# escape rendering. Both command ID and source ID tests use the same malformed value; `ExecuteVerified` rejection and immutability assertions are preserved. **No production code or contract changed.**
+
+**Verification:** .NET 8 workflow on the new HEAD must complete successfully before green claim. Local Unity Editor/EditMode NOT RUN. Existing financial processor remains provisional; full GameState snapshot, payables, events and SaveService still blocked. Branch only `feature/core-2`; PR Draft; no main merge/Issue closure.
