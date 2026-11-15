@@ -284,3 +284,10 @@
 **Commit:** `dbc7f361d3e5dd418220b431d72085078da47c52` updates `Tests/Core/FinancialCommandGoldenTests.cs` to call `FinancialCommandFingerprint.ExecuteVerified` with an unpaired UTF-16 surrogate in `LedgerEntry.PostingId`, asserting `Rejected / InvalidCommandEncoding`, identical original state, and no ledger or receipt mutation. No production API, contract, Unity, or other role changes.
 
 **Verification:** preceding Core .NET 8 run [43701790337](https://github.com/rixed318/Probably-TAU/actions/runs/43701790337) completed/success for prior HEAD `74ecb8b0`; this does **not** validate the new test. Query workflow for this new commit before claiming PASS. Unity Editor/EditMode not run. PR #9 remains Draft; do not merge or close Issues.
+
+
+## AutoDev 01 — fingerprint boundary/Unicode regression (15.11.2026)
+
+**Scope:** one bounded Issue #2 test-only change, no public API change. Added assertions to `Tests/Core/FinancialCommandGoldenTests.cs` that length-prefixed canonical fingerprint distinguishes different field boundaries (command ID vs posting ID) and different UTF-8 Unicode identifiers. Code commit: `32a5763c394119d3df1549a87bbca88be608189f`.
+
+**Verification:** prior GitHub Actions run [43701790337](https://github.com/rixed318/Probably-TAU/actions/runs/43701790337) completed successfully, but predates this change. New-head CI must be checked separately; Unity Editor/EditMode not run. No changes to `main`, no merge, no Issue closure. Next: verify current HEAD CI and continue integrated GameState/ledger work only after QA/00 contract review.
