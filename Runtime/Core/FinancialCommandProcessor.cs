@@ -12,6 +12,46 @@ namespace TAU.President.Core
         public int DayIndex { get; private set; }
         public int ReceiptCount { get { return receipts.Count; } }
 
+        /// <summary>Stable read-only order for future Save envelope integration.</summary>
+        public IReadOnlyList<FinancialCommandReceipt> ExportReceipts()
+        {
+            var ordered = new List<FinancialCommandReceipt>(receipts.Values);
+            ordered.Sort((a, b) =>
+            {
+                int byRevision = a.CommittedRevision.CompareTo(b.CommittedRevision);
+                return byRevision != 0 ? byRevision :
+                    StringComparer.Ordinal.Compare(a.CommandId, b.CommandId);
+            });
+            return ordered.AsReadOnly();
+        }
+
+        /// <summary>Restore the financial-only prototype without replaying postings.</summary>
+        public static FinancialCommandState Restore(LedgerSnapshot ledger, long revision,
+            int dayIndex, IEnumerable<FinancialCommandReceipt> savedReceipts)
+        {
+            if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            if (revision < 0) throw new ArgumentOutOfRangeException(nameof(revision));
+            if (savedReceipts == null) throw new ArgumentNullException(nameof(savedReceipts));
+            var map = new Dictionary<string, FinancialCommandReceipt>(StringComparer.Ordinal);
+            var seenRevisions = new HashSet<long>();
+            FinancialCommandReceipt latest = null;
+            foreach (var receipt in savedReceipts)
+            {
+                if (receipt == null) throw new ArgumentException("Null receipt.", nameof(savedReceipts));
+                if (receipt.CommittedRevision < 1 || receipt.CommittedRevision > revision)
+                    throw new ArgumentException("Receipt revision out of range.", nameof(savedReceipts));
+                if (!seenRevisions.Add(receipt.CommittedRevision) || !map.TryAdd(receipt.CommandId, receipt))
+                    throw new ArgumentException("Duplicate receipt ID or revision.", nameof(savedReceipts));
+                if (latest == null || receipt.CommittedRevision > latest.CommittedRevision)
+                    latest = receipt;
+            }
+            if (latest != null && latest.CommittedRevision == revision &&
+                latest.BalanceKopecks != ledger.CurrentBalanceKopecks)
+                throw new ArgumentException("Latest receipt balance differs from ledger.", nameof(savedReceipts));
+            return new FinancialCommandState(ledger, revision, dayIndex, map);
+        }
+
+
         public FinancialCommandState(LedgerSnapshot ledger, long revision, int dayIndex)
             : this(ledger, revision, dayIndex, new Dictionary<string, FinancialCommandReceipt>(StringComparer.Ordinal)) { }
 
@@ -78,8 +118,10 @@ namespace TAU.President.Core
 
         internal FinancialCommandReceipt(string commandId, string fingerprint, long revision, long balance)
         {
-            CommandId = commandId;
-            Fingerprint = fingerprint;
+            CommandId = GameStateSnapshotDto.Required(commandId, nameof(commandId));
+            Fingerprint = GameStateSnapshotDto.Required(fingerprint, nameof(fingerprint));
+            if (revision < 1) throw new ArgumentOutOfRangeException(nameof(revision));
+            if (balance < 0) throw new ArgumentOutOfRangeException(nameof(balance));
             CommittedRevision = revision;
             BalanceKopecks = balance;
         }
