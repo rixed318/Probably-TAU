@@ -69,7 +69,9 @@ namespace TAU.President.Npc
 
         private static string ReadString(JsonElement node, string name)
         {
-            JsonElement value = node.GetProperty(name);
+            JsonElement value;
+            if (!node.TryGetProperty(name, out value))
+                throw new FormatException("Missing required condition field: " + name);
             if (value.ValueKind != JsonValueKind.String)
                 throw new FormatException(name + " must be a string.");
             string result = value.GetString();
