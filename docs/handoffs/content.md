@@ -167,3 +167,14 @@
 **Actually verified:** fresh GitHub reads of committed validator and spec; independently executed 3 JavaScript checks against live spec: baseline 13 entries pass, E14 mutation rejected, E10 fractional mutation rejected. This independent check replicates the new calendar predicate; it is **not** a full execution of the Node CLI. **NOT RUN:** `node Content/validate-content-consistency.cjs` from a checkout, all 13 script assertions together, C# / Unity tests. QA 05: run the exact Node command on this branch and record the Actions run ID or logs.
 
 **BLOCKED for runtime integration:** still need Core/NPC event-instance, fact provenance and transactional earned-income contracts. ADR-C0-002 PR #17 is approved for feature work only. No merge/main changes. Next bounded work should be based on a real QA result or a concrete NPC fact-ID review, not another speculative runtime adapter.
+
+
+## AutoDev 04 — feed reference and temporal drift guard (15.11.2026, 09:23 +04)
+
+**One bounded Issue #7 task:** extend `Content/validate-content-consistency.cjs` to reject unknown `eventManifest[].feeds` targets, backward links to earlier-day events, self-links, duplicate feeds and invalid feed arrays/IDs. Targets resolve against known event IDs, existing project IDs (P01/P02), or the explicitly deferred `CHAPTER2_HOOK` marker. This is a *static narrative dependency check*, not an EventDirector or same-day execution scheduler. Added 3 negative fixtures: unknown E14 feed, backward E07→E02, duplicate E10→P02. Expected CLI total: **16** checks (13 existing + 3 new). Existing fictional story, money Int64 strings, event schedule and ledger policy unchanged.
+
+**Code commit:** `9439c541e41c2c7fb63b88e61f5d955a79ec62aa` on `feature/content-7`.
+
+**Actually verified:** fetched current GitHub `CONTENT_SPEC_DRAFT.json` and both related source files; executed four isolated JavaScript assertions in the GitHub-connected runtime: baseline feed graph has zero violations, unknown feed is rejected, backward feed is rejected, duplicate project feed is rejected. **NOT RUN:** the complete Node CLI from a real checkout, all 16 fixtures together, C#/Unity tests. QA 05: run `node Content/validate-content-consistency.cjs` on this branch and record CI logs; do not claim green until run is observed.
+
+**BLOCKED for runtime integration:** Core/NPC still own actual event instance IDs, fact provenance, agreement source instance and atomic earned income. ADR-C0-002 PR #17 is approved for feature work only. No merge or `main` changes.
