@@ -403,3 +403,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Core durable snapshot/Save→Load not confirmed complete; Unity Editor/EditMode/PlayMode NOT RUN.
 - **Next step:** inspect CI for QA workflow commit and exact checkout SHAs, then independently verify UI #12 playable artifact/launch and Node gameplay assertions for Issue #18. Do not announce READY_FOR_OWNER_TEST without evidence.
 - **Safety:** no changes to main/other branches, no merges, no new architecture contracts or third-party IP approvals.
+
+
+## 2026-11-16 02:55 UTC+4 — QA 05: pinned cross-branch QA checkout (#18)
+
+**One bounded code change:** commit `5a07a727d46c47999bb723d3896a79996d4548cf` in `feature/save-6` changes only `.github/workflows/qa-offline.yml`: read-only Core/UI/Content/NPC checkouts now use full immutable PR HEAD SHAs instead of moving feature refs, print actual checkout SHA and fail closed on mismatch. Exact reviewed source refs: Core PR #9 `0f5a85ef1136fec0cbc0285568b11985f0e7200c`; UI PR #12 `cc44bf037f2aad91c41718ec2f3f336b7a0cd464`; Content PR #11 `f3d9950e9e607176e28e0af70abc6bb9566555be`; NPC PR #16 `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`. Money-wire and NPC .NET steps remain present. These are frozen integration candidates, **not** automatically current HEAD after future PR pushes.
+
+**Actual evidence this pass:** GitHub accepted workflow source update. CI execution of this new pinned workflow **NOT VERIFIED**; no fresh PASS claims. Local Node/.NET/Python **NOT RUN**. UI HTML `prototypes/ui-day-one/day01-playable.html` verified as GitHub source at pinned UI SHA, but independent offline browser launch, 3-visitor EndDay behavior and downloadable artifact **NOT VERIFIED**. Unity Editor/EditMode/PlayMode and Save→Load **NOT RUN**. Status Issue #18: **BLOCKED; NOT READY_FOR_OWNER_TEST**.
+
+### Сводка для координатора 00 — 2026-11-16 02:55 UTC+4
+
+- **PRs/commits:** #9 Core `0f5a85ef`, #10 QA workflow `5a07a727` (handoff commit follows), #11 Content `f3d9950e`, #12 UI `cc44bf03`, #14 ADR `ebdc4be2`, #16 NPC `d82bc6ee`; all inspected as open/Draft. Main untouched. Issue #18 remains open.
+- **Blocker 1:** pinned QA workflow requires a completed CI run and per-job logs before asserting Core/UI/Content/NPC checks pass on frozen refs.
+- **Blocker 2:** offline launch and gameplay/finance/EndDay smoke, plus downloadable web-demo artifact, remain unverified; no READY_FOR_OWNER_TEST.
+- **Blocker 3:** durable Core GameState snapshot/Save→Load and Unity Editor tests remain unverified.
+- **Next step:** inspect Actions for pinned QA SHA and UI demo artifact workflow; independently execute UI Day01 smoke against the exact pinned SHA, verify artifact extraction/offline launch and 3 visitors, choices, EndDay and integer/once-only cash before owner gate. Do not merge or edit foreign branches.
