@@ -81,9 +81,16 @@ namespace TAU.President.Npc
             if (value.ValueKind != JsonValueKind.String)
                 throw new FormatException(name + " must be a string.");
             string result = value.GetString();
-            if (string.IsNullOrWhiteSpace(result) || result != result.Trim())
+            if (string.IsNullOrWhiteSpace(result) || result != result.Trim() || HasControlCharacters(result))
                 throw new FormatException(name + " must be a nonempty canonical string.");
             return result;
+        }
+
+        private static bool HasControlCharacters(string value)
+        {
+            foreach (char ch in value)
+                if (char.IsControl(ch)) return true;
+            return false;
         }
 
         private static void RequireFields(JsonElement node, params string[] expected)
