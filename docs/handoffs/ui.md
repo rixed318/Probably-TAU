@@ -281,3 +281,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Verification:** GitHub API accepted and returned SHAs for all three source changes. Immediately queried workflow runs for `d95eca28700a567bd07c604ea396b616a67daa4a`; **zero runs returned**. Therefore **Node tests NOT VERIFIED**, browser/320px/200%/screen reader NOT RUN, Unity NOT RUN. Prior green CI run #43675977238 applies to the *previous* HEAD, not this change. Run `node --test prototypes/ui-day-one/test-day01-preview.cjs` and inspect the new `UI standalone smoke tests` workflow when available. New regression assertions cover initial HTML busy state, success clearing and missing-fixture clearing; the pre-existing broken-fixture test still checks alert and empty cards.
 
 **Next:** confirm CI for the new HEAD and perform actual browser accessibility/zoom check. This is a small accessibility enhancement, not evidence of screen-reader conformance. No merge to `main`.
+
+
+## CI verification — 2026-11-15 (role 03)
+
+- Checked PR #12 head `4a05a4a8a10557846d36a1a8c0fdfa7a7b6d8ef0` via GitHub connector.
+- GitHub Actions workflow run `43691340453` for that exact head reports `status=completed`, `conclusion=success`. This verifies CI's reported outcome, not a local test execution or visual accessibility audit.
+- Follow-up still required: inspect individual job logs and manually test 320px viewport, 200% zoom, keyboard navigation and screen-reader announcements. No Unity Editor/PlayMode checks claimed.
+- No changes to GameState/Core or the existing mock. PR remains Draft; do not merge without owner approval.
