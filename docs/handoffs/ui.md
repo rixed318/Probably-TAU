@@ -303,3 +303,10 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **One scoped task:** extended `prototypes/ui-day-one/test-day01-preview.cjs` to assert `aria-busy="false"` when `getRoomConflictNotice()` throws, complementing existing missing-fixture and successful-render coverage. No renderer behavior or GameState/Core changed; the original mock and canonical Day01 fixture remain separate. Test commit: `9002ff89fda07eff4231ed4f9ab631d95f74872b` on `feature/ui-5`.
 
 **Verification:** GitHub accepted the test commit. Local `git clone` failed with `Could not resolve host: github.com`; consequently Node tests and browser 320px/200% zoom/screen-reader/Unity tests are **NOT RUN** for this commit. Check GitHub Actions against the exact new branch HEAD; earlier green runs do not cover this assertion. PR #12 remains Draft, no merge or main changes.
+
+
+## AutoDev 03 · 2026-11-15 · CI verification of corrupt-fixture regression (#5)
+
+**One scoped task:** checked GitHub Actions for the exact prior branch HEAD `c572e152752d3a9fdd20b4daab0b7138175b706e`. GitHub reports [UI standalone smoke tests run #43714885981](https://github.com/rixed318/Probably-TAU/actions/runs/43714885981), `status=completed`, `conclusion=success`. This is verified workflow outcome for the new corrupt-fixture busy-state assertion; individual assertion counts and browser behavior were not independently inspected. No new UI code changes.
+
+**NOT RUN here:** local Node tests, actual 320px/200% browser visual/keyboard/screen-reader checks, Unity Editor/PlayMode. This handoff-only commit itself is not yet CI-verified. Next task: real browser smoke with screenshot/notes, if a browser becomes available. Existing canonical Day01 fixture and old mock remain separate. No Core/GameState changes; PR #12 Draft; no merge to main.
