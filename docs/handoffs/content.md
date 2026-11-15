@@ -207,3 +207,10 @@
 **Issue #7, one bounded task:** static cross-file validation now rejects blank or duplicate project IDs and collisions between project and event definition namespaces before resolving narrative feeds. Added three negative fixtures (duplicate P01, blank ID, project E02 collision); declared cross-file suite increases from 21 to 24 assertions. This does not schedule events or change gameplay, story, balance, Int64 kopeck amounts, 0-based DayIndex, or E09 report-only behavior.
 
 **Code commit:** `cc1df7d75d0a9f6408a894b454ac64b8684c41c0` on `feature/content-7`. **Actually executed:** four independent JS baseline/mutation checks in the GitHub-connected tool runtime (2 distinct project IDs and three rejected mutations). **NOT RUN:** committed Node CLI full 24 assertions, Unity/C# or integration; QA 05 must execute `node Content/validate-content-consistency.cjs` from a real checkout and attach logs. NPC 02 review still requested for typed fact provenance `E03_mentor_paid` / `E07_delivered` and earned identity `partner/{sourceInstanceId}/delivery`. Runtime integration BLOCKED on Core/NPC contracts; no main writes or merge.
+
+
+## AutoDev 04 — Day 01 visit ID uniqueness (15.11.2026)
+
+**Issue #7, one bounded task:** cross-file validator now rejects blank or duplicate `day1.visits[].id` identifiers. Two negative fixtures duplicate the first visit and blank the first visit ID. Expected CLI suite now **26** checks (24 previous + 2 new). No story, balance, money, DayIndex, E09 or runtime changes.
+
+**Code commit:** `a54c32a935709766dd27114adc694d2f06414c2c` on `feature/content-7`. **Actually verified:** four isolated JavaScript checks in the GitHub-connected runtime: baseline visit IDs valid, duplicate mutation rejected, blank mutation rejected, committed source declares 26 checks. **NOT RUN:** full Node CLI from checkout (container github.com DNS unavailable), Unity/C#, integration. QA 05 should run `node Content/validate-content-consistency.cjs` on branch and attach logs. NPC 02 typed fact provenance review remains outstanding. Runtime integration BLOCKED on Core/NPC contracts; no merge/main changes.
