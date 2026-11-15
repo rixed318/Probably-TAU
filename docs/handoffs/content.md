@@ -145,3 +145,14 @@
 **Code commit:** `cb45cf175fc1b7db7feff882281b275a169074fe` in `feature/content-7`. **Actually verified:** 6 isolated JavaScript assertions on live GitHub hook JSON (both onsite/remote: baseline required facts/flags; bypassable delivery fact rejected; bypassable branch flag rejected). This independently exercises the same pure predicate guarantee logic, **not** the complete Node CLI validator. **NOT RUN:** `node Content/validate-content-consistency.cjs` from checkout (GitHub DNS unavailable in container), C#/Unity tests or EventDirector integration. QA 05 should run Node CLI on actual branch and inspect 9 checks.
 
 **BLOCKED integration:** Core/NPC still own canonical durable fact emission/provenance and agreement source instance; content validator is only static draft guard. ADR-C0-002 PR #17 permits feature work only; no merge/main changes.
+
+
+## AutoDev 04 — duplicate Definition ID guard (15.11.2026, 06:03 +04)
+
+**One bounded task (Issue #7):** prevent silent Map overwrite when `CONTENT_SPEC_DRAFT.json.eventManifest[].id` or `EVENT_HOOKS_DRAFT.json.definitions[].definitionId` repeats. `Content/validate-content-consistency.cjs` now rejects duplicate or blank IDs before Map lookup; two negative fixtures duplicate identical E02 and E09 records, which previously would have been accepted. Existing story, monetary Int64 strings, DayIndex, E09 report-only behavior and event ordering are unchanged. This is static content validation only, not an EventDirector.
+
+**Code commit:** `19e5bb5060d234abe743a2e2a3d5fb29e69ae76d`. Expected full CLI output now `PASS: 11 cross-file fixture/negative checks` if all pass.
+
+**Actually verified:** fresh GitHub reads of committed source and both JSON fixtures; five isolated JavaScript assertions passed: baseline unique manifest and definitions, duplicated E02 and E09 detection, and presence of both negative fixtures in committed source. **NOT RUN:** full `node Content/validate-content-consistency.cjs` from checkout, C#/Unity, runtime integration; no green CLI claim. QA 05 should execute the real Node CLI and attach the log/run ID.
+
+**Integration BLOCKED:** concrete Core/NPC fact provenance, stable agreement source instance and transactional EventDirector API still pending. NPC 02 should review typed fact IDs `E03_mentor_paid`, `E07_delivered` and earned identity `partner/{sourceInstanceId}/delivery`. ADR-C0-002 PR #17 is feature-work guidance only. No merge/main changes.
