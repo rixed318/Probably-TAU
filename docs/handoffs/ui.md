@@ -225,3 +225,20 @@ Open `prototypes/ui-day-one/day01-preview.html` through a static HTTP server to 
 **Actual verification:** GitHub source fetch and successful commits confirmed. Attempted a real `git clone --depth 1 --branch feature/ui-5 https://github.com/rixed318/Probably-TAU.git` in the container, but DNS failed with `Could not resolve host: github.com`; **Node tests NOT RUN**. Browser/screen-reader/320px/200% visual checks and Unity/C# compile **NOT RUN**. QA 05 should run `node --test prototypes/ui-day-one/test-day01-preview.cjs` against the actual branch and manually verify a missing `day01-read-model.cjs` gives a visible error.
 
 **Next:** obtain real Node/CI evidence and browser accessibility smoke. Art Direction A remains 320×180 planning basis; no new art generated. No merge to main.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-15 · Issue #5 (offline no-JavaScript fallback)
+
+**One scoped task:** added an explicit `<noscript>` message to standalone `day01-preview.html` so a browser with JavaScript disabled no longer displays only an indefinite loading message. The message explains the local preview requires JavaScript and sends no data to a server. This does not alter gameplay, C0 read-model, fixture, budget, NPC or legacy mock gateway.
+
+**Branch/PR:** `feature/ui-5` / Draft PR #12. **Commits:** `5ecc8be4414d17dea90d0770834434ae6e25472c` (HTML), `779b2cc2d5d75f139a3abec3290eead40873d93c` (regression source). This handoff is a separate commit.
+
+**Files:** `prototypes/ui-day-one/day01-preview.html`, `prototypes/ui-day-one/test-day01-preview.cjs`, `docs/handoffs/ui.md`.
+
+**Checks actually performed:** fetched updated GitHub HTML and test source, verified five static assertions (noscript block, explanatory text, no-server text, test presence, unchanged script references) in an isolated JS source inspection. **NOT RUN:** Node `--test` execution, browser JavaScript-disabled/manual test, 320px/200% zoom rendering, Unity EditMode/PlayMode. Static assertions are NOT equivalent to running Node tests.
+
+**QA 05 follow-up:** `node --test prototypes/ui-day-one/test-day01-preview.cjs`; manually disable JavaScript and open `day01-preview.html`, then check at 320px width/200% zoom. Expected: readable fallback, no endless loading-only UX. No external scripts or services added.
+
+**Constraints:** Art Direction A (320×180) remains planning baseline; no generated/approved sprites or third-party marks. PR #11 remains draft. **No merge to main.**
