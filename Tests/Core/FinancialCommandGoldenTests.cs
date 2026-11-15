@@ -241,6 +241,32 @@ namespace TAU.President.Tests.Core
             Assert(verifiedRestored.ReceiptCount == 1 && verifiedRestored.Ledger.Entries.Count == 2 &&
                 verifiedRestored.Ledger.CurrentBalanceKopecks == 960);
 
+            // Verified financial commands must reject a multi-posting overdraft atomically.
+            // The first posting is affordable; the second would cross below zero.
+            var atomicPostings = new LedgerEntry[] {
+                new LedgerEntry("atomic-p1", "atomic-source", -100),
+                new LedgerEntry("atomic-p2", "atomic-source", -1000) };
+            string atomicFingerprint = FinancialCommandFingerprint.Compute(
+                "verified-atomic", 0, 0, atomicPostings);
+            var atomicCommand = new FinancialPostingCommand(
+                "verified-atomic", atomicFingerprint, 0, 0, atomicPostings);
+            var atomicRejected = FinancialCommandFingerprint.ExecuteVerified(initial, atomicCommand);
+            Assert(atomicRejected.Status == FinancialCommandStatus.Rejected &&
+                Object.ReferenceEquals(atomicRejected.State, initial));
+            Assert(initial.Revision == 0 && initial.ReceiptCount == 0 &&
+                initial.Ledger.Entries.Count == 0 && initial.Ledger.CurrentBalanceKopecks == 1000);
+            // The same ID remains available after the failed prepare.
+            var affordablePostings = new LedgerEntry[] {
+                new LedgerEntry("atomic-p1", "atomic-source", -100) };
+            var affordableCommand = new FinancialPostingCommand("verified-atomic",
+                FinancialCommandFingerprint.Compute("verified-atomic", 0, 0, affordablePostings),
+                0, 0, affordablePostings);
+            var affordableResult = FinancialCommandFingerprint.ExecuteVerified(initial, affordableCommand);
+            Assert(affordableResult.Status == FinancialCommandStatus.Committed &&
+                affordableResult.State.Ledger.CurrentBalanceKopecks == 900 &&
+                affordableResult.State.Ledger.Entries.Count == 1 &&
+                affordableResult.State.ReceiptCount == 1);
+
             var empty = FinancialCommandProcessor.Execute(initial,
                 Command("empty", "sha256:empty", 0));
             Assert(empty.Status == FinancialCommandStatus.Committed && empty.State.Revision == 1);
