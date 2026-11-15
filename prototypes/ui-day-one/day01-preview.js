@@ -68,6 +68,30 @@
           " (не начислен при подписании)");
       }
     }
+    const queue = doc.getElementById("day01-queue");
+    const selectionApi = root.TAU_DAY01_SELECTION;
+    if (queue && selectionApi && typeof selectionApi.createSelectionGateway === "function") {
+      const gateway = selectionApi.createSelectionGateway(data);
+      const cards = documents.children;
+      const buttons = [];
+      const updateSelection = () => {
+        const selected = gateway.selected();
+        for (let i = 0; i < cards.length; i++) cards[i].hidden = data.model.documents[i].id !== selected.id;
+        for (let i = 0; i < buttons.length; i++) {
+          buttons[i].setAttribute("aria-pressed", String(data.model.documents[i].id === selected.id));
+        }
+      };
+      queue.replaceChildren();
+      for (const item of data.model.documents) {
+        const button = add(queue, "button", item.id + " · " + item.visitor);
+        button.setAttribute("type", "button");
+        button.addEventListener("click", () => {
+          if (gateway.select(item.id)) updateSelection();
+        });
+        buttons.push(button);
+      }
+      updateSelection();
+    }
     documents.setAttribute("aria-busy", "false");
   }
   try {
