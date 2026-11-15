@@ -201,3 +201,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - Commits: `2de1d0c2ee3b0c6ce1165465d7ac7c57a231ee48` (implementation), `75980863c02c0ac16bf70773b183311c76606e34` (three regression assertions); this handoff commit follows. Branch `feature/npc-4`, PR #16 Draft; no main changes/merge.
 - Validation: read back changed source from GitHub; **NOT RUN** .NET golden tests, Unity tests, or a new CI run. Passing status of this HEAD is unverified.
 - Dependencies: EventDirector still BLOCKED on Core event-instance/atomic transaction/receipt ports and canonical Content `earnedId`. ADR-C0-002 PR #17 remains feature-only until owner-approved merge.
+
+
+## P0 Issue #18 — immutable Day01 visitor mapping (2026-11-16)
+
+**Scope:** immutable `VisitorArchetype` and `VisitorInstance`, plus deterministic `Day01Visitors.Create()` mapping three fictional visitors to Content PR #11 `DAY01_UI_FIXTURE.json`: `D01_LAB/npc_irina_korneeva/DOC-01`, `D01_STUDENT/npc_dasha_polynskaya/DOC-02`, `D01_PARTNER/npc_mark_sviridov/DOC-03`. Zero-based DayIndex=0. `VisitorInstance.InstanceId` is a *visit* ID, not Core's scheduled-event occurrence ID; do not reuse it as a receipt key. Pure .NET, no GameState/ledger/RNG/scheduler.
+
+**Files:** `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`, standalone csproj and Program runner. Tests cover exact fixture mapping, replay-stable IDs, fresh immutable objects, null archetype and negative day rejection. CI executes via `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. **NOT RUN locally:** dotnet unavailable; CI result must be checked for new HEAD before claiming PASS. Unity Editor NOT RUN.
+
+**Cross-role contract:** Content fixture proposes `E03_mentor_paid` and `E07_delivered` as verified durable facts; producer must be Core-committed E03 mentor payment receipt and E07 delivery completion respectively, not UI flags. `partner/{sourceInstanceId}/delivery` uses original agreement occurrence's Core-stable instance ID; Content 04/Core 01 must confirm actual producer mapping and ownership before integration. No partner income on signature.
+
+**BLOCKED:** full EventDirector needs concrete Core event-instance DTO, atomic transaction and receipt ports. This increment does not change Core state, balance or event scheduler. PR #16 remains Draft; no merge to main.
