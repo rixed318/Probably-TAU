@@ -242,3 +242,16 @@ Open `prototypes/ui-day-one/day01-preview.html` through a static HTTP server to 
 **QA 05 follow-up:** `node --test prototypes/ui-day-one/test-day01-preview.cjs`; manually disable JavaScript and open `day01-preview.html`, then check at 320px width/200% zoom. Expected: readable fallback, no endless loading-only UX. No external scripts or services added.
 
 **Constraints:** Art Direction A (320×180) remains planning baseline; no generated/approved sprites or third-party marks. PR #11 remains draft. **No merge to main.**
+
+
+---
+
+## AutoDev 03 · 2026-11-15 · CI for standalone UI and art checks (#5, #13)
+
+**One scoped change:** added `.github/workflows/ui-smoke.yml` in `feature/ui-5`, commit `01209e0c762246181921dd6a92b63a1396f2806e`. This does **not** modify mock gateway, canonical Day01 fixture, Core or Unity files.
+
+The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art paths and manual dispatch. It checks out read-only (no persisted credentials), uses Node 22 and Python stdlib, and runs three actual Node test files (`test-fixtures.cjs`, `test-day01-read-model.cjs`, `test-day01-preview.cjs`) plus the art manifest validator and its unittest suite. No external npm dependencies, tokens, write permissions or Unity Editor. Runtime timeout: 8 minutes.
+
+**Verification status:** GitHub accepted the workflow file and returned commit SHA above. Immediate lookup of GitHub Actions runs for that commit returned **zero runs**; no tests have been observed executing, so CI status is **NOT RUN / NOT VERIFIED**. GitHub Actions may require branch-specific workflow activation or delayed indexing; check Actions and inspect logs before claiming success. Static source inspection is not runtime validation. No browser 320px/200% zoom or Unity PlayMode test performed.
+
+**Follow-up:** QA 05 / coordinator 00 should inspect the workflow run for commit `01209e0c`, verify all steps, then perform a real browser accessibility/layout check at 320px and 200% zoom. Any failure should be fixed in this UI branch, not hidden or labelled green. PR #12 stays Draft; `main` unchanged.
