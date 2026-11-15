@@ -89,3 +89,9 @@ test("broken read-model functions fail closed with an alert and no partial cards
   assert.equal(nodes["day01-conflicts"].children.length, 0);
   assert.equal(nodes["day01-documents"].children.length, 0);
 });
+
+test("no-JavaScript fallback explains why documents are unavailable without external services", () => {
+  assert.match(html, /<noscript>[\s\S]*?Для просмотра документов включите JavaScript/);
+  assert.match(html, /локальный черновик без передачи данных на сервер/);
+  assert.match(html, /<noscript>[\s\S]*?role="status"/);
+});
