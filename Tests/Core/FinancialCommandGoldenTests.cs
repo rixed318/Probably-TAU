@@ -224,6 +224,23 @@ namespace TAU.President.Tests.Core
                 Object.ReferenceEquals(malformedResult.State, initial));
             Assert(initial.ReceiptCount == 0 && initial.Ledger.Entries.Count == 0);
 
+            // Verified receipts must remain replay-safe after a save/load boundary.
+            // Reusing the same ID with a changed payload must never post twice.
+            var verifiedReceipts = verifiedResult.State.ExportReceipts();
+            var verifiedRestored = FinancialCommandState.Restore(verifiedResult.State.Ledger,
+                verifiedResult.State.Revision, verifiedResult.State.DayIndex, verifiedReceipts);
+            var verifiedRestoredReplay = FinancialCommandFingerprint.ExecuteVerified(verifiedRestored, verified);
+            Assert(verifiedRestoredReplay.Status == FinancialCommandStatus.Replayed &&
+                Object.ReferenceEquals(verifiedRestoredReplay.State, verifiedRestored));
+            Assert(verifiedRestoredReplay.Receipt.CommandId == verifiedReceipts[0].CommandId &&
+                verifiedRestoredReplay.Receipt.Fingerprint == verifiedReceipts[0].Fingerprint);
+            var verifiedRestoredForgery = FinancialCommandFingerprint.ExecuteVerified(verifiedRestored, forged);
+            Assert(verifiedRestoredForgery.Status == FinancialCommandStatus.Rejected &&
+                verifiedRestoredForgery.Error == "InvalidCommandFingerprint" &&
+                Object.ReferenceEquals(verifiedRestoredForgery.State, verifiedRestored));
+            Assert(verifiedRestored.ReceiptCount == 1 && verifiedRestored.Ledger.Entries.Count == 2 &&
+                verifiedRestored.Ledger.CurrentBalanceKopecks == 960);
+
             var empty = FinancialCommandProcessor.Execute(initial,
                 Command("empty", "sha256:empty", 0));
             Assert(empty.Status == FinancialCommandStatus.Committed && empty.State.Revision == 1);
