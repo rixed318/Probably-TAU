@@ -256,3 +256,18 @@
 - Partner signing changes E score only; deferred 12000000/9000000 kopecks are conditional on delivered service and never immediate cash. E09 remains report-only. UI report must show actual chosen cash deltas, five scores, zero weekly settlement on DayIndex 0, and no earned partner income.
 - **Actually checked:** in connector JavaScript, source JSON parsed, fixture has 3 documents, 3 visitors, 3 choices each, distinct visit IDs, all document references resolve, 18 `*Kopecks` fields validate as signed Int64 decimal strings, no partner choice has an immediate cash effect. GitHub confirmed content commit. **NOT RUN:** Node CLI validator from checkout, browser smoke tests, CI, Unity/C#, Core integration. This is mock fixture data, not proof of playable demo.
 - **Coordination:** Chat 03 should consume this exact fixture or mirror its IDs/effects in offline bundle; Chat 05 must execute `node Content/validate-money-wire.cjs`, `node Content/validate-content-consistency.cjs`, `node Content/validate-event-hooks.cjs` and test UI interactions. Chat 02 must confirm typed fact producers `E03_mentor_paid` / `E07_delivered` and `partner/{sourceInstanceId}/delivery` earned provenance; fixture does not manufacture facts. No main merge.
+
+## P0 Issue #18 — NPC 02 typed-fact provenance handoff (16.11.2026)
+
+**Scope:** one content-contract clarification for the existing `DAY01_UI_FIXTURE.json`; no runtime implementation, new gameplay, or monetary change. Response to NPC 02's PR #11 comment (2026-11-15 20:38 UTC).
+
+| Typed fact ID | Only permissible producer condition | Not a producer |
+| --- | --- | --- |
+| `E03_mentor_paid` | Core-confirmed, durable payment/ledger receipt for the mentor obligation associated with the **same partner agreement occurrence** | UI click, signature, inspection, NPC dialogue, merely scheduling E03 |
+| `E07_delivered` | Core-confirmed completion/delivery of the contracted partner service for the **same agreement occurrence** | Agreement signature, visit choice, scheduled E07, unverified narrative flag |
+
+**Identity:** `sourceInstanceId` in `partner/{sourceInstanceId}/delivery` is the stable **Core-assigned original partner agreement occurrence ID**, not `D01_PARTNER` (visit ID), `PARTNER-1/2` (choice ID), `E07` (definition ID), or an event instance for a later step. Both facts must be bound to that same source occurrence. `partner/{sourceInstanceId}/delivery` is a proposed durable earned/deduplication key for a **single** eligible delivery, with Core owning atomic posting and receipt uniqueness. Never infer earned income from either fact alone, a UI signature, or an E09 report.
+
+**Mock/UI acceptance:** signing `PARTNER-1` or `PARTNER-2` changes E score only; `signingCashDeltaKopecks="0"`, `endDayReport.partnerEarnedIncomeKopecks="0"` at DayIndex 0. Deferred nominal amounts stay `"12000000"`/`"9000000"` Int64 decimal strings; no automatic revenue. `E09` remains report-only. Content does not mint typed facts; NPC 02 may define fact shapes, while Core must verify receipts/delivery and own earned ledger effects. Producer API and occurrence correlation are **proposed, not yet integrated or end-to-end tested**.
+
+**Verification (source inspection, not runtime):** the fixture currently has 3 documents, 3 visitors, 9 choices; both partner options have no immediate `cashDelta`, and each has `signingCashDeltaKopecks="0"`; report earned income is `"0"`. **NOT RUN:** Node CLI, CI, browser, Unity, Core/NPC integration. QA 05 must run all Content validators and UI smoke tests. No `main` push or merge.
