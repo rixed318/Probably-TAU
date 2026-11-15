@@ -15,6 +15,12 @@ function validateCrossFile(spec,hooks){
    else seen.add(id);
   }
  }
+ // Validate every manifest entry, not just the E02/E03/E09 hook subset.
+ // DayIndex is canonical 0-based; legacy human day must be exactly DayIndex+1.
+ for(const e of spec.eventManifest){
+  if(!Number.isSafeInteger(e.dayIndex)||e.dayIndex<0||!Number.isSafeInteger(e.day)||e.day!==e.dayIndex+1)
+   errors.push(`${e.id}: invalid 0-based manifest calendar`);
+ }
  const manifest=new Map(spec.eventManifest.map(e=>[e.id,e]));
  const definitions=new Map(hooks.definitions.map(d=>[d.definitionId,d]));
  for(const id of ["E02","E03","E09"]){
@@ -103,4 +109,10 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: duplicat
 h=clone(hooks);h.definitions.push(clone(h.definitions.find(d=>d.definitionId==="E09")));
 assert.ok(validateCrossFile(spec,h).some(e=>e.includes("definitions: duplicate definitionId E09")),
   "duplicate hook definition ID must fail even when both copies match");
-console.log("PASS: 11 cross-file fixture/negative checks");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E14").dayIndex=10;
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E14: invalid 0-based manifest calendar")),
+  "late event E14 calendar drift must fail");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E10").dayIndex=1.5;
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E10: invalid 0-based manifest calendar")),
+  "fractional DayIndex must fail");
+console.log("PASS: 13 cross-file fixture/negative checks");
