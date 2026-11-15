@@ -335,3 +335,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** No pinned-SHA integrated test of the *current* Core/UI/Content/NPC HEADs; cross-branch green run is not merge approval.
 - **Recommended next step:** obtain fresh CI logs on current QA commit and current dependency HEADs; request stable full Core snapshot DTO before Save→Load implementation. Coordinator 00 retains all architecture and merge approvals.
 - **Safety:** no main writes, merges, foreign-branch edits, new shared contracts or IP approvals.
+
+
+## 2026-11-15 20:15 UTC+4 — QA 05: independent verification of newer cross-branch CI (#8)
+
+**One bounded task:** audited completed [QA Actions run #43725665784](https://github.com/rixed318/Probably-TAU/actions/runs/43725665784) for QA PR #10 head `ccd01c528b65c6073d1483b04513bdfce3b3014a`. Fetched all three job statuses and raw job logs. **All 3 jobs SUCCESS**. No code or workflow change in this pass; this is evidence verification only.
+
+- **Actual checked-out SHAs from raw logs:** Core `3f55e0428f455925039d1d7707db15b6c065c366`; UI `bfd8513966e297ac233861972ff67bcd1b887627`; Content `853af9d288a3f8d5ca274be75bab80a3bb08bef3`.
+- **Core .NET 8 job:** compile/run step SUCCESS; raw stdout contains PASS for PCG32, GameClock, GameStateSnapshot, Ledger, FinancialCommand and `PASS: all 5 Core golden suites.` This is pure C#, **not Unity**.
+- **UI/Content job:** mock Node, canonical Day 01 read-model and preview, art manifest and art unit tests, Content event hooks and consistency steps all SUCCESS. Raw log contains Content event-hook `PASS: 9 deterministic fixture/negative checks (including 4 ADR metadata drift checks)` and cross-file `PASS: 29 cross-file fixture/negative checks`. Python oracle/source audit job SUCCESS.
+- **Important limitation:** tested Core/UI/Content SHAs are **older than current PR heads**. The run does not establish that the current heads are green or that the branches integrate. No local execution; Unity Editor/EditMode **NOT RUN**. SaveService still deferred pending complete durable Core DTO.
+
+### Сводка для координатора 00 — 2026-11-15 20:15 UTC+4
+
+- **Latest PR heads observed:** #9 Core `9f2f3b3a77e9`, #10 QA `ccd01c528b65` before this handoff commit, #11 Content `61213269154f`, #12 UI `6b6f0c76e63b`, #14 ADR `ebdc4be28afd`, #16 NPC `2f93378766ae`, #17 ADR `bc9db999b419`. All checked PRs open/draft. No main mutation or merge.
+- **Blocker 1:** durable GameState snapshot still not established complete (ledger, obligations, command receipts/fingerprints, typed scheduled instances), so SaveService/Save→Load remains BLOCKED.
+- **Blocker 2:** cross-branch CI verified older moving-ref SHAs, not latest Core/UI/Content PR heads; pinned integrated verification missing.
+- **Blocker 3:** Unity Editor/EditMode and full gameplay integration tests NOT RUN.
+- **Recommended next step:** obtain CI evidence on latest Core/UI/Content commits with recorded checkout SHAs, then re-audit Core persistence DTO completeness before implementing SaveService. Keep PR #10 Draft; no contract approvals, main writes or merges.
