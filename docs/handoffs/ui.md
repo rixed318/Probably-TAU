@@ -321,3 +321,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Branch:** `feature/ui-5`; **PR:** #12 (Draft). **Code commit:** `9db6fea5aa579973b3a910311d1275a1d26e4377`; **test commit:** `edadb2241aadaff5699014f2d841087e18e654c4`.
 
 **Verification:** Source updates accepted by GitHub; Node test added to `prototypes/ui-day-one/test-day01-preview.cjs`, **not locally executed**. Run `node --test prototypes/ui-day-one/test-day01-preview.cjs` or inspect CI for the exact new HEAD. Actual browser 320px/200% zoom, keyboard, screen reader, and Unity tests remain **NOT RUN**. No merge or main changes.
+
+
+## CI verification · 2026-11-15 · role 03
+
+- Verified exact PR #12 HEAD `6b6f0c76e63b1d61d868f7afecd996d73373ff9b` using GitHub Actions run [#43733024210](https://github.com/rixed318/Probably-TAU/actions/runs/43733024210): `completed/success`.
+- Job **Node UI and art manifest regression (not Unity)**: `completed/success`; steps **Node UI mock and canonical Day 01 tests**, **Validate art manifest**, **Art manifest regression tests** each `success`.
+- This confirms CI for the preceding unique `aria-labelledby` document-heading regression. It does **not** confirm browser rendering at 320px/200% zoom, keyboard/screen reader behavior, Unity compile or PlayMode tests; those remain NOT RUN.
+- No changes to mock gateway, Core/GameState, money logic, content, art assets or main. PR stays Draft. This documentation-only update itself is not covered by the cited prior-HEAD CI.
