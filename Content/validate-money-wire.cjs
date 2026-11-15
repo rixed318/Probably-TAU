@@ -47,7 +47,23 @@ fails("+1");                      // plus prefix
 fails("9223372036854775808");    // above signed Int64
 fails("-9223372036854775809");   // below signed Int64
 fails("1e3");                     // exponent notation
+fails(null);                      // absent wire value
+fails(true);                      // boolean, not a money amount
+fails(" 1");                      // whitespace
+fails("1.00");                    // fractional representation
+assert.equal(validateMoney("9007199254740993"), true, "large exact Int64 decimal string");
+function failsAt(path, value) {
+  const altered = clone(spec);
+  let target = altered;
+  for (const segment of path.slice(0, -1)) target = target[segment];
+  target[path[path.length - 1]] = value;
+  const errors = inspect(altered).errors;
+  assert.equal(errors.length, 1, "expected one rejection at " + path.join("."));
+  assert.ok(errors[0].includes(path.join(".")), "expected field-specific diagnostic");
+}
+failsAt(["opening", "weeklyRevenueKopecks"], 34000000);
+
 assert.equal(validateMoney("-9223372036854775808"), true);
 assert.equal(validateMoney("9223372036854775807"), true);
 assert.equal(validateMoney("0"), true);
-console.log("PASS: 21 money fields; 8 negative mutations; 3 boundary positives");
+console.log("PASS: 21 money fields; 13 negative mutations; 4 boundary positives");
