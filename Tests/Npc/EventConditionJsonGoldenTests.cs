@@ -28,10 +28,26 @@ namespace TAU.President.Tests.Npc
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"flagEquals\",\"key\":\" PARTNER\",\"value\":\"onsite\"}"));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("[]"));
             Throws<ArgumentNullException>(() => EventConditionJsonAdapter.Parse(null));
+            // Regression for CI #43659607524: parser-level errors must honor the
+            // public FormatException contract and preserve the JSON root cause.
+            ThrowsWithJsonCause("{");
+            ThrowsWithJsonCause("{\\\"op\\\":\\\"always\\\"} trailing");
+            ThrowsWithJsonCause("{\\\"op\\\":");
+
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
             for (int i = 0; i < 33; i++) deep = "{\"op\":\"all\",\"items\":[" + deep + "]}";
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(deep));
+        }
+        private static void ThrowsWithJsonCause(string json)
+        {
+            try { EventConditionJsonAdapter.Parse(json); }
+            catch (FormatException ex)
+            {
+                Assert(ex.InnerException is System.Text.Json.JsonException);
+                return;
+            }
+            throw new Exception("Expected FormatException with JsonException cause.");
         }
         private static void Assert(bool ok) { if (!ok) throw new Exception("NPC JSON condition assertion failed."); }
         private static void Throws<T>(Action action) where T : Exception
