@@ -126,3 +126,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Prior verified CI:** NPC workflow run `43675160835` for prior head `a559ca65` concluded `success`. **Current tests NOT YET VERIFIED:** source inspected after the escaping fix, but no .NET execution result for the new head at handoff. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and inspect associated GitHub Actions. Unity EditMode NOT RUN.
 
 **Dependencies:** Full EventDirector remains blocked by concrete Core scheduled-instance DTO, atomic transaction/receipt APIs, and integration of canonical partner earnedId source. ADR-C0-002 PR #17 applies to feature work but is not merged. Next step: verify new CI, then consider independent content fixture adapter validation without inventing an EventDirector.
+
+## AutoDev 02 — Unicode JSON field alias regressions (2026-11-15)
+
+**Scope:** one independent regression increment for the strict Content JSON condition adapter. Added four cases to `Tests/Npc/EventConditionJsonGoldenTests.cs`: escaped Unicode alias for `op` must be rejected as duplicate, case-variant `Op` must be rejected as unknown, escaped `factId` alias must be rejected as duplicate, and a single escaped `op` key must parse correctly. No runtime, Core, GameState, ledger, scheduler, or Content changes.
+
+**Commits:** `c18d71872a2523af8fefea4cef1c727cd1e6d82a` initial test addition; `c68b293e3f0ba3de53d78b45d053d7398afc0134` corrected C# JSON escaping; this handoff commit follows. Branch `feature/npc-4`, PR #16 Draft. Previous HEAD `3e769292` had GitHub Actions run `43682379205` success, **but that does not validate the new tests**. Current new-HEAD CI pending confirmation; Unity Editor not run.
+
+**Dependencies:** EventDirector still BLOCKED on Core event instance/atomic command/receipt APIs. ADR-C0-002 PR #17 governs due-order for feature development; no merge to main.
