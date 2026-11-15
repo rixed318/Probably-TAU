@@ -77,6 +77,15 @@ namespace TAU.President.Tests.Npc
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"factExists\",\"factId\":\"bad\\nkey\"}"));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"flagEquals\",\"key\":\"PARTNER\",\"value\":\"onsite\\tvalue\"}"));
 
+            // Escaped control characters must be rejected after JSON unescaping,
+            // including NUL and a control character in the operator name.
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
+                "{\\\"op\\\":\\\"factExists\\\",\\\"factId\\\":\\\"E03\\\\u0000mentor\\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
+                "{\\\"op\\\":\\\"flag\\\\u000aEquals\\\",\\\"key\\\":\\\"PARTNER\\\",\\\"value\\\":\\\"onsite\\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
+                "{\\\"op\\\":\\\"flagEquals\\\",\\\"key\\\":\\\"PARTNER\\\",\\\"value\\\":\\\"on\\\\u007fsite\\\"}"));
+
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
             for (int i = 0; i < 33; i++) deep = "{\"op\":\"all\",\"items\":[" + deep + "]}";
