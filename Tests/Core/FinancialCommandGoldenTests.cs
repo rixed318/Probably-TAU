@@ -148,6 +148,8 @@ namespace TAU.President.Tests.Core
             Assert(FinancialCommandFingerprint.Compute("unicode-ё", 0, 0, canonicalPostings) !=
                 FinancialCommandFingerprint.Compute("unicode-е", 0, 0, canonicalPostings));
             // A player's machine locale must not alter persisted command identity.
+            string negativeBaseline = FinancialCommandFingerprint.Compute("locale-negative", 17, 3,
+                new LedgerEntry[] { new LedgerEntry("locale-p", "locale-s", -123456789) });
             var previousCulture = System.Globalization.CultureInfo.CurrentCulture;
             try
             {
@@ -159,8 +161,7 @@ namespace TAU.President.Tests.Core
                         canonicalPostings) == canonical);
                     Assert(FinancialCommandFingerprint.Compute("locale-negative", 17, 3,
                         new LedgerEntry[] { new LedgerEntry("locale-p", "locale-s", -123456789) }) ==
-                        FinancialCommandFingerprint.Compute("locale-negative", 17, 3,
-                            new LedgerEntry[] { new LedgerEntry("locale-p", "locale-s", -123456789) }));
+                        negativeBaseline);
                 }
             }
             finally { System.Globalization.CultureInfo.CurrentCulture = previousCulture; }
