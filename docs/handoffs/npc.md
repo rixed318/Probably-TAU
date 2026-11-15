@@ -93,3 +93,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Verification:** prior NPC workflow run `43651213848` completed success for prior head `5396808a`; this does not validate the new adapter. The updated `.csproj` links the new source and tests and the runner invokes both suites. **Local dotnet/csc/mcs NOT AVAILABLE, new CI outcome pending verification** at time of this handoff; do not claim a green test until new HEAD workflow is checked. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **Dependencies / BLOCKED:** concrete Core scheduled-instance DTO, command transaction and receipt ports still absent in Core PR #9, so no EventDirector runtime integration. Content PR #11 typed AST remains draft; earned-income source identity must be canonical and Core-owned. ADR-C0-002 PR #17 is feature-development-only, unmerged. Next: verify workflow and fix any failing assertions; then seek Content/QA review before wiring any JSON in Unity. No main changes, no merge.
+
+
+## AutoDev 02 — fix failed JSON adapter CI (2026-11-15)
+
+**One scoped task (#4):** investigated real failing GitHub Actions run [43659607524](https://github.com/rixed318/Probably-TAU/actions/runs/43659607524) on PR #16. The .NET 8 project compiled, but the deeply nested JSON negative test expected `FormatException` and received `System.Text.Json.JsonReaderException` from the JSON parser's own default 64-depth guard *before* the adapter's 32-depth guard. This is a real red test, not an infrastructure outage.
+
+**Fix:** `Runtime/Npc/EventConditionJsonAdapter.cs` now catches `JsonException` from `JsonDocument.Parse` / read and wraps it in `FormatException` (with original exception preserved as InnerException), keeping invalid JSON and over-deep input on the documented adapter error contract. No gameplay semantics, content, Core, money, RNG or scheduler changed. **Source commit:** `a06cad058df28e3a8b2d5864c00071ade1f033e8`.
+
+**Verification:** prior run 43659607524: **FAIL** in `EventConditionJsonGoldenTests.RunAll` (real log). New .NET 8 workflow for this fix: check run status before declaring pass. Local C# execution NOT RUN; Unity EditMode NOT RUN. Test command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**BLOCKED for full EventDirector:** concrete Core event-instance, atomic transaction, receipt API still absent in Core PR #9. ADR-C0-002 PR #17 applies to feature implementation, not merged main. PR #16 remains Draft; no merge.
