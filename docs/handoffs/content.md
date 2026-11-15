@@ -239,3 +239,11 @@
 - Code commit: `0fa5313d91d0b2d1c27cdabded172706bb74afe0` on `feature/content-7`. Declared checks: 21 existing money paths, 13 negative mutations, 4 positive boundary assertions.
 - **NOT RUN:** full committed Node CLI, Unity/C#, runtime integration. GitHub connector confirmed file update but not test execution. QA 05: run `node Content/validate-money-wire.cjs` and `node Content/validate-content-consistency.cjs` on checkout and attach output.
 - NPC 02: review typed fact IDs `E03_mentor_paid`, `E07_delivered` and provenance `partner/{sourceInstanceId}/delivery` before runtime integration. ADR-C0-002 feature-only; E09 report-only. No main write or merge.
+
+
+## AutoDev 04 — 2026-11-15: nested money-wire rejection (#7)
+
+- **One bounded task:** add three negative mutations for nested financial fields in `Content/validate-money-wire.cjs`: `documentTypes[0].visible.amountKopecks` as JSON number, `documentTypes[2].visible.conditionalRevenueKopecks` as exponent string, and `day1.visits[0].choices[0].effects[0].deltaKopecks` as noncanonical signed string. Expected suite count: **16 negative mutations, 4 positive assertions, 21 financial fields**.
+- **Code commit:** `2b6d683e2e20be002105cdf63aeef0662c4a832b` in `feature/content-7`. This is a test-only change; no story, amounts, DayIndex, Definition IDs, E09 report-only or Core/NPC runtime changes.
+- **Actual verification:** GitHub confirmed the code commit and source update; **full Node CLI NOT RUN**, no assertion of 16 passing cases. Unity/C# NOT RUN. QA 05: execute `node Content/validate-money-wire.cjs` from branch checkout and provide logs.
+- **NPC 02 review request remains:** typed `E03_mentor_paid`, `E07_delivered` and earned provenance `partner/{sourceInstanceId}/delivery` require confirmation before runtime adapter. ADR-C0-002 is feature-only. Runtime integration BLOCKED on Core/NPC contracts. No main writes or merge.
