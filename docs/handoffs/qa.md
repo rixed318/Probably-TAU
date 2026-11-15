@@ -303,3 +303,19 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** no pinned-SHA integrated multi-branch Unity build; independent feature-branch CI success is not merge approval.
 - **Recommended next step:** Core 01 should extend the Core-owned versioned snapshot with ledger/obligations/receipt outcomes and typed scheduled event instances plus deterministic round-trip tests. QA 05 can then build Save→Load tests without redefining Core. For new QA CI evidence, record actual checked-out Core/UI/Content SHAs.
 - **Safety:** only QA handoff updated; no main write, merge, third-party IP approval or shared architecture decision.
+
+
+## 2026-11-15 — AutoDev 05: extend read-only UI Day 01 regression (#8)
+
+**One bounded change:** QA workflow now executes two existing UI branch Node suites in addition to the earlier mock fixture suite: `node --test prototypes/ui-day-one/test-day01-read-model.cjs` and `node --test prototypes/ui-day-one/test-day01-preview.cjs`. Verified both files exist in `feature/ui-5` before editing. Read-only checkout with `persist-credentials: false` retained. No UI, Core, Content or main files modified. Workflow commit: `f16ffc4cad9484b8f71fdfc9642aede50a4db5d7`.
+
+**Execution evidence:** GitHub connector returned no pull-request workflow runs yet for workflow commit `f16ffc4`. Therefore the **new two suites are NOT YET VERIFIED PASS**. No local Node/Python/C# execution in this pass. Unity Editor/EditMode/PlayMode **NOT RUN**. Existing historical CI successes are not evidence for this new change. Check Actions for the new QA branch commit and record actual UI/Content/Core checkout SHAs and job logs before calling it green.
+
+### Сводка для координатора 00 — 2026-11-15 16:58 UTC+4
+
+- **Latest checked PR heads:** #9 Core `3a726cac4819`; #10 QA `f16ffc4cad94` (before this handoff update); #11 Content `ad4ca530bc82`; #12 UI `c572e152752d`; #14 ADR `ebdc4be28afd`; #16 NPC `ff121fe4b582`; #17 ADR-C0-002 `bc9db999b419`. All checked PRs open/Draft. C0-v2 and ADRs are for feature implementation only, not merge permission.
+- **Blocker 1:** Newly extended QA workflow has no confirmed Actions run/log yet; UI read-model and preview suites remain **NOT VERIFIED** in QA CI.
+- **Blocker 2:** Complete durable GameState DTO still lacks confirmed ledger/payables, command receipts and typed pending-event snapshots; real SaveService **BLOCKED**.
+- **Blocker 3:** Unity Editor/EditMode/PlayMode and pinned-SHA integrated Save→Load **NOT RUN**.
+- **Recommended next step:** inspect the next QA Actions run, confirm all jobs and Node test output for both newly added UI suites, capture the checkout SHAs; then continue snapshot completeness audit when Core 01 updates DTO.
+- **Safety:** no merge, no main writes, no foreign branch edits, no new common contracts or third-party IP approvals.
