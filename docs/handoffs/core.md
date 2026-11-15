@@ -305,3 +305,10 @@ Previous HEAD `3f55e042` GitHub Actions run 43718143815 completed/success, but i
 **One bounded test-only task:** commit `202e043947b423566d558fce915a204d71e989c5` extends `FinancialCommandGoldenTests.RunAll()` with a verified-command save/load boundary regression. Export one committed canonical SHA-256 receipt, reconstruct `FinancialCommandState.Restore`, replay the identical command via `ExecuteVerified` and assert no additional ledger entry or receipt. Reuse the same CommandId with modified postings and the original fingerprint, assert `Rejected / InvalidCommandFingerprint`, unchanged state and cash. No new public contract, production code, other subsystem or Unity scaffold changes.
 
 **Verification:** check GitHub Actions on the exact test commit and handoff HEAD; do not infer PASS from an older workflow. Unity Editor/EditMode NOT RUN. The financial-only state is not the full durable GameState/SaveEnvelope. Next substantive blocker remains QA/00-approved complete GameState snapshot with Ledger, obligations, verified receipts and typed due events. PR #9 stays Draft; no main merge or Issue closure.
+
+
+## AutoDev 01 — 15.11.2026: verified atomic overdraft rollback (#2)
+
+**One bounded test-only task:** commit `4873559309335cfa6b1d4e65f4eee4f715e37e8c` extends `Tests/Core/FinancialCommandGoldenTests.cs`. A canonical SHA-256 verified two-posting command (first affordable, second overdraws) must reject the entire transaction without ledger, receipt, revision or cash mutation. A corrected affordable command reusing the rejected CommandId must then commit exactly once. No public API, financial policy, Unity scaffold, or other subsystem changed.
+
+**CI:** previous handoff HEAD `e6f6f6f1` had a completed/success .NET 8 PR workflow #43736980365. This is **not** evidence for the new test commit; verify the exact new code SHA in GitHub Actions before claiming PASS. Unity Editor/EditMode NOT RUN. Full GameState snapshot and SaveService integration remain outstanding. PR #9 stays Draft, no main write/merge/Issue closure.
