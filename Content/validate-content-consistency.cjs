@@ -42,6 +42,27 @@ function validateCrossFile(spec,hooks){
     errors.push(`${event.id}: unresolved feed ${target}`);
   }
  }
+ // Same-day feeds are allowed, but cycles make narrative dependencies impossible to resolve.
+ // Inspect event-to-event edges only; projects and the deferred chapter hook are terminal metadata.
+ // This does NOT execute or schedule events.
+ const visited=new Set(),active=new Set(),reportedCycles=new Set();
+ function visitFeed(id){
+  if(active.has(id))return;
+  if(visited.has(id))return;
+  visited.add(id);active.add(id);
+  const event=eventById.get(id);
+  if(event&&Array.isArray(event.feeds)){
+   for(const target of event.feeds){
+    if(!eventById.has(target))continue;
+    if(active.has(target)){
+     const edge=id+" -> "+target;
+     if(!reportedCycles.has(edge)){errors.push(`eventManifest: cyclic feed ${edge}`);reportedCycles.add(edge);}
+    }else visitFeed(target);
+   }
+  }
+  active.delete(id);
+ }
+ for(const event of spec.eventManifest)if(typeof event.id==="string")visitFeed(event.id);
  const manifest=new Map(spec.eventManifest.map(e=>[e.id,e]));
  const definitions=new Map(hooks.definitions.map(d=>[d.definitionId,d]));
  for(const id of ["E02","E03","E09"]){
@@ -145,4 +166,11 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E07: backward feed to E
 s=clone(spec);s.eventManifest.find(e=>e.id==="E10").feeds.push("P02");
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E10: duplicate feed P02")),
   "duplicate project feed must fail");
-console.log("PASS: 16 cross-file fixture/negative checks");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E03").feeds.push("E02");
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: cyclic feed")),
+  "same-day two-event cycle E02 -> E03 -> E02 must fail");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E05").feeds.push("E04");
+s.eventManifest.find(e=>e.id==="E04").feeds.push("E05");
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: cyclic feed")),
+  "same-day two-event cycle E04 -> E05 -> E04 must fail");
+console.log("PASS: 18 cross-file fixture/negative checks");
