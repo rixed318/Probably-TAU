@@ -14,7 +14,7 @@
       summary.setAttribute("role", "alert");
     }
     if (conflicts) conflicts.replaceChildren();
-    if (documents) documents.replaceChildren();
+    if (documents) { documents.replaceChildren(); documents.setAttribute("aria-busy", "false"); }
   }
 
   // Never leave a misleading loading state when the fixture is unavailable.
@@ -66,6 +66,7 @@
           " (не начислен при подписании)");
       }
     }
+    documents.setAttribute("aria-busy", "false");
   }
   try {
     render();
