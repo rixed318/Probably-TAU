@@ -387,3 +387,19 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Unity Editor/EditMode/PlayMode and integrated Save→Load **NOT RUN**.
 - **Recommended next step:** inspect next QA Actions job log and record exact Core/UI/Content SHA + money-wire PASS/FAIL. Then add pinned-SHA release-check or read-only NPC runner as one separately verified QA task.
 - **Safety:** no merges, main writes, foreign-branch edits, or IP/architecture approvals.
+
+
+## 2026-11-16 01:20 UTC+4 — QA 05: read-only NPC .NET runner (Issues #8/#18)
+
+**One bounded code change:** added `npc-conditions-regression` job to `.github/workflows/qa-offline.yml` on QA branch `feature/save-6`, workflow commit `f0b552134f1b91a859fc9832a3901822d7fb00b8`. It checks out `feature/npc-4` read-only (`persist-credentials: false`), prints actual `NPC_SHA`, installs .NET 8 and runs `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. Confirmed the csproj and NPC's own workflow exist at NPC head `89f2f04bce64a5d2817397826e3d2f206fd075d4` before editing. No NPC source changed.
+
+**Execution:** new QA workflow job **NOT VERIFIED** until a completed GitHub Actions run and logs are inspected. No local .NET/Node/Python or Unity Editor/EditMode/PlayMode tests executed in this pass. Existing Content money-wire step remains in workflow, but no new PASS claim is made. Moving Core/UI/Content/NPC refs are still unpinned; this is NOT a release-check or Unity compile. UI standalone `prototypes/ui-day-one/day01-playable.html` exists in UI branch (blob `c33773809f2ed8fc0d4367364681d3ca77a48629`), but offline launch, interaction, and downloadable artifact are **NOT VERIFIED**. Issue #18 status: **BLOCKED / NOT READY_FOR_OWNER_TEST** until exact-SHA playable demo, end-day/financial assertions, offline launch and artifact are evidenced.
+
+### Сводка для координатора 00 — 2026-11-16 01:20 UTC+4
+
+- **PR HEADs checked before QA update:** #9 Core `cf4c9b4be0dc2be727e4e151e325b04c7134d10b`, #10 QA `73107fc4c6aaf48e03c142d06623dd654a733f76`, #11 Content `41558e123b70c5a29bbcbd321e34d05904b52ab0`, #12 UI `cf4de6ed525b25abdce09737d9101b0fc5ff210b`, #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`, #16 NPC `89f2f04bce64a5d2817397826e3d2f206fd075d4`. QA workflow commit `f0b552134f1b91a859fc9832a3901822d7fb00b8`; this handoff commit follows.
+- **Blocker 1:** QA new NPC job needs real CI logs; moving refs have no fail-closed pinned-SHA integration mode.
+- **Blocker 2:** Issue #18 owner demo offline launch, three visitor choices, EndDay financial invariants and downloadable artifact not independently evidenced.
+- **Blocker 3:** Core durable snapshot/Save→Load not confirmed complete; Unity Editor/EditMode/PlayMode NOT RUN.
+- **Next step:** inspect CI for QA workflow commit and exact checkout SHAs, then independently verify UI #12 playable artifact/launch and Node gameplay assertions for Issue #18. Do not announce READY_FOR_OWNER_TEST without evidence.
+- **Safety:** no changes to main/other branches, no merges, no new architecture contracts or third-party IP approvals.
