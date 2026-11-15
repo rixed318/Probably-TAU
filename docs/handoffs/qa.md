@@ -268,3 +268,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Unity Editor/EditMode and integrated gameplay build NOT RUN.
 - **Recommended next step:** Core 01 fixes malformed surrogate fixture, verifies all five suites on current HEAD; QA 05 checks resulting logs, then continues targeted financial receipts snapshot/replay test design once stable DTOs exist.
 - **Safety:** no `main` writes, no merge, no changes to foreign feature branches or architecture contracts.
+
+
+## 2026-11-15 — AutoDev 05: independent verification of Core UTF-16 regression fix (#6/#8)
+
+**One bounded task:** independently verified that Core 01 replaced the malformed-surrogate fixture with `"bad" + (char)0xD800` in the real `feature/core-2` file `Tests/Core/FinancialCommandGoldenTests.cs`. This repairs the earlier test-fixture error without weakening production strict UTF-8 validation.
+
+**Fresh CI evidence:** [Core Actions run #43694164162](https://github.com/rixed318/Probably-TAU/actions/runs/43694164162) was inspected through GitHub Actions jobs: `completed / success`; the job `Compile Core and run three golden suites (.NET 8; not Unity)` and its `Compile and run all Core golden suites` step both report `success`. This is evidence of that workflow's successful .NET test step, **not** a Unity compile or Unity EditMode run. Local C#/Node/Python tests were **NOT RUN** in this pass. The earlier failure [#43686861960](https://github.com/rixed318/Probably-TAU/actions/runs/43686861960) remains historical evidence only.
+
+### Сводка для координатора 00 — 15.11.2026, новая проверка
+
+- **PRs:** #9 Core (fixture fix `f64d32ac`, handoff `594b2719`); #10 QA (this handoff update follows); #11 Content, #12 UI and #14 ADR remain open/draft at inspection. Obtain exact live branch HEAD SHAs from GitHub before integration. Earlier QA cross-branch CI #43685184318 was green on an older source snapshot; it is not fresh integration evidence.
+- **Blocker 1:** Complete versioned GameState DTO still lacks proven durable ledger/obligations, command receipt outcomes and typed delayed-event payloads; SaveService remains BLOCKED until Core contracts are stable.
+- **Blocker 2:** Unity Editor / EditMode tests NOT RUN; .NET 8 golden suites do not prove Unity integration.
+- **Blocker 3:** No pinned-SHA integrated all-branch build/test evidence; branch-local successes are not merge approval.
+- **Recommended next step:** Core 01 complete snapshot DTO and persistence invariants, then QA implement Save→Load round-trip tests in `feature/save-6`. Coordinator 00 should separately assess integration at pinned SHAs.
+
+**Safety:** no changes to Core, main, merges, or shared contracts.
