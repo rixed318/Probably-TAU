@@ -80,6 +80,9 @@ jobs:
       - name: Content cross-file consistency validation
         run: node Content/validate-content-consistency.cjs
         working-directory: content
+      - name: Content canonical money wire validation
+        run: node Content/validate-money-wire.cjs
+        working-directory: content
 
   core-ledger-regression:
     name: Core ledger and snapshot .NET 8 regression (not Unity)
