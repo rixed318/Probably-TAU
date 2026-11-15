@@ -134,3 +134,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Commits:** `c18d71872a2523af8fefea4cef1c727cd1e6d82a` initial test addition; `c68b293e3f0ba3de53d78b45d053d7398afc0134` corrected C# JSON escaping; this handoff commit follows. Branch `feature/npc-4`, PR #16 Draft. Previous HEAD `3e769292` had GitHub Actions run `43682379205` success, **but that does not validate the new tests**. Current new-HEAD CI pending confirmation; Unity Editor not run.
 
 **Dependencies:** EventDirector still BLOCKED on Core event instance/atomic command/receipt APIs. ADR-C0-002 PR #17 governs due-order for feature development; no merge to main.
+
+
+## AutoDev 02 — missing-field JSON contract regression (2026-11-15)
+
+**One scoped task (#4):** normalized missing required `op`, `key`, `value`, `factId` fields in the independent Content condition adapter to `FormatException` instead of leaking `KeyNotFoundException`. Added seven negative golden cases, including absent `dayIndexAtLeast.value` and `all.items` (already covered by the existing field guard). No new scheduler, GameState, ledger, event mutation, or content schema approval.
+
+**Commits:** implementation `d28e4afb31ea4c0c3f596c2a24f18548d9d31e74`; tests `d59e61fc3f18870ca626576cf7a0ed02c2bcc65b`; corrected test escaping `0f5cc9464737f554ac963777102991ddc468840b`. All on `feature/npc-4`, PR #16 remains Draft. Prior head `3f13fea1` had GitHub Actions success #43689843236; this **does not validate the new commits**. New CI must be checked separately; no local Unity or .NET execution claimed.
+
+**Dependencies / BLOCKED for EventDirector:** Core 01 must supply compatible event instance/queue DTOs, atomic transaction and receipt APIs; Content 04 must finalize typed AST and canonical earnedId/source identity. ADR-C0-002 PR #17 is feature-only; never merge without owner permission.
