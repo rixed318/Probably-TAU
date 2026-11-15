@@ -5,6 +5,16 @@ const fs=require("node:fs"),path=require("node:path"),assert=require("node:asser
 const load=name=>JSON.parse(fs.readFileSync(path.join(__dirname,name),"utf8"));
 function validateCrossFile(spec,hooks){
  const errors=[];
+ // A Map silently overwrites duplicate IDs; reject ambiguous content before lookup.
+ for(const [items,key,label] of [[spec.eventManifest,"id","eventManifest"],[hooks.definitions,"definitionId","definitions"]]){
+  const seen=new Set();
+  for(const item of items){
+   const id=item[key];
+   if(typeof id!=="string"||!id.trim())errors.push(`${label}: invalid ${key}`);
+   else if(seen.has(id))errors.push(`${label}: duplicate ${key} ${id}`);
+   else seen.add(id);
+  }
+ }
  const manifest=new Map(spec.eventManifest.map(e=>[e.id,e]));
  const definitions=new Map(hooks.definitions.map(d=>[d.definitionId,d]));
  for(const id of ["E02","E03","E09"]){
@@ -87,4 +97,10 @@ assert.ok(validateCrossFile(spec,h).some(e=>e.includes("missing branch flag")),
   "partner flag under bypassable OR must fail");
 h=clone(hooks);h.definitions.find(d=>d.definitionId==="E09").effects.push({type:"proposeEarnedIncome"});
 assert.ok(validateCrossFile(spec,h).length>0,"E09 double posting must fail");
-console.log("PASS: 9 cross-file fixture/negative checks");
+s=clone(spec);s.eventManifest.push(clone(s.eventManifest.find(e=>e.id==="E02")));
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: duplicate id E02")),
+  "duplicate manifest ID must fail even when both copies match");
+h=clone(hooks);h.definitions.push(clone(h.definitions.find(d=>d.definitionId==="E09")));
+assert.ok(validateCrossFile(spec,h).some(e=>e.includes("definitions: duplicate definitionId E09")),
+  "duplicate hook definition ID must fail even when both copies match");
+console.log("PASS: 11 cross-file fixture/negative checks");
