@@ -115,3 +115,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Evidence:** the preceding post-fix .NET workflow for head `49ce22ee`, run [43667185679](https://github.com/rixed318/Probably-TAU/actions/runs/43667185679), completed **success**. It does **not** validate these newly added tests. Current new-head .NET CI outcome: **NOT VERIFIED** until checked on the final handoff commit. No local dotnet/Unity execution in this run. Manual command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **Dependencies / BLOCKED:** EventDirector requires Core-owned event instance DTO, command transaction and receipt APIs; the current `GameStateSnapshotDto` still only has pending/completed ID lists. ADR-C0-002 PR #17 remains feature-only/unmerged. No merge or main writes.
+
+
+## AutoDev 02 — partner condition regression (2026-11-15)
+
+**One bounded task (#4):** extended `Tests/Npc/EventConditionJsonGoldenTests.cs` with regression assertions for Content PR #11's mutually exclusive onsite/remote partner conditions, ordinal/case-sensitive flag matching, DayIndex=3 vs 4, Int32.MaxValue day boundary, and nested duplicate JSON field rejection. This does not post money or create event instances; it only checks the existing pure JSON condition adapter. No changes to runtime implementation or Core.
+
+**Commits:** `0c0d283a5b86f4301ed4f3a2263afcfde6a6fc58` tests, `38f020f62387ee894e1cc35342faec8be6bc3368` C# JSON literal escaping correction; this handoff committed separately. All writes in `feature/npc-4`, PR #16 Draft; no main/merge operations.
+
+**Prior verified CI:** NPC workflow run `43675160835` for prior head `a559ca65` concluded `success`. **Current tests NOT YET VERIFIED:** source inspected after the escaping fix, but no .NET execution result for the new head at handoff. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and inspect associated GitHub Actions. Unity EditMode NOT RUN.
+
+**Dependencies:** Full EventDirector remains blocked by concrete Core scheduled-instance DTO, atomic transaction/receipt APIs, and integration of canonical partner earnedId source. ADR-C0-002 PR #17 applies to feature work but is not merged. Next step: verify new CI, then consider independent content fixture adapter validation without inventing an EventDirector.
