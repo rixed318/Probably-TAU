@@ -329,3 +329,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Job **Node UI and art manifest regression (not Unity)**: `completed/success`; steps **Node UI mock and canonical Day 01 tests**, **Validate art manifest**, **Art manifest regression tests** each `success`.
 - This confirms CI for the preceding unique `aria-labelledby` document-heading regression. It does **not** confirm browser rendering at 320px/200% zoom, keyboard/screen reader behavior, Unity compile or PlayMode tests; those remain NOT RUN.
 - No changes to mock gateway, Core/GameState, money logic, content, art assets or main. PR stays Draft. This documentation-only update itself is not covered by the cited prior-HEAD CI.
+
+
+## AutoDev 03 · 2026-11-15 · Canonical Day01 queue selection (#5)
+
+- **One bounded feature:** standalone `day01-preview.html` now exposes three keyboard-operable queue buttons; selection displays the matching canonical document card and marks the active button with `aria-pressed`. The separate `day01-selection-gateway.cjs` holds only a selected document ID, reads the immutable canonical fixture, and never writes to GameState, money, room bookings, or the legacy single-case mock.
+- **Files:** `prototypes/ui-day-one/day01-selection-gateway.cjs`, `day01-preview.html`, `day01-preview.js`, `test-day01-selection.cjs`.
+- **Tests added:** two Node tests for three-document selection, invalid IDs, and immutable starting money/conditional revenue. **NOT RUN locally**: clone failed with `Could not resolve host: github.com`. GitHub Actions for new HEAD not yet confirmed. Browser/Unity tests NOT RUN.
+- **Remaining functional priority:** end-of-day report preview for three decisions using display-only mock projections, without invented Core finance. Preserve old `fixtures.js` and `index.html` until coordinator review.
+- **Integration:** PR #12 Draft, no main merge. C0-v2 PR #9 and ADR PR #14 remain contract references; no runtime adapter implemented.
