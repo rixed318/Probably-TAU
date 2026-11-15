@@ -104,3 +104,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Verification:** prior run 43659607524: **FAIL** in `EventConditionJsonGoldenTests.RunAll` (real log). New .NET 8 workflow for this fix: check run status before declaring pass. Local C# execution NOT RUN; Unity EditMode NOT RUN. Test command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **BLOCKED for full EventDirector:** concrete Core event-instance, atomic transaction, receipt API still absent in Core PR #9. ADR-C0-002 PR #17 applies to feature implementation, not merged main. PR #16 remains Draft; no merge.
+
+
+## AutoDev 02 — malformed JSON exception regression (#4, 2026-11-15)
+
+**Scoped task:** add regression coverage for the parser-level `JsonException` → public `FormatException` contract fixed in commit `a06cad05`. Added three negative fixtures to `Tests/Npc/EventConditionJsonGoldenTests.cs`: truncated JSON, trailing garbage, and incomplete property value. Each asserts a `FormatException` with `System.Text.Json.JsonException` as `InnerException`. No production behavior, Core state, scheduling, ledger, content, or Unity runtime was changed.
+
+**Commits:** `8a7d9a71c3415a8bd7b88986f729984c605f3956` (test additions), `50868075dd1d597134ba0ae1868ab12d94dd2d2b` (correct C# fixture escaping); this handoff follows as a separate commit. PR #16 remains Draft.
+
+**Evidence:** the preceding post-fix .NET workflow for head `49ce22ee`, run [43667185679](https://github.com/rixed318/Probably-TAU/actions/runs/43667185679), completed **success**. It does **not** validate these newly added tests. Current new-head .NET CI outcome: **NOT VERIFIED** until checked on the final handoff commit. No local dotnet/Unity execution in this run. Manual command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**Dependencies / BLOCKED:** EventDirector requires Core-owned event instance DTO, command transaction and receipt APIs; the current `GameStateSnapshotDto` still only has pending/completed ID lists. ADR-C0-002 PR #17 remains feature-only/unmerged. No merge or main writes.
