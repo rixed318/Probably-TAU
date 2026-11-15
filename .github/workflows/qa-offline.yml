@@ -62,6 +62,12 @@ jobs:
       - name: UI Node mock regression
         run: node --test prototypes/ui-day-one/test-fixtures.cjs
         working-directory: ui
+      - name: UI canonical Day 01 read-model regression
+        run: node --test prototypes/ui-day-one/test-day01-read-model.cjs
+        working-directory: ui
+      - name: UI canonical Day 01 preview regression
+        run: node --test prototypes/ui-day-one/test-day01-preview.cjs
+        working-directory: ui
       - name: UI art manifest validation
         run: python3 tools/art/validate_manifest.py
         working-directory: ui
