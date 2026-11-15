@@ -88,6 +88,7 @@ test("broken read-model functions fail closed with an alert and no partial cards
   assert.equal(nodes["day01-summary"].attributes.role, "alert");
   assert.equal(nodes["day01-conflicts"].children.length, 0);
   assert.equal(nodes["day01-documents"].children.length, 0);
+  assert.equal(nodes["day01-documents"].attributes["aria-busy"], "false");
 });
 
 test("no-JavaScript fallback explains why documents are unavailable without external services", () => {
