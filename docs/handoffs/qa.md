@@ -319,3 +319,19 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Unity Editor/EditMode/PlayMode and pinned-SHA integrated Save→Load **NOT RUN**.
 - **Recommended next step:** inspect the next QA Actions run, confirm all jobs and Node test output for both newly added UI suites, capture the checkout SHAs; then continue snapshot completeness audit when Core 01 updates DTO.
 - **Safety:** no merge, no main writes, no foreign branch edits, no new common contracts or third-party IP approvals.
+
+
+## 2026-11-15 — AutoDev 05: verify new UI Day 01 QA suites (#8)
+
+**One bounded task:** verify the two newly added UI canonical Node regression suites in the actual QA cross-branch workflow, including raw GitHub Actions job logs. No source/test workflow changes in this pass.
+
+**New evidence:** [QA Actions #43716587348](https://github.com/rixed318/Probably-TAU/actions/runs/43716587348), completed **success**, all three jobs **success**. Inspected raw logs of UI/Content job `132819357210`: mock Node **8/8 PASS**, canonical Day 01 read-model Node **7/7 PASS**, canonical Day 01 preview Node **11/11 PASS**; art validator Python unittest **8/8 PASS**; manifest validation and both Content Node validation steps completed successfully. The workflow read-only checkout logs pin UI `c572e152752d3a9fdd20b4daab0b7138175b706e` and Content `ad4ca530bc826bb9c69d16f996e91ba1769c8f45`. These are **historical checked-out revisions**, not current branch HEADs. Core .NET and PCG32 jobs also succeeded in this run; no Unity compile is implied. Local Node/Python/C# **NOT RUN**. Unity Editor/EditMode/PlayMode **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-15, 18:40 UTC+4
+
+- **Current PR HEADs inspected:** #9 Core `3f55e0428f45`; #10 QA `146a203a33e9` before this handoff commit; #11 Content `853af9d288a3`; #12 UI `bfd8513966e2`; #14 ADR `ebdc4be28afd`; #16 NPC `9ffbf1ff7bbf`; #17 ADR `bc9db999b419`. All open/Draft. QA Actions #43716587348 passed against earlier pinned UI/Content revisions; it does **not** establish success of their newer HEADs.
+- **Blocker 1:** Complete Core-owned durable GameState DTO (ledger/payables, verified command receipts, typed pending event payloads) is not confirmed; real SaveService **BLOCKED**.
+- **Blocker 2:** Unity Editor/EditMode/PlayMode and end-to-end Save→Load **NOT RUN**.
+- **Blocker 3:** No pinned-SHA integrated test of the *current* Core/UI/Content/NPC HEADs; cross-branch green run is not merge approval.
+- **Recommended next step:** obtain fresh CI logs on current QA commit and current dependency HEADs; request stable full Core snapshot DTO before Save→Load implementation. Coordinator 00 retains all architecture and merge approvals.
+- **Safety:** no main writes, merges, foreign-branch edits, new shared contracts or IP approvals.
