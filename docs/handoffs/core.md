@@ -240,3 +240,16 @@
 - **Проверка:** .NET 8 GitHub Actions workflow для commit `8d7106bd` **NOT VERIFIED** на момент записи (связанных PR runs пока не обнаружено). Предыдущий run `43664000246` прошёл, но не покрывает новые изменения. Локально dotnet/Unity Editor не запускались. Команда: `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`.
 - **Следующий блокер:** полное persisted GameState с ledger/receipts и проверяемый canonical command fingerprint; не заявлять Save→Load интеграцию.
 - **Безопасность:** изменена только `feature/core-2`, PR #9 остаётся Draft; main/Issues/чужие подсистемы не затронуты.
+
+
+## 18. AutoDev 01 — canonical fingerprint + opt-in verified financial boundary (15.11.2026)
+
+**Scope:** one bounded Core #2 security/determinism increment, no GameState/SaveService/Unity scaffold or change to approved C0. Prior receipt export/restore run [43672224600](https://github.com/rixed318/Probably-TAU/actions/runs/43672224600) was completed/success for previous HEAD; it is not evidence for this new code.
+
+**Files/commits:** `Runtime/Core/FinancialCommandFingerprint.cs` (commit `c9411274`) computes deterministic versioned SHA-256 over commandId, expected revision/day and the entire ordered ledger posting sequence (IDs, source IDs, Int64 deltas) using length-prefixed UTF-8 and invariant decimal integer strings. `ExecuteVerified` rejects an incorrect caller-provided fingerprint before any replay/collision/ledger handling. `Tests/Core/FinancialCommandGoldenTests.cs` (commit `ecc2098b`) covers deterministic digest, order/amount/command/revision sensitivity, verified commit and replay, forged payload rejection without mutation and invalid null posting. Existing fifth suite stays registered to preserve the QA workflow output gate.
+
+**Contract boundary:** this is an **opt-in** verified entry point; legacy `FinancialCommandProcessor.Execute` still accepts caller-provided fingerprints for compatibility with existing prototype tests and is **not** a secure integration boundary. New integrations must use `FinancialCommandFingerprint.ExecuteVerified`. The hash format is versioned `tau-financial-command-v1`; changes require explicit migration/ADR. No SaveEnvelope, durable full GameState receipts, payables, event queue, NPC adapter, domain events or Unity integration are claimed.
+
+**Verification:** source committed to `feature/core-2`; latest .NET 8 workflow must be inspected for completed/success before marking this new change green. Unity Editor/EditMode NOT RUN. No main writes, merges or Issue closures.
+
+**Next:** verify CI; then implement one bounded Core domain GameState transaction/receipt integration step after QA review.
