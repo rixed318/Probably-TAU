@@ -73,10 +73,14 @@ namespace TAU.President.Npc
             {
                 case "always": return true;
                 case "flagEquals":
-                    string actual;
-                    return flags.TryGetValue(node.Key, out actual)
-                        && string.Equals(actual, node.Value, StringComparison.Ordinal);
-                case "factExists": return facts.Contains(node.Key);
+                    foreach (var entry in flags)
+                        if (string.Equals(entry.Key, node.Key, StringComparison.Ordinal))
+                            return string.Equals(entry.Value, node.Value, StringComparison.Ordinal);
+                    return false;
+                case "factExists":
+                    foreach (string fact in facts)
+                        if (string.Equals(fact, node.Key, StringComparison.Ordinal)) return true;
+                    return false;
                 case "dayIndexAtLeast": return day >= node.DayIndex.Value;
                 case "all":
                     foreach (var child in node.Items)
