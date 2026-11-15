@@ -275,3 +275,12 @@
 ## AutoDev 01 — 15.11.2026: malformed posting/source ID regression coverage
 
 **One bounded test-only task** after confirming current branch Core .NET 8 CI `43694171144` completed/success for HEAD `594b2719`: extended `Tests/Core/FinancialCommandGoldenTests.cs` to verify that malformed UTF-16 in a posting ID is rejected by strict fingerprint computation and malformed source ID is rejected by `ExecuteVerified` as `InvalidCommandEncoding` with original financial state untouched. Commit `afce0a1f`. No production API or C0/ADR contract change. The prior green run does **not** verify this new test commit; check the new GitHub Actions workflow before claiming success. Unity Editor/EditMode NOT RUN. PR #9 stays Draft; no main write/merge/Issue closure.
+
+
+## AutoDev 01 — malformed posting ID verified-boundary regression (15.11.2026)
+
+**Scope:** one bounded Issue #2 test-only increment in `feature/core-2`. Existing strict UTF-8 code rejects malformed posting IDs during fingerprint computation, but the verified execution boundary lacked a direct assertion for this specific field.
+
+**Commit:** `dbc7f361d3e5dd418220b431d72085078da47c52` updates `Tests/Core/FinancialCommandGoldenTests.cs` to call `FinancialCommandFingerprint.ExecuteVerified` with an unpaired UTF-16 surrogate in `LedgerEntry.PostingId`, asserting `Rejected / InvalidCommandEncoding`, identical original state, and no ledger or receipt mutation. No production API, contract, Unity, or other role changes.
+
+**Verification:** preceding Core .NET 8 run [43701790337](https://github.com/rixed318/Probably-TAU/actions/runs/43701790337) completed/success for prior HEAD `74ecb8b0`; this does **not** validate the new test. Query workflow for this new commit before claiming PASS. Unity Editor/EditMode not run. PR #9 remains Draft; do not merge or close Issues.
