@@ -53,16 +53,15 @@ namespace TAU.President.Tests.Npc
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
                 "{\"op\":\"all\",\"items\":[{\"op\":\"always\",\"op\":\"always\"}]}"));
 
-            // JSON property names are compared after Unicode unescaping; escaped
-            // aliases must not bypass duplicate-field detection or field allowlists.
+            // Escaped JSON field aliases are decoded before duplicate/allowlist checks.
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
-                "{\\\"op\\\":\\\"always\\\",\\\"\\u006fp\\\":\\\"always\\\"}"));
+                "{\"op\":\"always\",\"\\u006fp\":\"always\"}"));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
-                "{\\\"op\\\":\\\"always\\\",\\\"Op\\\":\\\"always\\\"}"));
+                "{\"op\":\"always\",\"Op\":\"always\"}"));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
-                "{\\\"op\\\":\\\"factExists\\\",\\\"factId\\\":\\\"E07_delivered\\\",\\\"\\u0066actId\\\":\\\"E07_delivered\\\"}"));
+                "{\"op\":\"factExists\",\"factId\":\"E07_delivered\",\"\\u0066actId\":\"E07_delivered\"}"));
             Assert(EventConditionEvaluator.Evaluate(
-                EventConditionJsonAdapter.Parse("{\\\"\\u006fp\\\":\\\"always\\\"}"),
+                EventConditionJsonAdapter.Parse("{\"\\u006fp\":\"always\"}"),
                 0, flags, facts));
 
             // A deeply nested untrusted tree must fail before stack exhaustion.
