@@ -338,3 +338,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Tests added:** two Node tests for three-document selection, invalid IDs, and immutable starting money/conditional revenue. **NOT RUN locally**: clone failed with `Could not resolve host: github.com`. GitHub Actions for new HEAD not yet confirmed. Browser/Unity tests NOT RUN.
 - **Remaining functional priority:** end-of-day report preview for three decisions using display-only mock projections, without invented Core finance. Preserve old `fixtures.js` and `index.html` until coordinator review.
 - **Integration:** PR #12 Draft, no main merge. C0-v2 PR #9 and ADR PR #14 remain contract references; no runtime adapter implemented.
+
+
+## AutoDev 03 · 2026-11-16 · P0 Issue #18 standalone offline playable Day01
+- Implemented `prototypes/ui-day-one/day01-playable.html` + `day01-playable.js` + isolated `day01-gameplay-gateway.cjs` using the existing canonical read model. Legacy `index.html`/`fixtures.js` and read-only preview are unchanged.
+- Three distinct visitor documents, optional inspections, three choices per document, competing L-204 requests (never automatic bookings), budget in integer BigInt kopecks, five Q/S/M/E/R metrics, EndDay gated until all three decisions, immutable closed report with mock ledger, idempotent repeated EndDay. No partner income credited at signing. All mock consequences are **demonstration choices**, not authoritative Core policy.
+- Run: download and extract `day01-web-demo` from GitHub Actions, double-click `day01-playable.html` on Windows. Offline dependencies are relative files in the same folder; no server required. See `HOW_TO_PLAY.txt`.
+- Node tests: `node --test prototypes/ui-day-one/test-day01-gameplay.cjs`. Workflow `.github/workflows/ui-smoke.yml` includes tests and artifact upload.
+- **NOT VERIFIED at authoring time:** new HEAD CI, downloadable artifact existence, Windows browser manual run, Unity Editor. Do not call READY_FOR_OWNER_TEST until exact SHA workflow and artifact are confirmed by QA. SaveService/deferred outcomes not implemented. PR #12 Draft; no main merge.
