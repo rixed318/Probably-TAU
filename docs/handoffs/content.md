@@ -200,3 +200,10 @@
 - **NOT RUN:** `node Content/validate-content-consistency.cjs` from checkout (container cannot resolve github.com), complete 21-case suite, C#/Unity and runtime integration.
 - **Unchanged:** fictional scenario, Int64 decimal string kopecks, DayIndex 0-based, E09 report-only, ADR-C0-002 ordering, Core/NPC code, main. No merge.
 - **BLOCKED runtime integration:** Core/NPC fact provenance, sourceInstanceId and atomic ledger posting contracts; NPC 02 review of typed `E03_mentor_paid`, `E07_delivered`, and `partner/{sourceInstanceId}/delivery` remains outstanding. QA 05: run all three Content Node validators from actual feature checkout and attach logs.
+
+
+## AutoDev 04 — project definition ID guard (15.11.2026)
+
+**Issue #7, one bounded task:** static cross-file validation now rejects blank or duplicate project IDs and collisions between project and event definition namespaces before resolving narrative feeds. Added three negative fixtures (duplicate P01, blank ID, project E02 collision); declared cross-file suite increases from 21 to 24 assertions. This does not schedule events or change gameplay, story, balance, Int64 kopeck amounts, 0-based DayIndex, or E09 report-only behavior.
+
+**Code commit:** `cc1df7d75d0a9f6408a894b454ac64b8684c41c0` on `feature/content-7`. **Actually executed:** four independent JS baseline/mutation checks in the GitHub-connected tool runtime (2 distinct project IDs and three rejected mutations). **NOT RUN:** committed Node CLI full 24 assertions, Unity/C# or integration; QA 05 must execute `node Content/validate-content-consistency.cjs` from a real checkout and attach logs. NPC 02 review still requested for typed fact provenance `E03_mentor_paid` / `E07_delivered` and earned identity `partner/{sourceInstanceId}/delivery`. Runtime integration BLOCKED on Core/NPC contracts; no main writes or merge.
