@@ -36,7 +36,7 @@ namespace TAU.President.Tests.Npc
 
             // Draft Content PR #11 has mutually exclusive partner revenue paths.
             // The adapter must not silently accept the wrong branch or casing.
-            string remote = "{\\\"op\\\":\\\"all\\\",\\\"items\\\":[{\\\"op\\\":\\\"flagEquals\\\",\\\"key\\\":\\\"PARTNER\\\",\\\"value\\\":\\\"remote\\\"},{\\\"op\\\":\\\"factExists\\\",\\\"factId\\\":\\\"E03_mentor_paid\\\"},{\\\"op\\\":\\\"factExists\\\",\\\"factId\\\":\\\"E07_delivered\\\"},{\\\"op\\\":\\\"dayIndexAtLeast\\\",\\\"value\\\":4}]}";
+            string remote = "{\"op\":\"all\",\"items\":[{\"op\":\"flagEquals\",\"key\":\"PARTNER\",\"value\":\"remote\"},{\"op\":\"factExists\",\"factId\":\"E03_mentor_paid\"},{\"op\":\"factExists\",\"factId\":\"E07_delivered\"},{\"op\":\"dayIndexAtLeast\",\"value\":4}]}";
             var remoteCondition = EventConditionJsonAdapter.Parse(remote);
             facts.Add("E07_delivered");
             Assert(!EventConditionEvaluator.Evaluate(remoteCondition, 4, flags, facts));
@@ -48,10 +48,10 @@ namespace TAU.President.Tests.Npc
             flags["PARTNER"] = "remote";
             Assert(!EventConditionEvaluator.Evaluate(remoteCondition, 3, flags, facts));
             Assert(EventConditionEvaluator.Evaluate(
-                EventConditionJsonAdapter.Parse("{\\\"op\\\":\\\"dayIndexAtLeast\\\",\\\"value\\\":2147483647}"),
+                EventConditionJsonAdapter.Parse("{\"op\":\"dayIndexAtLeast\",\"value\":2147483647}"),
                 int.MaxValue, flags, facts));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(
-                "{\\\"op\\\":\\\"all\\\",\\\"items\\\":[{\\\"op\\\":\\\"always\\\",\\\"op\\\":\\\"always\\\"}]}"));
+                "{\"op\":\"all\",\"items\":[{\"op\":\"always\",\"op\":\"always\"}]}"));
 
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
