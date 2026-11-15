@@ -38,7 +38,7 @@ function validateCrossFile(spec,hooks){
  // Check across Day 01 visits and the subsequent event manifest, without imposing runtime order.
  const choiceOwners=new Map();
  const choiceGroups=[
-  ...spec.day1.visits.map(visit=>({owner:visit.id,ids:visit.choices.map(c=>c.id)})),
+  ...spec.day1.visits.map(visit=>({owner:visit.id,ids:Array.isArray(visit.choices)?visit.choices.map(c=>c?.id):null})),
   ...spec.eventManifest.map(event=>({owner:event.id,ids:event.choices}))
  ];
  for(const group of choiceGroups){
@@ -249,4 +249,10 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("documentTypes: invalid 
 s=clone(spec);s.day1.visits[0].documentId="DOC-MISSING";
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("unresolved documentId DOC-MISSING")),
   "visit referencing unknown document definition must fail");
-console.log("PASS: 29 cross-file fixture/negative checks");
+s=clone(spec);s.day1.visits[0].choices=null;
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("choices must be an array")),
+  "null Day 01 choices must fail cleanly, not crash");
+s=clone(spec);s.day1.visits[0].choices=[null];
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("invalid choice id")),
+  "null Day 01 choice entry must fail cleanly, not crash");
+console.log("PASS: 31 cross-file fixture/negative checks");
