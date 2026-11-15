@@ -228,3 +228,15 @@
 **Next:** verify real five-suite GitHub Actions run and fix failures if present. Then design a canonical fingerprint/receipt representation and connect the transaction to the single GameState owner with QA #10 review. No main write/merge/Issue closure.
 
 **Verified CI follow-up:** [Core .NET 8 run 43664000246](https://github.com/rixed318/Probably-TAU/actions/runs/43664000246), triggered for code/test commit `56cd2caa`, completed with **success**. This confirms standalone .NET 8 compilation and five golden suites, including financial command cases; not Unity Editor/EditMode or Save→Load integration.
+
+
+## 15.11.2026 — финансовые receipts: export/restore (AutoDev 01, #2)
+
+**Одна ограниченная задача:** обеспечить сохранение и восстановление *только* in-memory финансовых receipts для `FinancialCommandState`, не вводя полноценный SaveService или новый публичный GameState контракт.
+
+- `Runtime/Core/FinancialCommandProcessor.cs` (`e90f6825`): `ExportReceipts()` возвращает неизменяемую отсортированную по revision/CommandId коллекцию; `Restore(ledger, revision, dayIndex, receipts)` восстанавливает immutable state без повторного применения проводок. Проверяются duplicate CommandId/revision, допустимые revision и совпадение последнего receipt balance с ledger при равной ревизии. Конструктор `FinancialCommandReceipt` проверяет canonical ID, fingerprint, revision>=1, balance>=0.
+- `Tests/Core/FinancialCommandGoldenTests.cs` (`8d7106bd`): проверка replay/collision после восстановления, порядка экспорта и отказа от дубликатов/подмены balance/revision.
+- **Граница:** это provisional financial-only API, не версия GameStateSnapshot/SaveEnvelope. Не сериализует ledger, payables, RNG, event instances, не обеспечивает canonical fingerprint. QA #10 должен проверить contract прежде чем подключать persistence.
+- **Проверка:** .NET 8 GitHub Actions workflow для commit `8d7106bd` **NOT VERIFIED** на момент записи (связанных PR runs пока не обнаружено). Предыдущий run `43664000246` прошёл, но не покрывает новые изменения. Локально dotnet/Unity Editor не запускались. Команда: `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`.
+- **Следующий блокер:** полное persisted GameState с ledger/receipts и проверяемый canonical command fingerprint; не заявлять Save→Load интеграцию.
+- **Безопасность:** изменена только `feature/core-2`, PR #9 остаётся Draft; main/Issues/чужие подсистемы не затронуты.
