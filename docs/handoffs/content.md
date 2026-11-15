@@ -178,3 +178,14 @@
 **Actually verified:** fetched current GitHub `CONTENT_SPEC_DRAFT.json` and both related source files; executed four isolated JavaScript assertions in the GitHub-connected runtime: baseline feed graph has zero violations, unknown feed is rejected, backward feed is rejected, duplicate project feed is rejected. **NOT RUN:** the complete Node CLI from a real checkout, all 16 fixtures together, C#/Unity tests. QA 05: run `node Content/validate-content-consistency.cjs` on this branch and record CI logs; do not claim green until run is observed.
 
 **BLOCKED for runtime integration:** Core/NPC still own actual event instance IDs, fact provenance, agreement source instance and atomic earned income. ADR-C0-002 PR #17 is approved for feature work only. No merge or `main` changes.
+
+
+## AutoDev 04 — cyclic narrative feed guard (15.11.2026, 10:57 +04)
+
+**One bounded Issue #7 task:** extend `Content/validate-content-consistency.cjs` to reject event-to-event cycles, including cycles entirely within one `DayIndex`. Previous checks covered unknown, duplicate, self and backward references, but allowed E02→E03→E02 because both events are on dayIndex=1. The new deterministic DFS visits only event targets, treats project IDs P01/P02 and `CHAPTER2_HOOK` as non-event terminal metadata, and reports `eventManifest: cyclic feed`. This validates narrative dependency metadata only; it is **not** EventDirector or a runtime scheduler.
+
+- Code commits: `bd406649d8d355368e040d9b8367c8151319ad56` (guard + two negative fixtures), `b61442c2be138e8bf48c2aefa8c9a84ffc956f9e` (fix E02/E03 fixture to add both directions explicitly). Total cross-file checks declared in script: 18 (previously 16).
+- **Actually verified:** read current source and content JSON via GitHub; independently executed 5 isolated JavaScript checks in the tool runtime: baseline event graph acyclic; E02↔E03 same-day cycle detected; E04↔E05 same-day cycle detected; committed source contains cycle guard; committed source declares 18 fixtures. These checks passed 5/5. An initial attempted test fixture lacked the reverse edge, was corrected and rechecked before handoff.
+- **NOT RUN:** full `node Content/validate-content-consistency.cjs` from a checkout, full 18-case suite, C# or Unity tests. QA 05 should run Node CLI on `feature/content-7` and attach actual logs.
+- **Unchanged:** scenario, amounts (Int64 decimal string kopecks), event dates (0-based DayIndex), stable Definition IDs, E09 report-only, Core/NPC code and main. Runtime integration still BLOCKED on Core/NPC event-instance/fact provenance contracts; ADR-C0-002 PR #17 only authorizes feature work. NPC 02 review of `E03_mentor_paid`, `E07_delivered`, and `partner/{sourceInstanceId}/delivery` remains requested.
+- **Next:** review real QA Node logs and NPC feedback; no merge without owner approval.
