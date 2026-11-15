@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+
+namespace TAU.President.Npc
+{
+    /// <summary>
+    /// Strict draft Content JSON condition adapter for offline .NET tests.
+    /// Not a Unity/runtime serialization contract; no Core state or effects.
+    /// </summary>
+    public static class EventConditionJsonAdapter
+    {
+        private const int MaxDepth = 32;
+
+        public static EventCondition Parse(string json)
+        {
+            if (json == null) throw new ArgumentNullException(nameof(json));
+            using (var document = JsonDocument.Parse(json))
+                return ReadNode(document.RootElement, 0);
+        }
+
+        private static EventCondition ReadNode(JsonElement node, int depth)
+        {
+            if (depth >= MaxDepth) throw new FormatException("Condition nesting exceeds 32 levels.");
+            if (node.ValueKind != JsonValueKind.Object)
+                throw new FormatException("Condition must be a JSON object.");
+            string op = ReadString(node, "op");
+            switch (op)
+            {
+                case "always":
+                    RequireFields(node, "op");
+                    return EventCondition.Always();
+                case "flagEquals":
+                    RequireFields(node, "op", "key", "value");
+                    return EventCondition.FlagEquals(ReadString(node, "key"), ReadString(node, "value"));
+                case "factExists":
+                    RequireFields(node, "op", "factId");
+                    return EventCondition.FactExists(ReadString(node, "factId"));
+                case "dayIndexAtLeast":
+                    RequireFields(node, "op", "value");
+                    JsonElement day = node.GetProperty("value");
+                    int dayIndex;
+                    if (day.ValueKind != JsonValueKind.Number || !day.TryGetInt32(out dayIndex) || dayIndex < 0)
+                        throw new FormatException("DayIndex must be a nonnegative Int32.");
+                    return EventCondition.DayIndexAtLeast(dayIndex);
+                case "all":
+                case "any":
+                    RequireFields(node, "op", "items");
+                    JsonElement items = node.GetProperty("items");
+                    if (items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0)
+                        throw new FormatException("Condition group must have nonempty items.");
+                    var children = new List<EventCondition>();
+                    foreach (var item in items.EnumerateArray())
+                        children.Add(ReadNode(item, depth + 1));
+                    return op == "all" ? EventCondition.All(children.ToArray()) : EventCondition.Any(children.ToArray());
+                default:
+                    throw new FormatException("Unknown condition op: " + op);
+            }
+        }
+
+        private static string ReadString(JsonElement node, string name)
+        {
+            JsonElement value = node.GetProperty(name);
+            if (value.ValueKind != JsonValueKind.String)
+                throw new FormatException(name + " must be a string.");
+            string result = value.GetString();
+            if (string.IsNullOrWhiteSpace(result) || result != result.Trim())
+                throw new FormatException(name + " must be a nonempty canonical string.");
+            return result;
+        }
+
+        private static void RequireFields(JsonElement node, params string[] expected)
+        {
+            var allowed = new HashSet<string>(expected, StringComparer.Ordinal);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var field in node.EnumerateObject())
+            {
+                if (!allowed.Contains(field.Name) || !seen.Add(field.Name))
+                    throw new FormatException("Unexpected or duplicate condition field: " + field.Name);
+            }
+            if (seen.Count != allowed.Count)
+                throw new FormatException("Missing required condition field.");
+        }
+    }
+}
