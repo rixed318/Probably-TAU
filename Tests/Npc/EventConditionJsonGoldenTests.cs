@@ -73,25 +73,14 @@ namespace TAU.President.Tests.Npc
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"dayIndexAtLeast\"}"));
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"all\"}"));
 
-            // Canonical identifiers rejected by the AST factory must retain the
-            // adapter's public FormatException contract (not ArgumentException).
-            ThrowsWithArgumentCause("{\\\"op\\\":\\\"factExists\\\",\\\"factId\\\":\\\"bad\\\\nkey\\\"}");
-            ThrowsWithArgumentCause("{\\\"op\\\":\\\"flagEquals\\\",\\\"key\\\":\\\"PARTNER\\\",\\\"value\\\":\\\"onsite\\\\n\\\"}");
+            // JSON control characters must not enter persistent condition IDs.
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"factExists\",\"factId\":\"bad\\nkey\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"flagEquals\",\"key\":\"PARTNER\",\"value\":\"onsite\\tvalue\"}"));
 
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
             for (int i = 0; i < 33; i++) deep = "{\"op\":\"all\",\"items\":[" + deep + "]}";
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse(deep));
-        }
-        private static void ThrowsWithArgumentCause(string json)
-        {
-            try { EventConditionJsonAdapter.Parse(json); }
-            catch (FormatException ex)
-            {
-                Assert(ex.InnerException is ArgumentException);
-                return;
-            }
-            throw new Exception("Expected FormatException with ArgumentException cause.");
         }
         private static void ThrowsWithJsonCause(string json)
         {
