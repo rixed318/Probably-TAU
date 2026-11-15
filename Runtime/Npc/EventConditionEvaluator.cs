@@ -53,8 +53,17 @@ namespace TAU.President.Npc
         }
         private static bool HasControl(string value)
         {
-            foreach (char ch in value)
+            for (int i = 0; i < value.Length; i++)
+            {
+                char ch = value[i];
                 if (char.IsControl(ch)) return true;
+                if (char.IsHighSurrogate(ch))
+                {
+                    if (i + 1 >= value.Length || !char.IsLowSurrogate(value[i + 1])) return true;
+                    i++;
+                }
+                else if (char.IsLowSurrogate(ch)) return true;
+            }
             return false;
         }
     }
