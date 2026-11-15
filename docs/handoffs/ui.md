@@ -346,3 +346,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Run: download and extract `day01-web-demo` from GitHub Actions, double-click `day01-playable.html` on Windows. Offline dependencies are relative files in the same folder; no server required. See `HOW_TO_PLAY.txt`.
 - Node tests: `node --test prototypes/ui-day-one/test-day01-gameplay.cjs`. Workflow `.github/workflows/ui-smoke.yml` includes tests and artifact upload.
 - **NOT VERIFIED at authoring time:** new HEAD CI, downloadable artifact existence, Windows browser manual run, Unity Editor. Do not call READY_FOR_OWNER_TEST until exact SHA workflow and artifact are confirmed by QA. SaveService/deferred outcomes not implemented. PR #12 Draft; no main merge.
+
+
+## AutoDev 03 · 2026-11-16 · P0 #18 artifact verification
+
+**Scoped task:** independently verify the exact first playable demo CI result and its downloadable ZIP, rather than add test-only UI churn.
+
+- Source commit: `cf4de6ed525b25abdce09737d9101b0fc5ff210b` on `feature/ui-5`.
+- GitHub Actions [run #43761757451](https://github.com/rixed318/Probably-TAU/actions/runs/43761757451): `completed/success`; job `Node UI and art manifest regression (not Unity)` and the Node UI, manifest validation, regression, staging and artifact upload steps each report `success`.
+- Verified artifact `day01-web-demo` ID `14181090655`, 8,400-byte downloadable ZIP, non-expired, associated with exact source SHA. Downloaded and unpacked archive; confirmed five files: `day01-playable.html`, `day01-playable.js`, `day01-gameplay-gateway.cjs`, `day01-read-model.cjs`, `HOW_TO_PLAY.txt`. All HTML script references resolve within the extracted folder, with no remote script URLs.
+- Additional local Node 22 check against extracted gateway: three reject decisions then `endDay()` yielded exact closing balance `200000000` kopecks. This is **one manually executed smoke scenario**, not the full Node test suite.
+- **NOT VERIFIED:** real interactive Windows double-click session, keyboard/screen-reader/zoom audit, Unity Editor or compiled Windows Unity build. Headless Chromium smoke attempt timed out; do not claim browser PASS or QA 05 sign-off. SaveService/deferred consequences remain mock-only.
+- Windows launch: extract ZIP into one directory, double-click `day01-playable.html`, process all three docs, finish day; see `HOW_TO_PLAY.txt`. [Artifact download via GitHub Actions run](https://github.com/rixed318/Probably-TAU/actions/runs/43761757451).
+- PR #12 remains Draft; no merge, no changes to Core/GameState/main. **P0 CI/artifact gate passed; full READY_FOR_OWNER_TEST still awaits interactive launch/independent QA.**
