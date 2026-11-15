@@ -15,8 +15,17 @@ namespace TAU.President.Npc
         public static EventCondition Parse(string json)
         {
             if (json == null) throw new ArgumentNullException(nameof(json));
-            using (var document = JsonDocument.Parse(json))
-                return ReadNode(document.RootElement, 0);
+            try
+            {
+                using (var document = JsonDocument.Parse(json))
+                    return ReadNode(document.RootElement, 0);
+            }
+            catch (JsonException exception)
+            {
+                // System.Text.Json may reject excessive depth before ReadNode's own
+                // depth guard runs. Keep all invalid JSON shapes on the same API contract.
+                throw new FormatException("Invalid condition JSON.", exception);
+            }
         }
 
         private static EventCondition ReadNode(JsonElement node, int depth)
