@@ -113,3 +113,18 @@ test("missing fixture and render failure clear aria-busy without partial cards",
   assert.equal(nodes["day01-documents"].attributes["aria-busy"], "false");
   assert.equal(nodes["day01-documents"].children.length, 0);
 });
+
+
+test("each Day01 document is a uniquely labelled article for assistive navigation", () => {
+  const cards = run()["day01-documents"].children;
+  assert.equal(cards.length, 3);
+  const labels = cards.map(card => {
+    assert.equal(card.tag, "article");
+    const heading = card.children.find(child => child.tag === "h3");
+    assert.ok(heading);
+    assert.equal(card.attributes["aria-labelledby"], heading.attributes.id);
+    assert.match(heading.textContent, /^DOC-0[1-3] · /);
+    return heading.attributes.id;
+  });
+  assert.equal(new Set(labels).size, 3);
+});
