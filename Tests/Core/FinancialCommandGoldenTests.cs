@@ -70,6 +70,51 @@ namespace TAU.President.Tests.Core
             Assert(validAfterFailure.State.Revision == 2 && validAfterFailure.State.ReceiptCount == 2);
             Assert(validAfterFailure.State.Ledger.CurrentBalanceKopecks == 400);
 
+
+            // Persisted receipts survive reconstruction; replay never posts twice.
+            var exported = validAfterFailure.State.ExportReceipts();
+            Assert(exported.Count == 2 && exported[0].CommandId == "c1" &&
+                exported[1].CommandId == "c2");
+            var restored = FinancialCommandState.Restore(validAfterFailure.State.Ledger,
+                validAfterFailure.State.Revision, 0, exported);
+            var restoredReplay = FinancialCommandProcessor.Execute(restored, cmd);
+            Assert(restoredReplay.Status == FinancialCommandStatus.Replayed);
+            Assert(restoredReplay.State.Ledger.Entries.Count == 3 &&
+                restoredReplay.State.Ledger.CurrentBalanceKopecks == 400);
+            var restoredCollision = FinancialCommandProcessor.Execute(restored,
+                Command("c1", "sha256:tampered", 2, new LedgerEntry("p7", "source", -1)));
+            Assert(restoredCollision.Status == FinancialCommandStatus.CommandIdCollision);
+            Assert(restoredCollision.State.ReceiptCount == 2);
+            var shuffled = FinancialCommandState.Restore(validAfterFailure.State.Ledger, 2, 0,
+                new FinancialCommandReceipt[] { exported[1], exported[0] });
+            Assert(shuffled.ExportReceipts()[0].CommandId == "c1");
+            bool invalidReceipt = false;
+            try
+            {
+                FinancialCommandState.Restore(validAfterFailure.State.Ledger, 2, 0,
+                    new FinancialCommandReceipt[] { exported[0], exported[0] });
+            }
+            catch (ArgumentException) { invalidReceipt = true; }
+            Assert(invalidReceipt);
+            invalidReceipt = false;
+            try
+            {
+                FinancialCommandState.Restore(validAfterFailure.State.Ledger, 2, 0,
+                    new FinancialCommandReceipt[] {
+                        exported[0], new FinancialCommandReceipt("c2", "sha256:bad", 2, 999) });
+            }
+            catch (ArgumentException) { invalidReceipt = true; }
+            Assert(invalidReceipt);
+            invalidReceipt = false;
+            try
+            {
+                FinancialCommandState.Restore(validAfterFailure.State.Ledger, 2, 0,
+                    new FinancialCommandReceipt[] {
+                        exported[0], new FinancialCommandReceipt("c3", "sha256:bad", 1, 500) });
+            }
+            catch (ArgumentException) { invalidReceipt = true; }
+            Assert(invalidReceipt);
+
             var max = NewState(long.MaxValue);
             var overflow = FinancialCommandProcessor.Execute(max,
                 Command("c3", "sha256:overflow", 0, new LedgerEntry("p5", "source", 1)));
