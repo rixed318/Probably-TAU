@@ -310,3 +310,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **One scoped task:** checked GitHub Actions for the exact prior branch HEAD `c572e152752d3a9fdd20b4daab0b7138175b706e`. GitHub reports [UI standalone smoke tests run #43714885981](https://github.com/rixed318/Probably-TAU/actions/runs/43714885981), `status=completed`, `conclusion=success`. This is verified workflow outcome for the new corrupt-fixture busy-state assertion; individual assertion counts and browser behavior were not independently inspected. No new UI code changes.
 
 **NOT RUN here:** local Node tests, actual 320px/200% browser visual/keyboard/screen-reader checks, Unity Editor/PlayMode. This handoff-only commit itself is not yet CI-verified. Next task: real browser smoke with screenshot/notes, if a browser becomes available. Existing canonical Day01 fixture and old mock remain separate. No Core/GameState changes; PR #12 Draft; no merge to main.
+
+
+---
+
+## AutoDev 03 · 2026-11-15 · accessible Day01 document regions (#5)
+
+**One scoped change:** Give each read-only Day01 document `<article>` an `aria-labelledby` reference to its own uniquely identified `<h3>` heading. The three labels are derived from array positions, not from untrusted document IDs. This improves assistive-technology navigation without changing the canonical read-model, legacy mock, commands, finances, or GameState.
+
+**Branch:** `feature/ui-5`; **PR:** #12 (Draft). **Code commit:** `9db6fea5aa579973b3a910311d1275a1d26e4377`; **test commit:** `edadb2241aadaff5699014f2d841087e18e654c4`.
+
+**Verification:** Source updates accepted by GitHub; Node test added to `prototypes/ui-day-one/test-day01-preview.cjs`, **not locally executed**. Run `node --test prototypes/ui-day-one/test-day01-preview.cjs` or inspect CI for the exact new HEAD. Actual browser 320px/200% zoom, keyboard, screen reader, and Unity tests remain **NOT RUN**. No merge or main changes.
