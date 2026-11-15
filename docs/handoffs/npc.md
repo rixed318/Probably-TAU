@@ -212,3 +212,17 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Cross-role contract:** Content fixture proposes `E03_mentor_paid` and `E07_delivered` as verified durable facts; producer must be Core-committed E03 mentor payment receipt and E07 delivery completion respectively, not UI flags. `partner/{sourceInstanceId}/delivery` uses original agreement occurrence's Core-stable instance ID; Content 04/Core 01 must confirm actual producer mapping and ownership before integration. No partner income on signature.
 
 **BLOCKED:** full EventDirector needs concrete Core event-instance DTO, atomic transaction and receipt ports. This increment does not change Core state, balance or event scheduler. PR #16 remains Draft; no merge to main.
+
+
+## AutoDev 02 — P0 provenance reconciliation and verified NPC CI (2026-11-16)
+
+**Scoped task / Issue #18:** reconciled the immutable Day01 visitor mapping with Content 04's newly documented typed fact and earned-key provenance (Content handoff commit `f3d9950e9e607176e28e0af70abc6bb9566555be`, PR #11). This is a contract/handoff update only; no speculative Core adapter, ledger, scheduler or new GameState was added.
+
+- `E03_mentor_paid` is permitted only after a **Core-confirmed durable mentor payment receipt** correlated to the original partner agreement occurrence; a signature or queued event is insufficient.
+- `E07_delivered` is permitted only after **Core-confirmed contracted service delivery** for that **same** agreement occurrence; a narrative/UI choice is insufficient.
+- `partner/{sourceInstanceId}/delivery` uses the **Core-assigned original agreement occurrence ID**. Never use visit `D01_PARTNER`, choice `PARTNER-1/2`, event definition `E07` or child-event instance ID as the earned source. Core alone owns durable exactly-once receipt/ledger posting. Signing is zero cash; E09 is report-only.
+- **Producer/consumer integration remains BLOCKED:** Core 01 must expose concrete typed event-instance identity, verified payment/delivery receipts, atomic command/transaction ports and durable earned deduplication. NPC must not manufacture facts or revenue before those ports exist.
+
+**Actual verification:** GitHub Actions NPC .NET 8 golden workflow [run 43759188365](https://github.com/rixed318/Probably-TAU/actions/runs/43759188365) reports **completed / success** for preceding NPC HEAD `89f2f04bce64a5d2817397826e3d2f206fd075d4` (including VisitorModels and golden tests). This is a workflow-level result, not a locally executed test log. Content handoff and PR #11 reply were read from GitHub. **NOT RUN this pass:** local dotnet, Unity, new integration/receipt tests, browser. No runtime code changed; CI for this documentation-only commit is not claimed.
+
+**Next P0 criterion:** consume typed, Core-confirmed agreement occurrence and receipt APIs when actually available, then add a minimal adapter with one deterministic provenance test; until then keep EventDirector blocked. PR #16 remains Draft; no merge/main writes.
