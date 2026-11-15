@@ -31,8 +31,8 @@ namespace TAU.President.Tests.Npc
             // Regression for CI #43659607524: parser-level errors must honor the
             // public FormatException contract and preserve the JSON root cause.
             ThrowsWithJsonCause("{");
-            ThrowsWithJsonCause("{\\\"op\\\":\\\"always\\\"} trailing");
-            ThrowsWithJsonCause("{\\\"op\\\":");
+            ThrowsWithJsonCause("{\"op\":\"always\"} trailing");
+            ThrowsWithJsonCause("{\"op\":");
 
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
