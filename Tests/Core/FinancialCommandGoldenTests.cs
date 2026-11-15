@@ -155,6 +155,25 @@ namespace TAU.President.Tests.Core
             catch (ArgumentException) { nullRejected = true; }
             Assert(nullRejected);
 
+            // Invalid UTF-16 must not be silently normalized to U+FFFD in a command ID,
+            // source ID or posting ID; otherwise distinct payloads can share a hash.
+            string malformed = "bad\\uD800";
+            bool encodingRejected = false;
+            try { FinancialCommandFingerprint.Compute(malformed, 0, 0, canonicalPostings); }
+            catch (System.Text.EncoderFallbackException) { encodingRejected = true; }
+            Assert(encodingRejected);
+            encodingRejected = false;
+            try { FinancialCommandFingerprint.Compute("ok", 0, 0,
+                new LedgerEntry[] { new LedgerEntry("p", malformed, 1) }); }
+            catch (System.Text.EncoderFallbackException) { encodingRejected = true; }
+            Assert(encodingRejected);
+            var malformedCommand = new FinancialPostingCommand(malformed, canonical, 0, 0, canonicalPostings);
+            var malformedResult = FinancialCommandFingerprint.ExecuteVerified(initial, malformedCommand);
+            Assert(malformedResult.Status == FinancialCommandStatus.Rejected &&
+                malformedResult.Error == "InvalidCommandEncoding" &&
+                Object.ReferenceEquals(malformedResult.State, initial));
+            Assert(initial.ReceiptCount == 0 && initial.Ledger.Entries.Count == 0);
+
             var empty = FinancialCommandProcessor.Execute(initial,
                 Command("empty", "sha256:empty", 0));
             Assert(empty.Status == FinancialCommandStatus.Committed && empty.State.Revision == 1);
