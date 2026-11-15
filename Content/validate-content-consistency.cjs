@@ -39,7 +39,16 @@ function validateCrossFile(spec,hooks){
  // Every declared feed must resolve to an event, project, or explicit future chapter hook.
  // A feed is a narrative dependency, NOT a request to run the target immediately.
  const eventById=new Map(spec.eventManifest.map(e=>[e.id,e]));
- const projectIds=new Set((spec.projects||[]).map(p=>p.id));
+ // Project definition IDs must be unique and disjoint from event IDs: feed resolution
+ // otherwise silently picks an arbitrary namespace and can hide unreachable content.
+ const projectIds=new Set();
+ for(const project of spec.projects||[]){
+  const id=project.id;
+  if(typeof id!=="string"||!id.trim())errors.push("projects: invalid id");
+  else if(projectIds.has(id))errors.push(`projects: duplicate id ${id}`);
+  else if(eventById.has(id))errors.push(`projects: id collides with event ${id}`);
+  else projectIds.add(id);
+ }
  const externalHooks=new Set(["CHAPTER2_HOOK"]); // explicitly deferred outside current 13-event chapter
  for(const event of spec.eventManifest){
   if(!Array.isArray(event.feeds)){errors.push(`${event.id}: feeds must be an array`);continue;}
@@ -197,4 +206,13 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("duplicate choice id LAB
 s=clone(spec);s.eventManifest.find(e=>e.id==="E12").choices[0]=" ";
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E12: invalid choice id")),
   "blank event choice ID must fail");
-console.log("PASS: 21 cross-file fixture/negative checks");
+s=clone(spec);s.projects.push(clone(s.projects[0]));
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("projects: duplicate id P01")),
+  "duplicate project definition ID must fail");
+s=clone(spec);s.projects[0].id=" ";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("projects: invalid id")),
+  "blank project definition ID must fail");
+s=clone(spec);s.projects[0].id="E02";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("projects: id collides with event E02")),
+  "project/event definition namespace collision must fail");
+console.log("PASS: 24 cross-file fixture/negative checks");
