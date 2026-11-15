@@ -94,6 +94,13 @@ namespace TAU.President.Tests.Npc
             Assert(EventConditionEvaluator.Evaluate(EventCondition.FactExists("E03_mentor_paid"),
                 4, insensitiveFlags, insensitiveFacts));
 
+            // UTF-16 identifiers must not contain orphan surrogates; valid pairs remain legal.
+            Throws<ArgumentException>(() => EventCondition.FactExists("bad\uD800"));
+            Throws<ArgumentException>(() => EventCondition.FlagEquals("PARTNER", "bad\uDC00"));
+            string paired = "fact_\uD83D\uDE00";
+            Assert(EventConditionEvaluator.Evaluate(EventCondition.FactExists(paired), 4,
+                flags, new HashSet<string>(StringComparer.Ordinal) { paired }));
+
             // Fail closed on absent context, malformed groups, and noncanonical identifiers.
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, null, facts));
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, flags, null));
