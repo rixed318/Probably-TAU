@@ -74,6 +74,19 @@ namespace TAU.President.Tests.Npc
             Assert(!EventConditionEvaluator.Evaluate(EventCondition.FactExists("e03_mentor_paid"),
                 4, insensitiveFlags, insensitiveFacts));
 
+            // Boolean groups must preserve false outcomes across missing facts and
+            // mutually exclusive partner choices, including nested combinations.
+            var absent = EventCondition.FactExists("NEVER_EARNED");
+            var trueBranch = EventCondition.FlagEquals("PARTNER", "onsite");
+            Assert(!EventConditionEvaluator.Evaluate(EventCondition.All(trueBranch, absent),
+                4, flags, facts));
+            Assert(!EventConditionEvaluator.Evaluate(EventCondition.Any(absent,
+                EventCondition.FlagEquals("PARTNER", "remote")), 4, flags, facts));
+            Assert(EventConditionEvaluator.Evaluate(EventCondition.Any(absent, trueBranch),
+                4, flags, facts));
+            Assert(!EventConditionEvaluator.Evaluate(EventCondition.All(
+                EventCondition.Any(absent, trueBranch), absent), 4, flags, facts));
+
             // Direct AST construction must enforce the same ID rules as JSON parsing.
             Throws<ArgumentException>(() => EventCondition.FactExists("E03\nmentor"));
             Throws<ArgumentException>(() => EventCondition.FlagEquals("PARTNER\t", "onsite"));
