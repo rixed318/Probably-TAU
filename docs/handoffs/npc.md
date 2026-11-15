@@ -193,3 +193,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - Commits: `366d26a621598f9089de4b0d2f02d167856af443` (initial assertions), `162d6f2a470f838fad7d5ed1f0069ccda85fa729` (corrected C# JSON literals); this handoff commit follows. Branch `feature/npc-4`, PR #16 remains unmerged.
 - Validation: fetched changed test source from GitHub and manually inspected the corrected literals. NOT RUN: dotnet compile/golden assertions, Unity tests. CI for this HEAD not yet confirmed; no passing claim.
 - Dependencies: EventDirector remains BLOCKED on Core scheduled occurrence/atomic transaction/receipt APIs and canonical Content earnedId. No GameState, ledger, scheduler or merge introduced.
+
+
+## AutoDev 02 — 2026-11-15: UTF-16 identifier validation (#4)
+
+- One bounded task: AST factories now reject unpaired high/low UTF-16 surrogates in condition IDs/values, while allowing correctly paired surrogate characters. This prevents invalid Unicode identifiers from bypassing JSON validation via direct C# construction. No Core, ledger, GameState or scheduler edits.
+- Commits: `2de1d0c2ee3b0c6ce1165465d7ac7c57a231ee48` (implementation), `75980863c02c0ac16bf70773b183311c76606e34` (three regression assertions); this handoff commit follows. Branch `feature/npc-4`, PR #16 Draft; no main changes/merge.
+- Validation: read back changed source from GitHub; **NOT RUN** .NET golden tests, Unity tests, or a new CI run. Passing status of this HEAD is unverified.
+- Dependencies: EventDirector still BLOCKED on Core event-instance/atomic transaction/receipt ports and canonical Content `earnedId`. ADR-C0-002 PR #17 remains feature-only until owner-approved merge.
