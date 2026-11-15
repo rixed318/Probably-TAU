@@ -17,9 +17,12 @@ namespace TAU.President.Core
     {
         public const string Version = "tau-financial-command-v1";
 
+        // Throw on malformed UTF-16: replacement encoding would alias distinct IDs/payloads.
+        private static readonly UTF8Encoding StrictUtf8 = new UTF8Encoding(false, true);
+
         private static void WriteString(BinaryWriter writer, string value)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            byte[] bytes = StrictUtf8.GetBytes(value);
             writer.Write(bytes.Length);
             writer.Write(bytes);
         }
