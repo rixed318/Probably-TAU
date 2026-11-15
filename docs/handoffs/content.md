@@ -189,3 +189,14 @@
 - **NOT RUN:** full `node Content/validate-content-consistency.cjs` from a checkout, full 18-case suite, C# or Unity tests. QA 05 should run Node CLI on `feature/content-7` and attach actual logs.
 - **Unchanged:** scenario, amounts (Int64 decimal string kopecks), event dates (0-based DayIndex), stable Definition IDs, E09 report-only, Core/NPC code and main. Runtime integration still BLOCKED on Core/NPC event-instance/fact provenance contracts; ADR-C0-002 PR #17 only authorizes feature work. NPC 02 review of `E03_mentor_paid`, `E07_delivered`, and `partner/{sourceInstanceId}/delivery` remains requested.
 - **Next:** review real QA Node logs and NPC feedback; no merge without owner approval.
+
+
+## AutoDev 04 — unique choice definition IDs (15.11.2026, 12:37 +04)
+
+**One bounded Issue #7 task:** `Content/validate-content-consistency.cjs` now checks stable, nonblank choice IDs across all Day 01 visit choices and E02–E14 event manifest choices. Duplicate IDs across visits/events would make choice references and save data ambiguous; no Core runtime choice/instance contract is introduced. Three negative fixtures added (cross-event duplicate, cross-visit duplicate, blank ID). Declared CLI suite: **21** checks (18 prior + 3 new).
+
+- **Code commit:** `311205ae87ed7f53165784f76321036ae2dc7c23` on `feature/content-7`.
+- **Actually verified:** fetched current GitHub content JSON and independently ran 4 JavaScript assertions in the connected tool runtime: 61 baseline choice IDs unique/nonblank, both duplicate mutations rejected, blank ID rejected (4/4). This is **not** a full execution of the committed Node CLI.
+- **NOT RUN:** `node Content/validate-content-consistency.cjs` from checkout (container cannot resolve github.com), complete 21-case suite, C#/Unity and runtime integration.
+- **Unchanged:** fictional scenario, Int64 decimal string kopecks, DayIndex 0-based, E09 report-only, ADR-C0-002 ordering, Core/NPC code, main. No merge.
+- **BLOCKED runtime integration:** Core/NPC fact provenance, sourceInstanceId and atomic ledger posting contracts; NPC 02 review of typed `E03_mentor_paid`, `E07_delivered`, and `partner/{sourceInstanceId}/delivery` remains outstanding. QA 05: run all three Content Node validators from actual feature checkout and attach logs.
