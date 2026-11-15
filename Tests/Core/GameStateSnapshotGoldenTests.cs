@@ -56,6 +56,13 @@ namespace TAU.President.Tests.Core
                 new[] { new DurableCommandReceipt("cmd-1", "sha256-fingerprint", 1, new[] { "missing" }) }));
             Throws<ArgumentException>(() => new DurableFinanceSnapshot(header, ledger,
                 new DurableCommandReceipt[0]));
+            // A valid posting key cannot be claimed by a different command receipt.
+            var foreignHeader = new GameStateSnapshotDto(3, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 10000L, 9000L,
+                new RandomStreamSnapshotDto[0], new[] { "cmd-2" }, new string[0],
+                new string[0], new string[0]);
+            Throws<ArgumentException>(() => new DurableFinanceSnapshot(foreignHeader, ledger,
+                new[] { new DurableCommandReceipt("cmd-2", "sha256-fingerprint", 2, new[] { "post-1" }) }));
         }
 
         private static RandomStreamSnapshotDto streamsItem()

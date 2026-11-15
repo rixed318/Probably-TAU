@@ -23,8 +23,8 @@ namespace TAU.President.Core
             var commandIds = new HashSet<string>(header.ProcessedCommandIds, StringComparer.Ordinal);
             var seenCommands = new HashSet<string>(StringComparer.Ordinal);
             var seenRevisions = new HashSet<long>();
-            var ledgerKeys = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var entry in ledger.Entries) ledgerKeys.Add(entry.PostingId);
+            var ledgerSources = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var entry in ledger.Entries) ledgerSources.Add(entry.PostingId, entry.SourceId);
             var usedKeys = new HashSet<string>(StringComparer.Ordinal);
             this.receipts = new List<DurableCommandReceipt>();
             foreach (var receipt in receipts)
@@ -35,11 +35,12 @@ namespace TAU.President.Core
                     !seenRevisions.Add(receipt.CommittedRevision))
                     throw new ArgumentException("Invalid command receipt identity/revision.", nameof(receipts));
                 foreach (var key in receipt.PostingKeys)
-                    if (!ledgerKeys.Contains(key) || !usedKeys.Add(key))
-                        throw new ArgumentException("Missing or reused ledger posting key.", nameof(receipts));
+                    if (!ledgerSources.ContainsKey(key) || !usedKeys.Add(key) ||
+                        !StringComparer.Ordinal.Equals(ledgerSources[key], receipt.CommandId))
+                        throw new ArgumentException("Missing, reused or foreign ledger posting key.", nameof(receipts));
                 this.receipts.Add(receipt);
             }
-            if (seenCommands.Count != commandIds.Count || usedKeys.Count != ledgerKeys.Count)
+            if (seenCommands.Count != commandIds.Count || usedKeys.Count != ledgerSources.Count)
                 throw new ArgumentException("Receipts must cover every command and ledger posting.", nameof(receipts));
             this.receipts.Sort((a, b) =>
             {
