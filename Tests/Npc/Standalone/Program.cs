@@ -8,7 +8,8 @@ internal static class Program
         try
         {
             EventConditionGoldenTests.RunAll();
-            Console.WriteLine("PASS: EventConditionGoldenTests.RunAll (16 assertions)");
+            EventConditionJsonGoldenTests.RunAll();
+            Console.WriteLine("PASS: EventConditionGoldenTests and EventConditionJsonGoldenTests");
             return 0;
         }
         catch (Exception exception)
