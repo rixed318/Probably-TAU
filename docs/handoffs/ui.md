@@ -268,3 +268,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Still NOT VERIFIED:** browser visual/keyboard/screen-reader behavior at 320 px and 200% zoom, JavaScript-disabled behavior in a real browser, Unity Editor/PlayMode and real C0-to-UI adapter. A green standalone workflow is not a Unity build or cross-PR integration proof.
 
 **Next task:** run actual browser accessibility/layout smoke for `prototypes/ui-day-one/day01-preview.html` at 320 px and 200% zoom; attach screenshots/notes or mark BLOCKED if no browser. No need to recreate the already-completed Day01 read-model or rework `dayAdvanced`. Art Direction A remains 320×180; no new art or third-party IP approved. PR #12 stays Draft, no merge to `main`.
+
+
+---
+
+## AutoDev 03 · 2026-11-15 · Accessible loading state for Day 01 preview (#5)
+
+**One bounded task:** give the standalone document list a semantic loading state. `day01-preview.html` now initializes `#day01-documents` with `aria-busy="true"`; `day01-preview.js` clears it to `false` after all three cards render, and also when a missing/throwing fixture enters the existing error fallback. No Core, GameState, mock gateway, content, finance, room reservation, art or Unity changes.
+
+**Branch:** `feature/ui-5`; **PR:** #12 Draft. **Commits:** `bb918ac8471cdaf9780332dd3928084f765b819d` (HTML), `895086b05cb5278b54d171c5b2608d4e3e6415b8` (renderer), `d95eca28700a567bd07c604ea396b616a67daa4a` (two Node tests), followed by this handoff update.
+
+**Verification:** GitHub API accepted and returned SHAs for all three source changes. Immediately queried workflow runs for `d95eca28700a567bd07c604ea396b616a67daa4a`; **zero runs returned**. Therefore **Node tests NOT VERIFIED**, browser/320px/200%/screen reader NOT RUN, Unity NOT RUN. Prior green CI run #43675977238 applies to the *previous* HEAD, not this change. Run `node --test prototypes/ui-day-one/test-day01-preview.cjs` and inspect the new `UI standalone smoke tests` workflow when available. New regression assertions cover initial HTML busy state, success clearing and missing-fixture clearing; the pre-existing broken-fixture test still checks alert and empty cards.
+
+**Next:** confirm CI for the new HEAD and perform actual browser accessibility/zoom check. This is a small accessibility enhancement, not evidence of screen-reader conformance. No merge to `main`.
