@@ -154,3 +154,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Validation:** manually inspected adapter, immutable AST factory and final JSON fixture escaping through GitHub. **NOT RUN:** local .NET/C# tests, Unity EditMode; new-head GitHub Actions result must be checked before claiming pass. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 
 **BLOCKED for EventDirector:** Core's current `GameStateSnapshotDto` still exposes pending/completed event ID lists but not concrete scheduled instance/atomic transaction/receipt APIs; Content's typed AST and earnedId/source identity remain draft. ADR-C0-002 in PR #17 is feature-development-only. No main writes or merge.
+
+
+## AutoDev 02 — ordinal IDs independent of caller collection comparer (2026-11-15)
+
+**One scoped fix (#4):** the read-only condition evaluator previously delegated flag-key and fact-ID matching to the caller's dictionary/set comparer. An OrdinalIgnoreCase collection could silently make `partner` match `PARTNER` or `e03_mentor_paid` match `E03_mentor_paid`, contradicting the Content typed AST's exact identifier semantics. Evaluator now enumerates the read-only collections and compares keys/IDs with `StringComparison.Ordinal`; flag values remain ordinal. Four golden assertions cover exact and mismatched casing with intentionally case-insensitive input containers.
+
+**Commits:** runtime `15042f07b1acebc67379bbd3dd7d34bf9de01abc`; tests `0f7a5ed514d8d56fcdb1d82deab1fb0e910ebf95`; handoff update is a separate commit. Branch `feature/npc-4`, PR #16 Draft. No main writes/merge.
+
+**Validation:** manually inspected the exact source change and test assertions. Previous head `ddaf4a0c` passed GitHub Actions run [43704983083](https://github.com/rixed318/Probably-TAU/actions/runs/43704983083), but it does NOT validate this fix. New-head .NET workflow and Unity Editor results are **NOT VERIFIED** at handoff. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. Note linear scan of input collections is intentional to guarantee ordinal semantics independently of their comparer.
+
+**BLOCKED:** EventDirector still needs Core scheduled instance DTO, atomic command/ledger transaction and receipt APIs, plus Content canonical earnedId source mapping. ADR-C0-002 PR #17 remains feature-only/unmerged.
