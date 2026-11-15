@@ -1,0 +1,45 @@
+name: UI standalone smoke tests
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/ui-day-one/**'
+      - 'tools/art/**'
+      - 'docs/art/ASSET_MANIFEST_D01.csv'
+      - '.github/workflows/ui-smoke.yml'
+  push:
+    branches:
+      - feature/ui-5
+    paths:
+      - 'prototypes/ui-day-one/**'
+      - 'tools/art/**'
+      - 'docs/art/ASSET_MANIFEST_D01.csv'
+      - '.github/workflows/ui-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standalone-ui:
+    name: Node UI and art manifest regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout UI branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Node UI mock and canonical Day 01 tests
+        run: |
+          node --test prototypes/ui-day-one/test-fixtures.cjs
+          node --test prototypes/ui-day-one/test-day01-read-model.cjs
+          node --test prototypes/ui-day-one/test-day01-preview.cjs
+      - name: Validate art manifest
+        run: python3 tools/art/validate_manifest.py
+      - name: Art manifest regression tests
+        run: python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
