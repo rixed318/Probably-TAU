@@ -12,6 +12,8 @@
     <Compile Include="../EventConditionGoldenTests.cs" Link="EventConditionGoldenTests.cs" />
     <Compile Include="../../../Runtime/Npc/EventConditionJsonAdapter.cs" Link="EventConditionJsonAdapter.cs" />
     <Compile Include="../EventConditionJsonGoldenTests.cs" Link="EventConditionJsonGoldenTests.cs" />
+    <Compile Include="../../../Runtime/Npc/VisitorModels.cs" Link="VisitorModels.cs" />
+    <Compile Include="../VisitorIdentityGoldenTests.cs" Link="VisitorIdentityGoldenTests.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
 </Project>
