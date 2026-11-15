@@ -14,7 +14,7 @@
     .muted { color: #b9c4c5; }
     .notice { border: 2px solid #d5aa6b; padding: 1rem; border-radius: .5rem; margin: 1.5rem 0; }
     .notice h2 { margin-top: 0; }
-    .documents { display: grid; gap: 1rem; }
+    .documents { display: grid; gap: 1rem; }\n    .document[hidden] { display: none; }\n    .queue { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }\n    .queue button { font: inherit; padding: .65rem .9rem; border: 1px solid #d5aa6b; border-radius: .4rem; background: #253039; color: inherit; cursor: pointer; }\n    .queue button[aria-pressed="true"] { background: #d5aa6b; color: #171c21; font-weight: 700; }
     .document { border: 1px solid #73858c; padding: 1rem; border-radius: .5rem; background: #253039; }
     .document h3 { margin: 0 0 .5rem; }
     .document p { margin: .25rem 0; overflow-wrap: anywhere; }
@@ -22,7 +22,7 @@
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
   <script defer src="./day01-read-model.cjs"></script>
-  <script defer src="./day01-preview.js"></script>
+  <script defer src="./day01-selection-gateway.cjs"></script>\n  <script defer src="./day01-preview.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#day01-documents-heading">Перейти к документам</a>
@@ -36,7 +36,7 @@
     <section id="day01-conflicts" aria-label="Конфликты заявок" aria-live="polite"></section>
     <section aria-labelledby="day01-documents-heading">
       <h2 id="day01-documents-heading" tabindex="-1">Документы на рассмотрении</h2>
-      <div id="day01-documents" class="documents" aria-busy="true"></div>
+      <nav id="day01-queue" class="queue" aria-label="Очередь документов"></nav>\n      <div id="day01-documents" class="documents" aria-busy="true"></div>
     </section>
   </main>
 </body>
