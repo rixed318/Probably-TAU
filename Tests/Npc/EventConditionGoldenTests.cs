@@ -60,6 +60,20 @@ namespace TAU.President.Tests.Npc
             Assert(facts.Count == factCount && flags.Count == flagCount);
             Assert(flags["PARTNER"] == "onsite" && facts.Contains("E03_mentor_paid"));
 
+            // Caller-provided case-insensitive containers must not change wire-ID semantics.
+            var insensitiveFlags = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                { { "PARTNER", "onsite" } };
+            var insensitiveFacts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                { "E03_mentor_paid" };
+            Assert(EventConditionEvaluator.Evaluate(EventCondition.FlagEquals("PARTNER", "onsite"),
+                4, insensitiveFlags, insensitiveFacts));
+            Assert(!EventConditionEvaluator.Evaluate(EventCondition.FlagEquals("partner", "onsite"),
+                4, insensitiveFlags, insensitiveFacts));
+            Assert(EventConditionEvaluator.Evaluate(EventCondition.FactExists("E03_mentor_paid"),
+                4, insensitiveFlags, insensitiveFacts));
+            Assert(!EventConditionEvaluator.Evaluate(EventCondition.FactExists("e03_mentor_paid"),
+                4, insensitiveFlags, insensitiveFacts));
+
             // Fail closed on absent context, malformed groups, and noncanonical identifiers.
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, null, facts));
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, flags, null));
