@@ -210,3 +210,18 @@ Open `prototypes/ui-day-one/day01-preview.html` through a static HTTP server to 
 **Tests:** two new Node \`node:test\` assertions inspect the actual HTML for the skip target/focus styling and narrow-screen/reduced-motion rules. GitHub files were fetched and source changes reviewed. **Node CLI NOT RUN in this tool session; browser keyboard/zoom/screen-reader checks NOT RUN; Unity/C# NOT RUN.** Run \`node --test prototypes/ui-day-one/test-day01-preview.cjs\`, then manually tab from top of \`day01-preview.html\` and activate the skip link; check 320px width and 200% zoom. No green test claim before execution.
 
 **Next:** QA 05 to verify Node and manual browser behavior; later UI Toolkit adapter after real Core read models and Unity scene. No merge to main.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-15 · Issue #5 (Day 01 preview failure-state UX)
+
+**One bounded task:** make the standalone read-only preview fail visibly and accessibly if its canonical read-model script is missing, incompatible, or throws during rendering. Previously the initial `Загрузка черновых данных…` message remained indefinitely when `TAU_DAY01_READ_MODEL` was absent. The preview now replaces it with an explicit Russian `role="alert"` message and clears any partial conflict/document DOM. Normal valid-model rendering is unchanged. No command, budget, room reservation, Content, GameState or Core changes.
+
+**Branch:** `feature/ui-5`; **Draft PR:** #12. **Commits:** `361fd13a539b9eba7ef05c2c0591563469fb28e4` (preview error fallback), `8f83198910c732ecf93618de14b474f36d2bfa14` (two new regression tests), plus this handoff commit.
+
+**Files:** `prototypes/ui-day-one/day01-preview.js`, `prototypes/ui-day-one/test-day01-preview.cjs`, `docs/handoffs/ui.md`. Tests cover absent fixture and a throwing fixture function; both require a visible alert and empty document/conflict containers.
+
+**Actual verification:** GitHub source fetch and successful commits confirmed. Attempted a real `git clone --depth 1 --branch feature/ui-5 https://github.com/rixed318/Probably-TAU.git` in the container, but DNS failed with `Could not resolve host: github.com`; **Node tests NOT RUN**. Browser/screen-reader/320px/200% visual checks and Unity/C# compile **NOT RUN**. QA 05 should run `node --test prototypes/ui-day-one/test-day01-preview.cjs` against the actual branch and manually verify a missing `day01-read-model.cjs` gives a visible error.
+
+**Next:** obtain real Node/CI evidence and browser accessibility smoke. Art Direction A remains 320×180 planning basis; no new art generated. No merge to main.
