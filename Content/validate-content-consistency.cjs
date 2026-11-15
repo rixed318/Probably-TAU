@@ -15,6 +15,14 @@ function validateCrossFile(spec,hooks){
    else seen.add(id);
   }
  }
+ // Day 01 visit definition IDs must remain stable and unique for references/saves.
+ const visitIds=new Set();
+ for(const visit of spec.day1.visits){
+  const id=visit.id;
+  if(typeof id!=="string"||!id.trim())errors.push("day1.visits: invalid id");
+  else if(visitIds.has(id))errors.push(`day1.visits: duplicate id ${id}`);
+  else visitIds.add(id);
+ }
  // Choice IDs are stable content definition identifiers; duplicate/blank IDs make saves ambiguous.
  // Check across Day 01 visits and the subsequent event manifest, without imposing runtime order.
  const choiceOwners=new Map();
@@ -215,4 +223,10 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("projects: invalid id"))
 s=clone(spec);s.projects[0].id="E02";
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("projects: id collides with event E02")),
   "project/event definition namespace collision must fail");
-console.log("PASS: 24 cross-file fixture/negative checks");
+s=clone(spec);s.day1.visits.push(clone(s.day1.visits[0]));
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("day1.visits: duplicate id")),
+  "duplicate Day 01 visit definition ID must fail");
+s=clone(spec);s.day1.visits[0].id=" ";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("day1.visits: invalid id")),
+  "blank Day 01 visit definition ID must fail");
+console.log("PASS: 26 cross-file fixture/negative checks");
