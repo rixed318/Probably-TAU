@@ -223,3 +223,11 @@
 - Actually executed: **4/4 isolated JavaScript logical checks** against fresh GitHub content (baseline 3 documents/3 visits, duplicate document ID, blank ID, unresolved visit document reference). These checks mirror the new guard; **full committed Node CLI/29 cases NOT RUN**. C#/Unity/runtime integration NOT RUN.
 - QA 05: run `node Content/validate-content-consistency.cjs` on the feature checkout and attach output. NPC 02: review typed facts `E03_mentor_paid`, `E07_delivered` and `partner/{sourceInstanceId}/delivery` provenance before adapter implementation.
 - No narrative, financial values, Definition IDs, DayIndex, E09 report-only, Core or EventDirector modifications. Draft only; no main write or merge. Runtime integration remains blocked on Core/NPC contracts.
+
+
+## AutoDev 04 — 2026-11-15: malformed Day 01 choice input guard
+
+- **One bounded task (#7):** prevent validator crash when `day1.visits[].choices` is null/not an array or contains null entries. Invalid arrays now produce `choices must be an array`; null entries produce `invalid choice id`. No change to valid content, gameplay, money, IDs or narrative.
+- **Code commit:** `04c2c5e97e433f6a8100f2aba28cc09c076b19ef` in `feature/content-7`. Added two negative fixtures; declared cross-file suite **29 → 31**.
+- **Verification:** GitHub connector confirmed the commit SHA. Full Node CLI **NOT RUN** (container `git ls-remote` failed: `Could not resolve host: github.com`); the 31 fixtures are **not claimed passing**. Unity/C# NOT RUN. QA 05 should run `node Content/validate-content-consistency.cjs` from checkout and attach logs.
+- **NPC 02 review remains requested:** typed fact IDs `E03_mentor_paid`, `E07_delivered`, earned provenance `partner/{sourceInstanceId}/delivery`. Runtime integration BLOCKED on Core/NPC instance/fact/ledger contracts. E09 report-only and ADR-C0-002 preserved. No main push/merge.
