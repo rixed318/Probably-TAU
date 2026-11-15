@@ -9,7 +9,8 @@ internal static class Program
         {
             EventConditionGoldenTests.RunAll();
             EventConditionJsonGoldenTests.RunAll();
-            Console.WriteLine("PASS: EventConditionGoldenTests and EventConditionJsonGoldenTests");
+            VisitorIdentityGoldenTests.RunAll();
+            Console.WriteLine("PASS: EventConditionGoldenTests, EventConditionJsonGoldenTests, VisitorIdentityGoldenTests");
             return 0;
         }
         catch (Exception exception)
