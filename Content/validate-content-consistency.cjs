@@ -15,6 +15,21 @@ function validateCrossFile(spec,hooks){
    else seen.add(id);
   }
  }
+ // Choice IDs are stable content definition identifiers; duplicate/blank IDs make saves ambiguous.
+ // Check across Day 01 visits and the subsequent event manifest, without imposing runtime order.
+ const choiceOwners=new Map();
+ const choiceGroups=[
+  ...spec.day1.visits.map(visit=>({owner:visit.id,ids:visit.choices.map(c=>c.id)})),
+  ...spec.eventManifest.map(event=>({owner:event.id,ids:event.choices}))
+ ];
+ for(const group of choiceGroups){
+  if(!Array.isArray(group.ids)){errors.push(`${group.owner}: choices must be an array`);continue;}
+  for(const id of group.ids){
+   if(typeof id!=="string"||!id.trim()){errors.push(`${group.owner}: invalid choice id`);continue;}
+   if(choiceOwners.has(id))errors.push(`${group.owner}: duplicate choice id ${id} (first in ${choiceOwners.get(id)})`);
+   else choiceOwners.set(id,group.owner);
+  }
+ }
  // Validate every manifest entry, not just the E02/E03/E09 hook subset.
  // DayIndex is canonical 0-based; legacy human day must be exactly DayIndex+1.
  for(const e of spec.eventManifest){
@@ -173,4 +188,13 @@ s=clone(spec);s.eventManifest.find(e=>e.id==="E05").feeds.push("E04");
 s.eventManifest.find(e=>e.id==="E04").feeds.push("E05");
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("eventManifest: cyclic feed")),
   "same-day two-event cycle E04 -> E05 -> E04 must fail");
-console.log("PASS: 18 cross-file fixture/negative checks");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E14").choices.push("E02-A");
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("duplicate choice id E02-A")),
+  "cross-event duplicate choice definition ID must fail");
+s=clone(spec);s.day1.visits.find(v=>v.id==="D01_STUDENT").choices[0].id="LAB-1";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("duplicate choice id LAB-1")),
+  "Day 01 cross-visit duplicate choice ID must fail");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E12").choices[0]=" ";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E12: invalid choice id")),
+  "blank event choice ID must fail");
+console.log("PASS: 21 cross-file fixture/negative checks");
