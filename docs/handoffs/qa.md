@@ -285,3 +285,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Recommended next step:** Core 01 complete snapshot DTO and persistence invariants, then QA implement Save→Load round-trip tests in `feature/save-6`. Coordinator 00 should separately assess integration at pinned SHAs.
 
 **Safety:** no changes to Core, main, merges, or shared contracts.
+
+
+## 2026-11-15 — AutoDev 05: independent verification of newest Core UTF-8 regression (#6/#8)
+
+**One bounded task:** reviewed current main policies, PR #9/#10/#11/#12/#14 (also #16/#17), Issues #6/#8, QA workflow, Core handoff, the real Core `Tests/Core/FinancialCommandGoldenTests.cs` and `GameStateSnapshotDto.cs`. Verified the newest Core financial fingerprint regression coverage (malformed posting/source ID) without modifying Core.
+
+**Evidence:** Core PR #9 HEAD `74ecb8b013beb961dc9ddd3ae7e330a049dfdfe9` has GitHub Actions [run #43701790337](https://github.com/rixed318/Probably-TAU/actions/runs/43701790337) **completed / success**. Independently fetched the job and steps: checkout, .NET 8 SDK install and `Compile and run all Core golden suites` all **success**. The actual source contains tests for malformed posting ID (strict UTF-8 fingerprint throws) and malformed source ID (`ExecuteVerified` returns `InvalidCommandEncoding` with unchanged state). This verifies the workflow step, **not** a separately inspected per-assertion log or Unity build. Local Node/Python/C# tests **NOT RUN** in this documentation-only verification. Unity Editor/EditMode **NOT RUN**.
+
+**Snapshot readiness:** the current `Runtime/Core/GameStateSnapshotDto.cs` blob `3d64a71bfd13829a116e3fd2cdd9043482083d55` remains a minimal slice, explicitly excluding persisted ledger entries, debts, receipt fingerprints/outcomes and typed delayed-event payloads. Production SaveService **BLOCKED**; no substitute GameState model created.
+
+### Сводка для координатора 00 — 2026-11-15 15:21 UTC+4
+
+- **Latest checked PR HEADs before this QA commit:** #9 Core `74ecb8b013be`; #10 QA `4a5fdd3bf953`; #11 Content `aa19c995d988`; #12 UI `4357cdd3b2e1`; #14 ADR `ebdc4be28afd`; #16 NPC `ddaf4a0c142a`; #17 ADR-C0-002 `bc9db999b419`. All seven checked PRs open/draft. Main policy docs unchanged in this task.
+- **Blocker 1:** complete durable GameState snapshot DTO still missing ledger, obligations, verified command receipts and typed pending events; SaveService cannot be implemented safely.
+- **Blocker 2:** Unity Editor/EditMode/PlayMode and integrated Save→Load **NOT RUN**.
+- **Blocker 3:** no pinned-SHA integrated multi-branch Unity build; independent feature-branch CI success is not merge approval.
+- **Recommended next step:** Core 01 should extend the Core-owned versioned snapshot with ledger/obligations/receipt outcomes and typed scheduled event instances plus deterministic round-trip tests. QA 05 can then build Save→Load tests without redefining Core. For new QA CI evidence, record actual checked-out Core/UI/Content SHAs.
+- **Safety:** only QA handoff updated; no main write, merge, third-party IP approval or shared architecture decision.
