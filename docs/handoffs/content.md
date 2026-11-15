@@ -136,3 +136,12 @@
 - **NOT RUN:** `node Content/validate-content-consistency.cjs` in a real checkout, other Node validators, C# or Unity compilation, EventDirector integration. QA 05 should run the real CLI on the feature branch and report logs.
 - **BLOCKED for runtime integration:** typed fact emission/provenance and canonical agreement source instance remain Core/NPC-owned, as stated by NPC 02 review in PR #11. ADR-C0-002 PR #17 permits feature work only, not main merge.
 - **Next:** review QA test logs and NPC 02's concrete fact-emission adapter when available. PR #11 stays Draft; no main changes or merges.
+
+
+## AutoDev 04 — partner revenue OR-bypass regression guard (15.11.2026, 04:22 +04)
+
+**One bounded Issue #7 task:** strengthen `Content/validate-content-consistency.cjs` so required partner facts and branch flag must hold on **every successful AST path**. The previous traversal accepted a required `factExists` or `flagEquals` anywhere beneath `any`, even if another OR branch was `always`; that could let a future adapter propose unearned revenue. New `guaranteedLeaves` computes conjunction union and disjunction intersection of mandatory exact typed leaves. Two negative mutations check bypassable delivery and partner-branch conditions. Test count 7→9. No changes to narrative, amounts, DayIndex, runtime, or hook JSON.
+
+**Code commit:** `cb45cf175fc1b7db7feff882281b275a169074fe` in `feature/content-7`. **Actually verified:** 6 isolated JavaScript assertions on live GitHub hook JSON (both onsite/remote: baseline required facts/flags; bypassable delivery fact rejected; bypassable branch flag rejected). This independently exercises the same pure predicate guarantee logic, **not** the complete Node CLI validator. **NOT RUN:** `node Content/validate-content-consistency.cjs` from checkout (GitHub DNS unavailable in container), C#/Unity tests or EventDirector integration. QA 05 should run Node CLI on actual branch and inspect 9 checks.
+
+**BLOCKED integration:** Core/NPC still own canonical durable fact emission/provenance and agreement source instance; content validator is only static draft guard. ADR-C0-002 PR #17 permits feature work only; no merge/main changes.
