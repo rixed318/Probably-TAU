@@ -255,3 +255,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Verification status:** GitHub accepted the workflow file and returned commit SHA above. Immediate lookup of GitHub Actions runs for that commit returned **zero runs**; no tests have been observed executing, so CI status is **NOT RUN / NOT VERIFIED**. GitHub Actions may require branch-specific workflow activation or delayed indexing; check Actions and inspect logs before claiming success. Static source inspection is not runtime validation. No browser 320px/200% zoom or Unity PlayMode test performed.
 
 **Follow-up:** QA 05 / coordinator 00 should inspect the workflow run for commit `01209e0c`, verify all steps, then perform a real browser accessibility/layout check at 320px and 200% zoom. Any failure should be fixed in this UI branch, not hidden or labelled green. PR #12 stays Draft; `main` unchanged.
+
+
+---
+
+## AutoDev 03 · 2026-11-15 · Verified first UI CI execution (#5, #13)
+
+**One scoped task:** close the evidence gap left by the previous CI workflow commit. Inspected the actual GitHub Actions run associated with the current UI branch HEAD `b76e8f30c59af70b7a0864b2d3cf2aa9898c21c1`, without changing production UI or game state.
+
+**Verified evidence:** GitHub Actions [run #43675977238](https://github.com/rixed318/Probably-TAU/actions/runs/43675977238), workflow `UI standalone smoke tests`, status **completed**, conclusion **success**. Its single job `Node UI and art manifest regression (not Unity)` completed successfully. The reported step conclusions are **success** for `Checkout UI branch`, `Setup Node.js 22`, `Node UI mock and canonical Day 01 tests`, `Validate art manifest`, and `Art manifest regression tests`. Commands are defined in `.github/workflows/ui-smoke.yml`: three Node test suites and Python art validator/unittest suite. This confirms those CI steps exited successfully for that HEAD; individual assertion counts and full logs were **not** independently inspected.
+
+**Still NOT VERIFIED:** browser visual/keyboard/screen-reader behavior at 320 px and 200% zoom, JavaScript-disabled behavior in a real browser, Unity Editor/PlayMode and real C0-to-UI adapter. A green standalone workflow is not a Unity build or cross-PR integration proof.
+
+**Next task:** run actual browser accessibility/layout smoke for `prototypes/ui-day-one/day01-preview.html` at 320 px and 200% zoom; attach screenshots/notes or mark BLOCKED if no browser. No need to recreate the already-completed Day01 read-model or rework `dayAdvanced`. Art Direction A remains 320×180; no new art or third-party IP approved. PR #12 stays Draft, no merge to `main`.
