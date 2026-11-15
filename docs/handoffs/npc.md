@@ -143,3 +143,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Commits:** implementation `d28e4afb31ea4c0c3f596c2a24f18548d9d31e74`; tests `d59e61fc3f18870ca626576cf7a0ed02c2bcc65b`; corrected test escaping `0f5cc9464737f554ac963777102991ddc468840b`. All on `feature/npc-4`, PR #16 remains Draft. Prior head `3f13fea1` had GitHub Actions success #43689843236; this **does not validate the new commits**. New CI must be checked separately; no local Unity or .NET execution claimed.
 
 **Dependencies / BLOCKED for EventDirector:** Core 01 must supply compatible event instance/queue DTOs, atomic transaction and receipt APIs; Content 04 must finalize typed AST and canonical earnedId/source identity. ADR-C0-002 PR #17 is feature-only; never merge without owner permission.
+
+
+## AutoDev 02 — reject escaped JSON control characters (2026-11-15)
+
+**One scoped task (#4):** harden the independent draft condition JSON adapter against control characters inside persisted condition identifiers/values (e.g. JSON-escaped newline and tab). `ReadString` now rejects Unicode control characters as `FormatException`; two golden negative fixtures cover `factId` and `flagEquals.value`. Also normalize unexpected AST factory `ArgumentException` to adapter `FormatException` with preserved cause. No Core/GameState/ledger/queue/scheduler modifications.
+
+**Commits on `feature/npc-4`:** `d5e931b0` exception boundary, `22b45461` initial regression fixtures, `9cf38436` explicit control-character validation, `81e8777f` corrected final fixtures. This handoff is a separate commit. PR #16 remains Draft.
+
+**Validation:** manually inspected adapter, immutable AST factory and final JSON fixture escaping through GitHub. **NOT RUN:** local .NET/C# tests, Unity EditMode; new-head GitHub Actions result must be checked before claiming pass. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**BLOCKED for EventDirector:** Core's current `GameStateSnapshotDto` still exposes pending/completed event ID lists but not concrete scheduled instance/atomic transaction/receipt APIs; Content's typed AST and earnedId/source identity remain draft. ADR-C0-002 in PR #17 is feature-development-only. No main writes or merge.
