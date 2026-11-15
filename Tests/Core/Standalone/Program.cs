@@ -11,8 +11,9 @@ internal static class Program
         failures += Run("GameClock five-day calendar", GameClockGoldenTests.RunAll);
         failures += Run("GameState snapshot invariants", GameStateSnapshotGoldenTests.RunAll);
         failures += Run("Ledger checked Int64 and append invariants", LedgerGoldenTests.RunAll);
+        failures += Run("Financial command atomic prepare/commit and replay", FinancialCommandGoldenTests.RunAll);
         Console.WriteLine(failures == 0
-            ? "PASS: all 4 Core golden suites."
+            ? "PASS: all 5 Core golden suites."
             : "FAIL: " + failures + " Core golden suite(s).");
         return failures == 0 ? 0 : 1;
     }
