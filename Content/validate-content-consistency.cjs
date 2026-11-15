@@ -15,6 +15,17 @@ function validateCrossFile(spec,hooks){
    else seen.add(id);
   }
  }
+ // Document definition IDs are stable references from Day 01 visits.
+ const documentIds=new Set();
+ for(const doc of spec.documentTypes){
+  const id=doc.id;
+  if(typeof id!=="string"||!id.trim())errors.push("documentTypes: invalid id");
+  else if(documentIds.has(id))errors.push(`documentTypes: duplicate id ${id}`);
+  else documentIds.add(id);
+ }
+ for(const visit of spec.day1.visits){
+  if(!documentIds.has(visit.documentId))errors.push(`${visit.id}: unresolved documentId ${String(visit.documentId)}`);
+ }
  // Day 01 visit definition IDs must remain stable and unique for references/saves.
  const visitIds=new Set();
  for(const visit of spec.day1.visits){
@@ -229,4 +240,13 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("day1.visits: duplicate 
 s=clone(spec);s.day1.visits[0].id=" ";
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("day1.visits: invalid id")),
   "blank Day 01 visit definition ID must fail");
-console.log("PASS: 26 cross-file fixture/negative checks");
+s=clone(spec);s.documentTypes.push(clone(s.documentTypes[0]));
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("documentTypes: duplicate id DOC-01")),
+  "duplicate document definition ID must fail");
+s=clone(spec);s.documentTypes[0].id=" ";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("documentTypes: invalid id")),
+  "blank document definition ID must fail");
+s=clone(spec);s.day1.visits[0].documentId="DOC-MISSING";
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("unresolved documentId DOC-MISSING")),
+  "visit referencing unknown document definition must fail");
+console.log("PASS: 29 cross-file fixture/negative checks");
