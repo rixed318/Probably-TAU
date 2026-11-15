@@ -253,3 +253,13 @@
 **Verification:** source committed to `feature/core-2`; latest .NET 8 workflow must be inspected for completed/success before marking this new change green. Unity Editor/EditMode NOT RUN. No main writes, merges or Issue closures.
 
 **Next:** verify CI; then implement one bounded Core domain GameState transaction/receipt integration step after QA review.
+
+## AutoDev 01 — 15.11.2026: strict UTF-8 financial fingerprint boundary
+
+**Scope:** one bounded security/integrity regression in `feature/core-2`, Issue #2 / PR #9. The .NET 8 runner, Ledger and financial processor already existed; this pass did not rebuild them or touch another subsystem.
+
+- `Runtime/Core/FinancialCommandFingerprint.cs`: strict UTF-8 encoding (`new UTF8Encoding(false, true)`) rejects malformed UTF-16 rather than replacing invalid surrogate code units with U+FFFD and potentially aliasing distinct command/posting/source IDs. `ExecuteVerified` maps `EncoderFallbackException` to `Rejected / InvalidCommandEncoding` without committing state.
+- `Tests/Core/FinancialCommandGoldenTests.cs`: added malformed command ID and source ID regression checks and immutable-state rejection check; fifth golden suite remains registered in the existing runner.
+- Code commits: `6a7e26b9`, `955ea70e`, `99471718`. No public C0 contract change; existing valid ASCII/UTF-8 fingerprints remain unchanged. Legacy `FinancialCommandProcessor.Execute` remains a provisional unverified boundary; integrations must use `ExecuteVerified`.
+
+**Verification:** GitHub Actions run for latest code must be checked separately; no Unity Editor/EditMode available. Do not claim success based on earlier green runs. **Remaining:** full GameState/EndDay, durable ledger/receipt/event DTO, payables and Unity integration. No merge/main/Issue closure.
