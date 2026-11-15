@@ -26,6 +26,12 @@ namespace TAU.President.Npc
                 // depth guard runs. Keep all invalid JSON shapes on the same API contract.
                 throw new FormatException("Invalid condition JSON.", exception);
             }
+            catch (ArgumentException exception)
+            {
+                // The immutable AST factories validate canonical identifiers.
+                // Invalid content JSON must not leak factory-specific exceptions.
+                throw new FormatException("Invalid condition JSON value.", exception);
+            }
         }
 
         private static EventCondition ReadNode(JsonElement node, int depth)
