@@ -194,3 +194,18 @@
 **Next:** verify new Core .NET run; address real failures if any. Then implement atomic command transaction/receipt layer, integrating ledger and GameState only after QA #10 review. No main write, merge or Issue closure.
 
 **CI follow-up (verified):** [Core .NET run 43647817751](https://github.com/rixed318/Probably-TAU/actions/runs/43647817751), triggered by code commit `72abba2a`, is **completed / success**. The job's `Compile and run all Core golden suites` step completed successfully with the fourth Ledger suite registered. This verifies the standalone .NET 8 runner, not Unity compilation/EditMode nor cross-branch integration. The workflow job's displayed name still says 'three golden suites' (cosmetic stale label), while Program.cs actually invokes four.
+
+
+## 14. AutoDev 01 — atomic Ledger batch preparation (15.11.2026)
+
+**Scope:** one bounded additive Issue #3 implementation under C0-v2 / ADR-C0-001. Does not implement CommandProcessor, mutable GameState, obligations, payables, settlement, or Unity.
+
+- `Runtime/Core/LedgerSnapshot.cs` commit `99ac644a`: added `WithPostings(IEnumerable<LedgerEntry>)`. It builds a detached ordered candidate, checks duplicate PostingId both against the existing ledger and within the batch (ordinal IDs), validates nulls, checked Int64 balance after **each** entry and nonnegative intermediate cash. Returns a new immutable LedgerSnapshot only when every posting succeeds. Rejected batches cannot mutate the original snapshot or expose a partially committed result.
+- `Tests/Core/LedgerGoldenTests.cs` commit `3f168976`: tests two-entry success and order, empty batch, null collection/entry, duplicate existing/intra-batch IDs, insufficient funds at first/later entry, overflow after a valid first entry, unchanged source and subsequent valid append after rejection.
+- Existing `Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj` compiles all Core sources and `LedgerGoldenTests.RunAll()` without runner edits.
+
+**Baseline verification:** GitHub Actions Core .NET 8 run [43647859964](https://github.com/rixed318/Probably-TAU/actions/runs/43647859964) completed/success for preceding Core HEAD `7844ab6a` (four suites). This is **not** evidence for the new batch changes. New workflow result must be checked separately and only declared successful on completed/success. Local dotnet/Unity Editor not verified; Unity EditMode NOT RUN.
+
+**Contract boundary:** `WithPostings` is a *preparation* helper, not a transaction commit or a replacement for durable CommandId fingerprints/receipts. Mandatory-payment shortage must still create payable via future Economy/CommandProcessor policy, not by forcing negative cash. The C0 public command contract is unchanged; this is an additive ledger API.
+
+**Next:** verify new GitHub Actions run; then implement the smallest CommandProcessor atomic prepare/commit + idempotent receipt slice after QA #10 review. PR #9 remains Draft, no main write, no merge or Issue closure.
