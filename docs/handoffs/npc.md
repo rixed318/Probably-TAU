@@ -226,3 +226,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Actual verification:** GitHub Actions NPC .NET 8 golden workflow [run 43759188365](https://github.com/rixed318/Probably-TAU/actions/runs/43759188365) reports **completed / success** for preceding NPC HEAD `89f2f04bce64a5d2817397826e3d2f206fd075d4` (including VisitorModels and golden tests). This is a workflow-level result, not a locally executed test log. Content handoff and PR #11 reply were read from GitHub. **NOT RUN this pass:** local dotnet, Unity, new integration/receipt tests, browser. No runtime code changed; CI for this documentation-only commit is not claimed.
 
 **Next P0 criterion:** consume typed, Core-confirmed agreement occurrence and receipt APIs when actually available, then add a minimal adapter with one deterministic provenance test; until then keep EventDirector blocked. PR #16 remains Draft; no merge/main writes.
+
+
+## AutoDev 02 — P0 canonical visit lookup (2026-11-16)
+
+- **Scope / Issue #18:** added pure read-only `Day01Visitors.TryGetByVisitId` for UI/Content adapters to resolve the three canonical fictional visit IDs without a mutable visitor registry. Uses `StringComparison.Ordinal`; unknown, null and wrong-case IDs fail closed with null result. Existing factory, Core ownership, money and scheduler unchanged.
+- **Tests added:** golden checks for all three exact ID→archetype→document mappings and unknown/case-mismatch/null rejection in `VisitorIdentityGoldenTests`. Execute `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. **NOT RUN locally** (SDK unavailable); CI result for this new commit must be verified separately. Unity NOT RUN.
+- **Git commit:** this handoff, production method and golden assertions are in the same commit on `feature/npc-4` (see PR #16 head). No merge/main write.
+- **BLOCKED:** EventDirector still requires Core transaction, scheduled occurrence, verified receipts and earned dedup ports. Provenance of E03/E07 and agreement source ID is documented in prior handoff; no duplicate financial logic introduced.

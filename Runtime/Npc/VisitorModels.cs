@@ -44,6 +44,22 @@ namespace TAU.President.Npc
     /// <summary>Pure canonical Day01 mapping from Content/DAY01_UI_FIXTURE.json; no state or RNG.</summary>
     public static class Day01Visitors
     {
+        /// <summary>Resolve a canonical Day01 visit ID; ordinal matching, no mutable cache.</summary>
+        public static bool TryGetByVisitId(string visitId, out VisitorInstance visitor)
+        {
+            visitor = null;
+            if (string.IsNullOrEmpty(visitId)) return false;
+            foreach (var candidate in Create())
+            {
+                if (string.Equals(candidate.InstanceId, visitId, StringComparison.Ordinal))
+                {
+                    visitor = candidate;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static IReadOnlyList<VisitorInstance> Create()
         {
             return Array.AsReadOnly(new[]

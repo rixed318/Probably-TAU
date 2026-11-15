@@ -22,6 +22,20 @@ namespace TAU.President.Tests.Npc
                 if (first[i].InstanceId != replay[i].InstanceId)
                     throw new Exception("Replay changed stable visit identity.");
             }
+            for (int i = 0; i < expectedVisits.Length; i++)
+            {
+                VisitorInstance resolved;
+                if (!Day01Visitors.TryGetByVisitId(expectedVisits[i], out resolved) ||
+                    resolved.InstanceId != expectedVisits[i] ||
+                    resolved.DocumentId != expectedDocuments[i] ||
+                    resolved.Archetype.DefinitionId != expectedDefinitions[i])
+                    throw new Exception("Canonical visit lookup mismatch at " + i);
+            }
+            VisitorInstance missing;
+            if (Day01Visitors.TryGetByVisitId("d01_lab", out missing) || missing != null ||
+                Day01Visitors.TryGetByVisitId("D01_UNKNOWN", out missing) || missing != null ||
+                Day01Visitors.TryGetByVisitId(null, out missing) || missing != null)
+                throw new Exception("Unknown/case-mismatched visit must not resolve.");
             if (ReferenceEquals(first[0], replay[0]))
                 throw new Exception("Factory should return fresh immutable objects.");
             try { new VisitorInstance("x", null, "DOC-01", 0); throw new Exception("Null archetype accepted."); }
