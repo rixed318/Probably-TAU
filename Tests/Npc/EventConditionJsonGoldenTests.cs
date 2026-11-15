@@ -66,12 +66,12 @@ namespace TAU.President.Tests.Npc
 
             // Missing required fields must fail with FormatException, not KeyNotFoundException.
             Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"key\\":\\"PARTNER\\"}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"flagEquals\\",\\"value\\":\\"onsite\\"}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"flagEquals\\",\\"key\\":\\"PARTNER\\"}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"factExists\\"}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"dayIndexAtLeast\\"}"));
-            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"all\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"key\":\"PARTNER\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"flagEquals\",\"value\":\"onsite\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"flagEquals\",\"key\":\"PARTNER\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"factExists\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"dayIndexAtLeast\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\"op\":\"all\"}"));
 
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
