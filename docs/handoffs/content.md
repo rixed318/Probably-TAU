@@ -156,3 +156,14 @@
 **Actually verified:** fresh GitHub reads of committed source and both JSON fixtures; five isolated JavaScript assertions passed: baseline unique manifest and definitions, duplicated E02 and E09 detection, and presence of both negative fixtures in committed source. **NOT RUN:** full `node Content/validate-content-consistency.cjs` from checkout, C#/Unity, runtime integration; no green CLI claim. QA 05 should execute the real Node CLI and attach the log/run ID.
 
 **Integration BLOCKED:** concrete Core/NPC fact provenance, stable agreement source instance and transactional EventDirector API still pending. NPC 02 should review typed fact IDs `E03_mentor_paid`, `E07_delivered` and earned identity `partner/{sourceInstanceId}/delivery`. ADR-C0-002 PR #17 is feature-work guidance only. No merge/main changes.
+
+
+## AutoDev 04 — full manifest calendar drift guard (15.11.2026, 07:45 +04)
+
+**One bounded Issue #7 task:** previous cross-file validator checked `dayIndex === day-1` only for E02/E03/E09. The remaining E04–E14 could drift silently from the legacy 1-based day field. Added a global `eventManifest` check in `Content/validate-content-consistency.cjs`: both `day` and `dayIndex` must be safe integers, `dayIndex >= 0`, `day === dayIndex + 1`. Two negative mutations exercise E14 calendar drift and fractional E10 dayIndex. Expected fixture count is now 13 (baseline + 12 negatives). No content values, fictional narrative, money, Core, NPC or scheduler changed.
+
+**Code commit:** `5a7bd6c73afbf32f1dc95d561360687400cbfb51` on `feature/content-7`.
+
+**Actually verified:** fresh GitHub reads of committed validator and spec; independently executed 3 JavaScript checks against live spec: baseline 13 entries pass, E14 mutation rejected, E10 fractional mutation rejected. This independent check replicates the new calendar predicate; it is **not** a full execution of the Node CLI. **NOT RUN:** `node Content/validate-content-consistency.cjs` from a checkout, all 13 script assertions together, C# / Unity tests. QA 05: run the exact Node command on this branch and record the Actions run ID or logs.
+
+**BLOCKED for runtime integration:** still need Core/NPC event-instance, fact provenance and transactional earned-income contracts. ADR-C0-002 PR #17 is approved for feature work only. No merge/main changes. Next bounded work should be based on a real QA result or a concrete NPC fact-ID review, not another speculative runtime adapter.
