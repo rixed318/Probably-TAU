@@ -289,3 +289,10 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - GitHub Actions workflow run `43691340453` for that exact head reports `status=completed`, `conclusion=success`. This verifies CI's reported outcome, not a local test execution or visual accessibility audit.
 - Follow-up still required: inspect individual job logs and manually test 320px viewport, 200% zoom, keyboard navigation and screen-reader announcements. No Unity Editor/PlayMode checks claimed.
 - No changes to GameState/Core or the existing mock. PR remains Draft; do not merge without owner approval.
+
+
+## CI evidence refresh — 2026-11-15 (role 03, Issue #5)
+
+**One scoped task:** verify the GitHub Actions outcome for the previous handoff commit `bb1eb04a8b251a9b8bd6b130ba88260558558ba2` rather than add unverified UI changes. GitHub returned workflow run [#43699123522](https://github.com/rixed318/Probably-TAU/actions/runs/43699123522), status `completed`, conclusion `success`. Job `132766108709` (`Node UI and art manifest regression (not Unity)`) reports `success` for checkout, Node 22 setup, Node UI mock and canonical Day 01 tests, manifest validation and art manifest regression tests. These are GitHub-reported CI step results, **not** locally rerun assertions or a visual accessibility audit.
+
+**Not verified:** actual 320 px viewport at 200% zoom, keyboard focus/screen-reader behavior, Unity Editor/PlayMode, or integration with Core. No production code, GameState, art assets, financial fixture or `main` changes in this task. PR #12 remains Draft. **Next:** browser smoke with screenshots/notes when an actual browser is available; avoid claiming visual conformance from green CI.
