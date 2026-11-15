@@ -157,7 +157,7 @@ namespace TAU.President.Tests.Core
 
             // Invalid UTF-16 must not be silently normalized to U+FFFD in a command ID,
             // source ID or posting ID; otherwise distinct payloads can share a hash.
-            string malformed = "bad\\uD800";
+            string malformed = "bad" + (char)0xD800;
             bool encodingRejected = false;
             try { FinancialCommandFingerprint.Compute(malformed, 0, 0, canonicalPostings); }
             catch (System.Text.EncoderFallbackException) { encodingRejected = true; }
