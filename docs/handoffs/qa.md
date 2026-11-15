@@ -371,3 +371,19 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Unity Editor/EditMode/PlayMode and integrated Save→Load NOT RUN.
 - **Recommended next step:** ask Core 01 for stable full durable DTO with deterministic round-trip tests; rerun QA on current dependency SHAs and capture exact checkout hashes before any integration claim. Keep PR #10 Draft.
 - **Safety:** only QA handoff updated, no merge/main writes/foreign branch edits or new shared contracts.
+
+
+## 2026-11-15 23:41 UTC+4 — QA 05: Content money-wire gate (#8)
+
+**One bounded code change:** QA workflow `.github/workflows/qa-offline.yml` now invokes `node Content/validate-money-wire.cjs` in the existing read-only `feature/content-7` checkout, following event-hook and cross-file validation. QA workflow commit: `7e4583d6740d7f91975a03d1b732387003578888` in `feature/save-6`. Source validator was verified present in Content branch (blob `bba7df10212ebad99c26810d21c42cbd9f08f256`). No Content source edited, no new shared contracts.
+
+**Execution evidence:** GitHub accepted workflow commit. New money-wire step is **NOT YET VERIFIED** by Actions log; local Node/.NET/Python **NOT RUN**. Existing QA Actions #43744752193 3/3 success predates this new step and must **not** be cited as its result. The workflow still checks out moving Core/UI/Content refs; actual SHAs are logged but not frozen. Read-only NPC .NET runner and pin/freeze mode are separate next tasks; do not imply either is implemented. Unity Editor/EditMode/PlayMode **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-15 23:41 UTC+4
+
+- **Latest PR references:** #9 Core, #10 QA (workflow commit `7e4583d6740d7f91975a03d1b732387003578888` plus this handoff), #11 Content, #12 UI, #14 C0 ADR, #16 NPC; current PR head SHAs must be independently refreshed from GitHub before any release-check. Prior checked Core head `e6f6f6f1c2b0` is historical, not a current-head assertion. `main` untouched.
+- **Blocker 1:** complete durable Core GameState snapshot (ledger, obligations, command receipts, typed events/NPC) still not confirmed; SaveService deferred.
+- **Blocker 2:** new Content money-wire QA step has no completed CI evidence; moving checkout refs still lack pinned/fail-closed release mode and NPC runner.
+- **Blocker 3:** Unity Editor/EditMode/PlayMode and integrated Save→Load **NOT RUN**.
+- **Recommended next step:** inspect next QA Actions job log and record exact Core/UI/Content SHA + money-wire PASS/FAIL. Then add pinned-SHA release-check or read-only NPC runner as one separately verified QA task.
+- **Safety:** no merges, main writes, foreign-branch edits, or IP/architecture approvals.
