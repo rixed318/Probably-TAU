@@ -174,6 +174,14 @@ namespace TAU.President.Tests.Core
                 new LedgerEntry[] { new LedgerEntry(malformed, "source", 1) }); }
             catch (System.Text.EncoderFallbackException) { encodingRejected = true; }
             Assert(encodingRejected);
+            // A malformed posting ID must also fail closed at the execution boundary.
+            var malformedPostingCommand = new FinancialPostingCommand("verified-bad-posting", canonical,
+                0, 0, new LedgerEntry[] { new LedgerEntry(malformed, "source", 1) });
+            var malformedPostingResult = FinancialCommandFingerprint.ExecuteVerified(initial, malformedPostingCommand);
+            Assert(malformedPostingResult.Status == FinancialCommandStatus.Rejected &&
+                malformedPostingResult.Error == "InvalidCommandEncoding" &&
+                Object.ReferenceEquals(malformedPostingResult.State, initial));
+            Assert(initial.ReceiptCount == 0 && initial.Ledger.Entries.Count == 0);
             var malformedSourceCommand = new FinancialPostingCommand("verified-bad-source", canonical,
                 0, 0, new LedgerEntry[] { new LedgerEntry("p", malformed, 1) });
             var malformedSourceResult = FinancialCommandFingerprint.ExecuteVerified(initial, malformedSourceCommand);
