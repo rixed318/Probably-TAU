@@ -3,7 +3,28 @@
   "use strict";
   const data = root.TAU_DAY01_READ_MODEL;
   const doc = root.document;
-  if (!data || !doc) return;
+  if (!doc) return;
+
+  function showLoadError() {
+    const summary = doc.getElementById("day01-summary");
+    const conflicts = doc.getElementById("day01-conflicts");
+    const documents = doc.getElementById("day01-documents");
+    if (summary) {
+      summary.textContent = "Не удалось загрузить данные первого дня. Проверьте файлы предпросмотра.";
+      summary.setAttribute("role", "alert");
+    }
+    if (conflicts) conflicts.replaceChildren();
+    if (documents) documents.replaceChildren();
+  }
+
+  // Never leave a misleading loading state when the fixture is unavailable.
+  if (!data || typeof data.getSummary !== "function" ||
+      typeof data.getRoomConflictNotice !== "function" ||
+      typeof data.formatRub !== "function" ||
+      !data.model || !Array.isArray(data.model.documents)) {
+    showLoadError();
+    return;
+  }
 
   function add(parent, tag, content, className) {
     const node = doc.createElement(tag);
@@ -46,5 +67,9 @@
       }
     }
   }
-  render();
+  try {
+    render();
+  } catch (_error) {
+    showLoadError();
+  }
 })(typeof window !== "undefined" ? window : globalThis);
