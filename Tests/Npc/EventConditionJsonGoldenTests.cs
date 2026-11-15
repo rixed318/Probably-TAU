@@ -64,6 +64,15 @@ namespace TAU.President.Tests.Npc
                 EventConditionJsonAdapter.Parse("{\"\\u006fp\":\"always\"}"),
                 0, flags, facts));
 
+            // Missing required fields must fail with FormatException, not KeyNotFoundException.
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"key\\":\\"PARTNER\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"flagEquals\\",\\"value\\":\\"onsite\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"flagEquals\\",\\"key\\":\\"PARTNER\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"factExists\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"dayIndexAtLeast\\"}"));
+            Throws<FormatException>(() => EventConditionJsonAdapter.Parse("{\\"op\\":\\"all\\"}"));
+
             // A deeply nested untrusted tree must fail before stack exhaustion.
             string deep = "{\"op\":\"always\"}";
             for (int i = 0; i < 33; i++) deep = "{\"op\":\"all\",\"items\":[" + deep + "]}";
