@@ -62,8 +62,12 @@ function failsAt(path, value) {
   assert.ok(errors[0].includes(path.join(".")), "expected field-specific diagnostic");
 }
 failsAt(["opening", "weeklyRevenueKopecks"], 34000000);
+// Nested money fields must use the same exact wire format as opening fields.
+failsAt(["documentTypes", 0, "visible", "amountKopecks"], 22000000);
+failsAt(["documentTypes", 2, "visible", "conditionalRevenueKopecks"], "1e7");
+failsAt(["day1", "visits", 0, "choices", 0, "effects", 0, "deltaKopecks"], "-01");
 
 assert.equal(validateMoney("-9223372036854775808"), true);
 assert.equal(validateMoney("9223372036854775807"), true);
 assert.equal(validateMoney("0"), true);
-console.log("PASS: 21 money fields; 13 negative mutations; 4 boundary positives");
+console.log("PASS: 21 money fields; 16 negative mutations; 4 boundary positives");
