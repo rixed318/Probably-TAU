@@ -165,3 +165,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Validation:** manually inspected the exact source change and test assertions. Previous head `ddaf4a0c` passed GitHub Actions run [43704983083](https://github.com/rixed318/Probably-TAU/actions/runs/43704983083), but it does NOT validate this fix. New-head .NET workflow and Unity Editor results are **NOT VERIFIED** at handoff. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. Note linear scan of input collections is intentional to guarantee ordinal semantics independently of their comparer.
 
 **BLOCKED:** EventDirector still needs Core scheduled instance DTO, atomic command/ledger transaction and receipt APIs, plus Content canonical earnedId source mapping. ADR-C0-002 PR #17 remains feature-only/unmerged.
+
+
+## AutoDev 02 — direct AST control-character parity (2026-11-15)
+
+**One scoped task (#4):** the direct `EventCondition` factory previously accepted embedded control characters even though the Content JSON adapter rejected them. `Required` now rejects `char.IsControl` characters in keys, fact IDs and flag values. Added three negative factory assertions and one positive ordinal fact assertion. This prevents bypassing the JSON adapter's canonical identifier rules. No Core, GameState, ledger, scheduler or Unity changes.
+
+**Commits:** runtime `b549209c7e9afaf283bccac9afb6e6e25032a7cc`; tests `31f2e0529745d8f850dd14d02f2620452e63eadc`; handoff update committed separately on `feature/npc-4` (PR #16 Draft). **Validation:** GitHub source write verified; .NET/Unity tests NOT RUN locally; GitHub Actions for this head must be verified before claiming success. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**BLOCKED for EventDirector:** Core scheduled instance/atomic transaction/receipt APIs and Content canonical earnedId/source identity still require integration; ADR-C0-002 PR #17 is feature-only. No main write or merge.
