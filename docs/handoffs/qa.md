@@ -228,3 +228,22 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** cross-branch QA follows moving feature refs; passing this run does not prove all latest PR heads jointly integrate.
 - **Recommended next step:** audit Core #9 snapshot/receipt fields against Save schema and prepare a narrow persistence contract test once fields exist; retain QA's fifth-suite gate and pin source SHAs before integration claims.
 - **Safety:** documentation-only QA feature branch, no merge, no main writes, no architectural or third-party IP approvals.
+
+
+## 2026-11-15 10:22 UTC+4 — QA 05: current CI + persistence-readiness audit (#6, #8)
+
+**One bounded independent QA task:** inspect latest actual PR heads and GitHub Actions job results, then review the *real* Core `Runtime/Core/GameStateSnapshotDto.cs` against Save/Load prerequisites. No production SaveService code is attempted while the contract is incomplete.
+
+- **QA HEAD before this audit:** `415b8a4b5b6cf8aa8458b936b74e5fa8ee53e51d`. Its GitHub Actions [run 43677859489](https://github.com/rixed318/Probably-TAU/actions/runs/43677859489) is **completed / success**; independently fetched all three jobs: Python PCG32 oracle **success**, UI/Content static regression **success**, Core .NET 8 ledger/snapshot regression **success**. Job step summaries report no failures. This is CI evidence, **not** a local test execution and **not** Unity integration.
+- **Core HEAD:** `19e9bb10f536206f6742a9e94e92ded4c163c391`. Core's separate .NET 8 [run 43678924467](https://github.com/rixed318/Probably-TAU/actions/runs/43678924467) is **completed / success**; its compilation/golden-runner job is **success**. It is not a Unity Editor/EditMode run.
+- **Actual DTO audit:** `GameStateSnapshotDto.cs` blob `3d64a71bfd13829a116e3fd2cdd9043482083d55` exposes `Revision`, campaign identifiers/seed, `DayIndex`, Q/S/M/E/R metrics, opening/current cash, named RNG streams, processed command/day IDs and pending/completed **event ID lists**. Its own source comment explicitly states it is a minimal slice, not final persistence wire format. It **does not expose** persisted ledger postings, payables/debt, command fingerprints/outcome receipts or typed scheduled event payloads with priority/due dates. The presence of independent Ledger and FinancialCommand golden suites does **not** fill these snapshot gaps.
+- **Verdict:** CI regression gate **PASS** for the tested branch checkouts; production SaveService and Save→Load exactly-once replay **BLOCKED by incomplete Core snapshot contract**. Unity Editor/EditMode **NOT RUN**. No newly authored tests in this documentation-only audit.
+
+### Сводка для координатора 00 — 2026-11-15 10:22 UTC+4
+
+- **Current PR heads checked:** #9 Core `19e9bb10f536`, #10 QA `415b8a4b5b6c` before this handoff commit, #11 Content `7f8d0ac4cd5f`, #12 UI `cb3267291577`, #14 C0 ADR `ebdc4be28afd`, #16 NPC `3e76929289d4`, #17 ADR-C0-002 `bc9db999b419`. All inspected PRs open and Draft; #15 also exists. Main policy documents AGENTS.md and docs/CHAT_WORKFLOW.md re-read.
+- **Blocker 1:** complete persistable Core snapshot (ledger, payables, command fingerprint/outcome receipts, typed event instances and due metadata) still absent.
+- **Blocker 2:** Unity Editor/EditMode and real end-to-end Save→Load integration **NOT RUN**.
+- **Blocker 3:** QA CI checks moving feature-branch refs; its success does not prove simultaneous integration of all current PR heads at pinned SHAs.
+- **Recommended next step:** ask Core 01 to add a versioned **snapshot-only** extension for ledger/payables/receipts/event instances with deterministic round-trip golden tests, under the already-approved C0 and ADR-C0-002 rules; QA 05 can then implement isolated serialization/replay regression without inventing GameState or modifying Core.
+- **Safety:** no merge, no main writes, no edits to other role branches, no new shared contracts, no IP/logo approvals.
