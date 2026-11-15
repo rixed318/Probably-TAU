@@ -74,6 +74,13 @@ namespace TAU.President.Tests.Npc
             Assert(!EventConditionEvaluator.Evaluate(EventCondition.FactExists("e03_mentor_paid"),
                 4, insensitiveFlags, insensitiveFacts));
 
+            // Direct AST construction must enforce the same ID rules as JSON parsing.
+            Throws<ArgumentException>(() => EventCondition.FactExists("E03\nmentor"));
+            Throws<ArgumentException>(() => EventCondition.FlagEquals("PARTNER\t", "onsite"));
+            Throws<ArgumentException>(() => EventCondition.FlagEquals("PARTNER", "on\u0000site"));
+            Assert(EventConditionEvaluator.Evaluate(EventCondition.FactExists("E03_mentor_paid"),
+                4, insensitiveFlags, insensitiveFacts));
+
             // Fail closed on absent context, malformed groups, and noncanonical identifiers.
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, null, facts));
             Throws<ArgumentNullException>(() => EventConditionEvaluator.Evaluate(onsite, 4, flags, null));
