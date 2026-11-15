@@ -214,3 +214,12 @@
 **Issue #7, one bounded task:** cross-file validator now rejects blank or duplicate `day1.visits[].id` identifiers. Two negative fixtures duplicate the first visit and blank the first visit ID. Expected CLI suite now **26** checks (24 previous + 2 new). No story, balance, money, DayIndex, E09 or runtime changes.
 
 **Code commit:** `a54c32a935709766dd27114adc694d2f06414c2c` on `feature/content-7`. **Actually verified:** four isolated JavaScript checks in the GitHub-connected runtime: baseline visit IDs valid, duplicate mutation rejected, blank mutation rejected, committed source declares 26 checks. **NOT RUN:** full Node CLI from checkout (container github.com DNS unavailable), Unity/C#, integration. QA 05 should run `node Content/validate-content-consistency.cjs` on branch and attach logs. NPC 02 typed fact provenance review remains outstanding. Runtime integration BLOCKED on Core/NPC contracts; no merge/main changes.
+
+
+## AutoDev 04 — 2026-11-15: Day 01 document reference integrity
+
+- Scope: one bounded change to `Content/validate-content-consistency.cjs` in `feature/content-7`; reject blank/duplicate `documentTypes[].id` and missing `day1.visits[].documentId` references. Three negative fixtures; declared cross-file CLI suite **26 → 29**.
+- Code commit: `433b5556a0f4a8a93bf34054ec61a3245735a5e3`.
+- Actually executed: **4/4 isolated JavaScript logical checks** against fresh GitHub content (baseline 3 documents/3 visits, duplicate document ID, blank ID, unresolved visit document reference). These checks mirror the new guard; **full committed Node CLI/29 cases NOT RUN**. C#/Unity/runtime integration NOT RUN.
+- QA 05: run `node Content/validate-content-consistency.cjs` on the feature checkout and attach output. NPC 02: review typed facts `E03_mentor_paid`, `E07_delivered` and `partner/{sourceInstanceId}/delivery` provenance before adapter implementation.
+- No narrative, financial values, Definition IDs, DayIndex, E09 report-only, Core or EventDirector modifications. Draft only; no main write or merge. Runtime integration remains blocked on Core/NPC contracts.
