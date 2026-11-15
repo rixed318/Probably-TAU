@@ -191,3 +191,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** No Unity Editor/EditMode compile and integrated end-to-end verification. A successful standalone .NET 8 runner does not replace this.
 - **Blocker 3:** Cross-branch QA uses moving feature refs, not a pinned multi-branch integration snapshot; exact checked-out SHAs must be retained before claiming integration readiness.
 - **Next step:** independently review new Core Ledger implementation/DTO completeness and add focused persistence contract tests once stable Core fields exist; meanwhile retain the four-suite .NET CI gate. Do not merge without owner authorization.
+
+
+## 2026-11-15 — AutoDev 05: fifth financial-command suite enforced in QA CI (#8)
+
+**One bounded change:** QA `core-ledger-regression` job now requires the actual Core runner output to contain both `PASS: Financial command atomic prepare/commit and replay` and `PASS: all 5 Core golden suites.` It uses `set -euo pipefail`, `tee`, and exact-line `grep -Fx`; a future Core refactor that silently drops the fifth suite will fail this QA gate. No Core source, other role branch, shared contract or Unity project was edited.
+
+- **QA workflow commit:** `011d20dcbd2866d1a5649680c07880569c32ca0d` on `feature/save-6`; file `.github/workflows/qa-offline.yml` only.
+- **Prior real evidence:** Core PR #9 HEAD `47cd9edbc43e89c239a3529ce8e2365af3be71ed`; Core .NET 8 CI [run 43664046080](https://github.com/rixed318/Probably-TAU/actions/runs/43664046080) **completed success** and job logs explicitly show all **five** suites PASS including `Financial command atomic prepare/commit and replay`. Earlier QA [run 43662824705](https://github.com/rixed318/Probably-TAU/actions/runs/43662824705) **completed success** but checked out older Core with only **four** suites. Neither older run proves the new QA guard itself.
+- **New QA workflow status:** code committed; fresh CI result for this exact change **NOT VERIFIED at handoff write**. No local .NET or Unity Editor execution claimed; Unity Editor/EditMode **NOT RUN**.
+- **Implementation scope:** current Core `GameStateSnapshotDto` remains a minimal slice without ledger entries, command fingerprints/outcomes, payables or typed scheduled event instances. Ledger and financial-command unit tests are not yet an integrated persistence API; SaveService is still deferred.
+
+### Сводка для координатора 00 — 2026-11-15 07:02 UTC+4
+
+- **PR heads checked before QA write:** #9 Core `47cd9edbc43e`, #10 QA `8b8116ca7b72`, #11 Content `b4aa7b8096c7`, #12 UI `7ecd54714ff9`, #14 ADR `ebdc4be28afd`, #17 ADR-C0-002 `bc9db999b419`; #15 and #16 also open. QA branch gained `011d20dcbd28` plus this handoff update. No merge or main mutation.
+- **Blocker 1:** complete, stable persistable GameState including command receipts, ledger/payables and typed scheduled instances still missing; SaveService/Save→Load integration blocked.
+- **Blocker 2:** fresh QA CI run of the new fifth-suite guard needs verification (older QA run only tested four suites).
+- **Blocker 3:** Unity Editor/EditMode and integrated gameplay/save-load tests remain **NOT RUN**.
+- **Recommended next step:** check the fresh QA workflow run; if green, independently review Core transaction receipts and event instance DTO readiness before implementing persistence. Keep exact Core SHA and CI evidence. PR #10 remains Draft; no main writes, merges, contract approvals or IP/logo approvals.
