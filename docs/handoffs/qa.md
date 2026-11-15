@@ -353,3 +353,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** cross-branch CI verified older moving-ref SHAs, not latest Core/UI/Content PR heads; pinned integrated verification missing.
 - **Blocker 3:** Unity Editor/EditMode and full gameplay integration tests NOT RUN.
 - **Recommended next step:** obtain CI evidence on latest Core/UI/Content commits with recorded checkout SHAs, then re-audit Core persistence DTO completeness before implementing SaveService. Keep PR #10 Draft; no contract approvals, main writes or merges.
+
+
+## 2026-11-15 22:04 UTC+4 — QA 05: audit current Core snapshot and latest available QA run (#6/#8)
+
+**One bounded task:** independently re-read the Core-owned `Runtime/Core/GameStateSnapshotDto.cs` at PR #9 head `e6f6f6f1c2b0af079faf5c0dfce1ef9e1e422419` (blob `3d64a71bfd13829a116e3fd2cdd9043482083d55`) and verify the newest QA workflow run returned for the previous QA commit. No Core code or shared contracts changed.
+
+**Specific persistence finding:** `GameStateSnapshotDto` exposes campaign/revision/day/metrics/balances, RNG streams, processed command/day **IDs**, and pending/completed event **IDs**. Its own source comment explicitly excludes receipt fingerprints/outcomes, ledger entries, debts and typed NPC state. Event IDs alone do not preserve due-time/payload/processing status; processed command IDs alone cannot reproduce verified command receipt outcomes. Thus a production Save→Load round-trip and exactly-once restoration are **BLOCKED** pending Core-owned durable DTO expansion. This is a source review, not a newly executed test.
+
+**Additional CI evidence:** [QA Actions #43734567100](https://github.com/rixed318/Probably-TAU/actions/runs/43734567100) for QA commit `8605ea1e873c3623f92206dac889ba9a134d0429` completed SUCCESS (3/3 jobs); independently inspected all three raw job logs. Actual checkout SHAs: Core `9f2f3b3a77e9fcbffbcc4f45a6327ba2892ca530`, UI `6b6f0c76e63b1d61d868f7afecd996d73373ff9b`, Content `61213269154ffae8e1abf1c628ba785676da9f1e`. Core log prints five PASS suites (PCG32, GameClock, GameStateSnapshot, Ledger, FinancialCommand); Content prints 9 event-hook and 31 cross-file checks PASS; UI/Art steps and Python oracle job succeeded. These are **older SHAs than current PR heads**, not latest-head/integrated Unity evidence. Local Node/Python/C# **NOT RUN** in this pass; Unity Editor/EditMode/PlayMode **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-15 22:04 UTC+4
+
+- **Latest inspected PR heads:** #9 Core `e6f6f6f1c2b0`, #10 QA `8605ea1e873c` (before this handoff commit), #11 Content `a3986bd043b0`, #12 UI `9e4600289e12`, #14 ADR `ebdc4be28afd`, #16 NPC `654526511c92`, #17 ADR `bc9db999b419`. All open/Draft. C0-v2/ADR feature-development guidance remains non-merge authority.
+- **Blocker 1:** Core-owned durable snapshot missing ledger, obligations, receipt fingerprints/outcomes and typed delayed-event/NPC state; SaveService remains BLOCKED.
+- **Blocker 2:** verified CI run #43734567100 checked out older moving-ref Core/UI/Content revisions, not current PR heads.
+- **Blocker 3:** Unity Editor/EditMode/PlayMode and integrated Save→Load NOT RUN.
+- **Recommended next step:** ask Core 01 for stable full durable DTO with deterministic round-trip tests; rerun QA on current dependency SHAs and capture exact checkout hashes before any integration claim. Keep PR #10 Draft.
+- **Safety:** only QA handoff updated, no merge/main writes/foreign branch edits or new shared contracts.
