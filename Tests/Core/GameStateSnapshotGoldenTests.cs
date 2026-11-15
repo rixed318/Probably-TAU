@@ -35,6 +35,7 @@ namespace TAU.President.Tests.Core
                 new string[0], new string[] { "event" }, new string[] { "event" }));
             Throws<ArgumentException>(() => new RandomStreamSnapshotDto("events", 0UL, 2UL));
             DurableFinanceRoundTrip();
+            ScheduledEventQueueRoundTrip();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -63,6 +64,32 @@ namespace TAU.President.Tests.Core
                 new string[0], new string[0]);
             Throws<ArgumentException>(() => new DurableFinanceSnapshot(foreignHeader, ledger,
                 new[] { new DurableCommandReceipt("cmd-2", "sha256-fingerprint", 2, new[] { "post-1" }) }));
+        }
+
+        private static void ScheduledEventQueueRoundTrip()
+        {
+            var input = new List<ScheduledEventOccurrence> {
+                new ScheduledEventOccurrence("z", "event.z", 2, 0),
+                new ScheduledEventOccurrence("b", "event.b", 0, 1),
+                new ScheduledEventOccurrence("a", "event.a", 0, 1),
+                new ScheduledEventOccurrence("high", "event.high", 0, 3),
+                new ScheduledEventOccurrence("later", "event.later", 1, int.MinValue)
+            };
+            var queue = new ScheduledEventQueueSnapshot(input, new[] { "finished" });
+            input.Clear();
+            var due = queue.CaptureDueStage(0);
+            Assert(due.Count == 3 && due[0].InstanceId == "high" &&
+                due[1].InstanceId == "a" && due[2].InstanceId == "b");
+            Assert(queue.Restore().CaptureDueStage(2).Count == 5);
+            Assert(queue.Pending.Count == 5 && queue.CompletedIds[0] == "finished");
+            Throws<NotSupportedException>(() => ((IList<ScheduledEventOccurrence>)due).Add(
+                new ScheduledEventOccurrence("new", "event.new", 3, 0)));
+            Throws<ArgumentException>(() => new ScheduledEventQueueSnapshot(
+                new[] { new ScheduledEventOccurrence("finished", "event.x", 1, 0) },
+                new[] { "finished" }));
+            Throws<ArgumentOutOfRangeException>(() =>
+                ScheduledEventQueueSnapshot.ValidateChildDueDay(0, 0));
+            ScheduledEventQueueSnapshot.ValidateChildDueDay(0, 1);
         }
 
         private static RandomStreamSnapshotDto streamsItem()
