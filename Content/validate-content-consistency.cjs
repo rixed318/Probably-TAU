@@ -21,6 +21,27 @@ function validateCrossFile(spec,hooks){
   if(!Number.isSafeInteger(e.dayIndex)||e.dayIndex<0||!Number.isSafeInteger(e.day)||e.day!==e.dayIndex+1)
    errors.push(`${e.id}: invalid 0-based manifest calendar`);
  }
+ // Every declared feed must resolve to an event, project, or explicit future chapter hook.
+ // A feed is a narrative dependency, NOT a request to run the target immediately.
+ const eventById=new Map(spec.eventManifest.map(e=>[e.id,e]));
+ const projectIds=new Set((spec.projects||[]).map(p=>p.id));
+ const externalHooks=new Set(["CHAPTER2_HOOK"]); // explicitly deferred outside current 13-event chapter
+ for(const event of spec.eventManifest){
+  if(!Array.isArray(event.feeds)){errors.push(`${event.id}: feeds must be an array`);continue;}
+  const seenFeeds=new Set();
+  for(const target of event.feeds){
+   if(typeof target!=="string"||!target.trim()){errors.push(`${event.id}: invalid feed target`);continue;}
+   if(seenFeeds.has(target))errors.push(`${event.id}: duplicate feed ${target}`);
+   seenFeeds.add(target);
+   if(target===event.id)errors.push(`${event.id}: self-referential feed`);
+   const destination=eventById.get(target);
+   if(destination){
+    if(Number.isSafeInteger(event.dayIndex)&&Number.isSafeInteger(destination.dayIndex)&&destination.dayIndex<event.dayIndex)
+     errors.push(`${event.id}: backward feed to ${target}`);
+   }else if(!projectIds.has(target)&&!externalHooks.has(target))
+    errors.push(`${event.id}: unresolved feed ${target}`);
+  }
+ }
  const manifest=new Map(spec.eventManifest.map(e=>[e.id,e]));
  const definitions=new Map(hooks.definitions.map(d=>[d.definitionId,d]));
  for(const id of ["E02","E03","E09"]){
@@ -115,4 +136,13 @@ assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E14: invalid 0-based ma
 s=clone(spec);s.eventManifest.find(e=>e.id==="E10").dayIndex=1.5;
 assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E10: invalid 0-based manifest calendar")),
   "fractional DayIndex must fail");
-console.log("PASS: 13 cross-file fixture/negative checks");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E14").feeds=["UNKNOWN_EVENT"];
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E14: unresolved feed UNKNOWN_EVENT")),
+  "unknown feed target must fail");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E07").feeds.push("E02");
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E07: backward feed to E02")),
+  "backward event feed must fail");
+s=clone(spec);s.eventManifest.find(e=>e.id==="E10").feeds.push("P02");
+assert.ok(validateCrossFile(s,hooks).some(e=>e.includes("E10: duplicate feed P02")),
+  "duplicate project feed must fail");
+console.log("PASS: 16 cross-file fixture/negative checks");
