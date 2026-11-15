@@ -34,6 +34,28 @@ namespace TAU.President.Tests.Core
             Throws<ArgumentException>(() => Create(new RandomStreamSnapshotDto[0],
                 new string[0], new string[] { "event" }, new string[] { "event" }));
             Throws<ArgumentException>(() => new RandomStreamSnapshotDto("events", 0UL, 2UL));
+            DurableFinanceRoundTrip();
+        }
+
+        private static void DurableFinanceRoundTrip()
+        {
+            var header = new GameStateSnapshotDto(2, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 10000L, 9000L,
+                new RandomStreamSnapshotDto[0], new[] { "cmd-1" }, new string[0],
+                new string[0], new string[0]);
+            var ledger = new LedgerSnapshot(10000L,
+                new[] { new LedgerEntry("post-1", "cmd-1", -1000L) });
+            var receipt = new DurableCommandReceipt("cmd-1", "sha256-fingerprint", 1,
+                new[] { "post-1" });
+            var durable = new DurableFinanceSnapshot(header, ledger, new[] { receipt });
+            var restored = durable.Restore();
+            Assert(restored.Ledger.CurrentBalanceKopecks == 9000L);
+            Assert(restored.Receipts.Count == 1 && restored.Receipts[0].PostingKeys[0] == "post-1");
+            Assert(restored.Receipts[0].Fingerprint == "sha256-fingerprint");
+            Throws<ArgumentException>(() => new DurableFinanceSnapshot(header, ledger,
+                new[] { new DurableCommandReceipt("cmd-1", "sha256-fingerprint", 1, new[] { "missing" }) }));
+            Throws<ArgumentException>(() => new DurableFinanceSnapshot(header, ledger,
+                new DurableCommandReceipt[0]));
         }
 
         private static RandomStreamSnapshotDto streamsItem()
