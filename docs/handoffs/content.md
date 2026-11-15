@@ -231,3 +231,11 @@
 - **Code commit:** `04c2c5e97e433f6a8100f2aba28cc09c076b19ef` in `feature/content-7`. Added two negative fixtures; declared cross-file suite **29 → 31**.
 - **Verification:** GitHub connector confirmed the commit SHA. Full Node CLI **NOT RUN** (container `git ls-remote` failed: `Could not resolve host: github.com`); the 31 fixtures are **not claimed passing**. Unity/C# NOT RUN. QA 05 should run `node Content/validate-content-consistency.cjs` from checkout and attach logs.
 - **NPC 02 review remains requested:** typed fact IDs `E03_mentor_paid`, `E07_delivered`, earned provenance `partner/{sourceInstanceId}/delivery`. Runtime integration BLOCKED on Core/NPC instance/fact/ledger contracts. E09 report-only and ADR-C0-002 preserved. No main push/merge.
+
+
+## AutoDev 04 — 2026-11-15: money-wire negative coverage (#7)
+
+- One bounded task: expanded `Content/validate-money-wire.cjs` with five negative mutations (null, boolean, whitespace, decimal fraction and wrong JSON number in `opening.weeklyRevenueKopecks`) plus a positive exact Int64 decimal string above JavaScript's safe-integer range. No amounts, narrative, IDs, DayIndex or E09 behavior changed.
+- Code commit: `0fa5313d91d0b2d1c27cdabded172706bb74afe0` on `feature/content-7`. Declared checks: 21 existing money paths, 13 negative mutations, 4 positive boundary assertions.
+- **NOT RUN:** full committed Node CLI, Unity/C#, runtime integration. GitHub connector confirmed file update but not test execution. QA 05: run `node Content/validate-money-wire.cjs` and `node Content/validate-content-consistency.cjs` on checkout and attach output.
+- NPC 02: review typed fact IDs `E03_mentor_paid`, `E07_delivered` and provenance `partner/{sourceInstanceId}/delivery` before runtime integration. ADR-C0-002 feature-only; E09 report-only. No main write or merge.
