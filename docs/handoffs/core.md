@@ -209,3 +209,5 @@
 **Contract boundary:** `WithPostings` is a *preparation* helper, not a transaction commit or a replacement for durable CommandId fingerprints/receipts. Mandatory-payment shortage must still create payable via future Economy/CommandProcessor policy, not by forcing negative cash. The C0 public command contract is unchanged; this is an additive ledger API.
 
 **Next:** verify new GitHub Actions run; then implement the smallest CommandProcessor atomic prepare/commit + idempotent receipt slice after QA #10 review. PR #9 remains Draft, no main write, no merge or Issue closure.
+
+**Verified CI follow-up:** [Core .NET 8 run 43656370911](https://github.com/rixed318/Probably-TAU/actions/runs/43656370911) for test/code HEAD `3f168976` is **completed / success**. This verifies compilation and four Core golden suites including the new batch cases. Later documentation-only commits do not modify compiled code. Unity Editor/EditMode remains NOT RUN.
