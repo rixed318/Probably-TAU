@@ -82,3 +82,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Dependencies:** Core PR #9 still exposes only a partial GameState snapshot (pending/completed string IDs), not a concrete event-instance DTO, atomic command/ledger ports or EventDirector adapter. Content PR #11 has draft typed predicates and canonical partner agreement source ID, but runtime schema integration is still pending. ADR-C0-002 in PR #17 governs ordering for feature implementation only. No Core/GameState/ledger/scheduler edits, no main merge.
 
 **Next bounded task:** if the new GitHub CI passes, consider a separate deterministic read-only Content AST adapter/validator with explicit failure on unknown op/shape; do not create an alternative scheduler.
+
+
+## AutoDev 02 — strict draft JSON condition adapter (2026-11-15)
+
+**One bounded task (#4):** added `Runtime/Npc/EventConditionJsonAdapter.cs`, a read-only strict adapter from Content PR #11's *condition* JSON AST into the existing independent `EventCondition` model. Only `always/all/any/flagEquals/factExists/dayIndexAtLeast` are accepted. Unknown/duplicate/missing fields, invalid numeric day, malformed groups, null values and depth >=32 are rejected; ordinal comparisons remain in the existing evaluator. Does not read effects, schedule events, post ledger entries or mutate GameState. This adapter uses .NET 8 `System.Text.Json` for standalone testing and is **not approved as a Unity runtime serializer**.
+
+**Commits:** implementation `fdaba518b4b18b4092ce40290bb99078d95cba5c`; new golden assertions `4d622892c13813c3c6d952586f3dd0d7661a0032`; standalone project update `ff210b7d195e666448020fcfc0c62c3f9c367f64`; runner update `3c48999b7500d12733a75462997b338ad4a0caaa`. Handoff update follows.
+
+**Verification:** prior NPC workflow run `43651213848` completed success for prior head `5396808a`; this does not validate the new adapter. The updated `.csproj` links the new source and tests and the runner invokes both suites. **Local dotnet/csc/mcs NOT AVAILABLE, new CI outcome pending verification** at time of this handoff; do not claim a green test until new HEAD workflow is checked. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+
+**Dependencies / BLOCKED:** concrete Core scheduled-instance DTO, command transaction and receipt ports still absent in Core PR #9, so no EventDirector runtime integration. Content PR #11 typed AST remains draft; earned-income source identity must be canonical and Core-owned. ADR-C0-002 PR #17 is feature-development-only, unmerged. Next: verify workflow and fix any failing assertions; then seek Content/QA review before wiring any JSON in Unity. No main changes, no merge.
