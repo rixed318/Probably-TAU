@@ -51,9 +51,11 @@
         notice.slot + " · " + notice.documentIds.join(", "));
       add(panel, "p", notice.message);
     }
-    for (const item of data.model.documents) {
+    for (const [index, item] of data.model.documents.entries()) {
       const card = add(documents, "article", "", "document");
-      add(card, "h3", item.id + " · " + item.title);
+      const heading = add(card, "h3", item.id + " · " + item.title);
+      heading.setAttribute("id", "day01-document-" + (index + 1) + "-title");
+      card.setAttribute("aria-labelledby", "day01-document-" + (index + 1) + "-title");
       add(card, "p", item.visitor + " — " + item.role);
       add(card, "p", "Запрошено: " + item.room + ", день " +
         (item.slotDayIndex + 1) + ", " + item.slot + ". Не подтверждено.");
