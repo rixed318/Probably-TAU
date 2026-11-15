@@ -211,3 +211,18 @@
 **Next:** verify new GitHub Actions run; then implement the smallest CommandProcessor atomic prepare/commit + idempotent receipt slice after QA #10 review. PR #9 remains Draft, no main write, no merge or Issue closure.
 
 **Verified CI follow-up:** [Core .NET 8 run 43656370911](https://github.com/rixed318/Probably-TAU/actions/runs/43656370911) for test/code HEAD `3f168976` is **completed / success**. This verifies compilation and four Core golden suites including the new batch cases. Later documentation-only commits do not modify compiled code. Unity Editor/EditMode remains NOT RUN.
+
+
+## 15. AutoDev 01 — financial command atomic slice (15.11.2026)
+
+**One bounded Issue #2/#3 implementation:** a pure C# immutable *financial-only* command preparation/commit prototype; **not** the complete mutable GameState or public CommandProcessor/Save contract.
+
+- `Runtime/Core/FinancialCommandProcessor.cs` (commit `804c446c`): `FinancialCommandState` holds an immutable LedgerSnapshot, revision/day and copied receipt map; `FinancialPostingCommand` holds command ID, caller-provided fingerprint, expected revision/day and defensive-copy postings; `Execute` handles prior ID first (same fingerprint replay / differing fingerprint collision), stale state, and atomic `WithPostings` plus revision increment and receipt commit. Invalid batches or overflow reject without mutating the source state.
+- `Tests/Core/FinancialCommandGoldenTests.cs` (commit `68755261`): successful two-posting commit, defensive copy, replay despite stale revision, ID collision, stale revision/day, duplicate posting, partial-batch overdraft rejection, valid command after failure, balance/revision overflow and empty batch.
+- `Tests/Core/Standalone/Program.cs` (commit `56cd2caa`): fifth golden suite registered in existing .NET 8 runner; csproj already includes all `Runtime/Core/*.cs` and `*GoldenTests.cs`.
+
+**Verification at authoring:** GitHub files were committed successfully. Local `dotnet`, `csc`, `mcs` unavailable; **new CI result NOT VERIFIED yet** (commit workflow lookup returned no runs immediately after commit). Do not infer success from prior green four-suite run 43656370911. Unity Editor/EditMode NOT RUN.
+
+**Important limitations:** The fingerprint is caller-supplied and is **not yet verified against canonical command payload**; this is therefore a transaction *prototype*, not a security or persistence boundary. Receipts are only in the in-memory immutable FinancialCommandState and are not integrated into GameStateSnapshotDto/SaveEnvelope. No external command event publication, domain metrics, scheduled outcomes, obligations/payables, or complete EndDay. Do not integrate NPC/Save against this as a final C0 public API. The accepted C0-v2/ADR-C0-001/ADR-C0-002 remain normative.
+
+**Next:** verify real five-suite GitHub Actions run and fix failures if present. Then design a canonical fingerprint/receipt representation and connect the transaction to the single GameState owner with QA #10 review. No main write/merge/Issue closure.
