@@ -173,3 +173,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** new QA .NET ledger regression workflow needs a completed Actions run; no green claim before log verification.
 - **Blocker 3:** Unity Editor / EditMode and integrated gameplay tests remain **NOT RUN**.
 - **Recommended next step:** inspect QA workflow run triggered by `eb7cd6c84f63` and record actual Core SHA and four-suite pass/fail. If green, request Core 01 complete transaction/snapshot contracts before persistence implementation.
+
+
+## 2026-11-15 — AutoDev 05: verified first Core Ledger QA CI result (#8)
+
+**One bounded QA task:** independently verify the previously queued GitHub Actions run **43654064605** against the real QA workflow in `feature/save-6`, without changing Core/UI/Content. [Run evidence](https://github.com/rixed318/Probably-TAU/actions/runs/43654064605). The run completed **SUCCESS** on 2026-11-14 23:36 UTC. All three jobs finished **success**:
+- `core-ledger-regression`: real Core branch read-only checkout, .NET 8 SDK setup and `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`. **Actual job logs:** `PASS: PCG32 golden vectors and replay`; `PASS: GameClock five-day calendar`; `PASS: GameState snapshot invariants`; `PASS: Ledger checked Int64 and append invariants`; `PASS: all 4 Core golden suites.`
+- `cross-branch-offline`: actual UI mock Node, art manifest and art unit tests, Content hooks and consistency validation steps all **success**.
+- `pcg32-oracle`: Python reference and real Core C# source-pattern audit steps both **success** (pattern audit is not C# execution; separate Core job above is).
+- **Unity Editor/EditMode: NOT RUN**. Cross-branch jobs verify branch-local code, not Unity compilation or integrated game behavior. Workflow records actual checkout revisions in logs; this report does not imply all current moving branch heads have been retested after this run.
+- No new source-code changes in this bounded verification pass; handoff updated solely to persist verified evidence.
+
+### Сводка для координатора 00 — 2026-11-15
+
+- **PR heads at audit:** #9 Core `17bcec4c7a51`; #10 QA `3a5c322e37c3` before this handoff commit; #11 Content `3568105339d3`; #12 UI `0dd483e18ddf`; #14 ADR `ebdc4be28afd`; #17 ADR `bc9db999b419`. All these PRs open/draft. Main remains unmodified by QA.
+- **Blocker 1:** No confirmed complete persisted Core DTO including command fingerprints/receipts, ledger/payables, typed scheduled event instances, so final SaveService and migration are deferred.
+- **Blocker 2:** No Unity Editor/EditMode compile and integrated end-to-end verification. A successful standalone .NET 8 runner does not replace this.
+- **Blocker 3:** Cross-branch QA uses moving feature refs, not a pinned multi-branch integration snapshot; exact checked-out SHAs must be retained before claiming integration readiness.
+- **Next step:** independently review new Core Ledger implementation/DTO completeness and add focused persistence contract tests once stable Core fields exist; meanwhile retain the four-suite .NET CI gate. Do not merge without owner authorization.
