@@ -346,5 +346,42 @@
     ],
     "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
     "status": "proposal; NPC 02/Core to confirm typed fact producer and unique instance mapping; do not synthesize facts in UI"
+  },
+  "acceptanceExample": {
+    "id": "DAY01-P0-TRIPLE-CLAIM",
+    "dayIndex": 0,
+    "selectedChoiceIds": [
+      "LAB-1",
+      "STUDENT-1",
+      "PARTNER-1"
+    ],
+    "inspectionDocumentIds": [],
+    "roomResolutionChoiceId": "ROOM-4",
+    "roomStatus": "unresolved-no-booking",
+    "expected": {
+      "inspectionTokensUsed": 0,
+      "openingBudgetKopecks": "200000000",
+      "immediateLedgerPostings": [
+        {
+          "choiceId": "LAB-1",
+          "deltaKopecks": "-22000000"
+        },
+        {
+          "choiceId": "STUDENT-1",
+          "deltaKopecks": "-6500000"
+        }
+      ],
+      "closingBudgetKopecks": "171500000",
+      "closingScores": {
+        "Q": 55,
+        "S": 51,
+        "M": 52,
+        "E": 47,
+        "R": 48
+      },
+      "partnerEarnedIncomeKopecks": "0",
+      "weeklySettlementApplied": false,
+      "nextDefinitionId": "E02"
+    }
   }
 }
