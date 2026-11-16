@@ -54,7 +54,7 @@ jobs:
       - name: Checkout Content branch read-only
         uses: actions/checkout@v4
         with:
-          ref: f3d9950e9e607176e28e0af70abc6bb9566555be
+          ref: c2d9ba267549c4e1a404fd6fa68a7d1037566597
           path: content
           persist-credentials: false
       - name: Record exact source revisions
@@ -65,7 +65,7 @@ jobs:
           test "$ui_sha" = "cc44bf037f2aad91c41718ec2f3f336b7a0cd464"
           content_sha=$(git -C content rev-parse HEAD)
           echo "CONTENT_SHA=$content_sha"
-          test "$content_sha" = "f3d9950e9e607176e28e0af70abc6bb9566555be"
+          test "$content_sha" = "c2d9ba267549c4e1a404fd6fa68a7d1037566597"
       - name: UI Node mock regression
         run: node --test prototypes/ui-day-one/test-fixtures.cjs
         working-directory: ui
