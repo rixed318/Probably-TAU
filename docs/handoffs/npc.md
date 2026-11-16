@@ -1,6 +1,6 @@
 # Chat 02 — NPC/EventDirector handoff
 
-**Date:** 2026-11-14. **Issue:** #4. **Branch:** `feature/npc-4`. **Status:** design proposal only; integration BLOCKED on concrete Core APIs and typed content predicates.
+**Updated:** 2026-11-16. **Issues:** #4, #18. **Branch:** `feature/npc-4`. **PR:** #16 (Draft). **Status:** immutable Day01 visitor models, typed condition evaluator, read-only choice/document adapters and golden tests implemented; full EventDirector integration BLOCKED on Core atomic settlement/receipt/earned-key ports. Content typed predicates are implemented as a proposed adapter, not an approved runtime wire schema. Last verified production-code CI: `d6278f4b412b483adc7b433537b31e6027af5782` — [Actions #43807241719](https://github.com/rixed318/Probably-TAU/actions/runs/43807241719) success; Unity/PlayMode NOT RUN.
 
 ## Completed in this run
 - Reviewed main README, AGENTS, CHAT_WORKFLOW, GDD and ARCHITECTURE; Core Gate C0-v2 in PR #9 and ADR-C0-001 in PR #14; Content PR #11 and its `CONTENT_SPEC_DRAFT.json`.
