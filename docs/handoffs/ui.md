@@ -366,3 +366,18 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Exact UI HEAD before this documentation update: `cc44bf037f2aad91c41718ec2f3f336b7a0cd464`; own UI Actions [#43770562434](https://github.com/rixed318/Probably-TAU/actions/runs/43770562434) is `completed/success`. This is **not** an independent Windows browser launch.
 - QA 05's pinned cross-branch [run #43772020964](https://github.com/rixed318/Probably-TAU/actions/runs/43772020964) reports **3/4 jobs success, UI/Content integration job failed** in `Content/validate-money-wire.cjs:62`: `expected field-specific diagnostic`. QA traced mismatch between bracketed `inspect()` paths and dotted `failsAt()` expectation in Content SHA `f3d9950e9e607176e28e0af70abc6bb9566555be`. This is **Content/QA-owned**, not an excuse for UI to edit another branch. QA reports no artifact for that cross-branch run.
 - P0 **BLOCKED / NOT READY_FOR_OWNER_TEST**: independent exact-SHA QA PASS and real Windows offline double-click interactive smoke are missing. UI's own `day01-web-demo` ZIP remains available from successful UI run; do not conflate with failed QA run. No code, Core, GameState or legacy preview change in this checkpoint. No local Node, browser, Unity or Windows tests executed in this pass. Next: Content owner correct diagnostic expectation, QA rerun pinned workflow and perform actual offline browser smoke.
+
+
+## AutoDev 03 · 2026-11-16 · Windows owner smoke acceptance checklist (Issue #18)
+
+**Single scoped deliverable:** explicit, reproducible Windows acceptance checklist for the already-built `day01-web-demo` ZIP. This is documentation only; **not** evidence that Windows testing happened.
+
+1. Open the **successful UI workflow run matching the `feature/ui-5` commit SHA**; download its `day01-web-demo` artifact and record run URL, source SHA and artifact ID before testing. Do not substitute a QA cross-branch artifact.
+2. On Windows, disconnect internet, extract the complete ZIP into a new folder, and double-click `day01-playable.html`. The browser must render the Day 01 HUD without a local web server or network.
+3. Confirm DayIndex 0, starting budget **200000000 integer kopecks** (2,000,000 fictional RUB), five Q/S/M/E/R metrics, three distinct visitors and three distinct documents. Read/inspect each document.
+4. Confirm all three applications compete for room **L-204, Day 04, 14:00–17:00**; no choice silently reserves it. Confirm the partner's **120000 RUB is not credited on signature**.
+5. Try `EndDay` before all three decisions (must remain unavailable); inspect a document, choose a decision, then try the same decision again (no duplicate ledger/budget effect). Complete all three documents and open EndDay report; check closing budget and each ledger entry against the chosen options.
+6. Reload and test the alternative route (three rejects): EndDay should show **200000000 kopecks**, no decision-expense ledger entries. Verify all controls remain usable by keyboard and at browser zoom 150%.
+7. Record browser name/version, Windows version, exact ZIP artifact/run/SHA, each step PASS/FAIL, screenshots or error text, and QA 05 review link in PR #12. Only after real interactive PASS and exact artifact CI verification may the coordinator decide whether to mark `READY_FOR_OWNER_TEST`.
+
+**Current evidence boundary:** successful CI/Node results reported in previous handoff entries do **not** prove Windows double-click, offline browser rendering, or actual player interaction. This checklist has not been executed in Windows in this pass. No Unity Editor/PlayMode tests. `main`, GameState/Core and old preview remain untouched; PR #12 remains Draft.
