@@ -135,6 +135,14 @@ namespace TAU.President.Tests.Core
                 restored.Outstanding[1].DueKey == "due-b" &&
                 restored.Outstanding[2].DueKey == "due-z");
             Assert(restored.Outstanding[0].AmountKopecks == 700L);
+            var dueDayOne = restored.CaptureDueStage(1);
+            Assert(dueDayOne.Count == 2 && dueDayOne[0].DueKey == "due-a" &&
+                dueDayOne[1].DueKey == "due-b");
+            Assert(restored.CaptureDueStage(0).Count == 0);
+            Assert(restored.CaptureDueStage(3).Count == 3);
+            Throws<NotSupportedException>(() => ((IList<DurablePayable>)dueDayOne).Clear());
+            Throws<ArgumentOutOfRangeException>(() => restored.CaptureDueStage(-1));
+            Assert(restored.Outstanding.Count == 3);
             Throws<ArgumentException>(() => new DurablePayablesSnapshot(new[] {
                 new DurablePayable("duplicate", 1, 100L),
                 new DurablePayable("duplicate", 2, 200L)
