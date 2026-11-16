@@ -632,3 +632,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** portrait/landscape 48dp targets, overflow, alternative decisions and replay/EndDay still NOT VERIFIED on current UI SHA; Windows file double-click and real Android device NOT RUN.
 - **Blocker 3:** Unity 6.3 Editor, Android APK build, real Save→Load and committed PNG binary verification NOT RUN.
 - **Recommended next step:** UI #12 publishes self-contained HTML artifact pinned to `a7d12d76` or a new exact SHA; QA then runs both viewport touch scenarios and ledger replay against the actual extracted artifact. Keep #18/#20 BLOCKED for owner mobile readiness until evidence. No main/foreign branch write or merge.
+
+
+## 2026-11-17 02:18 UTC+4 — #20 exact-head mobile artifact gate (read-only source verification)
+
+**One bounded task:** refresh current GitHub PR heads and re-audit the actual UI Day01 entrypoint at immutable PR #12 SHA `fdc601a8bdec5d4e079ca9f2e93dfe5a58919890`. Read main README/AGENTS.md/CHAT_WORKFLOW.md, QA handoff, PRs #9/#10/#11/#12/#14 and Issues #6/#8/#18/#19/#20/#21. No cross-team code or architectural contracts changed.
+
+**Verified source:** `prototypes/ui-day-one/day01-playable.html` at UI SHA `fdc601a8bdec5d4e079ca9f2e93dfe5a58919890`, blob `c33773809f2ed8fc0d4367364681d3ca77a48629`. It contains three external local script tags (`day01-read-model.cjs`, `day01-gameplay-gateway.cjs`, `day01-playable.js`), viewport meta and a max-width 650px breakpoint. This **specific entrypoint is not single-file**. Fetching the candidate `prototypes/ui-day-one/day01-mobile-single.html` returned 404; this does **not** establish that no differently named bundled artifact exists. Source blob matches the prior audited entrypoint, so no new mobile-ready evidence can be inferred from the newer moving UI head.
+
+**Executed this pass:** GitHub API read-only file/PR/issue checks and static inspection of actual HTML text; no local Node/.NET/Python test, no artifact ZIP extraction, no Chromium 360x800 or 800x360 touch run, no Android device or Unity Editor/APK test, no PNG binary signature/dimension validation, no Save→Load. All runtime checks **NOT RUN**. The previous CI/browser results on older SHAs are not transitive to `fdc601a8bdec5d4e079ca9f2e93dfe5a58919890`.
+
+### Сводка для координатора 00 — 2026-11-17 02:18 UTC+4
+
+- **Latest PR heads (GitHub read):** #9 Core `eb3a74e8e58b82ba6a91545590f6296e0ebfd82c`; #10 QA `935329e6b4e8dabcc4122a3628207ea13946386f` before this handoff commit; #11 Content `fd2d3d08ff08d37a8dcff9499a19e6d7a50b5d08`; #12 UI `fdc601a8bdec5d4e079ca9f2e93dfe5a58919890`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `a9aa94ab0adeb1048c0d11d8c1fffbe11265c0e8`. PRs remain open/draft. Main only read, never written.
+- **Blocker 1:** Current exact-SHA Day01 entrypoint is multi-file; no downloaded/extracted *single-file* artifact tied to UI `fdc601a8bdec5d4e079ca9f2e93dfe5a58919890` independently evidenced.
+- **Blocker 2:** Chromium touch portrait/landscape, 48px targets, overflow, alternate choices, EndDay replay and partner cash behavior on current exact SHA NOT RUN.
+- **Blocker 3:** Actual PNG binaries, Unity Editor/APK/physical Android and Save→Load NOT VERIFIED.
+- **Recommended next step:** UI owner publish the self-contained Day01 HTML as a named Actions artifact with run ID and exact UI commit SHA. QA then download ZIP, hash and inspect bytes, run 360x800/800x360 Chromium touch paths and ledger replay; only then consider WEB_MOBILE_EMULATION_PASS. Issue #18/#20 remain BLOCKED; no READY_FOR_OWNER_TEST, no merge.
