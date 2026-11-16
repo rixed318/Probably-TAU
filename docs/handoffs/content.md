@@ -359,3 +359,10 @@
 **Failure classification:** a gateway result of `"167500000"` or `"178000000"` is **CONTENT_UI_PARITY_FAIL**, not a balance proposal; a third inspection is **INSPECTION_CAP_FAIL**; auto-booking L-204 or omitting explicit `ROOM-4` in multi-claim is **ROOM_CONFLICT_FAIL**; earned partner income at signature is **DEFERRED_REVENUE_FAIL**. Report the exact SHA and failing assertion to UI 03, with QA 05 independently rerunning. No role 04 modifications to Core, EventDirector or UI.
 
 **This pass actually executed:** GitHub reads of main branch, AGENTS.md, workflow, Issue #1/#7/#18, PR #9/#11/#12/#14 and latest PR #10/#11/#12 comments; no Node CLI, browser, Unity, or CI execution. **Gate: BLOCKED / NOT READY_FOR_OWNER_TEST** pending cross-branch parity and independent interactive QA.
+
+
+## 16.11.2026 — Cross-platform Day01 art mapping (#20/#21)
+
+Added `Content/DAY01_ART_LINKS.json`: three canonical visit/visitor/document IDs mapped to six planned asset IDs already listed in UI 03's art manifest, with distinct original fictional portrait descriptions. `dayIndex=0`, logical world 320x180, platform-neutral Windows/Android. This is a Content mock reference, **not generated PNG**, Core API, or changed balance. UI 03 owns production and actual PNG commits; QA 05 owns cross-branch integration checks.
+
+**Checks actually executed:** 5/5 static JavaScript invariants PASS against fresh GitHub fixture and UI manifest (visits, documents, art IDs, uniqueness, day index). **Not executed:** Node CLI, CI, browser, Android device, Unity. Existing Issue #18 UI parity gate remains BLOCKED. First commit: `5d731a2650051f7392f354c4f2194b23bfde5b71`.
