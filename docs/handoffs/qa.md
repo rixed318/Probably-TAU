@@ -562,3 +562,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Current UI PR head `fdfc4682` differs from artifact-tested `8951e40e`; alternate decisions, duplicate posting and new-head artifact regression require evidence before owner-ready claim.
 - **Blocker 3:** Durable GameState snapshot contract/Unity Editor/Save→Load still not independently validated.
 - **Recommended next step:** owner/QA on Windows extract exact artifact and double-click `day01-playable.html` with networking off; cover alternate decisions and repeated clicks, then pin/retest latest UI SHA and capture screenshots/logs. **Issue #18 BLOCKED; READY_FOR_OWNER_TEST not declared.**
+
+
+## 2026-11-16 21:17 UTC+4 — P0 #18: independent QA CI step-level verification
+
+**One bounded verification, no code change:** inspected GitHub Actions run [43892508977](https://github.com/rixed318/Probably-TAU/actions/runs/43892508977) via job and step APIs. All four jobs report `success`. In job `133387195524`, each relevant step independently reports `completed/success`: pinned source revision recording, playable Day01 gameplay gateway regression, static offline entrypoint dependency closure, Content canonical money-wire validation, and other UI/Content regressions. This closes the earlier **CI NOT VERIFIED** gap for the static offline check on that run. These results apply to the **pinned refs configured in the workflow at that commit**, not to moving PR heads. This is not an independent Windows file:// launch or full Unity test.
+
+**Tests executed locally this pass:** none (Node/.NET/Python NOT RUN). **Tests observed in GitHub CI:** four successful jobs; named steps above completed successfully. Unity Editor, Save→Load, Windows offline file launch, alternate choice combinations on the extracted artifact: **NOT RUN / NOT VERIFIED**. No runtime implementation or architectural contract changed.
+
+### Сводка для координатора 00 — 2026-11-16 21:17 UTC+4
+
+- **Latest independently verified QA evidence:** PR #10 branch previous recorded commit `bbde3fdc7320`; this handoff-only commit follows. PR #12 artifact-tested UI `8951e40eece975bec8cf731aae8c2746e97364f3`, whereas the last observed newer UI head was `fdfc468264ce`. Last observed PR #9 Core `f25401e6d055`, PR #11 Content `f92f4da7222a`, PR #14 ADR `ebdc4be28afd`, PR #16 NPC `b2680f76b21f`. These non-QA heads are **previously observed, not revalidated as current heads**. CI pinned revisions remain Core `0f5a85ef`, UI `8951e40e`, Content `c2d9ba26`, NPC `d82bc6ee` pending deliberate review. Main was read-only; no merge.
+- **Blocker 1:** Independent direct offline launch from extracted folder on Windows remains NOT VERIFIED; Playwright injected-script smoke is not equivalent to double-clicking HTML offline.
+- **Blocker 2:** Tested UI artifact SHA differs from last observed newer PR #12 head; alternate paths and duplicate-click regression on the newer artifact not evidenced.
+- **Blocker 3:** Unity Editor and real Save→Load NOT RUN; durable GameState DTO readiness not independently confirmed.
+- **Recommended next step:** obtain an artifact from the newest UI exact SHA, extract and launch with networking disabled on Windows, verify three visitors, alternative choices, repeated EndDay, unique ledger keys and conditional partner revenue; then record browser evidence. Issue #18 remains **BLOCKED**, no READY_FOR_OWNER_TEST.
