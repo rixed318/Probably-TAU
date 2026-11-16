@@ -515,3 +515,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Pinned Core/Content/NPC refs are older than current PR heads; release candidate integration readiness needs re-pin/re-run after review.
 - **Blocker 3:** Durable Core GameState snapshot not yet confirmed complete for Save→Load; Unity tests NOT RUN.
 - **Recommended next step:** obtain the UI run artifact ZIP and perform a genuinely offline browser smoke test of all 3 visitors/choices/EndDay and finance invariants on UI SHA `8951e40e`; attach concrete evidence to Issue #18 before declaring READY_FOR_OWNER_TEST.
+
+
+## 2026-11-16 16:33 UTC+4 — P0 #18: offline entrypoint static dependency gate
+
+**One bounded change:** commit `e84deb7499450127fb1922508b225b698feb6fd8` adds a read-only Node step to `.github/workflows/qa-offline.yml` for the pinned UI SHA `8951e40eece975bec8cf731aae8c2746e97364f3`. It checks that `day01-playable.html` references exactly three relative local JavaScript files, that all three exist in the UI checkout, and that the HTML has no obvious remote asset/network references. This is a **static offline dependency closure check**, NOT a browser run, ZIP extraction, full JavaScript network audit, or Windows verification. No Core/NPC/UI/Content source changes.
+
+**Evidence:** GitHub UI artifact ID `14191677502` (run `43789277275`, 8400 bytes, not expired) has the exact pinned UI SHA; prior QA Actions run `43824110415` passed 4/4 jobs at QA SHA `a0562946`, before this new step. The new workflow step has **NOT RUN / CI NOT VERIFIED** at handoff time. Local Node/.NET/Python **NOT RUN** this pass; Unity Editor/EditMode/PlayMode and Save→Load **NOT RUN**. READY_FOR_OWNER_TEST remains **BLOCKED**.
+
+### Сводка для координатора 00 — 2026-11-16 16:33 UTC+4
+
+- **Latest inspected PR HEADs:** #9 Core `dc05ba68b239`, #10 QA `e84deb749945` (handoff commit follows), #11 Content `287387ab08a4`, #12 UI `8951e40eece9`, #14 ADR `ebdc4be28afd`, #16 NPC `b2680f76b21f`. CI pins remain Core `0f5a85ef`, UI `8951e40e`, Content `c2d9ba26`, NPC `d82bc6ee`; do not conflate tested refs with moving PR heads. Main remains `d673322cd9d0`.
+- **Blocker 1:** New static offline-closure CI step has no verified run yet; artifact ZIP extraction and actual offline browser interactions (3 visitors, choices, EndDay, once-only postings, conditional partner cash, integer finance) remain NOT RUN.
+- **Blocker 2:** Core/Content/NPC pinned refs are older than latest PR heads; integration release-check requires deliberate review and re-pin.
+- **Blocker 3:** Durable GameState snapshot contract is not confirmed sufficient for real SaveService; Unity Editor and Save→Load NOT RUN.
+- **Recommended next step:** inspect Actions run for QA commit `e84deb74`, then independently download/extract artifact `14191677502` and run offline browser smoke with evidence on exact UI SHA. Keep Issue #18 BLOCKED until that proof exists; no merge/main writes.
