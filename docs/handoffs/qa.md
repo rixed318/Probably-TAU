@@ -603,3 +603,32 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Latest UI exact SHA has not been matched to downloaded artifact and independently exercised via Windows offline double-click; #18 READY_FOR_OWNER_TEST remains BLOCKED.
 - **Blocker 3:** Unity Editor compile/PlayMode and real Save→Load still NOT RUN; no release claim.
 - **Recommended next step:** coordinator records one integration candidate commit with the four input SHAs, runs pure .NET/Content tests against it, then Unity 6.3 LTS import/PlayMode smoke. Separately, obtain exact-SHA UI artifact and test offline launch and replay. No merge until owner authorization.
+
+
+## 2026-11-17 00:38 UTC+4 — Issue #20 mobile acceptance preflight (one bounded static audit)
+
+**Scope:** exact UI PR #12 HEAD `a7d12d7634a84fb448d97ed12e96f285fb9a7eaa`, file `prototypes/ui-day-one/day01-playable.html` (blob `c33773809f2ed8fc0d4367364681d3ca77a48629`). This is a static GitHub source audit, **not** Chromium touch emulation or Android installation. Read main AGENTS.md and CHAT_WORKFLOW.md, Issues #6/#8/#18/#19/#20/#21, PRs #9/#10/#11/#12/#14 and QA handoff before editing.
+
+**Observed checks (source text):**
+- PASS: HTML declares a viewport meta tag and has `@media(max-width:650px)` to stack the two-column layout on narrow screens.
+- PASS: HTML uses three **relative external scripts** (`day01-read-model.cjs`, `day01-gameplay-gateway.cjs`, `day01-playable.js`); no HTTP(S) script URLs in this file.
+- NOT SATISFIED by this file: single-file self-contained Android distribution. It depends on three other local files. This is **not** proof that a separate single-file artifact does not exist elsewhere.
+- NOT VERIFIED: 48dp hit targets (button padding is defined, but there is no explicit minimum touch target), safe-area insets, landscape overflow, touch interaction, replay/duplicate ledger, EndDay behavior. No DOM/browser measurements performed.
+- Source manifest `docs/art/ASSET_MANIFEST_D01.csv` contains 85 asset rows. No actual PNG bytes/signatures/dimensions/manifest SHA256 were checked; do **not** infer that assets have been committed from rows alone.
+
+**Android acceptance checklist for QA once UI provides an exact-SHA self-contained HTML artifact:**
+1. Record UI commit SHA, Actions run, artifact ID and ZIP SHA256; inspect extracted contents and confirm a **single** HTML with embedded JS/CSS, no remote resource requests.
+2. Run isolated Chromium with mobile/touch emulation at **360×800 portrait** and **800×360 landscape**. Measure `documentElement.scrollWidth <= innerWidth`, critical content visibility, touch-target bounding boxes (minimum 48 CSS px as conservative emulation proxy; actual Android dp must be device-verified), focus and no hover-only actions.
+3. On the exact artifact, inspect three distinct documents, exercise two divergent choice paths, EndDay once, repeated click/replay, unique ledger keys and integer-kopeck budget reconciliation; signing partner request must not immediately credit 120,000 RUB.
+4. Report **WEB_MOBILE_EMULATION_PASS** only after these measurements and interactions; report Android physical device **NOT RUN** until real device evidence. Unity Editor compile/APK, Save→Load **NOT RUN**.
+5. Future real Unity APK: pin Unity 6.3 LTS and Android Build Support/SDK/NDK/OpenJDK versions, verify build target/package ID/arm64, use debug/development signing for sideload; **never commit keystore/passwords**. Verify produced APK file SHA256 and actual Android installation/rotation/resume separately. No APK exists or is claimed by this audit.
+
+**Tests actually run this pass:** deterministic static text inspection of the exact GitHub HTML (viewport, responsive breakpoint, script references, absence of remote script src, presence/absence of explicit touch/safe-area/min-size patterns). No Node/.NET/Python/Chromium/Unity tests executed. The static check cannot certify mobile UX.
+
+### Сводка для координатора 00 — 2026-11-17 00:38 UTC+4
+
+- **Latest PR HEADs fetched:** #9 Core `eb3a74e8e58b82ba6a91545590f6296e0ebfd82c`; #10 QA `603d7d7540d437d14d6a454cad754a4b0bb6c58e` before this commit; #11 Content `94ee96b691bb58f56aef7b998c883e070efecb88`; #12 UI `a7d12d7634a84fb448d97ed12e96f285fb9a7eaa`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `b2680f76b21f9d85e11911f94dd27460a9e9acf4`. Main base reported `d673322cd9d0d366a27a57b81056504dfb26c731`. C0-v2/ADR are not permission to merge.
+- **Blocker 1:** exact current UI HTML is multi-file, while Issue #20 requires a verified downloadable single-file offline artifact; no current exact-SHA artifact/browser touch smoke performed.
+- **Blocker 2:** portrait/landscape 48dp targets, overflow, alternative decisions and replay/EndDay still NOT VERIFIED on current UI SHA; Windows file double-click and real Android device NOT RUN.
+- **Blocker 3:** Unity 6.3 Editor, Android APK build, real Save→Load and committed PNG binary verification NOT RUN.
+- **Recommended next step:** UI #12 publishes self-contained HTML artifact pinned to `a7d12d76` or a new exact SHA; QA then runs both viewport touch scenarios and ledger replay against the actual extracted artifact. Keep #18/#20 BLOCKED for owner mobile readiness until evidence. No main/foreign branch write or merge.
