@@ -381,3 +381,10 @@ Added `DurableDayAdvance.PreparePayablesDay`: validates expected day/revision an
 ## AutoDev 01 — Quiet EndDay durable receipt (16.11.2026)
 
 Issue #18, branch feature/core-2, PR #9. A successful PrepareQuietDay now appends the same end-day command ID to ProcessedCommandIds and a zero-posting DurableCommandReceipt (fingerprint end-day-quiet-v1, committed revision). Previously only ProcessedDayKeys advanced, losing command provenance across restore. No Ledger, RNG, event, payable, or other subsystem mutation. Targeted golden assertions cover durable receipt and restore; standalone .NET runner includes this suite. Unity Editor NOT RUN. This is not the full AdvanceDay: scheduled events and weekly settlement remain fail-closed. QA #10 should review zero-posting receipt semantics.
+
+
+## AutoDev 01 — unified fail-closed EndDay entrypoint (16.11.2026)
+
+**Issue #18 / #2/#3, PR #9, branch feature/core-2.** Added `DurableDayAdvance.PrepareDay(current, expectedRevision, expectedDayIndex)` to route through the existing quiet or mandatory-payables transaction path, based on the deterministic due-stage. Rejects stale/finished state and due typed events or weekly settlement before routing; does not consume RNG or modify the original snapshot. This is an additive Core-owned entrypoint; the specialized methods remain available. No event execution, weekly income, terminal checks, project tick, SaveService, or Unity build is claimed.
+
+**Files:** `Runtime/Core/DurableDayAdvance.cs`, `Tests/Core/GameStateSnapshotGoldenTests.cs`, this handoff. **Commits:** `d6e2e5e5` (production), `301e2854` (targeted tests), handoff commit. Existing golden tests now exercise unified entrypoint for quiet day, affordable due payments, stale revision and weekly fail-closed behavior. No local .NET/Unity toolchain; exact-head GitHub CI must be checked independently. **Next P0:** integrate NPC-owned typed due-event outcomes with Core-controlled receipts/earned-key provenance and atomic ledger/queue transition, then weekly settlement. QA #10 and NPC #16 review required. No main changes or merge.
