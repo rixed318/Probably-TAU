@@ -435,3 +435,19 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Issue #18 lacks evidenced offline playable smoke and downloadable demo artifact; READY_FOR_OWNER_TEST prohibited.
 - **Blocker 3:** Complete durable GameState snapshot/Unity Editor validation unavailable; SaveService and Unity tests NOT RUN.
 - **Recommended next step:** Content owner fix the pointer-format assertion; QA repin updated Content SHA, rerun CI and separately verify offline demo artifact + 3 visitor/EndDay finance invariants before any readiness verdict. No merge/main/foreign branch writes.
+
+
+## 2026-11-16 06:22 UTC+4 — Issue #18: playable gameplay gateway CI gate
+
+**One scoped QA code change:** commit `5c73cc4e6be9280a73e720e90e4bf65adcab17a9` adds `node --test prototypes/ui-day-one/test-day01-gameplay.cjs` to the read-only, SHA-pinned UI checkout in `.github/workflows/qa-offline.yml`. This suite is confirmed to exist at pinned UI `cc44bf037f2aad91c41718ec2f3f336b7a0cd464` (blob `06db14140987d6bccd411856228bd664e99225d9`). Source inspection shows four test cases covering DayIndex 0, three distinct NPCs, 200000000 kopecks, all three decisions, conditional partner cash, divergent inspected choices, EndDay gating and repeated EndDay no-op. **Test file presence and assertions are verified, but this is not an execution result.**
+
+**Execution:** new QA CI run/log NOT VERIFIED at handoff time; local Node/.NET/Python NOT RUN; Unity Editor, offline Windows browser launch and Save→Load NOT RUN. Previous pinned CI [43772020964](https://github.com/rixed318/Probably-TAU/actions/runs/43772020964) had 3/4 successful jobs and Content money-wire diagnostic mismatch; this new step was not part of that run. Artifact download/launch not verified. READY_FOR_OWNER_TEST remains **BLOCKED**.
+
+### Сводка для координатора 00 — 2026-11-16 06:22 UTC+4
+
+- **PR/commits:** #10 QA workflow `5c73cc4e6be9280a73e720e90e4bf65adcab17a9` (this handoff commit follows); #9 Core pinned `0f5a85ef`; #11 Content pinned `f3d9950e`; #12 UI pinned `cc44bf03`; #16 NPC pinned `d82bc6ee`. These are **CI frozen refs**, not asserted latest branch heads. #14 ADR and #17 due-event ADR remain feature-development guidance, not merge approval.
+- **Blocker 1:** Content money-wire validator fails at pinned Content SHA (array diagnostic pointer mismatch), so cross-branch job not green.
+- **Blocker 2:** New playable gateway test needs a successful exact-SHA CI log; Windows offline launch and downloadable demo artifact have not been independently demonstrated.
+- **Blocker 3:** Durable GameState DTO incomplete for SaveService; Unity Editor/EditMode/PlayMode NOT RUN.
+- **Recommended next step:** inspect new QA CI run and its gameplay step; ask Content owner to fix validator on their branch, then update pinned Content SHA and re-run. Separately verify artifact and offline browser launch before READY_FOR_OWNER_TEST.
+- **Safety:** QA branch only; no main writes, merges, other-branch edits or shared-contract approvals.
