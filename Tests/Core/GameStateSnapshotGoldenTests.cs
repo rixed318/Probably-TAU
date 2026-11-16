@@ -40,6 +40,7 @@ namespace TAU.President.Tests.Core
             DurablePayablesRoundTrip();
             QuietDayAdvanceGolden();
             AffordablePayablesGolden();
+            PayablesDayAdvanceGolden();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -216,6 +217,40 @@ namespace TAU.President.Tests.Core
             Throws<NotSupportedException>(() => ((IList<DurablePayable>)selected).Clear());
             Throws<ArgumentOutOfRangeException>(() => payables.CaptureAffordableDueStage(0, -1L));
             Throws<ArgumentOutOfRangeException>(() => payables.CaptureAffordableDueStage(-1, 500L));
+        }
+
+
+        private static void PayablesDayAdvanceGolden()
+        {
+            var header = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 500L,
+                new RandomStreamSnapshotDto[0], new[] { "setup" }, new string[0],
+                new string[0], new string[0]);
+            var ledger = new LedgerSnapshot(1000L,
+                new[] { new LedgerEntry("setup-post", "setup", -500L) });
+            var finance = new DurableFinanceSnapshot(header, ledger,
+                new[] { new DurableCommandReceipt("setup", "setup-fingerprint", 1,
+                    new[] { "setup-post" }) });
+            // Revision must be at least that of existing receipts.
+            var state = new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]),
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("a", 0, 800L),
+                    new DurablePayable("b", 0, 300L),
+                    new DurablePayable("c", 0, 200L),
+                    new DurablePayable("future", 2, 50L)
+                }));
+            var next = DurableDayAdvance.PreparePayablesDay(state, 1, 0);
+            Assert(state.Header.DayIndex == 0 && state.Finance.Ledger.Entries.Count == 1);
+            Assert(next.Header.DayIndex == 1 && next.Header.BalanceKopecks == 0L);
+            Assert(next.Finance.Ledger.Entries.Count == 3);
+            Assert(next.Finance.Receipts.Count == 2);
+            Assert(next.Payables.Outstanding.Count == 2 &&
+                next.Payables.Outstanding[0].DueKey == "a" &&
+                next.Payables.Outstanding[1].DueKey == "future");
+            Assert(next.Restore().Header.BalanceKopecks == 0L);
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(next, 1, 0));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(state, 0, 0));
         }
 
         private static RandomStreamSnapshotDto streamsItem()
