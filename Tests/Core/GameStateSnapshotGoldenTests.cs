@@ -36,6 +36,7 @@ namespace TAU.President.Tests.Core
             Throws<ArgumentException>(() => new RandomStreamSnapshotDto("events", 0UL, 2UL));
             DurableFinanceRoundTrip();
             ScheduledEventQueueRoundTrip();
+            DurableCompositionRoundTrip();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -90,6 +91,32 @@ namespace TAU.President.Tests.Core
             Throws<ArgumentOutOfRangeException>(() =>
                 ScheduledEventQueueSnapshot.ValidateChildDueDay(0, 0));
             ScheduledEventQueueSnapshot.ValidateChildDueDay(0, 1);
+        }
+
+        private static void DurableCompositionRoundTrip()
+        {
+            var header = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 10000L, 9000L,
+                new RandomStreamSnapshotDto[0], new[] { "cmd-1" }, new string[0],
+                new[] { "due-1" }, new[] { "done-1" });
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(10000L, new[] { new LedgerEntry("post-1", "cmd-1", -1000L) }),
+                new[] { new DurableCommandReceipt("cmd-1", "fingerprint", 1, new[] { "post-1" }) });
+            var events = new ScheduledEventQueueSnapshot(
+                new[] { new ScheduledEventOccurrence("due-1", "event.x", 2, 5) },
+                new[] { "done-1" });
+            var restored = new DurableGameStateSnapshot(finance, events).Restore();
+            Assert(restored.Header.DayIndex == 0 && restored.Finance.Ledger.CurrentBalanceKopecks == 9000L);
+            Assert(restored.Events.Pending[0].InstanceId == "due-1");
+            Assert(restored.Events.CompletedIds[0] == "done-1");
+            Throws<ArgumentException>(() => new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(
+                    new[] { new ScheduledEventOccurrence("wrong", "event.x", 2, 5) },
+                    new[] { "done-1" })));
+            Throws<ArgumentException>(() => new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(
+                    new[] { new ScheduledEventOccurrence("due-1", "event.x", 2, 5) },
+                    new[] { "wrong" })));
         }
 
         private static RandomStreamSnapshotDto streamsItem()
