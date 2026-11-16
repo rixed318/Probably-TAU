@@ -387,3 +387,13 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 
 - **Single UI change:** `day01-playable.js` remembers the focused queue-button index before rebuilding the three visitor buttons and restores keyboard focus to the matching button after re-render. Prevents keyboard users losing their place when switching documents. No mock gateway, money, content or Core changes.
 - **Verification status:** GitHub source update only; Node gameplay, browser keyboard interaction, Windows offline double-click and Unity Editor **NOT RUN** in this pass. Existing Node gameplay tests do not assert DOM focus. CI for the new commit must be inspected separately. PR #12 remains Draft; no merge.
+
+
+## P0 #18 — exact CI artifact verification (2026-11-16)
+
+- Verified PR #12 head: `871d6897ccf90e775cbc8b37a745dc358b618e82` (`feature/ui-5`).
+- GitHub Actions run `43913954397` (`UI standalone smoke tests`) reports **completed / success** for that exact SHA: https://github.com/rixed318/Probably-TAU/actions/runs/43913954397
+- Run artifact `day01-web-demo`, ID `14247763859`, size **8,484 bytes**, `expired=false`, digest `sha256:a8ce1838497564d590ece80a9c082968627126196580639337a15e9a1cdb2805`; verified via GitHub artifact metadata. This is a verified downloadable CI artifact, **not** proof of Windows execution.
+- **Actually executed in this pass:** GitHub API metadata reads only. No local Node, browser, Windows, Unity Editor, or ZIP extraction tests. CI status is a remote reported result, not an independently observed browser run.
+- **Remaining P0 acceptance gate:** extract this exact ZIP on Windows; double-click `day01-playable.html` with network disabled; complete three documents, L-204 conflict and EndDay; check budget/ledger, duplicate actions and no partner cash at signing. Record actual outcomes and screenshots/logs before `READY_FOR_OWNER_TEST`.
+- No Core/GameState modifications, no approval of real-world trademarks or third-party IP. PR remains Draft; no merge.
