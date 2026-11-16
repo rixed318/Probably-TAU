@@ -36,6 +36,19 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetByVisitId("D01_UNKNOWN", out missing) || missing != null ||
                 Day01Visitors.TryGetByVisitId(null, out missing) || missing != null)
                 throw new Exception("Unknown/case-mismatched visit must not resolve.");
+            for (int i = 0; i < expectedDocuments.Length; i++)
+            {
+                VisitorInstance byDocument;
+                if (!Day01Visitors.TryGetByDocumentId(expectedDocuments[i], out byDocument) ||
+                    byDocument.InstanceId != expectedVisits[i] ||
+                    byDocument.Archetype.DefinitionId != expectedDefinitions[i])
+                    throw new Exception("Canonical document lookup mismatch at " + i);
+            }
+            VisitorInstance absentDocument;
+            if (Day01Visitors.TryGetByDocumentId("doc-01", out absentDocument) || absentDocument != null ||
+                Day01Visitors.TryGetByDocumentId("DOC-04", out absentDocument) || absentDocument != null ||
+                Day01Visitors.TryGetByDocumentId(null, out absentDocument) || absentDocument != null)
+                throw new Exception("Unknown/case-mismatched document must not resolve.");
             if (ReferenceEquals(first[0], replay[0]))
                 throw new Exception("Factory should return fresh immutable objects.");
             try { new VisitorInstance("x", null, "DOC-01", 0); throw new Exception("Null archetype accepted."); }
