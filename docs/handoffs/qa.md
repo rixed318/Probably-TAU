@@ -530,3 +530,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Core/Content/NPC pinned refs are older than latest PR heads; integration release-check requires deliberate review and re-pin.
 - **Blocker 3:** Durable GameState snapshot contract is not confirmed sufficient for real SaveService; Unity Editor and Save→Load NOT RUN.
 - **Recommended next step:** inspect Actions run for QA commit `e84deb74`, then independently download/extract artifact `14191677502` and run offline browser smoke with evidence on exact UI SHA. Keep Issue #18 BLOCKED until that proof exists; no merge/main writes.
+
+
+## 2026-11-16 19:02 UTC+4 — P0 #18: independent pinned-entrypoint source audit
+
+**One bounded verification:** fetched `prototypes/ui-day-one/day01-playable.html` directly from immutable UI SHA `8951e40eece975bec8cf731aae8c2746e97364f3` (blob `c33773809f2ed8fc0d4367364681d3ca77a48629`). Independently parsed its script references: exactly `./day01-read-model.cjs`, `./day01-gameplay-gateway.cjs`, `./day01-playable.js`; no literal http(s) URLs, fetch(), XMLHttpRequest or WebSocket tokens in HTML. This is a **source-only static inspection**, not proof of ZIP contents, JS dependency closure or offline browser launch. No runtime tests executed this pass (Node/.NET/Python NOT RUN; Unity and Save→Load NOT RUN). PR #10 remains open Draft.
+
+**CI evidence:** previously confirmed run [#43824110415](https://github.com/rixed318/Probably-TAU/actions/runs/43824110415) has four successful jobs, but it predates the offline-entrypoint static step introduced at `e84deb749945`. Commit-associated PR-run lookup for QA HEAD `d07f32e605c0` returned zero records; **the new step remains NOT VERIFIED**, not failed. No new CI success is claimed.
+
+### Сводка для координатора 00 — 2026-11-16 19:02 UTC+4
+
+- **PR heads verified:** #9 Core `f25401e6d055`, #10 QA `d07f32e605c0` before this handoff commit, #11 Content `f92f4da7222a`, #12 UI `8951e40eece9`, #14 ADR `ebdc4be28afd`, #16 NPC `b2680f76b21f`. All are open Draft. Main base `d673322cd9d0`. Tested QA pins remain Core `0f5a85ef`, UI `8951e40e`, Content `c2d9ba26`, NPC `d82bc6ee` — never substitute moving heads for tested SHAs.
+- **Blocker 1:** Artifact ZIP extraction and independent offline browser Day01 smoke (3 visitors, decisions, EndDay, once-only posting, conditional partner cash, integer finance) NOT RUN; Issue #18 **BLOCKED**, not READY_FOR_OWNER_TEST.
+- **Blocker 2:** CI result for the newly introduced static offline dependency step not verified; latest Core/Content/NPC heads differ from tested pins.
+- **Blocker 3:** Durable GameState DTO for real SaveService not established; Unity Editor/Save→Load NOT RUN.
+- **Recommended next step:** retrieve UI artifact ID `14191677502`, extract and launch it with networking disabled, execute all Day01 scenarios, capture exact SHA and evidence, then inspect new QA CI before owner-ready claim. No main/foreign-branch write, no merge, no new shared contracts.
