@@ -323,3 +323,10 @@
 - This is **not** a request to change game balance or Core. UI 03 owns the mock gateway; it should consume/map canonical Content IDs and choices, use exact Int64 kopeck strings, respect the two-token inspection budget, preserve partner signing income **zero**, show room conflict resolution explicitly and match **both** `acceptanceExamples`. QA 05 should add cross-branch oracle assertions against the actual gateway rather than treating independent green tests as content compatibility.
 - **Actually checked:** GitHub file contents and arithmetic of both selected paths; expected 200000000-22000000-6500000=171500000 vs UI 200000000-22000000-6500000-4000000=167500000; expected 200000000-16000000-3500000=180500000 vs UI 200000000-16000000-3500000-2500000=178000000. **NOT RUN:** Node CLI, browser, CI, Unity. This finding remains a P0 blocker for canonical Day01 acceptance, even if UI's own tests and QA's pinned tests pass.
 - **Ownership:** no edits to UI, NPC, Core, EventDirector, fixture or balance. Content handoff only; escalate to UI 03 and QA 05 via PR #11. **BLOCKED / NOT READY_FOR_OWNER_TEST** until same-SHA playable output is independently compared to both Content acceptance examples.
+
+
+## P0 #18 — room resolution acceptance guard (16.11.2026)
+
+- Strengthened `Content/validate-day01-acceptance.cjs`: a multi-claim fixture marked `unresolved-no-booking` must explicitly select `ROOM-4`; other priority IDs cannot silently masquerade as unresolved. This is a fixture validation guard, **not** runtime room allocation or a balance change.
+- Connector-JS fixture check: canonical triple-claim ROOM-4 **PASS**; mutation replacing it with ROOM-1 **REJECTED**. The full Node CLI, cross-branch UI smoke, CI, Unity were **not run** in this pass.
+- P0 still **BLOCKED / NOT READY_FOR_OWNER_TEST**: UI 03 must align playable gateway with canonical budgets, inspection cap and room choice; QA 05 must execute Content validators and compare both browser EndDay outcomes. No main merge.

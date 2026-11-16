@@ -68,6 +68,11 @@ for (const example of fixture.acceptanceExamples) {
   assert.equal(expected.nextDefinitionId, fixture.endDayReport.nextDefinitionId);
   if (claims.length > 1) {
     assert.ok(fixture.roomResolutionChoices.ifMultiple.some(c => c.id === example.roomResolutionChoiceId));
+    if (example.roomStatus === "unresolved-no-booking") {
+      assert.equal(example.roomResolutionChoiceId, "ROOM-4", "unresolved room must use explicit ROOM-4");
+    } else {
+      assert.notEqual(example.roomResolutionChoiceId, "ROOM-4", "ROOM-4 cannot represent a resolved priority");
+    }
     assert.equal(example.roomStatus, "unresolved-no-booking");
   } else {
     assert.equal(example.roomResolutionChoiceId, "ROOM-AUTO");
