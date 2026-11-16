@@ -406,3 +406,13 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Workflow uploads separate `day01-android-touch` artifact while retaining `day01-web-demo`. `test-day01-android-touch.cjs` statically checks the single-file bundle, three parseable scripts and mobile CSS; it is **not** a DOM/viewport/device test.
 - Android manual procedure: download the `day01-android-touch` Actions artifact, unzip, open `day01-android-touch.html` from the Android file manager in a browser supporting local HTML, rotate landscape, inspect and decide all three documents, EndDay. Some Android browsers block `file://` opening; record actual browser/device behavior before claiming success.
 - **Verification at authoring:** in-memory bundle assertions only; Node CI, 360x800/800x360 browser screenshots, actual Android file opening and Unity Editor **NOT RUN**. Verify exact new commit's workflow/artifact. No Core/GameState, IP/logo or main changes. PR #12 stays Draft.
+
+
+## AutoDev 03 · 2026-11-17 · Android #20 exact CI artifact verification
+
+- Verified branch `feature/ui-5` at `a7d12d7634a84fb448d97ed12e96f285fb9a7eaa` before this documentation-only update. `main` remains at `d673322cd9d0d366a27a57b81056504dfb26c731`.
+- GitHub Actions `UI standalone smoke tests` run **43949663503** for the exact Android bundle commit reports `completed / success`: https://github.com/rixed318/Probably-TAU/actions/runs/43949663503 . This is remote CI evidence, not a device run.
+- Verified artifact metadata from the same run: **day01-android-touch**, artifact ID **14266916387**, **7012 bytes**, `expired=false`, created 2026-11-16T20:25:51Z. The existing **day01-web-demo** artifact is also present: ID **14266301602**, **8484 bytes**, `expired=false`. Download both from the run page under Artifacts (GitHub authentication may be required).
+- Actually performed: live GitHub branch, workflow status and artifact metadata reads. **NOT RUN:** local Node tests, ZIP extraction/content verification, 360x800/800x360 DOM viewport rendering, Android device/offline file launch, Windows browser, Unity Editor/PlayMode. CI success must not be presented as those tests passing.
+- Next P0 gate: QA/device smoke test the downloaded Android ZIP in landscape and portrait, including all three documents, L-204 conflict, EndDay ledger, duplicate-effect prevention, and no partner cash on signature. Record device/browser, screenshots, and PASS/FAIL before declaring Android playtest ready. No Unity APK exists by virtue of this artifact.
+- PR #12 remains Draft. No Core/GameState changes, no main merge, no use of real academy marks or third-party game art.
