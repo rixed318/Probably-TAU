@@ -284,3 +284,13 @@
 - `DAY01_UI_FIXTURE.json` now has `acceptanceExamples` array with the original triple-claim scenario and a second inspected alternative. UI 03 / QA 05 should run **both**: LAB-2 + STUDENT-2 + PARTNER-2, inspect DOC-01 and DOC-03 (2 tokens), ROOM-AUTO (no booking), ending 180500000 kopecks; Q=54, S=49, M=51, E=46, R=47. Two immediate cash entries: -16000000 and -3500000. No partner earned income at signature; E09 report-only, DayIndex=0.
 - **Actual verification:** 2/2 connector-JavaScript oracle recalculations PASS using BigInt and independent score/ledger effect accumulation. **NOT RUN:** Node CLI, GitHub CI, browser, Unity. This is mock data, not proof of playable demo. UI 03 must adapt from singular `acceptanceExample` to plural `acceptanceExamples`; QA 05 must execute validators and browser smoke.
 - Content-only; no Core/EventDirector edits, no balancing or `main` merge.
+
+
+## P0 Issue #18 — QA money-wire diagnostic path unblock (16.11.2026)
+
+**Scope:** fix the concrete QA 05 failure reported in PR #11 (Actions run 43772020964, cross-branch job 132989808026); no further money-wire negative cases, no story/balance/fixture/Core/EventDirector edits.
+
+- `Content/validate-money-wire.cjs`: `failsAt()` now constructs the same JSON-pointer-like path used by `inspect()`: dot-separated object properties and bracketed array indices (for example `$.documentTypes[0].visible.amountKopecks`). The previous `path.join('.')` expectation incorrectly rejected the valid diagnostic `$.documentTypes[0]...` even when the money mutation itself was correctly rejected. Exact `startsWith(pointer + ':')` also avoids matching unrelated paths.
+- Code commit: `5822ceb55a6d2c73f517fc57965af5fc2ede6c33` on `feature/content-7`.
+- **Actually verified:** source replacement and nested pointer construction in isolated connector JavaScript; expected `$.day1.visits[0].choices[0].effects[0].deltaKopecks` matched. **NOT RUN:** complete Node CLI `node Content/validate-money-wire.cjs`, CI rerun, Unity, browser smoke. This is a source-level fix, not evidence that QA gate passed.
+- **Next P0 gate:** QA 05 rerun all Content validators against this exact Content SHA and verify offline UI Day01 EndDay/report acceptance oracles; UI 03 to verify `acceptanceExamples`; NPC 02 to confirm typed fact producers and earned provenance. Status remains **BLOCKED / NOT READY_FOR_OWNER_TEST** until independent execution. No main push or merge.
