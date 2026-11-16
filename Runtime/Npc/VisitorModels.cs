@@ -41,6 +41,27 @@ namespace TAU.President.Npc
         }
     }
 
+
+    /// <summary>Read-only, Unity-free presentation snapshot for Windows and Android.
+    /// Identity only: never a Core command, event receipt or authorization.</summary>
+    public sealed class Day01VisitorCard
+    {
+        public string VisitId { get; private set; }
+        public string VisitorId { get; private set; }
+        public string DocumentId { get; private set; }
+        public string Role { get; private set; }
+        public int DayIndex { get; private set; }
+
+        internal Day01VisitorCard(VisitorInstance source)
+        {
+            VisitId = source.InstanceId;
+            VisitorId = source.Archetype.DefinitionId;
+            DocumentId = source.DocumentId;
+            Role = source.Archetype.Role;
+            DayIndex = source.DayIndex;
+        }
+    }
+
     /// <summary>Pure canonical Day01 mapping from Content/DAY01_UI_FIXTURE.json; no state or RNG.</summary>
     public static class Day01Visitors
     {
@@ -130,6 +151,16 @@ namespace TAU.President.Npc
             if (!TryDescribeChoice(choiceId, out choice)) return false;
             visitor = choice.Visitor;
             return true;
+        }
+
+        /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
+        public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
+        {
+            var visits = Create();
+            var cards = new Day01VisitorCard[visits.Count];
+            for (int i = 0; i < visits.Count; i++)
+                cards[i] = new Day01VisitorCard(visits[i]);
+            return Array.AsReadOnly(cards);
         }
 
         public static IReadOnlyList<VisitorInstance> Create()

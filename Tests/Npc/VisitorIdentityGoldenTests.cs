@@ -7,6 +7,26 @@ namespace TAU.President.Tests.Npc
     {
         public static void RunAll()
         {
+            var cards = Day01Visitors.CreateReadOnlyCards();
+            var repeatedCards = Day01Visitors.CreateReadOnlyCards();
+            if (cards.Count != 3 || repeatedCards.Count != 3)
+                throw new Exception("Read-only visitor card count mismatch.");
+            for (int i = 0; i < cards.Count; i++)
+            {
+                var visit = Day01Visitors.Create()[i];
+                if (cards[i].VisitId != visit.InstanceId ||
+                    cards[i].VisitorId != visit.Archetype.DefinitionId ||
+                    cards[i].DocumentId != visit.DocumentId ||
+                    cards[i].Role != visit.Archetype.Role ||
+                    cards[i].DayIndex != 0 ||
+                    cards[i].VisitId != repeatedCards[i].VisitId ||
+                    ReferenceEquals(cards[i], repeatedCards[i]))
+                    throw new Exception("Android/Windows visitor card identity mismatch at " + i);
+            }
+            var mutableCards = cards as System.Collections.Generic.IList<Day01VisitorCard>;
+            if (mutableCards == null || !mutableCards.IsReadOnly)
+                throw new Exception("Visitor cards must be read-only.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
