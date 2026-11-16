@@ -451,3 +451,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Durable GameState DTO incomplete for SaveService; Unity Editor/EditMode/PlayMode NOT RUN.
 - **Recommended next step:** inspect new QA CI run and its gameplay step; ask Content owner to fix validator on their branch, then update pinned Content SHA and re-run. Separately verify artifact and offline browser launch before READY_FOR_OWNER_TEST.
 - **Safety:** QA branch only; no main writes, merges, other-branch edits or shared-contract approvals.
+
+
+## 2026-11-16 — P0 #18: re-pin corrected Content validator (QA 05)
+
+**One bounded change:** QA workflow Content checkout and exact-SHA assertion moved from failing `f3d9950e9e607176e28e0af70abc6bb9566555be` to Content PR #11 `c2d9ba267549c4e1a404fd6fa68a7d1037566597`. Workflow commit: `328640d6dc363fe879a7d970b25c117bff177c3b`. No Core/UI/NPC refs changed; no other subsystem branch modified.
+
+**Observed regression:** QA Actions [#43791893275](https://github.com/rixed318/Probably-TAU/actions/runs/43791893275) at prior QA HEAD `f215ebf57156ffd50e91e213db96e9d7d3b80e58` finished failure: Core, NPC and PCG32 jobs success, UI/Content job failed specifically at `Content canonical money wire validation`. Source review confirms old Content validator compares dotted paths against bracketed array diagnostics; new Content blob `d3f3215f8cf9a9a956ed583626c3e48c640711ed` builds the exact bracketed pointer and uses `startsWith(pointer + ":")`. **New pinned workflow CI NOT YET VERIFIED**; source comparison is not a Node execution.
+
+**UI artifact evidence:** UI PR #12 exact HEAD `8951e40eece975bec8cf731aae8c2746e97364f3` has own Actions [#43789277275](https://github.com/rixed318/Probably-TAU/actions/runs/43789277275) success and `day01-web-demo` artifact ID `14191677502` (8,400 bytes, not expired at inspection). This is a newer UI revision than QA's pinned `cc44bf037f2aad91c41718ec2f3f336b7a0cd464`; it does **not** establish independent gameplay/browser PASS at the newer SHA. Browser offline launch, 3 visitors/choices/EndDay and downloadable ZIP execution **NOT RUN** in this QA pass. Unity Editor/EditMode and Save→Load **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-16 08:00 UTC+4
+
+- **Latest inspected PR heads:** #9 Core `e08952448b19`, #10 QA workflow `328640d6dc36` (this handoff commit follows), #11 Content `c2d9ba267549`, #12 UI `8951e40eece9`, #14 ADR `ebdc4be28afd`, #16 NPC `a737f5c1d2ac`. No merge/main changes.
+- **Blocker 1:** New QA CI for corrected pinned Content SHA not yet confirmed; previous run #43791893275 failed money-wire at old SHA.
+- **Blocker 2:** QA-pinned UI SHA predates current UI #12; exact-current-SHA gameplay/interactive offline launch and independent artifact smoke are missing. `READY_FOR_OWNER_TEST` / `PLAYABLE_WEB_DEMO` **BLOCKED**.
+- **Blocker 3:** Durable Core snapshot incomplete for receipt/ledger/typed event replay; Unity Editor and Save→Load not tested.
+- **Recommended next step:** fetch the workflow run for QA commit `328640d6dc36`, inspect all four jobs and money-wire logs; then update UI pin to latest verified artifact SHA and execute independent offline browser gameplay smoke. Do not claim ready before all Issue #18 gates are evidenced.
