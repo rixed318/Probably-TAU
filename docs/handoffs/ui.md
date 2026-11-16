@@ -381,3 +381,9 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 7. Record browser name/version, Windows version, exact ZIP artifact/run/SHA, each step PASS/FAIL, screenshots or error text, and QA 05 review link in PR #12. Only after real interactive PASS and exact artifact CI verification may the coordinator decide whether to mark `READY_FOR_OWNER_TEST`.
 
 **Current evidence boundary:** successful CI/Node results reported in previous handoff entries do **not** prove Windows double-click, offline browser rendering, or actual player interaction. This checklist has not been executed in Windows in this pass. No Unity Editor/PlayMode tests. `main`, GameState/Core and old preview remain untouched; PR #12 remains Draft.
+
+
+## AutoDev 03 · 2026-11-16 · keyboard focus retention (#18)
+
+- **Single UI change:** `day01-playable.js` remembers the focused queue-button index before rebuilding the three visitor buttons and restores keyboard focus to the matching button after re-render. Prevents keyboard users losing their place when switching documents. No mock gateway, money, content or Core changes.
+- **Verification status:** GitHub source update only; Node gameplay, browser keyboard interaction, Windows offline double-click and Unity Editor **NOT RUN** in this pass. Existing Node gameplay tests do not assert DOM focus. CI for the new commit must be inspected separately. PR #12 remains Draft; no merge.

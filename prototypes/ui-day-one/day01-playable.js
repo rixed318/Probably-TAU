@@ -7,10 +7,12 @@ function money(v){const n=BigInt(v),sign=n<0n?"−":"";return sign+model.formatR
 function clear(id){el(id).replaceChildren();}
 function button(parent,label,fn,disabled=false,pressed=null){const b=node(parent,"button",label);b.type="button";b.disabled=disabled;if(pressed!==null)b.setAttribute("aria-pressed",String(pressed));b.addEventListener("click",()=>{try{fn();el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});return b;}
 function render(){
+ const focusedQueueIndex=Array.from(el("queue").querySelectorAll("button")).indexOf(d.activeElement);
  const s=g.view(), item=s.documents.find(x=>x.id===s.selected), done=new Set(s.decisions.map(x=>x.id));
  el("hud").textContent="День "+s.dayNumber+" · Бюджет: "+money(s.balanceKopecks)+" · Q "+s.metrics.Q+" / S "+s.metrics.S+" / M "+s.metrics.M+" / E "+s.metrics.E+" / R "+s.metrics.R;
  el("progress").textContent="Решений: "+done.size+" из 3";
  clear("queue");for(const doc of s.documents)button(el("queue"),doc.id+" · "+doc.visitor+(done.has(doc.id)?" ✓":""),()=>g.select(doc.id),false,doc.id===s.selected);
+ if(focusedQueueIndex>=0){const next=el("queue").querySelectorAll("button")[focusedQueueIndex];if(next)next.focus();}
  el("doc-title").textContent=item.id+" · "+item.title;clear("doc-body");
  node(el("doc-body"),"p",item.visitor+" — "+item.role);
  node(el("doc-body"),"p","Запрос на Л-204, день 04, 14:00–17:00 (не бронь)");
