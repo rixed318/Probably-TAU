@@ -12,21 +12,30 @@ namespace TAU.President.Core
         public DurableFinanceSnapshot Finance { get; private set; }
         public ScheduledEventQueueSnapshot Events { get; private set; }
         public GameStateSnapshotDto Header { get { return Finance.Header; } }
+        public DurablePayablesSnapshot Payables { get; private set; }
 
         public DurableGameStateSnapshot(DurableFinanceSnapshot finance,
             ScheduledEventQueueSnapshot events)
+            : this(finance, events, new DurablePayablesSnapshot(new DurablePayable[0]))
         {
+        }
+
+        public DurableGameStateSnapshot(DurableFinanceSnapshot finance,
+            ScheduledEventQueueSnapshot events, DurablePayablesSnapshot payables)
+        {
+            if (payables == null) throw new ArgumentNullException(nameof(payables));
             if (finance == null) throw new ArgumentNullException(nameof(finance));
             if (events == null) throw new ArgumentNullException(nameof(events));
             ValidateIds(finance.Header.PendingEventIds, events.Pending, true);
             ValidateIds(finance.Header.CompletedEventIds, events.CompletedIds, false);
             Finance = finance.Restore();
             Events = events.Restore();
+            Payables = payables.Restore();
         }
 
         public DurableGameStateSnapshot Restore()
         {
-            return new DurableGameStateSnapshot(Finance, Events);
+            return new DurableGameStateSnapshot(Finance, Events, Payables);
         }
 
         private static void ValidateIds(IEnumerable<string> headerIds,
