@@ -347,3 +347,12 @@ Production hardening of `DurableFinanceSnapshot`: each persisted posting key mus
 **Tests:** `GameStateSnapshotGoldenTests.RunAll()` checks stable ordering, input isolation, duplicate due-key rejection, zero amount rejection, read-only view and composed restore preserving cash. Run with `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`. GitHub Actions status for new HEAD must be checked; Unity Editor/EditMode not run. QA #10 and NPC #16 should review the wire boundary before adoption.
 
 **Remaining P0:** payable settlement/due-key history, typed event effects and atomic `AdvanceDay`. No main writes or merge.
+
+
+## 16.11.2026 — P0 due-payables EndDay preparation (#18)
+
+- Branch: `feature/core-2`; PR #9 Draft. Production commit `67db6760`, regression commit `432d3315`.
+- Added `DurablePayablesSnapshot.CaptureDueStage(int closingDayIndex)`: returns a fixed, read-only, deterministically ordered list of obligations due on or before the closing day (due day ASC, due key ordinal ASC). Rejects negative day indices. No ledger postings, RNG draws, mutation, or debt settlement.
+- Added targeted checks in `GameStateSnapshotGoldenTests.RunAll()`: due selection across day 0/1/3, stable ordering, immutable view, invalid index, original outstanding list preserved.
+- This is a **preparation-only slice**, not atomic `AdvanceDay` or a payable settlement transaction. Next P0: use this fixed due-stage view in an atomic Core-owned EndDay transaction with receipts, processed-day key and insufficient-funds policy, then QA #10 / NPC #16 review.
+- Verification: .NET 8 workflow for the final HEAD must be inspected before claiming PASS; Unity Editor/EditMode/PlayMode NOT RUN. No main writes, merge, or Issue closure.
