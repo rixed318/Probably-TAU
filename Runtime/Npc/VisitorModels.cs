@@ -60,6 +60,22 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Resolve a canonical document to its Day01 visitor without mutable state.</summary>
+        public static bool TryGetByDocumentId(string documentId, out VisitorInstance visitor)
+        {
+            visitor = null;
+            if (string.IsNullOrEmpty(documentId)) return false;
+            foreach (var candidate in Create())
+            {
+                if (string.Equals(candidate.DocumentId, documentId, StringComparison.Ordinal))
+                {
+                    visitor = candidate;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static IReadOnlyList<VisitorInstance> Create()
         {
             return Array.AsReadOnly(new[]
