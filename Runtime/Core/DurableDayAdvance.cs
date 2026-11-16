@@ -7,6 +7,25 @@ namespace TAU.President.Core
     /// <summary>Fail-closed first EndDay transaction boundary; caller publishes result atomically.</summary>
     public static class DurableDayAdvance
     {
+        /// <summary>Single Core-owned EndDay entrypoint for days without due events
+        /// or weekly settlement. Selects mandatory-payment settlement when due,
+        /// otherwise the quiet path. Both return detached snapshots.</summary>
+        public static DurableGameStateSnapshot PrepareDay(
+            DurableGameStateSnapshot current, long expectedRevision, int expectedDayIndex)
+        {
+            if (current == null) throw new ArgumentNullException(nameof(current));
+            // Check caller expectations before inspecting due work; no state is mutated.
+            if (current.Header.IsFinished ||
+                current.Header.Revision != expectedRevision ||
+                current.Header.DayIndex != expectedDayIndex)
+                throw new InvalidOperationException("Stale or finished EndDay.");
+            if (current.Events.CaptureDueStage(expectedDayIndex).Count != 0 ||
+                (expectedDayIndex + 1) % 5 == 0)
+                throw new InvalidOperationException("Event or weekly settlement handler required.");
+            return current.Payables.CaptureDueStage(expectedDayIndex).Count == 0
+                ? PrepareQuietDay(current, expectedRevision, expectedDayIndex)
+                : PreparePayablesDay(current, expectedRevision, expectedDayIndex);
+        }
 
         /// <summary>Prepare a single atomic day close with affordable mandatory payments.
         /// Unaffordable liabilities remain outstanding; events and weekly closes fail closed.</summary>
