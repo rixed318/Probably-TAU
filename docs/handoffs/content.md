@@ -366,3 +366,10 @@
 Added `Content/DAY01_ART_LINKS.json`: three canonical visit/visitor/document IDs mapped to six planned asset IDs already listed in UI 03's art manifest, with distinct original fictional portrait descriptions. `dayIndex=0`, logical world 320x180, platform-neutral Windows/Android. This is a Content mock reference, **not generated PNG**, Core API, or changed balance. UI 03 owns production and actual PNG commits; QA 05 owns cross-branch integration checks.
 
 **Checks actually executed:** 5/5 static JavaScript invariants PASS against fresh GitHub fixture and UI manifest (visits, documents, art IDs, uniqueness, day index). **Not executed:** Node CLI, CI, browser, Android device, Unity. Existing Issue #18 UI parity gate remains BLOCKED. First commit: `5d731a2650051f7392f354c4f2194b23bfde5b71`.
+
+
+## 17.11.2026 — Day01 standing sprite references (#20/#21)
+
+**One bounded content-only task:** extend `Content/DAY01_ART_LINKS.json` with `standingAssetId` for all three fictional visitors, pointing to existing `feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv` rows (`irina_korneeva_standing`, `dasha_polynskaya_standing`, `mark_sviridov_standing`). Neutral portraits and blank documents remain unchanged; no PNGs claimed or produced. UI 03 owns sprite production and responsive Windows/Android presentation. No Core/ledger/EventDirector changes, no balancing changes.
+
+**Actually verified before commit:** fresh GitHub reads; all three visit/visitor/document tuples match the canonical Day01 fixture; all nine referenced portrait/document/standing asset IDs exist in UI manifest; standing IDs unique 3/3; `dayIndex=0`. These are isolated JS structural checks, **not** Node CLI, CI, browser, Android device or Unity tests. Issue #18 UI parity and independent QA remain BLOCKED.
