@@ -468,3 +468,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** QA-pinned UI SHA predates current UI #12; exact-current-SHA gameplay/interactive offline launch and independent artifact smoke are missing. `READY_FOR_OWNER_TEST` / `PLAYABLE_WEB_DEMO` **BLOCKED**.
 - **Blocker 3:** Durable Core snapshot incomplete for receipt/ledger/typed event replay; Unity Editor and Save→Load not tested.
 - **Recommended next step:** fetch the workflow run for QA commit `328640d6dc36`, inspect all four jobs and money-wire logs; then update UI pin to latest verified artifact SHA and execute independent offline browser gameplay smoke. Do not claim ready before all Issue #18 gates are evidenced.
+
+
+## 2026-11-16 09:40 UTC+4 — P0 #18: verified pinned QA CI results
+
+**One bounded task:** independently inspected completed GitHub Actions [run 43801271386](https://github.com/rixed318/Probably-TAU/actions/runs/43801271386) and [run 43801287579](https://github.com/rixed318/Probably-TAU/actions/runs/43801287579). Both runs have **4/4 jobs SUCCESS**: Python PCG32 oracle, Core .NET 8 standalone, NPC .NET 8 standalone, and cross-branch UI/Content static regression. In run 43801271386, job [133081861718](https://github.com/rixed318/Probably-TAU/actions/runs/43801271386/job/133081861718) confirms all steps success, including the **UI playable Day 01 gameplay gateway Node test** and **Content canonical money wire validation**. This supersedes the older money-wire failure; it is not Unity compilation or an offline browser launch.
+
+**Exact pinned refs in executed workflow:** Core `0f5a85ef1136fec0cbc0285568b11985f0e7200c`, UI `cc44bf037f2aad91c41718ec2f3f336b7a0cd464`, Content `c2d9ba267549c4e1a404fd6fa68a7d1037566597`, NPC `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`. The `Record exact source revisions` step succeeded, including fail-closed SHA assertions. These are pinned **tested refs**, not assertions that feature branches remain at those heads.
+
+**Artifact/offline limitation:** artifacts query for QA run 43801271386 returned **zero artifacts**. A separate UI workflow previously produced `day01-web-demo` artifact for UI `8951e40e`, but that SHA differs from QA-pinned `cc44bf03`. The pinned HTML entrypoint exists; actual downloaded ZIP extraction, Windows offline browser launch, all three visitor interactions and EndDay manually exercised in browser remain **NOT RUN**. No independent READY_FOR_OWNER_TEST claim. Local Node/.NET/Python not run this pass; CI executions only. Unity Editor/EditMode/PlayMode and Save→Load **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-16 09:40 UTC+4
+
+- **PRs/commits:** #9 Core (CI pin `0f5a85ef`), #10 QA (handoff commit from this pass), #11 Content (CI pin `c2d9ba26`), #12 UI (CI pin `cc44bf03`; separate artifact SHA `8951e40e`), #14 ADR, #16 NPC (CI pin `d82bc6ee`). All CI refs are exact and not necessarily latest branch HEADs. Issue #18 remains open.
+- **Blocker 1:** UI demo artifact is evidenced only for newer UI SHA, while QA regression passed older pinned SHA; no same-SHA artifact + gameplay proof yet.
+- **Blocker 2:** Independent offline Windows/browser interactive smoke (3 visitors, decisions, EndDay and once-only finance) remains NOT RUN.
+- **Blocker 3:** Durable Core snapshot still not confirmed complete; Unity Editor and Save→Load NOT RUN.
+- **Recommended next step:** repin QA workflow to the latest UI artifact-producing SHA after source review, run the same gameplay suite and verify artifact ZIP/extracted offline browser launch on that exact SHA. Keep Issue #18 BLOCKED until the owner-test gate has matching evidence. No merge, no main or foreign-branch writes.
