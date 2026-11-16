@@ -545,3 +545,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** CI result for the newly introduced static offline dependency step not verified; latest Core/Content/NPC heads differ from tested pins.
 - **Blocker 3:** Durable GameState DTO for real SaveService not established; Unity Editor/Save→Load NOT RUN.
 - **Recommended next step:** retrieve UI artifact ID `14191677502`, extract and launch it with networking disabled, execute all Day01 scenarios, capture exact SHA and evidence, then inspect new QA CI before owner-ready claim. No main/foreign-branch write, no merge, no new shared contracts.
+
+
+## 2026-11-16 20:03 UTC+4 — P0 #18: extracted artifact browser gameplay smoke
+
+**One bounded independent verification (no source change):** downloaded actual GitHub Actions artifact ID `14191677502` (`day01-web-demo`, run `43789277275`, UI source SHA `8951e40eece975bec8cf731aae8c2746e97364f3`), extracted ZIP and verified five files: `HOW_TO_PLAY.txt`, `day01-playable.html`, `day01-read-model.cjs`, `day01-gameplay-gateway.cjs`, `day01-playable.js`. Artifact metadata reports 8400 bytes, SHA256 digest `cc90f202a966506357c5b0672ffb05bd82434675ba9093fedcc07d7166d7b138`, not expired.
+
+**Actual execution:** local Python Playwright + installed Chromium (headless) executed the extracted HTML DOM and injected all three extracted JavaScript files with HTTP(S) routes blocked. Browser verified three distinct queue entries; EndDay initially disabled; selected and accepted DOC-01 full 220,000 RUB, DOC-02 full 65,000 RUB, DOC-03 onsite 40,000 RUB; budget changed 2,000,000 → 1,780,000 → 1,715,000 → **1,675,000 RUB**; EndDay became enabled and produced report with **exactly three distinct ledger keys** (`day0:DOC-01/02/03`), no partner signing revenue, and explicit no-auto-booking note. Browser page errors: none. **PASS for this one path in an isolated Chromium DOM with local scripts and HTTP blocked.** The check did not exercise alternate choices, duplicate decision clicks, integer overflow edges, or a real Windows double-click file launch. Direct `file://` navigation failed with `net::ERR_BLOCKED_BY_ADMINISTRATOR` in this execution environment; therefore **offline file launch on Windows NOT VERIFIED**. This is not an assertion of full artifact launch readiness.
+
+**Additional CI:** GitHub reports QA workflow run [43892508977](https://github.com/rixed318/Probably-TAU/actions/runs/43892508977) `completed/success` associated with QA commit `c892ca13d48563e56a77f823aa74eb7e4df14540`; job-level steps for this run not inspected in this pass. Prior [43824110415](https://github.com/rixed318/Probably-TAU/actions/runs/43824110415) independently verified 4/4 jobs successful. Unity and Save→Load **NOT RUN**. No new shared contracts, no merge.
+
+### Сводка для координатора 00 — 2026-11-16 20:03 UTC+4
+
+- **PR heads checked:** #9 Core `f25401e6d055`, #10 QA `c892ca13d485` before this handoff commit, #11 Content `f92f4da7222a`, #12 UI **`fdfc468264ce`** (newer than tested artifact `8951e40e`), #14 ADR `ebdc4be28afd`, #16 NPC `b2680f76b21f`. CI pins still Core `0f5a85ef`, UI `8951e40e`, Content `c2d9ba26`, NPC `d82bc6ee`.
+- **Blocker 1:** Direct `file://` browser launch blocked by sandbox administrator; real extracted-folder Windows/Edge/Chrome offline launch remains unverified. Playwright local-script DOM smoke passed only one three-decision path.
+- **Blocker 2:** Current UI PR head `fdfc4682` differs from artifact-tested `8951e40e`; alternate decisions, duplicate posting and new-head artifact regression require evidence before owner-ready claim.
+- **Blocker 3:** Durable GameState snapshot contract/Unity Editor/Save→Load still not independently validated.
+- **Recommended next step:** owner/QA on Windows extract exact artifact and double-click `day01-playable.html` with networking off; cover alternate decisions and repeated clicks, then pin/retest latest UI SHA and capture screenshots/logs. **Issue #18 BLOCKED; READY_FOR_OWNER_TEST not declared.**
