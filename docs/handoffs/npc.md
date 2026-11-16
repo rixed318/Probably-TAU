@@ -271,3 +271,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Verification:** manually reviewed C# mapping and Content JSON; local .NET/Unity/Android builds **NOT RUN** (SDK/Editor unavailable). GitHub Actions for this new commit must be checked before reporting pass. Commit SHA: see current PR #16 head (same atomic commit as code/test/handoff).
 - **Art coordination:** Issue #21 belongs to UI 03. Portrait asset IDs/descriptions are not yet approved as a cross-role mapping; do not invent IDs or imply PNGs exist. Content 04 owns fictional character identities; request alignment before wiring portrait assets.
 - **BLOCKED:** EventDirector still requires Core-owned atomic transaction/receipt/earned-key ports and confirmed `E03_mentor_paid` / `E07_delivered` facts tied to original agreement occurrence. No `main` merge.
+
+
+## AutoDev 02 — Android read-only choice card adapter (2026-11-17)
+
+- **Issue #20, one bounded increment:** `Day01Visitors.TryGetCardByChoiceId` maps all nine canonical Content Day01 choices to a fresh immutable `Day01VisitorCard` for Windows/Android UI. It does not authorize a decision, inspect documents, mutate Core, or issue money/receipts.
+- **Files:** `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`, this handoff. Golden assertions cover all nine choices and invalid/case-mismatched/null choices.
+- **Validation:** source and fixture manually cross-checked; .NET and Unity/Android execution NOT RUN locally (SDK unavailable). GitHub Actions must be checked for this exact commit before claiming pass.
+- **Dependencies:** UI 03/Content 04 must approve original portrait asset IDs under Issue #21; no image asset invented. EventDirector remains blocked on Core transaction/receipt ports and canonical partner earnedId; E03_mentor_paid/E07_delivered must originate from Core-confirmed facts.
+- **Safety:** only feature/npc-4; Draft PR #16; no main merge, no alternate GameState/ledger.

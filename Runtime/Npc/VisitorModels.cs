@@ -153,6 +153,16 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Read-only presentation lookup for a canonical Content choice; no eligibility or Core mutation.</summary>
+        public static bool TryGetCardByChoiceId(string choiceId, out Day01VisitorCard card)
+        {
+            card = null;
+            VisitorInstance visitor;
+            if (!TryGetByChoiceId(choiceId, out visitor)) return false;
+            card = new Day01VisitorCard(visitor);
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {

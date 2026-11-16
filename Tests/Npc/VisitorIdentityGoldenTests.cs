@@ -27,6 +27,29 @@ namespace TAU.President.Tests.Npc
             if (mutableCards == null || !mutableCards.IsReadOnly)
                 throw new Exception("Visitor cards must be read-only.");
 
+            // Android and Windows use the same canonical choice-to-card identity.
+            string[][] cardChoiceIds =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int i = 0; i < cardChoiceIds.Length; i++)
+                foreach (string choiceId in cardChoiceIds[i])
+                {
+                    Day01VisitorCard byChoiceCard;
+                    if (!Day01Visitors.TryGetCardByChoiceId(choiceId, out byChoiceCard) ||
+                        byChoiceCard.VisitId != cards[i].VisitId ||
+                        byChoiceCard.VisitorId != cards[i].VisitorId ||
+                        byChoiceCard.DocumentId != cards[i].DocumentId)
+                        throw new Exception("Choice-to-card mismatch: " + choiceId);
+                }
+            Day01VisitorCard missingCard;
+            if (Day01Visitors.TryGetCardByChoiceId("ROOM-1", out missingCard) || missingCard != null ||
+                Day01Visitors.TryGetCardByChoiceId("lab-1", out missingCard) || missingCard != null ||
+                Day01Visitors.TryGetCardByChoiceId(null, out missingCard) || missingCard != null)
+                throw new Exception("Invalid choice must not resolve to a visitor card.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
