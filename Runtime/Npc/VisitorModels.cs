@@ -76,33 +76,60 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Immutable Content Day01 choice identity and inspection prerequisite; not an authorization.</summary>
+        public sealed class ChoiceDescriptor
+        {
+            public string ChoiceId { get; private set; }
+            public VisitorInstance Visitor { get; private set; }
+            public string RequiredInspectionDocumentId { get; private set; }
+
+            internal ChoiceDescriptor(string choiceId, VisitorInstance visitor, string requiredInspectionDocumentId)
+            {
+                ChoiceId = choiceId;
+                Visitor = visitor;
+                RequiredInspectionDocumentId = requiredInspectionDocumentId;
+            }
+        }
+
+        /// <summary>Read-only fixture metadata. Callers must independently verify inspection and Core state.</summary>
+        public static bool TryDescribeChoice(string choiceId, out ChoiceDescriptor choice)
+        {
+            choice = null;
+            string visitId;
+            string inspection = null;
+            switch (choiceId)
+            {
+                case "LAB-1":
+                case "LAB-3":
+                    visitId = "D01_LAB"; break;
+                case "LAB-2":
+                    visitId = "D01_LAB"; inspection = "DOC-01"; break;
+                case "STUDENT-1":
+                case "STUDENT-2":
+                case "STUDENT-3":
+                    visitId = "D01_STUDENT"; break;
+                case "PARTNER-1":
+                case "PARTNER-3":
+                    visitId = "D01_PARTNER"; break;
+                case "PARTNER-2":
+                    visitId = "D01_PARTNER"; inspection = "DOC-03"; break;
+                default:
+                    return false;
+            }
+            VisitorInstance visitor;
+            if (!TryGetByVisitId(visitId, out visitor)) return false;
+            choice = new ChoiceDescriptor(choiceId, visitor, inspection);
+            return true;
+        }
+
         /// <summary>Resolve a Day01 choice to its canonical visitor; does not validate eligibility or apply effects.</summary>
         public static bool TryGetByChoiceId(string choiceId, out VisitorInstance visitor)
         {
             visitor = null;
-            if (string.IsNullOrEmpty(choiceId)) return false;
-            string visitId;
-            switch (choiceId)
-            {
-                case "LAB-1":
-                case "LAB-2":
-                case "LAB-3":
-                    visitId = "D01_LAB";
-                    break;
-                case "STUDENT-1":
-                case "STUDENT-2":
-                case "STUDENT-3":
-                    visitId = "D01_STUDENT";
-                    break;
-                case "PARTNER-1":
-                case "PARTNER-2":
-                case "PARTNER-3":
-                    visitId = "D01_PARTNER";
-                    break;
-                default:
-                    return false;
-            }
-            return TryGetByVisitId(visitId, out visitor);
+            ChoiceDescriptor choice;
+            if (!TryDescribeChoice(choiceId, out choice)) return false;
+            visitor = choice.Visitor;
+            return true;
         }
 
         public static IReadOnlyList<VisitorInstance> Create()

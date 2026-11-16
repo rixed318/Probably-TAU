@@ -66,6 +66,31 @@ namespace TAU.President.Tests.Npc
                         throw new Exception("Canonical choice-to-visitor mapping mismatch: " + choiceId);
                 }
             }
+            // Content PR #11: only LAB-2 and PARTNER-2 require an inspection.
+            string[] inspectedChoices = { "LAB-2", "PARTNER-2" };
+            string[] inspectedDocuments = { "DOC-01", "DOC-03" };
+            for (int i = 0; i < inspectedChoices.Length; i++)
+            {
+                Day01Visitors.ChoiceDescriptor descriptor;
+                if (!Day01Visitors.TryDescribeChoice(inspectedChoices[i], out descriptor) ||
+                    descriptor.ChoiceId != inspectedChoices[i] ||
+                    descriptor.RequiredInspectionDocumentId != inspectedDocuments[i] ||
+                    descriptor.Visitor.DocumentId != inspectedDocuments[i])
+                    throw new Exception("Inspection requirement mismatch: " + inspectedChoices[i]);
+            }
+            foreach (string[] group in choiceIds)
+                foreach (string id in group)
+                {
+                    Day01Visitors.ChoiceDescriptor descriptor;
+                    if (!Day01Visitors.TryDescribeChoice(id, out descriptor) ||
+                        (id != "LAB-2" && id != "PARTNER-2" && descriptor.RequiredInspectionDocumentId != null))
+                        throw new Exception("Unexpected inspection prerequisite: " + id);
+                }
+            Day01Visitors.ChoiceDescriptor invalidDescriptor;
+            if (Day01Visitors.TryDescribeChoice("ROOM-1", out invalidDescriptor) || invalidDescriptor != null ||
+                Day01Visitors.TryDescribeChoice("lab-2", out invalidDescriptor) || invalidDescriptor != null ||
+                Day01Visitors.TryDescribeChoice(null, out invalidDescriptor) || invalidDescriptor != null)
+                throw new Exception("Invalid choice descriptor must fail closed.");
             VisitorInstance absentChoice;
             if (Day01Visitors.TryGetByChoiceId("LAB-4", out absentChoice) || absentChoice != null ||
                 Day01Visitors.TryGetByChoiceId("lab-1", out absentChoice) || absentChoice != null ||
