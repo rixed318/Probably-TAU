@@ -356,3 +356,10 @@ Production hardening of `DurableFinanceSnapshot`: each persisted posting key mus
 - Added targeted checks in `GameStateSnapshotGoldenTests.RunAll()`: due selection across day 0/1/3, stable ordering, immutable view, invalid index, original outstanding list preserved.
 - This is a **preparation-only slice**, not atomic `AdvanceDay` or a payable settlement transaction. Next P0: use this fixed due-stage view in an atomic Core-owned EndDay transaction with receipts, processed-day key and insufficient-funds policy, then QA #10 / NPC #16 review.
 - Verification: .NET 8 workflow for the final HEAD must be inspected before claiming PASS; Unity Editor/EditMode/PlayMode NOT RUN. No main writes, merge, or Issue closure.
+
+## 16.11.2026 — P0 fail-closed quiet-day EndDay boundary (#18)
+
+- `DurableDayAdvance.PrepareQuietDay` prepares an immutable replacement GameState, increments day/revision with checked arithmetic, records a canonical processed-day key, and preserves Ledger/receipts/RNG. Caller owns atomic publication.
+- Fails closed for stale revision/day, finished campaign, due event/payable and weekly settlement day; **not a full AdvanceDay**. Projects, content intents, earned income, weekly charges, terminal metrics and next-day generation are not silently skipped in a claimed complete pipeline.
+- Golden test covers transition, original immutability, restore, stale request, payable guard and weekly guard. Run `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release`. Unity Editor not run. Verify exact SHA CI before PASS.
+- Next: integrate actual EndDay event/economy intents and settlement with QA #10 / NPC #16; no main merge.
