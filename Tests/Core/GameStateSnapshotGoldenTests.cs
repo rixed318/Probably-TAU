@@ -179,7 +179,7 @@ namespace TAU.President.Tests.Core
                 new LedgerSnapshot(10000L, new LedgerEntry[0]), new DurableCommandReceipt[0]);
             var quiet = new DurableGameStateSnapshot(finance,
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
-            var next = DurableDayAdvance.PrepareQuietDay(quiet, 0, 0);
+            var next = DurableDayAdvance.PrepareDay(quiet, 0, 0);
             Assert(quiet.Header.DayIndex == 0 && quiet.Header.Revision == 0);
             Assert(next.Header.DayIndex == 1 && next.Header.Revision == 1);
             Assert(next.Header.ProcessedDayKeys.Count == 1 &&
@@ -198,6 +198,8 @@ namespace TAU.President.Tests.Core
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]),
                 new DurablePayablesSnapshot(new[] { new DurablePayable("rent", 0, 200L) }));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(payable, 0, 0));
+            Assert(DurableDayAdvance.PrepareDay(payable, 0, 0).Finance.Ledger.CurrentBalanceKopecks == 9800L);
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(payable, 1, 0));
             Assert(payable.Header.DayIndex == 0 && payable.Payables.Outstanding.Count == 1);
             var weeklyHeader = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 4, false,
                 header.Metrics, 10000L, 10000L, new RandomStreamSnapshotDto[0],
@@ -206,6 +208,7 @@ namespace TAU.President.Tests.Core
                 new DurableFinanceSnapshot(weeklyHeader, finance.Ledger, finance.Receipts),
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(weekly, 0, 4));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(weekly, 0, 4));
         }
 
         private static void AffordablePayablesGolden()
@@ -247,7 +250,7 @@ namespace TAU.President.Tests.Core
                     new DurablePayable("c", 0, 200L),
                     new DurablePayable("future", 2, 50L)
                 }));
-            var next = DurableDayAdvance.PreparePayablesDay(state, 1, 0);
+            var next = DurableDayAdvance.PrepareDay(state, 1, 0);
             Assert(state.Header.DayIndex == 0 && state.Finance.Ledger.Entries.Count == 1);
             Assert(next.Header.DayIndex == 1 && next.Header.BalanceKopecks == 0L);
             Assert(next.Finance.Ledger.Entries.Count == 3);
