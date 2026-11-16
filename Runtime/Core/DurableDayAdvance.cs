@@ -44,8 +44,9 @@ namespace TAU.President.Core
                 if (!settled.Contains(payable.DueKey)) remaining.Add(payable);
             var commandIds = new List<string>(h.ProcessedCommandIds);
             var receipts = new List<DurableCommandReceipt>(current.Finance.Receipts);
-            if (selected.Count != 0)
             {
+                // Even a zero-payment EndDay is a committed command with a durable receipt.
+                // This preserves replay provenance when no payable is affordable.
                 commandIds.Add(dayKey);
                 // Canonical length-prefixed due keys prevent ambiguous fingerprint inputs.
                 var fingerprint = new System.Text.StringBuilder("end-day-payables-v1:");

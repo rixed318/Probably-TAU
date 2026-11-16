@@ -251,6 +251,26 @@ namespace TAU.President.Tests.Core
             Assert(next.Restore().Header.BalanceKopecks == 0L);
             Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(next, 1, 0));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(state, 0, 0));
+            // No affordable payment must still leave a durable committed EndDay receipt.
+            var noCashHeader = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
+                header.Metrics, 1000L, 0L, new RandomStreamSnapshotDto[0],
+                new[] { "setup" }, new string[0], new string[0], new string[0]);
+            var noCashLedger = new LedgerSnapshot(1000L,
+                new[] { new LedgerEntry("setup-post", "setup", -1000L) });
+            var noCashFinance = new DurableFinanceSnapshot(noCashHeader, noCashLedger,
+                new[] { new DurableCommandReceipt("setup", "setup-fingerprint", 1,
+                    new[] { "setup-post" }) });
+            var noCash = new DurableGameStateSnapshot(noCashFinance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]),
+                new DurablePayablesSnapshot(new[] { new DurablePayable("rent", 0, 100L) }));
+            var noCashNext = DurableDayAdvance.PreparePayablesDay(noCash, 1, 0);
+            Assert(noCashNext.Header.DayIndex == 1 && noCashNext.Header.BalanceKopecks == 0L);
+            Assert(noCashNext.Finance.Receipts.Count == 2 &&
+                noCashNext.Finance.Receipts[1].PostingKeys.Count == 0 &&
+                noCashNext.Finance.Receipts[1].CommandId == "end-day:campaign:0");
+            Assert(noCashNext.Payables.Outstanding.Count == 1);
+            Assert(noCashNext.Restore().Finance.Receipts.Count == 2);
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(noCashNext, 1, 0));
         }
 
         private static RandomStreamSnapshotDto streamsItem()

@@ -371,3 +371,8 @@ Core-only production addition: `DurablePayablesSnapshot.CaptureAffordableDueStag
 ## P0 Issue #18 — atomic affordable payables EndDay (16.11.2026)
 
 Added `DurableDayAdvance.PreparePayablesDay`: validates expected day/revision and blocks pending due events/weekly settlement, stages ordered affordable payments as Ledger postings with a single command receipt and canonical fingerprint, advances day/revision, preserves unpaid liabilities, and returns a new snapshot. Repeated/stale calls fail; original snapshot is unchanged. One golden test covers paid/unpaid split, ledger/receipt integrity, restore and stale rejection. No NPC event processing, weekly settlement, SaveEnvelope, Unity build or Editor verification. CI result must be checked for the exact commit. QA #10: review receipt and payable semantics; NPC #16: due events remain fail-closed.
+
+
+## AutoDev 01 — zero-payment EndDay receipt (16.11.2026)
+
+**Issue #18 / #3, branch feature/core-2, PR #9.** `PreparePayablesDay` now records a committed receipt and command ID even when all due obligations are unaffordable (or none are due). Previously it advanced the day without a receipt, leaving no durable command provenance for the zero-posting transition. Existing ledger and cash stay unchanged; unpaid liabilities remain outstanding. Fingerprint retains the canonical `end-day-payables-v1:` prefix with an empty selection, and the receipt contains an empty posting-key list. Added a targeted no-cash EndDay golden case verifying durable restore and stale replay rejection. This does **not** implement NPC effects, weekly settlement, or Unity integration. .NET CI exact SHA must be checked after push; Unity Editor NOT RUN. QA #10: review zero-posting receipt semantics before Save wire adoption.
