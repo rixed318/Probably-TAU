@@ -373,3 +373,10 @@ Added `Content/DAY01_ART_LINKS.json`: three canonical visit/visitor/document IDs
 **One bounded content-only task:** extend `Content/DAY01_ART_LINKS.json` with `standingAssetId` for all three fictional visitors, pointing to existing `feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv` rows (`irina_korneeva_standing`, `dasha_polynskaya_standing`, `mark_sviridov_standing`). Neutral portraits and blank documents remain unchanged; no PNGs claimed or produced. UI 03 owns sprite production and responsive Windows/Android presentation. No Core/ledger/EventDirector changes, no balancing changes.
 
 **Actually verified before commit:** fresh GitHub reads; all three visit/visitor/document tuples match the canonical Day01 fixture; all nine referenced portrait/document/standing asset IDs exist in UI manifest; standing IDs unique 3/3; `dayIndex=0`. These are isolated JS structural checks, **not** Node CLI, CI, browser, Android device or Unity tests. Issue #18 UI parity and independent QA remain BLOCKED.
+
+
+## Автономный проход 04 — cross-platform art-link validation (17.11.2026)
+
+**Scope / #21:** в `Content/validate-day01-acceptance.cjs` добавлена проверка `DAY01_ART_LINKS.json` против канонического `DAY01_UI_FIXTURE.json`: три точных соответствия visit/visitor/document ID, девять уникальных ссылок на portrait/standing/document, непустые визуальные описания, DayIndex=0, Android+Windows, ART A, 320x180. Проверка не требует UI-ветки или Unity и не доказывает наличие PNG. Баланс, выборы, Core и EventDirector не менялись.
+
+**Запуск QA 05:** `node Content/validate-day01-acceptance.cjs` из корня репозитория. Нужен независимый запуск на текущем SHA. **Ограничение:** GitHub-сверка исходников не равна исполнению Node CLI/CI; наличие реальных PNG и UI-паритет проверяет 03/05.

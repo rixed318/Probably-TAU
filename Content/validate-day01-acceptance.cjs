@@ -80,3 +80,29 @@ for (const example of fixture.acceptanceExamples) {
   }
 }
 console.log("PASS: 2 Day01 acceptance oracles, 3 visits/docs, budget, scores, postings, inspections, room, no signing income");
+
+// Cross-platform Day01 art-link contract: planned references, not proof of PNG delivery.
+const art = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
+assert.equal(art.dayIndex, fixture.dayIndex);
+assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
+assert.equal(art.worldLogicalResolution, "320x180");
+assert.equal(art.artDirection, "A");
+assert.equal(art.visits.length, fixture.visitors.length);
+const artByVisit = new Map(art.visits.map(v => [v.visitId, v]));
+assert.equal(artByVisit.size, art.visits.length);
+const assetIds = new Set();
+for (const visit of fixture.visitors) {
+  const link = artByVisit.get(visit.visitId);
+  assert.ok(link, "missing art mapping: " + visit.visitId);
+  assert.equal(link.visitorId, visit.visitorId);
+  assert.equal(link.documentId, visit.documentId);
+  assert.ok(typeof link.visualBrief === "string" && link.visualBrief.trim().length >= 40);
+  for (const field of ["portraitAssetId", "standingAssetId", "documentAssetId"]) {
+    const id = link[field];
+    assert.match(id, /^[a-z][a-z0-9_]*$/);
+    assert.ok(!assetIds.has(id), "duplicate asset ID: " + id);
+    assetIds.add(id);
+  }
+}
+assert.equal(assetIds.size, 9);
+console.log("PASS: Day01 art links 3/3 visits, 9 unique assets, cross-platform IDs");
