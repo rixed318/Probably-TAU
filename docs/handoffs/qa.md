@@ -485,3 +485,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Independent offline Windows/browser interactive smoke (3 visitors, decisions, EndDay and once-only finance) remains NOT RUN.
 - **Blocker 3:** Durable Core snapshot still not confirmed complete; Unity Editor and Save→Load NOT RUN.
 - **Recommended next step:** repin QA workflow to the latest UI artifact-producing SHA after source review, run the same gameplay suite and verify artifact ZIP/extracted offline browser launch on that exact SHA. Keep Issue #18 BLOCKED until the owner-test gate has matching evidence. No merge, no main or foreign-branch writes.
+
+
+## 2026-11-16 11:27 UTC+4 — P0 #18: align QA UI pin with artifact revision
+
+**Bounded change:** QA cross-branch workflow UI checkout and fail-closed SHA assertion updated from `cc44bf037f2aad91c41718ec2f3f336b7a0cd464` to `8951e40eece975bec8cf731aae8c2746e97364f3`. The UI #12 HEAD at inspection is `8951e40eece975bec8cf731aae8c2746e97364f3`, and UI Actions [#43789277275](https://github.com/rixed318/Probably-TAU/actions/runs/43789277275) has successful artifact `day01-web-demo` ID `14191677502`, size 8400 bytes, SHA-256 `cc90f202a966506357c5b0672ffb05bd82434675ba9093fedcc07d7166d7b138` (artifact metadata only; archive not extracted or executed). The HTML references sibling `day01-read-model.cjs`, `day01-gameplay-gateway.cjs`, and `day01-playable.js`, so a standalone HTML file by itself is insufficient.
+
+**Tests:** UI source and four Node gameplay assertions read at exact SHA; no local Node/browser execution in this pass. Prior QA Actions [#43811815380](https://github.com/rixed318/Probably-TAU/actions/runs/43811815380) succeeded on **older** UI pin; it is NOT evidence for this update. New workflow run must be observed before claiming same-SHA CI pass. Windows offline browser smoke and ZIP extraction NOT RUN; Unity Editor/EditMode and Save→Load NOT RUN. No new shared architecture contracts.
+
+### Сводка для координатора 00 — 2026-11-16 11:27 UTC+4
+
+- **Latest inspected PR HEADs:** #9 Core `2333c93e9606`; #10 QA `ac2bb365caaf` before this change; #11 Content `aef96e038e06`; #12 UI `8951e40eece9`; #16 NPC `c30668d972d1`; #14 ADR open Draft. `main` `d673322cd9d0`. QA workflow retains pinned Core `0f5a85ef`, Content `c2d9ba26`, NPC `d82bc6ee`; UI now `8951e40e`.
+- **Blocker 1:** Newly pinned UI gameplay Node suite must PASS in QA Actions on exact `8951e40e` (no results yet at commit preparation).
+- **Blocker 2:** Artifact ZIP extraction and real Windows offline browser interactions (3 visitors/choices/EndDay, once-only postings, conditional partner cash) remain NOT RUN; `READY_FOR_OWNER_TEST` BLOCKED.
+- **Blocker 3:** Durable Core GameState DTO remains incomplete for persistence; Unity/Save→Load NOT RUN.
+- **Next:** inspect new QA Actions jobs and actual checkout SHAs, then independently extract/launch artifact offline and exercise all three decisions and EndDay. No merge/main writes.
