@@ -78,6 +78,23 @@ jobs:
       - name: UI playable Day 01 gameplay gateway regression (Issue #18, not browser launch)
         run: node --test prototypes/ui-day-one/test-day01-gameplay.cjs
         working-directory: ui
+      - name: UI offline entrypoint dependency closure (static; not browser launch)
+        working-directory: ui/prototypes/ui-day-one
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('day01-playable.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/gi)].map(m => m[1]);
+          if (scripts.length !== 3) throw new Error('Expected exactly three local gameplay scripts, found ' + scripts.length);
+          for (const script of scripts) {
+            if (!/^\.\/[a-z0-9-]+\.(?:js|cjs)$/i.test(script)) throw new Error('Nonlocal script reference: ' + script);
+            if (!fs.statSync(script).isFile()) throw new Error('Missing local script: ' + script);
+          }
+          if (/<(?:link|img|iframe|source)\b[^>]*(?:href|src)=["'](?:https?:|\/\/)/i.test(html)) throw new Error('External asset reference');
+          if (/\b(?:fetch\s*\(|XMLHttpRequest|WebSocket|import\s*\()/i.test(html)) throw new Error('Potential network or dynamic import in HTML');
+          console.log('PASS: offline HTML has 3 present local script dependencies (static check only)');
+          NODE
       - name: UI art manifest validation
         run: python3 tools/art/validate_manifest.py
         working-directory: ui
