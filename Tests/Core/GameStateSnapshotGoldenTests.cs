@@ -38,6 +38,7 @@ namespace TAU.President.Tests.Core
             ScheduledEventQueueRoundTrip();
             DurableCompositionRoundTrip();
             DurablePayablesRoundTrip();
+            RejectSettledOutstandingPayableGolden();
             QuietDayAdvanceGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
@@ -167,6 +168,27 @@ namespace TAU.President.Tests.Core
             Assert(composed.Payables.Outstanding.Count == 3 &&
                 composed.Payables.Outstanding[2].DueKey == "due-z");
             Assert(composed.Finance.Ledger.CurrentBalanceKopecks == 10000L);
+        }
+
+        private static void RejectSettledOutstandingPayableGolden()
+        {
+            var header = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 1, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 800L,
+                new RandomStreamSnapshotDto[0], new[] { "end-day:campaign:0" },
+                new[] { "end-day:campaign:0" }, new string[0], new string[0]);
+            var ledger = new LedgerSnapshot(1000L,
+                new[] { new LedgerEntry("payable:rent", "end-day:campaign:0", -200L) });
+            var finance = new DurableFinanceSnapshot(header, ledger,
+                new[] { new DurableCommandReceipt("end-day:campaign:0",
+                    "end-day-payables-v1:4:rent:200;", 1, new[] { "payable:rent" }) });
+            var events = new ScheduledEventQueueSnapshot(
+                new ScheduledEventOccurrence[0], new string[0]);
+            Throws<ArgumentException>(() => new DurableGameStateSnapshot(finance, events,
+                new DurablePayablesSnapshot(new[] { new DurablePayable("rent", 0, 200L) })));
+            var valid = new DurableGameStateSnapshot(finance, events,
+                new DurablePayablesSnapshot(new[] { new DurablePayable("utilities", 0, 300L) }));
+            Assert(valid.Restore().Payables.Outstanding.Count == 1);
+            Assert(valid.Finance.Ledger.CurrentBalanceKopecks == 800L);
         }
 
         private static void QuietDayAdvanceGolden()
