@@ -416,3 +416,10 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Actually performed: live GitHub branch, workflow status and artifact metadata reads. **NOT RUN:** local Node tests, ZIP extraction/content verification, 360x800/800x360 DOM viewport rendering, Android device/offline file launch, Windows browser, Unity Editor/PlayMode. CI success must not be presented as those tests passing.
 - Next P0 gate: QA/device smoke test the downloaded Android ZIP in landscape and portrait, including all three documents, L-204 conflict, EndDay ledger, duplicate-effect prevention, and no partner cash on signature. Record device/browser, screenshots, and PASS/FAIL before declaring Android playtest ready. No Unity APK exists by virtue of this artifact.
 - PR #12 remains Draft. No Core/GameState changes, no main merge, no use of real academy marks or third-party game art.
+
+
+## AutoDev 03 · 2026-11-17 · Android touch CSS regression assertions
+
+- Scoped change: extend `test-day01-android-touch.cjs` with explicit checks for 48px minimum width and height, `touch-action:manipulation`, landscape compact layout, portrait stacking, and all four safe-area insets. The existing single-file inline-script and no-external-resource checks remain.
+- This is a **source-level regression guard**, not a real Android viewport rendering or physical-device smoke test. Do not claim it proves usable 48dp targets under browser scaling.
+- Device acceptance still BLOCKED pending offline file open, landscape/portrait interaction, all three documents, room L-204, EndDay and ledger checks on Android. No Unity APK or image PNG is claimed by this change.
