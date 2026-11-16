@@ -58,6 +58,23 @@ namespace TAU.President.Core
             return due.AsReadOnly();
         }
 
+        /// <summary>Deterministic all-or-nothing affordable settlement plan.
+        /// Unaffordable obligations remain due; this does not post cash or mutate state.</summary>
+        public IReadOnlyList<DurablePayable> CaptureAffordableDueStage(
+            int closingDayIndex, long availableKopecks)
+        {
+            if (availableKopecks < 0) throw new ArgumentOutOfRangeException(nameof(availableKopecks));
+            var affordable = new List<DurablePayable>();
+            long remaining = availableKopecks;
+            foreach (var payable in CaptureDueStage(closingDayIndex))
+            {
+                if (payable.AmountKopecks > remaining) continue;
+                remaining = checked(remaining - payable.AmountKopecks);
+                affordable.Add(payable);
+            }
+            return affordable.AsReadOnly();
+        }
+
         public DurablePayablesSnapshot Restore()
         {
             return new DurablePayablesSnapshot(outstanding);

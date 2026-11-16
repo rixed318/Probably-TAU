@@ -39,6 +39,7 @@ namespace TAU.President.Tests.Core
             DurableCompositionRoundTrip();
             DurablePayablesRoundTrip();
             QuietDayAdvanceGolden();
+            AffordablePayablesGolden();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -197,6 +198,24 @@ namespace TAU.President.Tests.Core
                 new DurableFinanceSnapshot(weeklyHeader, finance.Ledger, finance.Receipts),
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(weekly, 0, 4));
+        }
+
+        private static void AffordablePayablesGolden()
+        {
+            var payables = new DurablePayablesSnapshot(new[] {
+                new DurablePayable("a", 0, 800L),
+                new DurablePayable("b", 0, 300L),
+                new DurablePayable("c", 0, 200L),
+                new DurablePayable("later", 1, 50L)
+            });
+            var selected = payables.CaptureAffordableDueStage(0, 500L);
+            Assert(selected.Count == 2 && selected[0].DueKey == "b" &&
+                selected[1].DueKey == "c");
+            Assert(payables.Outstanding.Count == 4);
+            Assert(payables.CaptureAffordableDueStage(0, 0L).Count == 0);
+            Throws<NotSupportedException>(() => ((IList<DurablePayable>)selected).Clear());
+            Throws<ArgumentOutOfRangeException>(() => payables.CaptureAffordableDueStage(0, -1L));
+            Throws<ArgumentOutOfRangeException>(() => payables.CaptureAffordableDueStage(-1, 500L));
         }
 
         private static RandomStreamSnapshotDto streamsItem()
