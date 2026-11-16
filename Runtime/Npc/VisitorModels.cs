@@ -76,6 +76,35 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Resolve a Day01 choice to its canonical visitor; does not validate eligibility or apply effects.</summary>
+        public static bool TryGetByChoiceId(string choiceId, out VisitorInstance visitor)
+        {
+            visitor = null;
+            if (string.IsNullOrEmpty(choiceId)) return false;
+            string visitId;
+            switch (choiceId)
+            {
+                case "LAB-1":
+                case "LAB-2":
+                case "LAB-3":
+                    visitId = "D01_LAB";
+                    break;
+                case "STUDENT-1":
+                case "STUDENT-2":
+                case "STUDENT-3":
+                    visitId = "D01_STUDENT";
+                    break;
+                case "PARTNER-1":
+                case "PARTNER-2":
+                case "PARTNER-3":
+                    visitId = "D01_PARTNER";
+                    break;
+                default:
+                    return false;
+            }
+            return TryGetByVisitId(visitId, out visitor);
+        }
+
         public static IReadOnlyList<VisitorInstance> Create()
         {
             return Array.AsReadOnly(new[]

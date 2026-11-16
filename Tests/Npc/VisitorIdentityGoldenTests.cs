@@ -49,6 +49,29 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetByDocumentId("DOC-04", out absentDocument) || absentDocument != null ||
                 Day01Visitors.TryGetByDocumentId(null, out absentDocument) || absentDocument != null)
                 throw new Exception("Unknown/case-mismatched document must not resolve.");
+            string[][] choiceIds =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int i = 0; i < choiceIds.Length; i++)
+            {
+                foreach (string choiceId in choiceIds[i])
+                {
+                    VisitorInstance byChoice;
+                    if (!Day01Visitors.TryGetByChoiceId(choiceId, out byChoice) ||
+                        byChoice.InstanceId != expectedVisits[i] ||
+                        byChoice.DocumentId != expectedDocuments[i])
+                        throw new Exception("Canonical choice-to-visitor mapping mismatch: " + choiceId);
+                }
+            }
+            VisitorInstance absentChoice;
+            if (Day01Visitors.TryGetByChoiceId("LAB-4", out absentChoice) || absentChoice != null ||
+                Day01Visitors.TryGetByChoiceId("lab-1", out absentChoice) || absentChoice != null ||
+                Day01Visitors.TryGetByChoiceId("ROOM-1", out absentChoice) || absentChoice != null ||
+                Day01Visitors.TryGetByChoiceId(null, out absentChoice) || absentChoice != null)
+                throw new Exception("Unknown, room, or case-mismatched choice must not resolve.");
             if (ReferenceEquals(first[0], replay[0]))
                 throw new Exception("Factory should return fresh immutable objects.");
             try { new VisitorInstance("x", null, "DOC-01", 0); throw new Exception("Null archetype accepted."); }
