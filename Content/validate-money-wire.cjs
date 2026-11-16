@@ -59,7 +59,8 @@ function failsAt(path, value) {
   target[path[path.length - 1]] = value;
   const errors = inspect(altered).errors;
   assert.equal(errors.length, 1, "expected one rejection at " + path.join("."));
-  assert.ok(errors[0].includes(path.join(".")), "expected field-specific diagnostic");
+  const pointer = "$" + path.map(segment => typeof segment === "number" ? `[${segment}]` : `.${segment}`).join("");
+  assert.ok(errors[0].startsWith(pointer + ":"), "expected field-specific diagnostic at " + pointer);
 }
 failsAt(["opening", "weeklyRevenueKopecks"], 34000000);
 // Nested money fields must use the same exact wire format as opening fields.
