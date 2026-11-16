@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Probably-TAU — День 01 · игровая веб-демоверсия</title>
+<style>
+:root{font:16px/1.5 system-ui,sans-serif;color:#f7efdf;background:#0b1917}*{box-sizing:border-box}body{max-width:1100px;margin:auto;padding:1.2rem}header,section,aside{background:#193a31;border:1px solid #c6a36c;border-radius:12px;padding:1rem;margin-bottom:1rem}h1,h2{margin:.2rem 0 .8rem}button{font:inherit;background:#ede2c9;color:#263e36;border:2px solid #c6a36c;border-radius:8px;padding:.65rem .9rem;margin:.3rem;cursor:pointer}button:disabled{opacity:.48;cursor:not-allowed}button[aria-pressed=true]{background:#c6a36c;font-weight:bold}button:focus-visible{outline:3px solid #fff;outline-offset:2px}.layout{display:grid;grid-template-columns:minmax(220px,1fr) minmax(0,2fr);gap:1rem}.muted{color:#c9d7ce}.warning{border-left:4px solid #f3b16c;padding:.6rem;background:#263e36}#error{color:#ffd7c6}#report[hidden],#game[hidden]{display:none}li{margin:.3rem 0}small{display:block}@media(max-width:650px){.layout{display:block}body{padding:.5rem}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Android touch shell: keep 320x180 world art independent of legible controls. */
+html{min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}body{width:100%;max-width:1100px;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));overflow-wrap:anywhere}button{min-height:48px;min-width:48px;touch-action:manipulation}#queue button,#choices button{display:block;width:calc(100% - .6rem);text-align:left}main,aside,.layout>*{min-width:0}#hud{font-variant-numeric:tabular-nums}#report{overflow-wrap:anywhere}@media (orientation:landscape) and (max-height:520px){body{max-width:none;padding-top:max(8px,env(safe-area-inset-top));padding-bottom:max(8px,env(safe-area-inset-bottom))}header,section,aside{padding:.65rem;margin-bottom:.5rem}.layout{grid-template-columns:minmax(190px,34%) minmax(0,1fr);gap:.5rem}h1{font-size:1.3rem}h2{font-size:1.1rem}button{margin:.15rem}}@media (max-width:650px) and (orientation:portrait){.layout{display:block}button{max-width:100%}}</style><script>/* Day 01 read-model fixture derived from Content PR #11 (content-draft-0.2).
+ * Separate from fixtures.js legacy one-request mock. DISPLAY ONLY: never posts
+ * ledger entries, mutates GameState, or credits conditional partner revenue.
+ * All people, room and finances are fictional gameplay data.
+ */
+(function (root) {
+  "use strict";
+  const kopecks = (value) => {
+    if (typeof value !== "string" || !/^(0|[1-9][0-9]*)$/.test(value)) throw new TypeError("Canonical nonnegative kopeck string required");
+    const amount = BigInt(value);
+    if (amount > 9223372036854775807n) throw new RangeError("Int64 overflow");
+    return amount;
+  };
+  const formatRub = (value) => {
+    const amount = kopecks(value);
+    const rub = (amount / 100n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const fraction = (amount % 100n).toString().padStart(2, "0");
+    return fraction === "00" ? rub + " ₽" : rub + "," + fraction + " ₽";
+  };
+  const freeze = (obj) => {
+    if (obj && typeof obj === "object" && !Object.isFrozen(obj)) {
+      Object.values(obj).forEach(freeze);
+      Object.freeze(obj);
+    }
+    return obj;
+  };
+  const model = freeze({
+    schema: "ui-day01-read-model-v1",
+    source: "Content/CONTENT_SPEC_DRAFT.json content-draft-0.2 (PR #11)",
+    status: "DRAFT_DISPLAY_ONLY",
+    fictional: true,
+    dayIndex: 0,
+    dayNumber: 1,
+    openingBalanceKopecks: "200000000",
+    metrics: { educationQuality: 52, studentSatisfaction: 48, staffMorale: 50, employerTrust: 45, publicReputation: 47 },
+    documents: [
+      {
+        id: "DOC-01", visitId: "D01_LAB", npcId: "npc_irina_korneeva",
+        visitor: "Ирина Корнеева", role: "Координатор цифровых дисциплин",
+        type: "procurement_request", title: "Оснащение компьютерного класса",
+        amountKopecks: "22000000", room: "Л-204", roomStatus: "request-not-booking", slotDayIndex: 3, slot: "14:00-17:00",
+        inspectionId: "check_seat_map", revealed: { realSeats: 20, phasedPriceKopecks: "16000000" }
+      },
+      {
+        id: "DOC-02", visitId: "D01_STUDENT", npcId: "npc_dasha_polynskaya",
+        visitor: "Даша Полынская", role: "Студенческий организатор",
+        type: "student_project_proposal", title: "Студенческий проект",
+        amountKopecks: "6500000", room: "Л-204", slotDayIndex: 3, slot: "14:00-17:00",
+        roomStatus: "request-not-booking",
+        inspectionId: "check_room_calendar", revealed: { roomReserved: false, mobilePriceKopecks: "3500000" }
+      },
+      {
+        id: "DOC-03", visitId: "D01_PARTNER", npcId: "npc_mark_sviridov",
+        visitor: "Марк Свиридов", role: "Представитель вымышленной фирмы «Пульс Инжиниринг»",
+        type: "partner_offer", title: "Партнёрское предложение",
+        conditionalRevenueKopecks: "12000000", recognizedRevenueKopecks: "0",
+        revenueEarliestDayIndex: 4, room: "Л-204", roomStatus: "request-not-booking", slotDayIndex: 3, slot: "14:00-17:00",
+        inspectionId: "check_contract_appendix",
+        revealed: {
+          onsiteMentorCostKopecks: "4000000", remoteMentorCostKopecks: "2500000",
+          remoteConditionalRevenueKopecks: "9000000"
+        }
+      }
+    ]
+  });
+  const getRoomConflictNotice = () => {
+    const requests = model.documents.filter((doc) => doc.roomStatus === "request-not-booking");
+    const key = (doc) => `${doc.room}|${doc.slotDayIndex}|${doc.slot}`;
+    const groups = new Map();
+    for (const doc of requests) {
+      const k = key(doc);
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(doc.id);
+    }
+    return freeze(Array.from(groups.values()).filter((ids) => ids.length > 1).map((ids) => ({
+      room: model.documents.find((doc) => doc.id === ids[0]).room,
+      slotDayIndex: model.documents.find((doc) => doc.id === ids[0]).slotDayIndex,
+      slot: model.documents.find((doc) => doc.id === ids[0]).slot,
+      documentIds: ids.slice(),
+      status: "unresolved-requests",
+      message: "Несколько заявок на одно время. Ни одна не является подтверждённой бронью."
+    })));
+  };
+  const api = freeze({
+    model,
+    formatRub,
+    getRoomConflictNotice,
+    getDocument(id) { return model.documents.find((doc) => doc.id === id) || null; },
+    getSummary() {
+      return freeze({
+        dayNumber: model.dayNumber,
+        openingBalance: formatRub(model.openingBalanceKopecks),
+        documentCount: model.documents.length,
+        pendingDocuments: model.documents.map((doc) => doc.id)
+      });
+    }
+  });
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.TAU_DAY01_READ_MODEL = api;
+})(typeof window !== "undefined" ? window : globalThis);
+</script><script>/* Isolated fictional browser demo; not Core, SaveService or authoritative GameState. */
+(function(root) {
+"use strict";
+const source = typeof module === "object" && module.exports ? require("./day01-read-model.cjs") : root.TAU_DAY01_READ_MODEL;
+const OPTIONS = Object.freeze({
+ "DOC-01": [{id:"full",label:"Полная закупка · 220 000 ₽",cost:"22000000",score:{Q:7,M:2,R:-1}},{id:"phase",label:"Поэтапная закупка · 160 000 ₽ (после проверки)",cost:"16000000",needsInspect:true,score:{Q:5,M:1,R:2}},{id:"reject",label:"Отклонить",cost:"0",score:{Q:-3,M:-2,R:-1}}],
+ "DOC-02": [{id:"full",label:"Поддержать проект · 65 000 ₽",cost:"6500000",score:{S:7,R:3}},{id:"mobile",label:"Мобильный формат · 35 000 ₽ (после проверки)",cost:"3500000",needsInspect:true,score:{S:5,R:2}},{id:"reject",label:"Отклонить",cost:"0",score:{S:-4,R:-2}}],
+ "DOC-03": [{id:"onsite",label:"Принять с очным наставником · 40 000 ₽",cost:"4000000",score:{E:6,Q:2}},{id:"remote",label:"Дистанционный наставник · 25 000 ₽ (после проверки)",cost:"2500000",needsInspect:true,score:{E:4,Q:1}},{id:"reject",label:"Отказаться",cost:"0",score:{E:-4,R:-1}}]
+});
+const clone = x => JSON.parse(JSON.stringify(x));
+function createGateway() {
+ const docs=source.model.documents, opening=BigInt(source.model.openingBalanceKopecks);
+ let balance=opening, selected=docs[0].id, closed=false, report=null;
+ const metrics={Q:52,S:48,M:50,E:45,R:47}, inspected=new Set(), decisions=new Map(), ledger=[];
+ function assertOpen(){if(closed)throw Error("День уже завершён");}
+ function valid(id){if(!docs.some(d=>d.id===id))throw Error("Неизвестный документ");}
+ function view(){return clone({dayIndex:0,dayNumber:1,selected,balanceKopecks:balance.toString(),metrics,inspected:[...inspected],decisions:[...decisions.values()],ledger,closed,report,documents:docs,conflicts:source.getRoomConflictNotice()});}
+ return Object.freeze({
+  view,
+  select(id){assertOpen();valid(id);selected=id;return view();},
+  inspect(id){assertOpen();valid(id);if(decisions.has(id))throw Error("Решение уже принято");inspected.add(id);return view();},
+  options(id){valid(id);return clone(OPTIONS[id].map(o=>({...o,enabled:!decisions.has(id)&&(!o.needsInspect||inspected.has(id))})));},
+  decide(id,choice){assertOpen();valid(id);if(decisions.has(id))throw Error("Повторное решение запрещено");
+   const option=OPTIONS[id].find(o=>o.id===choice);if(!option)throw Error("Неизвестное решение");
+   if(option.needsInspect&&!inspected.has(id))throw Error("Сначала проверьте документ");
+   const cost=BigInt(option.cost);if(cost>balance)throw Error("Недостаточно средств");
+   balance-=cost;for(const [k,v] of Object.entries(option.score))metrics[k]=Math.max(0,Math.min(100,metrics[k]+v));
+   const decision={id,choice,label:option.label,costKopecks:cost.toString()};decisions.set(id,decision);
+   if(cost)ledger.push({key:"day0:"+id,description:option.label,deltaKopecks:(-cost).toString()});
+   return view();
+  },
+  endDay(){if(report)return view();if(decisions.size!==3)throw Error("Сначала рассмотрите все три документа");
+   closed=true;report={dayIndex:0,openingKopecks:opening.toString(),closingKopecks:balance.toString(),decisions:[...decisions.values()],ledger:clone(ledger),metrics:clone(metrics),notes:["Бронь Л-204 не создавалась автоматически.","Доход партнёра при подписании не начисляется.","Отложенные последствия и SaveService не подключены."]};return view();
+  }
+ });
+}
+const api={createGateway};if(typeof module==="object"&&module.exports)module.exports=api;else root.TAU_DAY01_GAMEPLAY=api;
+})(typeof window!=="undefined"?window:globalThis);
+</script><script>(function(root){"use strict";
+const model=root.TAU_DAY01_READ_MODEL, api=root.TAU_DAY01_GAMEPLAY, d=root.document;
+if(!d||!model||!api)return;
+const g=api.createGateway(), el=id=>d.getElementById(id);
+function node(parent,tag,value){const n=d.createElement(tag);n.textContent=String(value);parent.appendChild(n);return n;}
+function money(v){const n=BigInt(v),sign=n<0n?"−":"";return sign+model.formatRub((n<0n?-n:n).toString());}
+function clear(id){el(id).replaceChildren();}
+function button(parent,label,fn,disabled=false,pressed=null){const b=node(parent,"button",label);b.type="button";b.disabled=disabled;if(pressed!==null)b.setAttribute("aria-pressed",String(pressed));b.addEventListener("click",()=>{try{fn();el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});return b;}
+function render(){
+ const focusedQueueIndex=Array.from(el("queue").querySelectorAll("button")).indexOf(d.activeElement);
+ const s=g.view(), item=s.documents.find(x=>x.id===s.selected), done=new Set(s.decisions.map(x=>x.id));
+ el("hud").textContent="День "+s.dayNumber+" · Бюджет: "+money(s.balanceKopecks)+" · Q "+s.metrics.Q+" / S "+s.metrics.S+" / M "+s.metrics.M+" / E "+s.metrics.E+" / R "+s.metrics.R;
+ el("progress").textContent="Решений: "+done.size+" из 3";
+ clear("queue");for(const doc of s.documents)button(el("queue"),doc.id+" · "+doc.visitor+(done.has(doc.id)?" ✓":""),()=>g.select(doc.id),false,doc.id===s.selected);
+ if(focusedQueueIndex>=0){const next=el("queue").querySelectorAll("button")[focusedQueueIndex];if(next)next.focus();}
+ el("doc-title").textContent=item.id+" · "+item.title;clear("doc-body");
+ node(el("doc-body"),"p",item.visitor+" — "+item.role);
+ node(el("doc-body"),"p","Запрос на Л-204, день 04, 14:00–17:00 (не бронь)");
+ if(item.amountKopecks)node(el("doc-body"),"p","Запрошено: "+money(item.amountKopecks));
+ else node(el("doc-body"),"p","Условный будущий доход: "+money(item.conditionalRevenueKopecks)+"; при подписании 0 ₽");
+ el("inspect").disabled=done.has(item.id)||s.inspected.includes(item.id);
+ el("inspection").textContent=s.inspected.includes(item.id)?"Проверка: "+Object.entries(item.revealed).map(([k,v])=>k+": "+(k.toLowerCase().includes("kopecks")?money(v):v)).join(" · "):"Проверка ещё не выполнена";
+ clear("choices");if(done.has(item.id))node(el("choices"),"p","Решение зафиксировано: "+s.decisions.find(x=>x.id===item.id).label);
+ else for(const option of g.options(item.id))button(el("choices"),option.label,()=>g.decide(item.id,option.id),!option.enabled);
+ el("end").disabled=done.size!==3;
+ if(s.closed){el("game").hidden=true;el("report").hidden=false;clear("report-body");
+ node(el("report-body"),"p","Старт: "+money(s.report.openingKopecks)+" · Остаток: "+money(s.report.closingKopecks));
+ const ul=node(el("report-body"),"ul","");for(const x of s.report.decisions)node(ul,"li",x.id+" — "+x.label);
+ node(el("report-body"),"h3","Ledger (только mock)");const ll=node(el("report-body"),"ul","");
+ for(const row of s.report.ledger)node(ll,"li",row.key+": "+money(row.deltaKopecks)+" · "+row.description);
+ node(el("report-body"),"p","Q/S/M/E/R: "+Object.values(s.report.metrics).join(" / "));
+ for(const note of s.report.notes)node(el("report-body"),"p",note);
+ el("report").focus();
+ }
+}
+el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);render();}catch(e){el("error").textContent=e.message;}});
+el("end").addEventListener("click",()=>{try{g.endDay();render();}catch(e){el("error").textContent=e.message;}});
+render();
+})(typeof window!=="undefined"?window:globalThis);
+</script></head>
+<body><header><p class="muted">ANDROID TOUCH · автономный единый HTML · откройте файл в браузере после сохранения на телефон; поворот экрана в альбомный режим рекомендован. Это не APK.</p><h1>Кабинет решений · День 01</h1><p class="muted">Вымышленная академия · OFFLINE WEB PROTOTYPE · НЕ Unity-игра · данные и эффекты только mock</p><p id="hud">Загрузка…</p><p class="warning">Л-204, день 04, 14:00–17:00: три конкурирующие заявки. Подписание не бронирует аудиторию. Партнёрские 120 000 ₽ не начисляются сейчас.</p></header>
+<div id="game" class="layout"><aside><h2>Очередь посетителей</h2><nav id="queue" aria-label="Выбор документа"></nav><p id="progress"></p></aside><main><section><h2 id="doc-title">Документ</h2><div id="doc-body"></div><p><button id="inspect" type="button">Проверить сведения</button></p><div id="inspection" aria-live="polite"></div><h2>Решение</h2><div id="choices"></div><p id="error" role="alert"></p></section><section><button id="end" type="button" disabled>Завершить день и открыть отчёт</button></section></main></div>
+<section id="report" hidden tabindex="-1"><h2>Отчёт по итогам Дня 01</h2><div id="report-body"></div><p>День завершён. Для новой демонстрации обновите страницу. Сохранение игры не реализовано.</p></section>
+<noscript>Для автономной демонстрации требуется включённый JavaScript.</noscript></body></html>

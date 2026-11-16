@@ -397,3 +397,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Actually executed in this pass:** GitHub API metadata reads only. No local Node, browser, Windows, Unity Editor, or ZIP extraction tests. CI status is a remote reported result, not an independently observed browser run.
 - **Remaining P0 acceptance gate:** extract this exact ZIP on Windows; double-click `day01-playable.html` with network disabled; complete three documents, L-204 conflict and EndDay; check budget/ledger, duplicate actions and no partner cash at signing. Record actual outcomes and screenshots/logs before `READY_FOR_OWNER_TEST`.
 - No Core/GameState modifications, no approval of real-world trademarks or third-party IP. PR remains Draft; no merge.
+
+
+## AutoDev 03 · 2026-11-17 · Android P0 #20 single-file touch bundle
+
+- **One scoped deliverable:** `prototypes/ui-day-one/day01-android-touch.html` embeds the existing Day01 read-model, mock gateway and UI scripts in their original order. No new gameplay rules, no external JS/CSS, no network requirement. Desktop `day01-playable.html` is unchanged.
+- Mobile shell: `viewport-fit=cover`, safe-area padding, landscape-first compact two-column layout, 48px minimum touch buttons, portrait stacking, no hover-only commands. This is a WEB prototype, **not an APK**.
+- Workflow uploads separate `day01-android-touch` artifact while retaining `day01-web-demo`. `test-day01-android-touch.cjs` statically checks the single-file bundle, three parseable scripts and mobile CSS; it is **not** a DOM/viewport/device test.
+- Android manual procedure: download the `day01-android-touch` Actions artifact, unzip, open `day01-android-touch.html` from the Android file manager in a browser supporting local HTML, rotate landscape, inspect and decide all three documents, EndDay. Some Android browsers block `file://` opening; record actual browser/device behavior before claiming success.
+- **Verification at authoring:** in-memory bundle assertions only; Node CI, 360x800/800x360 browser screenshots, actual Android file opening and Unity Editor **NOT RUN**. Verify exact new commit's workflow/artifact. No Core/GameState, IP/logo or main changes. PR #12 stays Draft.
