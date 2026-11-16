@@ -500,3 +500,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Artifact ZIP extraction and real Windows offline browser interactions (3 visitors/choices/EndDay, once-only postings, conditional partner cash) remain NOT RUN; `READY_FOR_OWNER_TEST` BLOCKED.
 - **Blocker 3:** Durable Core GameState DTO remains incomplete for persistence; Unity/Save→Load NOT RUN.
 - **Next:** inspect new QA Actions jobs and actual checkout SHAs, then independently extract/launch artifact offline and exercise all three decisions and EndDay. No merge/main writes.
+
+
+## 2026-11-16 14:43 UTC+4 — P0 #18: exact-UI-SHA QA CI evidence
+
+**One bounded verification:** inspected GitHub Actions [run #43824110415](https://github.com/rixed318/Probably-TAU/actions/runs/43824110415) for QA PR #10 at prior HEAD `a0562946dcc5f65f74a7efcc7ebfd0143d9b20da`. All **four jobs completed SUCCESS**: Python PCG32 oracle, NPC standalone .NET 8, UI/Content static regression, and Core ledger/snapshot standalone .NET 8. The workflow file at that QA HEAD pins and asserts exact read-only checkout refs: Core `0f5a85ef1136fec0cbc0285568b11985f0e7200c`, UI `8951e40eece975bec8cf731aae8c2746e97364f3`, Content `c2d9ba267549c4e1a404fd6fa68a7d1037566597`, NPC `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`. Thus the CI job success now covers the **same UI source SHA** as the previously documented UI web-demo artifact. No local tests executed this pass; CI jobs are not browser launch or Unity compilation. Artifacts query for this QA run returned **zero artifacts**, which does not invalidate the separately reported UI artifact but prevents independent ZIP execution proof.
+
+**Issue #18 verdict:** **BLOCKED / NOT READY_FOR_OWNER_TEST**. Actual downloaded artifact extraction and offline Windows browser interaction (three visitors/choices, EndDay, no double postings, conditional partner cash, integer finance) remain **NOT RUN**. Unity Editor/EditMode and Save→Load **NOT RUN**. No Core/NPC/UI/Content branch writes, no merge, no architectural approval.
+
+### Сводка для координатора 00 — 2026-11-16 14:43 UTC+4
+
+- **Latest PR HEADs at inspection:** #9 Core `50066c979b12`; #10 QA `a0562946dcc5` before this handoff commit; #11 Content `a241569d3c7d`; #12 UI `8951e40eece9`; #14 ADR `ebdc4be28afd`; #16 NPC `b2680f76b21f`. All listed PRs remain Draft; tested pinned refs differ from current Core/Content/NPC heads.
+- **Blocker 1:** No independent extraction/launch of the UI artifact in offline Windows/browser and interactive end-to-end Day 01 proof. Same-UI-SHA CI static/Node checks are now SUCCESS, not equivalent to browser proof.
+- **Blocker 2:** Pinned Core/Content/NPC refs are older than current PR heads; release candidate integration readiness needs re-pin/re-run after review.
+- **Blocker 3:** Durable Core GameState snapshot not yet confirmed complete for Save→Load; Unity tests NOT RUN.
+- **Recommended next step:** obtain the UI run artifact ZIP and perform a genuinely offline browser smoke test of all 3 visitors/choices/EndDay and finance invariants on UI SHA `8951e40e`; attach concrete evidence to Issue #18 before declaring READY_FOR_OWNER_TEST.
