@@ -37,6 +37,7 @@ namespace TAU.President.Tests.Core
             DurableFinanceRoundTrip();
             ScheduledEventQueueRoundTrip();
             DurableCompositionRoundTrip();
+            DurablePayablesRoundTrip();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -117,6 +118,44 @@ namespace TAU.President.Tests.Core
                 new ScheduledEventQueueSnapshot(
                     new[] { new ScheduledEventOccurrence("due-1", "event.x", 2, 5) },
                     new[] { "wrong" })));
+        }
+
+        private static void DurablePayablesRoundTrip()
+        {
+            var input = new List<DurablePayable> {
+                new DurablePayable("due-z", 3, 1200L),
+                new DurablePayable("due-b", 1, 500L),
+                new DurablePayable("due-a", 1, 700L)
+            };
+            var payables = new DurablePayablesSnapshot(input);
+            input.Clear();
+            var restored = payables.Restore();
+            Assert(restored.Outstanding.Count == 3);
+            Assert(restored.Outstanding[0].DueKey == "due-a" &&
+                restored.Outstanding[1].DueKey == "due-b" &&
+                restored.Outstanding[2].DueKey == "due-z");
+            Assert(restored.Outstanding[0].AmountKopecks == 700L);
+            Throws<ArgumentException>(() => new DurablePayablesSnapshot(new[] {
+                new DurablePayable("duplicate", 1, 100L),
+                new DurablePayable("duplicate", 2, 200L)
+            }));
+            Throws<ArgumentOutOfRangeException>(() => new DurablePayable("zero", 1, 0L));
+            Throws<NotSupportedException>(() =>
+                ((IList<DurablePayable>)restored.Outstanding).Add(
+                    new DurablePayable("extra", 4, 1L)));
+
+            var header = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 10000L, 10000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var composed = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(header, new LedgerSnapshot(10000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]),
+                payables).Restore();
+            Assert(composed.Payables.Outstanding.Count == 3 &&
+                composed.Payables.Outstanding[2].DueKey == "due-z");
+            Assert(composed.Finance.Ledger.CurrentBalanceKopecks == 10000L);
         }
 
         private static RandomStreamSnapshotDto streamsItem()
