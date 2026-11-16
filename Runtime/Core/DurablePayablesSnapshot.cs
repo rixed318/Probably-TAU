@@ -45,6 +45,19 @@ namespace TAU.President.Core
             });
         }
 
+        /// <summary>Fixed, ordered due-stage view for the closing day; no payments are posted.</summary>
+        public IReadOnlyList<DurablePayable> CaptureDueStage(int closingDayIndex)
+        {
+            if (closingDayIndex < 0) throw new ArgumentOutOfRangeException(nameof(closingDayIndex));
+            var due = new List<DurablePayable>();
+            foreach (var payable in outstanding)
+            {
+                if (payable.DueDayIndex > closingDayIndex) break;
+                due.Add(payable);
+            }
+            return due.AsReadOnly();
+        }
+
         public DurablePayablesSnapshot Restore()
         {
             return new DurablePayablesSnapshot(outstanding);
