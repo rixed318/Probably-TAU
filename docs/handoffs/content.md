@@ -278,3 +278,9 @@
 - Expected report: starting `200000000` kopecks, exactly two immediate ledger entries (`-22000000`, `-6500000`), closing `171500000` kopecks; Q=55, S=51, M=52, E=47, R=48. No partner earned income (`"0"`), no weekly settlement, next definition `E02`. All money fields are decimal strings.
 - **Actually executed:** six connector-JavaScript assertions over parsed fixture: 3/3 docs/visits, BigInt closing budget, five scores, exact two ledger entries / string format, explicit no-booking conflict, zero partner signature cash — **6/6 PASS**. **NOT RUN:** checkout Node CLI validators, browser/CI/Unity, Core integration; QA 05 must execute independent verification on committed SHA.
 - Fixture commit: `507ca8f6cb8d6c0d3222549342310f1ee4bd1c50`. Scope limited to Content; no Core/EventDirector, scenario/balance changes, main write or merge. NPC 02 typed fact producer API remains pending.
+
+## P0 Issue #18 — divergent inspected Day01 acceptance oracle (16.11.2026)
+
+- `DAY01_UI_FIXTURE.json` now has `acceptanceExamples` array with the original triple-claim scenario and a second inspected alternative. UI 03 / QA 05 should run **both**: LAB-2 + STUDENT-2 + PARTNER-2, inspect DOC-01 and DOC-03 (2 tokens), ROOM-AUTO (no booking), ending 180500000 kopecks; Q=54, S=49, M=51, E=46, R=47. Two immediate cash entries: -16000000 and -3500000. No partner earned income at signature; E09 report-only, DayIndex=0.
+- **Actual verification:** 2/2 connector-JavaScript oracle recalculations PASS using BigInt and independent score/ledger effect accumulation. **NOT RUN:** Node CLI, GitHub CI, browser, Unity. This is mock data, not proof of playable demo. UI 03 must adapt from singular `acceptanceExample` to plural `acceptanceExamples`; QA 05 must execute validators and browser smoke.
+- Content-only; no Core/EventDirector edits, no balancing or `main` merge.
