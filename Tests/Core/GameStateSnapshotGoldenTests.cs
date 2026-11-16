@@ -185,6 +185,13 @@ namespace TAU.President.Tests.Core
             Assert(next.Header.ProcessedDayKeys.Count == 1 &&
                 next.Header.ProcessedDayKeys[0] == "end-day:campaign:0");
             Assert(next.Restore().Finance.Ledger.CurrentBalanceKopecks == 10000L);
+            Assert(next.Header.ProcessedCommandIds.Count == 1 &&
+                next.Header.ProcessedCommandIds[0] == "end-day:campaign:0");
+            Assert(next.Finance.Receipts.Count == 1 &&
+                next.Finance.Receipts[0].CommandId == "end-day:campaign:0" &&
+                next.Finance.Receipts[0].PostingKeys.Count == 0 &&
+                next.Finance.Receipts[0].Fingerprint == "end-day-quiet-v1");
+            Assert(next.Restore().Finance.Receipts.Count == 1);
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(quiet, 1, 0));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(next, 0, 0));
             var payable = new DurableGameStateSnapshot(finance,

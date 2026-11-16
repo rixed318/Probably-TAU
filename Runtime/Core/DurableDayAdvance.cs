@@ -90,14 +90,19 @@ namespace TAU.President.Core
                     throw new InvalidOperationException("Day already processed.");
             var keys = new List<string>(h.ProcessedDayKeys);
             keys.Add(key);
+            var commandIds = new List<string>(h.ProcessedCommandIds);
+            commandIds.Add(key);
+            var receipts = new List<DurableCommandReceipt>(current.Finance.Receipts);
+            receipts.Add(new DurableCommandReceipt(key, "end-day-quiet-v1",
+                checked(h.Revision + 1), new string[0]));
             var next = new GameStateSnapshotDto(
                 checked(h.Revision + 1), h.CampaignId, h.CampaignSeed,
                 h.DifficultyId, h.ContentVersion, checked(h.DayIndex + 1),
                 false, h.Metrics, h.OpeningBalanceKopecks, h.BalanceKopecks,
-                h.RandomStreams, h.ProcessedCommandIds, keys,
+                h.RandomStreams, commandIds, keys,
                 h.PendingEventIds, h.CompletedEventIds);
             return new DurableGameStateSnapshot(
-                new DurableFinanceSnapshot(next, current.Finance.Ledger, current.Finance.Receipts),
+                new DurableFinanceSnapshot(next, current.Finance.Ledger, receipts),
                 current.Events, current.Payables);
         }
     }

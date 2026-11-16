@@ -376,3 +376,8 @@ Added `DurableDayAdvance.PreparePayablesDay`: validates expected day/revision an
 ## AutoDev 01 — zero-payment EndDay receipt (16.11.2026)
 
 **Issue #18 / #3, branch feature/core-2, PR #9.** `PreparePayablesDay` now records a committed receipt and command ID even when all due obligations are unaffordable (or none are due). Previously it advanced the day without a receipt, leaving no durable command provenance for the zero-posting transition. Existing ledger and cash stay unchanged; unpaid liabilities remain outstanding. Fingerprint retains the canonical `end-day-payables-v1:` prefix with an empty selection, and the receipt contains an empty posting-key list. Added a targeted no-cash EndDay golden case verifying durable restore and stale replay rejection. This does **not** implement NPC effects, weekly settlement, or Unity integration. .NET CI exact SHA must be checked after push; Unity Editor NOT RUN. QA #10: review zero-posting receipt semantics before Save wire adoption.
+
+
+## AutoDev 01 — Quiet EndDay durable receipt (16.11.2026)
+
+Issue #18, branch feature/core-2, PR #9. A successful PrepareQuietDay now appends the same end-day command ID to ProcessedCommandIds and a zero-posting DurableCommandReceipt (fingerprint end-day-quiet-v1, committed revision). Previously only ProcessedDayKeys advanced, losing command provenance across restore. No Ledger, RNG, event, payable, or other subsystem mutation. Targeted golden assertions cover durable receipt and restore; standalone .NET runner includes this suite. Unity Editor NOT RUN. This is not the full AdvanceDay: scheduled events and weekly settlement remain fail-closed. QA #10 should review zero-posting receipt semantics.
