@@ -418,3 +418,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** offline launch and gameplay/finance/EndDay smoke, plus downloadable web-demo artifact, remain unverified; no READY_FOR_OWNER_TEST.
 - **Blocker 3:** durable Core GameState snapshot/Save→Load and Unity Editor tests remain unverified.
 - **Next step:** inspect Actions for pinned QA SHA and UI demo artifact workflow; independently execute UI Day01 smoke against the exact pinned SHA, verify artifact extraction/offline launch and 3 visitors, choices, EndDay and integer/once-only cash before owner gate. Do not merge or edit foreign branches.
+
+
+## 2026-11-16 — QA 05 / Issue #18: pinned CI money-wire failure (independent review)
+
+**One bounded task:** inspected completed pinned GitHub Actions run [43772020964](https://github.com/rixed318/Probably-TAU/actions/runs/43772020964) and failing [cross-branch job 132989808026](https://github.com/rixed318/Probably-TAU/actions/runs/43772020964/job/132989808026), plus the exact pinned Content validator source. **Result: 3/4 jobs SUCCESS, 1/4 FAILURE.** Core .NET 8, PCG32 Python, and NPC .NET 8 jobs succeeded; UI Node mock (8), read-model (7), preview (12), art tests (8), Content event hooks (9) and cross-file checks (31) succeeded within the failing cross-branch job. The final `node Content/validate-money-wire.cjs` step FAILED with `AssertionError [ERR_ASSERTION]: expected field-specific diagnostic` at validator line 62, invoked at line 66; Node v24.22.2. No claims of all-green CI.
+
+**Root cause identified by source inspection (not a local reproduction):** `inspect()` constructs indexed diagnostic paths with brackets, e.g. `$.documentTypes[0].visible.amountKopecks`, but `failsAt()` asserts `errors[0].includes(path.join("."))`, expecting `documentTypes.0.visible.amountKopecks`. The first nested negative fixture on line 66 fails because of this formatting mismatch, even though `errors.length === 1` passed. Content owner should make expected paths match actual pointer syntax or assert against a shared formatter, preserving strict field-specific rejection. QA does not edit Content-owned validator.
+
+**Exact pinned checkout refs in workflow:** Core `0f5a85ef1136fec0cbc0285568b11985f0e7200c`; UI `cc44bf037f2aad91c41718ec2f3f336b7a0cd464`; Content `f3d9950e9e607176e28e0af70abc6bb9566555be`; NPC `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`. GitHub job steps confirmed the checkout SHA checks succeeded. Local Node/.NET/Python NOT RUN this pass; Unity Editor/EditMode and Save→Load NOT RUN. No downloadable artifact in this workflow run (artifacts API returned empty); offline browser gameplay, three interactive visitor decisions, EndDay exactly-once and conditional revenue remain NOT VERIFIED. Verdict **BLOCKED / NOT READY_FOR_OWNER_TEST**.
+
+### Сводка для координатора 00 — 2026-11-16
+
+- **PRs:** #9 Core (pinned `0f5a85ef`), #10 QA (this handoff commit follows), #11 Content (pinned `f3d9950e`), #12 UI (pinned `cc44bf03`), #16 NPC (pinned `d82bc6ee`); #14 ADR is not merged. These are *verified CI source refs*, not assertions about current branch HEADs.
+- **Blocker 1:** Content money-wire validator's nested-path assertion fails in pinned CI; owner 04 must fix and QA must rerun exact-SHA validation.
+- **Blocker 2:** Issue #18 lacks evidenced offline playable smoke and downloadable demo artifact; READY_FOR_OWNER_TEST prohibited.
+- **Blocker 3:** Complete durable GameState snapshot/Unity Editor validation unavailable; SaveService and Unity tests NOT RUN.
+- **Recommended next step:** Content owner fix the pointer-format assertion; QA repin updated Content SHA, rerun CI and separately verify offline demo artifact + 3 visitor/EndDay finance invariants before any readiness verdict. No merge/main/foreign branch writes.
