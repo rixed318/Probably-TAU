@@ -577,3 +577,29 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Tested UI artifact SHA differs from last observed newer PR #12 head; alternate paths and duplicate-click regression on the newer artifact not evidenced.
 - **Blocker 3:** Unity Editor and real Save→Load NOT RUN; durable GameState DTO readiness not independently confirmed.
 - **Recommended next step:** obtain an artifact from the newest UI exact SHA, extract and launch with networking disabled on Windows, verify three visitors, alternative choices, repeated EndDay, unique ledger keys and conditional partner revenue; then record browser evidence. Issue #18 remains **BLOCKED**, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-16 23:00 UTC+4 — Issue #19: immutable integration acceptance matrix (documentation only)
+
+**One bounded deliverable:** independently refreshed GitHub PR metadata and documented an exact-SHA integration matrix for coordinator 00. This is a *test plan*, not a claim that cross-branch integration has been executed. No changes to Core/NPC/Content/UI, no shared contracts approved. Read main README, AGENTS.md, CHAT_WORKFLOW.md, Issues #6/#8/#18/#19 and PRs #9/#10/#11/#12/#14/#16. The ADR remains unmerged and C0-v2 governs proposals.
+
+| Source | Latest PR HEAD observed 16 Nov 23:00 UTC+4 | Cross-branch integrated test on this exact SHA |
+| --- | --- | --- |
+| Core #9 | `eb3a74e8e58b82ba6a91545590f6296e0ebfd82c` | NOT RUN |
+| NPC #16 | `b2680f76b21f9d85e11911f94dd27460a9e9acf4` | NOT RUN |
+| Content #11 | `f92f4da7222a9dc60c07e6d870182e23d62ebaa2` | NOT RUN |
+| UI #12 | `df0b4bc2ce39e1fadd9e04db961c5c7fc23acdc6` | NOT RUN |
+| QA #10 | `8b1d2f35a92f332a1c36f27e97b804c81aed0ce7` (before this commit) | Earlier pinned CI only |
+| ADR #14 | `ebdc4be28afd56e82bc14ca397af88376ae59d20` | Documentation only |
+
+**Minimal first Unity Editor acceptance for #19 (future, not performed):** import the exact pinned integration commit in Unity 6.3 LTS; confirm no compile/asmdef errors; in PlayMode execute three unique document commands through the Core command processor with NPC visitor identities and Content values; check each command's single durable receipt, exactly-once ledger entries, expectedRevision and integer-kopeck balances; EndDay only after all three resolved; inspect serialized durable snapshot and replay after load without duplicate transactions. These checks are *proposed acceptance*, not a new architecture contract. Before the test, the coordinator must choose exact integration commit and record the four input SHAs; do not use mutable branch refs as evidence.
+
+**#18 artifact provenance:** GitHub Actions run [43913954397](https://github.com/rixed318/Probably-TAU/actions/runs/43913954397) currently exposes unexpired artifact `day01-web-demo`, ID `14247763859`, 8484 bytes. This pass checked artifact metadata **only**, not its ZIP bytes, source SHA linkage, browser interactions or Windows double-click. Coordinator reports two previous Chromium paths (1,675,000 and 1,780,000 RUB) but this pass did not independently rerun them. Latest UI PR HEAD `df0b4bc2` is not assumed identical to artifact source. Node/.NET/Python local tests NOT RUN; Unity Editor and Save→Load NOT RUN.
+
+### Сводка для координатора 00 — 2026-11-16 23:00 UTC+4
+
+- **Latest PRs/commits:** #9 `eb3a74e8`, #10 `8b1d2f35` before this documentation commit, #11 `f92f4da7`, #12 `df0b4bc2`, #14 `ebdc4be2`, #16 `b2680f76`. Main PR base `d673322c`; no main write.
+- **Blocker 1:** No cross-branch integration tests on the refreshed immutable SHA matrix; earlier green QA CI uses older pinned inputs.
+- **Blocker 2:** Latest UI exact SHA has not been matched to downloaded artifact and independently exercised via Windows offline double-click; #18 READY_FOR_OWNER_TEST remains BLOCKED.
+- **Blocker 3:** Unity Editor compile/PlayMode and real Save→Load still NOT RUN; no release claim.
+- **Recommended next step:** coordinator records one integration candidate commit with the four input SHAs, runs pure .NET/Content tests against it, then Unity 6.3 LTS import/PlayMode smoke. Separately, obtain exact-SHA UI artifact and test offline launch and replay. No merge until owner authorization.
