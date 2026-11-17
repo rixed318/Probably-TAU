@@ -199,6 +199,28 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoiceIdsByVisitId(null, out invalidMenu) || invalidMenu != null)
                 throw new Exception("Invalid visit choice menu must fail closed.");
 
+            // The shared menu adapter preserves Content order and inspection hints without UI duplication.
+            for (int i = 0; i < menuVisits.Length; i++)
+            {
+                IReadOnlyList<Day01Visitors.ChoicePreview> previews;
+                if (!Day01Visitors.TryGetChoicePreviewsByVisitId(menuVisits[i], out previews) ||
+                    previews == null || previews.Count != 3 ||
+                    !(previews is System.Collections.ObjectModel.ReadOnlyCollection<Day01Visitors.ChoicePreview>))
+                    throw new Exception("Invalid immutable preview menu: " + menuVisits[i]);
+                for (int j = 0; j < previews.Count; j++)
+                {
+                    string id = menuChoices[i][j];
+                    if (previews[j].ChoiceId != id || previews[j].VisitorCard.VisitId != menuVisits[i] ||
+                        previews[j].RequiresInspection != (id == "LAB-2" || id == "PARTNER-2"))
+                        throw new Exception("Preview menu order or inspection mismatch: " + id);
+                }
+            }
+            IReadOnlyList<Day01Visitors.ChoicePreview> invalidPreviews;
+            if (Day01Visitors.TryGetChoicePreviewsByVisitId(null, out invalidPreviews) || invalidPreviews != null ||
+                Day01Visitors.TryGetChoicePreviewsByVisitId("d01_lab", out invalidPreviews) || invalidPreviews != null ||
+                Day01Visitors.TryGetChoicePreviewsByVisitId("D01_UNKNOWN", out invalidPreviews) || invalidPreviews != null)
+                throw new Exception("Unknown preview menu must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
