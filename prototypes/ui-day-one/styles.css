@@ -232,3 +232,33 @@ dialog::backdrop { background:rgba(3,13,11,.83); backdrop-filter:blur(4px); }
 @media(prefers-reduced-motion:reduce) {
   *,*::before,*::after {animation:none!important;transition:none!important;scroll-behavior:auto!important;}
 }
+
+
+/* Android touch preview (#20): safe-area and coarse-pointer affordances.
+   Desktop mouse layout is unchanged; this is NOT a validated Android build. */
+@media (pointer:coarse) {
+  button, .button, .tab, .close-button, .link-button {
+    min-height:48px;
+    min-width:48px;
+    touch-action:manipulation;
+  }
+  .document-hotspot {
+    min-width:96px;
+    min-height:64px;
+    touch-action:manipulation;
+  }
+  .document-dialog, .report-dialog {
+    max-height:calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+  .toast {
+    bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+    right:calc(12px + env(safe-area-inset-right, 0px));
+  }
+}
+@media (pointer:coarse) and (orientation:landscape) and (max-height:500px) {
+  .topbar {padding-top:max(8px, env(safe-area-inset-top, 0px));}
+  .app-shell {padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);}
+  .office-scene {height:clamp(180px, 52dvh, 300px);}
+  .dialogue-panel {min-height:0;}
+  .document-dialog, .report-dialog {width:calc(100vw - 16px);}
+}
