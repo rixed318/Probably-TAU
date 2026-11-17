@@ -75,6 +75,24 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByChoiceId(null, out missingCard) || missingCard != null)
                 throw new Exception("Invalid choice must not resolve to a visitor card.");
 
+            // Save/restore navigation uses canonical visit IDs on both platforms.
+            string[] restoreVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            for (int i = 0; i < restoreVisits.Length; i++)
+            {
+                Day01VisitorCard restored;
+                if (!Day01Visitors.TryGetCardByVisitId(restoreVisits[i], out restored) ||
+                    restored.VisitId != cards[i].VisitId ||
+                    restored.DocumentId != cards[i].DocumentId ||
+                    restored.PlannedPortraitAssetId != cards[i].PlannedPortraitAssetId ||
+                    ReferenceEquals(restored, cards[i]))
+                    throw new Exception("Visit restore card mismatch: " + restoreVisits[i]);
+            }
+            Day01VisitorCard invalidRestore;
+            if (Day01Visitors.TryGetCardByVisitId("d01_lab", out invalidRestore) || invalidRestore != null ||
+                Day01Visitors.TryGetCardByVisitId("D01_UNKNOWN", out invalidRestore) || invalidRestore != null ||
+                Day01Visitors.TryGetCardByVisitId(null, out invalidRestore) || invalidRestore != null)
+                throw new Exception("Unknown visit restore must fail closed.");
+
             // Document-tap route must resolve the same immutable card on Windows/Android.
             string[] tapDocuments = { "DOC-01", "DOC-02", "DOC-03" };
             for (int i = 0; i < tapDocuments.Length; i++)

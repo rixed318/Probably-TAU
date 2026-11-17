@@ -176,6 +176,16 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a saved canonical visit ID to a fresh read-only card; no state mutation.</summary>
+        public static bool TryGetCardByVisitId(string visitId, out Day01VisitorCard card)
+        {
+            card = null;
+            VisitorInstance visitor;
+            if (!TryGetByVisitId(visitId, out visitor)) return false;
+            card = new Day01VisitorCard(visitor);
+            return true;
+        }
+
         /// <summary>Resolve a document tap to a read-only card; exact Content ID, no state mutation.</summary>
         public static bool TryGetCardByDocumentId(string documentId, out Day01VisitorCard card)
         {

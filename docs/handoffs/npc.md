@@ -309,3 +309,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **One bounded production increment (#20):** added pure C# `Day01Visitors.TryGetCardByDocumentId` for document-tap presentation on Windows and Android. Uses canonical `DOC-01/02/03` IDs, returns a fresh immutable `Day01VisitorCard`, fails closed for unknown/case-mismatched/null IDs; no Core state, ledger, Unity API or engine fork.
 - **Golden assertions added:** all three document-to-card mappings plus three invalid inputs in `VisitorIdentityGoldenTests`. **NOT RUN locally:** .NET/Unity/Android (SDK unavailable); CI status must be checked for resulting commit.
 - **Dependencies:** UI 03 owns document tap UI and actual PNGs; Content 04 owns canonical mappings. EventDirector still BLOCKED pending Core atomic transaction/receipt/earned-key ports and E03/E07 provenance. PR #16 Draft; no main merge.
+
+
+## AutoDev 02 — canonical visit restore card (2026-11-17)
+
+- **One scoped increment (#20):** added `Day01Visitors.TryGetCardByVisitId` to resolve persisted canonical Day01 visit IDs into fresh immutable, Unity-free `Day01VisitorCard` snapshots for Windows/Android navigation. It performs exact ordinal lookup, returns false/null for unknown IDs, and never authorizes decisions or changes Core state.
+- **Golden test:** added three successful visit restore assertions and invalid/case-mismatched/null failure assertions to `VisitorIdentityGoldenTests.RunAll()`. Canonical Content fixture IDs `D01_LAB`, `D01_STUDENT`, `D01_PARTNER` checked against PR #11; art IDs remain planned only.
+- **Validation:** source-to-fixture manual review; local .NET, Unity, Android tests **NOT RUN** in connector runtime. GitHub Actions result must be checked separately for the new SHA. One atomic commit includes runtime, test and handoff; see PR #16 commit history for SHA.
+- **Dependencies:** EventDirector still BLOCKED pending Core atomic transaction/receipt/earnedId ports; Content 04 owns E03/E07 provenance; UI 03 owns actual PNG and art manifest. No second GameState/ledger, no main merge.
