@@ -59,6 +59,17 @@ class CandidateAuditTests(unittest.TestCase):
         self.assertEqual(result['alpha_pixels'], 1)
         self.assertFalse(result['has_partial_alpha'])
 
+    def test_invisible_rgb_does_not_inflate_palette(self):
+        image = Image.new('RGBA', (320, 180), (24, 57, 47, 255))
+        for i in range(30):
+            image.putpixel((i, 0), (i, 0, 0, 0))
+        image.save(self.path)
+        result = audit(self.path)
+        self.assertEqual(result['alpha_pixels'], 30)
+        self.assertEqual(result['unique_colors'], 1)
+        self.assertTrue(result['within_24_colors'])
+        self.assertFalse(result['has_partial_alpha'])
+
     def test_over_24_colors_flagged(self):
         image = Image.new('RGB', (320, 180))
         for i in range(25):
