@@ -408,3 +408,9 @@ Three canonical portrait descriptions added to `Content/DAY01_ART_PROMPTS.md`, u
 One bounded Content validation change: `Content/validate-day01-acceptance.cjs` now requires a backticked production brief for every one of the nine IDs referenced by `DAY01_ART_LINKS.json` (three portraits, three standing sprites, three blank documents). This is **source-document coverage only**, not a check that PNG files exist or meet dimensions. No runtime, Core, EventDirector, balances, or Day01 choices changed.
 
 **Actual checks:** connector-side JavaScript preflight confirmed 9/9 unique IDs and 9/9 existing prompt references. **Not run:** Node CLI, GitHub Actions, Unity, browser, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on the latest branch SHA and UI 03 must independently produce and verify PNGs. Validator change commit: `acff0d2b5aa6342d3d8fcd6db7c2d5cf65887294`. No merge/main push.
+
+## 17.11.2026 — Unique art brief coverage guard (#21)
+
+**One bounded validation fix:** `Content/validate-day01-acceptance.cjs` now requires **exactly one** production-brief heading/bullet per each of the nine canonical `DAY01_ART_LINKS.json` IDs. Previously any backticked mention anywhere in the Markdown passed, even without an actual brief; duplicate brief headings were also unnoticed. Existing nine briefs remain unchanged. Commit `489d44dc728783828d51d688ff80a2e43e6a2f69` on `feature/content-7`.
+
+**Actually checked:** GitHub source read and connector-side JS preflight against the current Markdown: 9 distinct IDs and exactly 1 qualifying heading/bullet each (9/9). **Not run:** Node CLI, CI, Unity, browser, Android; QA 05 must run `node Content/validate-day01-acceptance.cjs` independently. No PNG delivery proven, no changes to Core, EventDirector, DayIndex, financial effects, content IDs or main. Issue #18 remains NOT READY_FOR_OWNER_TEST pending UI parity, binaries and QA.
