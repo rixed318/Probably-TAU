@@ -451,6 +451,24 @@ namespace TAU.President.Tests.Core
                 before.Header.Metrics.StaffMorale == 50 &&
                 before.Finance.Ledger.Entries.Count == 0 &&
                 before.Finance.Receipts.Count == 0);
+            // A due event at EndDay must fail closed after all three document choices.
+            // The original durable snapshot remains untouched despite staged postings.
+            var dueHeader = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new[] { "event-due" }, new string[0]);
+            var dueBefore = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(dueHeader, new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(
+                    new[] { new ScheduledEventOccurrence("event-due", "event.day01", 0, 1) },
+                    new string[0]));
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(dueBefore, 0, 0, choices));
+            Assert(dueBefore.Header.Revision == 0 && dueBefore.Header.DayIndex == 0 &&
+                dueBefore.Header.BalanceKopecks == 1000L &&
+                dueBefore.Finance.Ledger.Entries.Count == 0 &&
+                dueBefore.Finance.Receipts.Count == 0 &&
+                dueBefore.Events.Pending.Count == 1);
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
