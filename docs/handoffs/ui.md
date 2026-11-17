@@ -481,3 +481,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Commits:** `7024b649176086391f571f94c9be237669752bac` (audit) and `95c949469a8db6bf9b80dd12eb345774650fc634` (two synthetic alpha regression tests), plus this handoff commit. Branch: `feature/ui-5`, PR #12 remains Draft.
 - **Actual verification:** fetched current source and tests through authenticated GitHub before editing; GitHub Contents API acknowledged both commits. **Tests NOT RUN** in this pass: 8-test Pillow suite, CI, Android viewport/device, Unity. QA 05 should execute `python -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v` on checkout.
 - **BLOCKED:** actual office C001 PNG binary still not committed to GitHub; this pass does not change manifest status or imply art approval. No GameState/Core/main changes.
+
+
+## AutoDev 03 · 2026-11-17 · execute existing PNG audit regression (#21)
+
+- **One bounded task:** execute the existing eight candidate-audit regression tests and audit the real local C001 PNG. No source code, manifest, gameplay or production approval changed.
+- **Actually executed locally:** Python unittest with Pillow, eight tests passed (8/8, 0.095 s), covering 320x180, RGB/RGBA, SHA, palette limit, invalid PNG/mode, binary alpha and partial alpha. Local copies of `tools/art/audit_candidate.py` and `tools/art/test_audit_candidate.py` were reconstructed from the authenticated GitHub contents read for this pass; tests were not run in GitHub Actions.
+- **Actual local C001 audit:** `probably_tau_office_c001_320x180_candidate.png`: 320x180 RGB, 32781 bytes, 24 colors, 0 transparent pixels, no partial alpha, SHA256 `e0a1236ee20665f5b063fab7e9b0385cd5842fb03f3a0bcbd20a22d5c7d85232`; `production_ready=false`. This verifies file metadata and palette, not manual pixel cleanup or style approval.
+- **BLOCKED for art delivery:** real PNG binary still not committed to `feature/ui-5`. GitHub connector supports base64 blobs, but no verified bridge from local file bytes to the connector was available in this pass. No Android device, Unity Editor, or CI test performed. Do not merge PR #12 or touch main/Core.
