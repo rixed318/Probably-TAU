@@ -281,6 +281,24 @@ namespace TAU.President.Npc
             }
         }
 
+        /// <summary>Ordered, read-only choice previews for a Day01 visitor menu on Windows/Android.
+        /// UI hints only; Core owns eligibility, inspection receipts and state mutations.</summary>
+        public static bool TryGetChoicePreviewsByVisitId(string visitId, out IReadOnlyList<ChoicePreview> previews)
+        {
+            previews = null;
+            IReadOnlyList<string> choiceIds;
+            if (!TryGetChoiceIdsByVisitId(visitId, out choiceIds)) return false;
+            var result = new ChoicePreview[choiceIds.Count];
+            for (int i = 0; i < choiceIds.Count; i++)
+            {
+                ChoicePreview preview;
+                if (!TryGetChoicePreview(choiceIds[i], out preview)) return false;
+                result[i] = preview;
+            }
+            previews = Array.AsReadOnly(result);
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
