@@ -416,6 +416,23 @@ namespace TAU.President.Tests.Core
                 before.Finance.Ledger.Entries.Count == 0);
             var duplicate = new[] { choices[0], choices[1], choices[0] };
             Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicate));
+            // A different command ID cannot authorize a second choice for the same decision.
+            var duplicateDecision = new[] {
+                choices[0], choices[1],
+                new Day01DocumentChoice("doc-other",
+                    new DocumentDecisionEffects("a", 0L, 0, 0, 0, 0, 0))
+            };
+            Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicateDecision));
+            // No partial publication after a rejected third decision or duplicate ID.
+            Assert(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
+                before.Header.Metrics.EducationQuality == 50 &&
+                before.Header.Metrics.StudentSatisfaction == 50 &&
+                before.Header.Metrics.StaffMorale == 50 &&
+                before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0);
+            // A replay against a newer snapshot must reject the stale Day01 precondition.
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
+                result.Next.Header.Revision, 0, choices));
         }
 
         private static RandomStreamSnapshotDto streamsItem()

@@ -407,3 +407,10 @@ Added `Runtime/Core/DurableDocumentDecision.cs` with `DocumentDecisionEffects` (
 ## 17.11.2026 — Day01 detached three-choice orchestration (#19)
 
 Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document choices are staged through existing `DurableDocumentDecision.Prepare`, followed by canonical `DurableDayAdvance.PrepareDay` and `DurableDayReport.Capture`. Only the final detached snapshot is returned for publication; any rejected choice or EndDay leaves the original snapshot untouched. Duplicate command/decision IDs, stale revision, wrong day and invalid choice count fail closed. Golden checks exercise ordered three-choice ledger, Q/S/M/E/R, receipts, restore, EndDay, replay and rollback on insufficient funds. **This is not NPC availability/completion integration, content balance approval, or full typed event/weekly pipeline.** Do not expose the helper directly to UI until NPC/Content validation is connected. Unity 6.3 LTS Editor/Android SDK/NDK and local dotnet unavailable in this runtime; exact-SHA CI is the only available compile/test verification. Android APK remains BLOCKED. QA #10, NPC #16, Content #11 review requested. No main merge.
+
+
+## AutoDev 01 — Day01 duplicate decision regression (17.11.2026)
+
+**Scope:** one bounded test-only increment for Issue #19; no new Core API, NPC/Content contract, economy rule or Unity scaffold. Added a golden regression to `Tests/Core/GameStateSnapshotGoldenTests.cs` for distinct CommandId values referencing the same DecisionId, plus checks that rejected Day01 preparations do not publish partial Ledger, receipt, revision or metric changes. Also checks replay against an already advanced DayIndex. Existing `DurableDay01Flow.Prepare` remains the single Core-owned staged path.
+
+**Verification:** test source updated; local C# execution and Unity Editor compile unavailable in this environment. GitHub Actions result for this exact commit must be checked separately. Android APK remains blocked until real Unity 6.3 LTS and Android Build Support/SDK/NDK are available. PR #9 remains Draft; no main merge or Issue closure.
