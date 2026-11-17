@@ -414,3 +414,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded validation fix:** `Content/validate-day01-acceptance.cjs` now requires **exactly one** production-brief heading/bullet per each of the nine canonical `DAY01_ART_LINKS.json` IDs. Previously any backticked mention anywhere in the Markdown passed, even without an actual brief; duplicate brief headings were also unnoticed. Existing nine briefs remain unchanged. Commit `489d44dc728783828d51d688ff80a2e43e6a2f69` on `feature/content-7`.
 
 **Actually checked:** GitHub source read and connector-side JS preflight against the current Markdown: 9 distinct IDs and exactly 1 qualifying heading/bullet each (9/9). **Not run:** Node CLI, CI, Unity, browser, Android; QA 05 must run `node Content/validate-day01-acceptance.cjs` independently. No PNG delivery proven, no changes to Core, EventDirector, DayIndex, financial effects, content IDs or main. Issue #18 remains NOT READY_FOR_OWNER_TEST pending UI parity, binaries and QA.
+
+## Автономный проход 04 — глобальная уникальность Day01 ID (17.11.2026)
+
+**Одна задача:** расширена статическая проверка `Content/validate-day01-acceptance.cjs`: все `choiceId` уникальны между посетителями, все `inspection.id` уникальны между документами, а `requiresInspection` ссылается только на документ соответствующего визита. Это защита от неоднозначных UI/Core команд; существующие исходы, суммы, DayIndex=0, Definition IDs и графические ссылки не изменены.
+
+**Commit:** `10f49c3cb82d6418511104347060e3146dde1449`. **Проверки:** GitHub принял изменение файла; Node CLI, CI, Unity и Android в этом проходе не запускались. До интеграции QA 05 должен запустить `node Content/validate-day01-acceptance.cjs` и проверить отрицательные случаи с дублирующимися ID. PR #11 остаётся Draft, без merge в main.
