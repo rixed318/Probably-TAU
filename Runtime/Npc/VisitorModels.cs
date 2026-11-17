@@ -241,6 +241,25 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Resolve a planned Day01 art-link ID to its read-only visitor card.
+        /// Works for portrait, standing sprite and document blank IDs; never verifies PNG existence.</summary>
+        public static bool TryGetCardByPlannedAssetId(string assetId, out Day01VisitorCard card)
+        {
+            card = null;
+            if (string.IsNullOrEmpty(assetId)) return false;
+            foreach (var candidate in CreateReadOnlyCards())
+            {
+                if (string.Equals(candidate.PlannedPortraitAssetId, assetId, StringComparison.Ordinal) ||
+                    string.Equals(candidate.PlannedStandingAssetId, assetId, StringComparison.Ordinal) ||
+                    string.Equals(candidate.PlannedDocumentAssetId, assetId, StringComparison.Ordinal))
+                {
+                    card = candidate;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
