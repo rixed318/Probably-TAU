@@ -828,3 +828,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** exact-SHA HTML ZIP and Chromium 360x800/800x360 interactive Day01 acceptance remain NOT RUN.
 - **Blocker 3:** Unity Editor APK/physical Android and complete Save→Load regression remain NOT RUN.
 - **Recommended next step:** UI 03 deliver 3–5 original PNG binaries with SHA-256 and binary validation, then QA audit actual bytes. Separately run exact-SHA HTML mobile interaction tests. **READY_FOR_OWNER_TEST not granted.** QA-only handoff change, no main write/merge.
+
+
+## 2026-11-17 20:41 UTC+4 — QA 05: standalone PNG header/hash regression (#21)
+
+**One bounded task:** added `Tests/QA/test_png_integrity.py` in QA-owned `feature/save-6`, commit `2746222d55b889b73f28754551d3d6dbce139c3c`. Standard-library-only independent gate checks PNG signature, IHDR length/type, IHDR CRC, exact width/height and SHA-256. CLI accepts `--file PATH --width 320 --height 180 --sha256 HEX`. This does **not** decode complete PNG chunks, certify image appearance, or grant IP/rights approval; use Pillow or a full decoder for final art acceptance.
+
+**Actually executed locally:** `python3 /mnt/data/qa/test_png_integrity.py -v` -> **5 tests passed** (synthetic header fixture; invalid signature, wrong dimensions, wrong SHA, corrupt IHDR CRC). GitHub committed source was not separately downloaded and rerun after upload. PR #12 changed-file inventory checked at `371f8ae0da653fd5e436d936aac8fe00215d83d0`: 31 changed paths, **0 PNG**. Real PNG binary acceptance NOT RUN; no actual files to certify. Chromium touch 360x800/800x360, Node/.NET, Unity Editor, APK/Android and Save→Load NOT RUN this pass. No C0/ADR change.
+
+### Сводка для координатора 00 — 2026-11-17 20:41 UTC+4
+
+- **Heads before QA writes:** main `d673322cd9d0d366a27a57b81056504dfb26c731`; #9 Core `2961ab2ece1cdbbc0a8448268ab517b2d87149e2`; #10 QA `36964ac3c01f2777591f06ffc0fc1d6e6855950a` -> new test commit `2746222d55b889b73f28754551d3d6dbce139c3c` -> this handoff commit; #11 Content `baaee3d95714b203d19637a558488c589e6e8efc`; #12 UI `371f8ae0da653fd5e436d936aac8fe00215d83d0`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `e8672c866801076c62ce9e71c98642afbf26f0e4`. PR #9 C0-v2 and #14 ADR remain open/unmerged.
+- **Blocker 1:** #21 actual original PNG binaries and manifest SHA still not independently verified (zero PNG in PR #12 diff).
+- **Blocker 2:** #20 exact-SHA ZIP and Chromium touch interactive Day01 acceptance (3 docs, EndDay, ledger replay, 48dp, overflow) NOT RUN.
+- **Blocker 3:** Unity Editor APK/physical Android and complete Save→Load regression NOT RUN; stable integrated DTO/runtime needed.
+- **Recommended next step:** UI 03 commit 3–5 real original PNG binaries with expected SHA-256; QA run the new binary header/hash gate **and** full PNG decoding against those bytes, then pinned HTML mobile acceptance. No READY_FOR_OWNER_TEST, no main push/merge, no shared contract or IP approval.
