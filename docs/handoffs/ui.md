@@ -458,3 +458,10 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Assessment:** suitable for *composition review only*. A single flattened RGB office image does not meet the layered transparent world-prop contract in the Art Bible; no production approval or rights sign-off is implied. Keep manifest entries `planned` until binary is committed and reviewed.
 - **BLOCKED for GitHub binary:** local PNG bytes are not accessible to the authenticated GitHub connector, and local git failed DNS resolution of `github.com`. Thus no PNG blob/upload is claimed. Owner/Content 04 review, layer cleanup, and actual binary verification remain required.
 - **Not run:** Node gameplay, GitHub CI for this documentation-only commit, Android viewport/device, Windows browser, Unity Editor/PlayMode. No Core/GameState or main changes.
+
+
+## AutoDev 03 · 2026-11-17 · reproducible C001 PNG audit (#21)
+
+- **Bounded task:** add `tools/art/audit_candidate.py`, a read-only Pillow audit of candidate PNG dimensions, mode, SHA256, byte count, unique colors and most common RGB colors. Output JSON explicitly marks `production_ready: false`; it cannot approve artwork or replace manual pixel/rights QA.
+- **Executed locally:** `python tools/art/audit_candidate.py /mnt/data/probably_tau_office_c001_320x180_candidate.png` (equivalent local copy) and `python -m py_compile tools/art/audit_candidate.py`. Both passed. Observed 320×180, RGB, 24 colors, 32781 bytes, SHA256 `e0a1236ee20665f5b063fab7e9b0385cd5842fb03f3a0bcbd20a22d5c7d85232`.
+- **Still BLOCKED:** actual PNG bytes have not been committed; authenticated GitHub connector cannot directly read container files. No GitHub CI, Android hardware, Unity Editor, pixel-cluster cleanup or production approval claimed. No Core/main changes.
