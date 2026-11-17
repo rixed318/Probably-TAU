@@ -41,6 +41,24 @@ class CandidateAuditTests(unittest.TestCase):
         self.assertEqual(result['top_colors'][0]['rgb'], '#18392F')
         self.assertFalse(result['production_ready'])
 
+    def test_transparent_and_partial_alpha_reported(self):
+        image = Image.new('RGBA', (320, 180), (24, 57, 47, 255))
+        image.putpixel((0, 0), (24, 57, 47, 0))
+        image.putpixel((1, 0), (24, 57, 47, 128))
+        image.save(self.path)
+        result = audit(self.path)
+        self.assertEqual(result['alpha_pixels'], 2)
+        self.assertTrue(result['has_partial_alpha'])
+        self.assertFalse(result['production_ready'])
+
+    def test_binary_alpha_only_is_not_partial(self):
+        image = Image.new('RGBA', (320, 180), (24, 57, 47, 255))
+        image.putpixel((0, 0), (24, 57, 47, 0))
+        image.save(self.path)
+        result = audit(self.path)
+        self.assertEqual(result['alpha_pixels'], 1)
+        self.assertFalse(result['has_partial_alpha'])
+
     def test_over_24_colors_flagged(self):
         image = Image.new('RGB', (320, 180))
         for i in range(25):
