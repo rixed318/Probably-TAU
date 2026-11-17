@@ -446,3 +446,7 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - No new production contract, content financial rule, NPC document ownership logic, Unity scaffold or Android build.
 - Local `dotnet`, Unity Editor, Android SDK/NDK and adb not found (Java/Javac present). Test has NOT been executed locally; exact-SHA GitHub CI must be checked before claiming PASS.
 - Remaining integration dependency: NPC/Content-approved typed document availability/completion and due-event/weekly EndDay support. PR #9 stays Draft; no main merge.
+
+## AutoDev 01 — Day01 insufficient payable golden regression (18.11.2026)
+
+**Issue:** #19 / #3. Added one bounded golden regression in `Day01FlowGolden`: after three document decisions leave 750 kopecks, a due payable of 800 kopecks remains outstanding; EndDay advances exactly once, emits a receipt with no posting keys, creates no extra ledger posting, and reports the unpaid payable. Restore preserves the debt and replay rejects; original snapshot stays unchanged. No new policy or public API; no NPC/UI/Content changes. Local dotnet/Unity/Android toolchain unavailable; source-only review, exact-SHA CI to be checked. No Unity build or APK claimed.
