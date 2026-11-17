@@ -44,6 +44,7 @@ namespace TAU.President.Tests.Core
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
             DocumentDecisionTransactionGolden();
+            Day01FlowGolden();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -372,6 +373,49 @@ namespace TAU.President.Tests.Core
                 next.Header.BalanceKopecks == 750L &&
                 next.Finance.Receipts.Count == 2);
             Assert(DurableDayReport.Capture(after, next).Postings.Count == 0);
+        }
+
+
+        private static void Day01FlowGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var before = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(header, new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
+            var choices = new[] {
+                new Day01DocumentChoice("doc-1", new DocumentDecisionEffects("a", -100L, 1, 0, 0, 0, 0)),
+                new Day01DocumentChoice("doc-2", new DocumentDecisionEffects("b", -200L, 0, 2, 0, 0, 0)),
+                new Day01DocumentChoice("doc-3", new DocumentDecisionEffects("c", 50L, 0, 0, 3, 0, 0))
+            };
+            var result = DurableDay01Flow.Prepare(before, 0, 0, choices);
+            Assert(before.Header.Revision == 0 && before.Finance.Ledger.Entries.Count == 0);
+            Assert(result.Next.Header.DayIndex == 1 && result.Next.Header.Revision == 4 &&
+                result.Next.Header.BalanceKopecks == 750L &&
+                result.Next.Header.Metrics.EducationQuality == 51 &&
+                result.Next.Header.Metrics.StudentSatisfaction == 52 &&
+                result.Next.Header.Metrics.StaffMorale == 53);
+            Assert(result.Next.Finance.Ledger.Entries.Count == 3 &&
+                result.Next.Finance.Receipts.Count == 4 &&
+                result.Next.Finance.Ledger.Entries[0].PostingId == "decision:doc-1" &&
+                result.Next.Finance.Ledger.Entries[2].PostingId == "decision:doc-3" &&
+                result.Report.Postings.Count == 0);
+            Assert(result.Next.Restore().Header.BalanceKopecks == 750L);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next, 0, 0, choices));
+
+            var unaffordable = new[] {
+                choices[0], choices[1],
+                new Day01DocumentChoice("doc-3", new DocumentDecisionEffects("c", -1000L, 0, 0, 0, 0, 0))
+            };
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 0, 0, unaffordable));
+            Assert(before.Header.BalanceKopecks == 1000L &&
+                before.Finance.Receipts.Count == 0 &&
+                before.Finance.Ledger.Entries.Count == 0);
+            var duplicate = new[] { choices[0], choices[1], choices[0] };
+            Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicate));
         }
 
         private static RandomStreamSnapshotDto streamsItem()
