@@ -438,3 +438,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded change:** `Content/validate-day01-acceptance.cjs` now rejects *any* immediate `cashDelta` on a Day01 choice with `deferredPartnerRevenue`, even if its separate `signingCashDeltaKopecks` field remains `"0"`. This closes a static fixture loophole; Core alone owns later earned-income ledger postings. No fixture, balance, ID, DayIndex, runtime, or art change.
 
 **Validator commit:** `22a456307e25777d505c3577f0eb7fe798a9dfa0`. **Actually checked:** connector-side JS preflight on GitHub fixture: both existing deferred partner choices passed (2/2); injected immediate `cashDelta` mutation rejected. **Not run:** Node CLI, CI, Unity, browser, Android. QA 05 must run `node Content/validate-day01-acceptance.cjs` and negative fixture tests independently. PR #11 remains Draft, Issue #18 NOT READY_FOR_OWNER_TEST pending integration, QA and real PNGs. No main push/merge.
+
+## 18.11.2026 — Day01 document money and day-label guards (#7)
+
+**One bounded task:** validator checks opening budget and all visible/revealed document fields ending in `Kopecks` as signed Int64 decimal strings, plus each document's `visible.dayIndex === visible.day - 1`. This is a static fixture check only; no authored prices, DayIndex values, choices, Core, ledger, runtime or art assets changed.
+
+**Validator commit:** `d6a05fc84eceed11bfb15d9e806d0b7ae96ebad2`. **Verification:** source change accepted by GitHub; Node CLI, CI, Unity and Android not run. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations for fractional/overflow kopecks and mismatched document day labels. PR #11 remains unmerged.
