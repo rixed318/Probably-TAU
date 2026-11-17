@@ -751,3 +751,28 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** no actual mobile Chromium 360×800 / 800×360 gameplay, computed touch target, overflow, replay and partner-cash checks.
 - **Blocker 3:** real Unity/APK/Android, PNG binary verification and Save→Load tests absent.
 - **Recommended next step:** retrieve an immutable Actions artifact associated with UI `f509b64a...`, transfer extracted standalone HTML into Chromium test environment, then run both mobile viewports and finance/replay acceptance. Keep web mock distinct from Unity; no main push/merge or IP approvals.
+
+
+## 2026-11-17 14:00 UTC+4 — Issue #20 Android Unity APK acceptance/signing checklist (QA-only)
+
+**One bounded deliverable:** define a reproducible owner-test checklist for a *future real Unity Android APK*, without claiming a build exists or modifying Core/UI. Read current `main` AGENTS.md and CHAT_WORKFLOW.md, PRs #9/#10/#11/#12/#14/#16, Issues #6/#8/#18–#21. C0-v2 in #9 and ADR #14 remain feature-development guidance; QA approves no shared contract.
+
+**Preflight / provenance:** pin immutable Core/NPC/Content/UI commit SHAs and Unity editor version (Issue #19 targets Unity 6.3 LTS); record Android Build Support, SDK/NDK/OpenJDK versions; log clean checkout, build command, CI run URL, output APK filename, byte size and SHA-256. Do not treat branch names as immutable inputs. Record package ID, versionCode/versionName, min/target SDK and architecture actually produced. Fail the gate if any of these are unknown.
+
+**Signing / secrets:** use a dedicated test signing identity (debug signing acceptable for an explicitly labeled test APK); do not commit keystores, passwords, `*.keystore`, `*.jks`, `*.p12` or secret-bearing Unity settings. Prefer secure CI secret storage or a local signing setup outside the repository. Record only certificate fingerprint and signing mode, never credentials. Verify the resulting APK signature with Android SDK `apksigner verify --verbose --print-certs <apk>` and archive redacted logs.
+
+**Install / launch:** on a physical Android phone capture Android version, model, orientation, device resolution and `adb devices`; install with `adb install -r <apk>`, cold-launch via launcher/adb, disconnect network and confirm offline start. Collect `adb logcat` (redact personal data) for crashes/ANRs; capture screenshots for 360x800 portrait and 800x360 landscape where the device/emulator can reproduce those sizes. Emulator touch tests are distinct from physical-device results.
+
+**Gameplay gate:** from a fresh state process DOC-01/02/03 with recorded choices, verify exactly three unique ledger entries and integer-denominated balance; EndDay once, attempt double-tap/replay and ensure no duplicate financial postings; partner immediate recognized cash remains zero unless an approved contract changes it. Capture expected/actual balance, ledger IDs, report and screenshots. A second fresh run should exercise different choices. If stable Core DTO/SaveService is absent, mark Save→Load NOT RUN, never simulate it with browser localStorage.
+
+**Result policy:** PASS only with exact SHA, artifact hash, successful signature verification, install + offline launch and observed gameplay logs. Any missing evidence = BLOCKED/NOT RUN, not READY_FOR_OWNER_TEST. The browser single-file HTML and its touch emulation are a separate web-demo gate, not proof of an APK.
+
+**Actual tests this pass:** GitHub metadata and document reads only. No APK artifact or physical Android/Unity Editor available to this check; `apksigner`, `adb`, Unity tests, Node/.NET, Chromium and Save→Load **NOT RUN**. No PNG binary validation was performed. This is a checklist, not a test result.
+
+### Сводка для координатора 00 — 2026-11-17 14:00 UTC+4
+
+- **Verified PR HEADs before this QA commit:** #9 Core `98ea35dae6b43817eb1f2d140390e6fa1e064e21`; #10 QA `1682ee9ff6cb5c7859886f0a56f1b946b01e4202`; #11 Content `165215f13ce85ae0262131d1f92f0c67786f6f6f`; #12 UI `8ccb613dbff8d6b893eccf3de41ffc726036fb77`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `9e18b8e3568be94986372916e188ca25074cc61b`. QA HEAD will advance with this documentation-only commit.
+- **Blocker 1:** no immutable UI Actions ZIP retrieved/hashed and no Chromium touch 360x800 / 800x360 gameplay/replay run for latest UI SHA.
+- **Blocker 2:** no verified Unity APK, signing/install/offline launch or physical Android acceptance; checklist is prepared only.
+- **Blocker 3:** original PNG signatures/dimensions/manifest hashes and real Save→Load still unverified.
+- **Recommended next step:** retrieve exact-UI-SHA single-file Actions ZIP and execute mobile Chromium tests; separately ask Unity integrator to produce an SHA-pinned test APK with signature/hash and install evidence using the checklist above. No READY_FOR_OWNER_TEST, no merge/main write, no third-party IP authorization.
