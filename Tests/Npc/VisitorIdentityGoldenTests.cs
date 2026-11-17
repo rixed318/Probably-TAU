@@ -75,6 +75,23 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByChoiceId(null, out missingCard) || missingCard != null)
                 throw new Exception("Invalid choice must not resolve to a visitor card.");
 
+            // Document-tap route must resolve the same immutable card on Windows/Android.
+            string[] tapDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < tapDocuments.Length; i++)
+            {
+                Day01VisitorCard tapped;
+                if (!Day01Visitors.TryGetCardByDocumentId(tapDocuments[i], out tapped) ||
+                    tapped.VisitId != cards[i].VisitId ||
+                    tapped.VisitorId != cards[i].VisitorId ||
+                    tapped.PlannedDocumentAssetId != cards[i].PlannedDocumentAssetId)
+                    throw new Exception("Document tap card mismatch: " + tapDocuments[i]);
+            }
+            Day01VisitorCard invalidTap;
+            if (Day01Visitors.TryGetCardByDocumentId("doc-01", out invalidTap) || invalidTap != null ||
+                Day01Visitors.TryGetCardByDocumentId("DOC-04", out invalidTap) || invalidTap != null ||
+                Day01Visitors.TryGetCardByDocumentId(null, out invalidTap) || invalidTap != null)
+                throw new Exception("Unknown document tap must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };

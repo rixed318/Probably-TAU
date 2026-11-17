@@ -176,6 +176,16 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a document tap to a read-only card; exact Content ID, no state mutation.</summary>
+        public static bool TryGetCardByDocumentId(string documentId, out Day01VisitorCard card)
+        {
+            card = null;
+            VisitorInstance visitor;
+            if (!TryGetByDocumentId(documentId, out visitor)) return false;
+            card = new Day01VisitorCard(visitor);
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {

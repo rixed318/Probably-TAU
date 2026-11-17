@@ -302,3 +302,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **One bounded Issue #20/#21 increment:** `Day01VisitorCard.PlannedStandingAssetId` exposes the three draft `standingAssetId` strings from Content 04 `Content/DAY01_ART_LINKS.json`, on the same immutable Unity-free Windows/Android DTO. No asset binaries are claimed to exist and no gameplay state/ledger is modified.
 - **Regression added:** `VisitorIdentityGoldenTests` checks exact IDs for three visitors and stable repeat snapshots. IDs manually compared to Content branch JSON. **NOT RUN:** local .NET (SDK absent), Unity, Android; check Actions against this commit.
 - **Dependencies:** UI 03 owns original sprite PNGs and final art manifest; Content 04 owns mapping. EventDirector still blocked by Core transaction/receipt/earnedId ports and E03/E07 provenance. Only feature/npc-4; PR #16 Draft, no main merge.
+
+
+## AutoDev 02 — document-tap card lookup (2026-11-17)
+
+- **One bounded production increment (#20):** added pure C# `Day01Visitors.TryGetCardByDocumentId` for document-tap presentation on Windows and Android. Uses canonical `DOC-01/02/03` IDs, returns a fresh immutable `Day01VisitorCard`, fails closed for unknown/case-mismatched/null IDs; no Core state, ledger, Unity API or engine fork.
+- **Golden assertions added:** all three document-to-card mappings plus three invalid inputs in `VisitorIdentityGoldenTests`. **NOT RUN locally:** .NET/Unity/Android (SDK unavailable); CI status must be checked for resulting commit.
+- **Dependencies:** UI 03 owns document tap UI and actual PNGs; Content 04 owns canonical mappings. EventDirector still BLOCKED pending Core atomic transaction/receipt/earned-key ports and E03/E07 provenance. PR #16 Draft; no main merge.
