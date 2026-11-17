@@ -719,3 +719,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Recommended next step:** pin UI PR #12 commit SHA, download its Actions single-file artifact, verify extracted HTML SHA256 and execute 360x800 + 800x360 Chromium touch with three documents, replay and partner-cash assertions. Only after that evaluate WEB_READY; APK remains a separate gate.
 
 **Safety:** no shared architecture contracts approved, no main push/merge, no third-party IP authorization.
+
+
+## 2026-11-17 10:35 UTC+4 — exact UI HEAD standalone HTML provenance check (Issue #20)
+
+**One bounded task:** independently pin PR #12 HEAD `1b15c25c83d252b52213440d9d9edbdb790303e3` and read `prototypes/ui-day-one/day01-android-touch.html` at that exact commit. GitHub returned blob SHA `28450454bd89792d1d1ac16413ea6507f8b16dd8`, matching the previously audited blob. Static source checks (connector-fetched UTF-8): no external `<script src>`; no external stylesheet `<link>`; exactly 3 inline `<script>` tags; viewport meta present. A generic `http(s)` string scan is informational only and cannot establish offline runtime. The identical blob indicates **no HTML byte changes** across the audited commits, not that a downloadable Actions ZIP is identical. No browser execution or binary artifact retrieval in this pass.
+
+**Actual checks:** 4 static structural assertions PASS (no external script tags, no external CSS links, 3 inline scripts, viewport). Node, .NET, Chromium touch 360x800/800x360, finance replay, 48dp computed hit targets, overflow, APK/Unity/Save→Load, and PNG binary signatures **NOT RUN**. No claim of WEB_READY/READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-17 10:35 UTC+4
+
+- **Latest verified PR HEADs:** #9 Core `540945353ebb748fd7eff4625cbe4df5a2dd6cfd`; #10 QA `48c8b8ecc0baf0aa45bf639afc4403e2285f3da8` before this handoff; #11 Content `91e5413841a883f9055634d8682427e2e32f9a5f`; #12 UI `1b15c25c83d252b52213440d9d9edbdb790303e3`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `661ca75c2689bc29911ab00bcbd8b2f4a5da5d4b`. Main AGENTS.md and CHAT_WORKFLOW.md re-read; C0-v2/ADR are not merged into main.
+- **Blocker 1:** no exact-commit Actions artifact ZIP downloaded and hashed against the verified HTML blob.
+- **Blocker 2:** Chromium touch gameplay (portrait/landscape, 3 decisions, EndDay, replay, no partner immediate cash) and computed 48dp/overflow NOT RUN.
+- **Blocker 3:** PNG binaries, Unity Editor/APK/real Android and Save→Load NOT RUN.
+- **Recommended next step:** download the Actions ZIP associated with UI `1b15c25c...`, verify extracted HTML byte hash and execute the two touch viewport flows; do not treat the web prototype as a Unity build. No main write, merge or external IP authorization.
