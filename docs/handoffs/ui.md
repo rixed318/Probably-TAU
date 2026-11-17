@@ -510,3 +510,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Commits:** `160eebbd2039137b9b1bec2fff29760fe021deb6` (audit fix), `aab37cabee664809f078e8a8340b5d41f2472ff4` (new regression test); this handoff commit follows.
 - **Actually executed:** local targeted Python/Pillow reproduction of the updated Counter algorithm on a 320x180 RGBA image with alpha 255/128/1: PASS (1 visible RGB color, 57600 pixels). **Full repository unittest suite, GitHub CI, real C001 binary, Android and Unity NOT run** in this pass. The new test was committed but its execution has not been verified.
 - **BLOCKED for Issue #21 delivery:** C001 PNG binary still absent from GitHub; image generator output cannot be read directly by the GitHub connector. Needs binary upload, blob verification and owner visual review. PR #12 remains Draft. No main push/merge.
+
+
+## AutoDev 03 · 2026-11-17 · Issue #20 — coarse touch / Android safe-area CSS
+
+- **One bounded task:** added coarse-pointer-only minimum 48px interactive targets, 96×64px document hotspot, safe-area offsets for landscape and toast, and viewport-height-limited dialogs to existing desktop prototype CSS. Desktop fine-pointer styling remains unchanged. This is incremental preparation, **not** the required single-file offline mobile artifact.
+- **Code commit:** `a24939cf7d35be8b785a7619ae6e5a1ed4f84577` in `feature/ui-5`; file `prototypes/ui-day-one/styles.css`. No JS fixture, Content, Core/GameState or main edits.
+- **Actually verified:** authenticated GitHub Contents API accepted the code commit. CSS syntax was reviewed at source level; **no** browser rendering, Android viewport, touch hardware, Node, CI or Unity tests executed in this pass. Do not claim 48dp physical size on device until browser/device test.
+- **Remaining #20:** landscape/portrait screenshot regression, safe-area visual inspection, single-file offline bundle and actual Android playtest. **Remaining #21:** C001 real PNG binary upload and manual art review. PR #12 stays Draft; no merge.
