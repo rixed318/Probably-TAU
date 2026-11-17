@@ -430,3 +430,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Commit:** `8991642235a91c25fa8741c4cbf2819d4f9b6427` (test file); this handoff update follows as a documentation commit on the same feature branch.
 
 **Verification:** local dotnet/Unity/Android toolchains unavailable; C# runner and Unity Editor not executed locally. Exact-SHA GitHub Actions result must be checked before claiming test success. Android APK remains BLOCKED until real Unity 6.3 LTS and Android Build Support/SDK/NDK are available. PR remains Draft; no merge or Issue closure.
+
+
+## AutoDev 01 — Zero-cash document receipt regression (18.11.2026)
+
+**Issue #19 / PR #9; bounded Core golden-test increment.** Added a zero-cash document-decision case to `DocumentDecisionTransactionGolden`: revision and Q/S/M/E/R update, one durable receipt with no posting keys, no zero-amount Ledger entry, Save→Load receipt persistence and duplicate command rejection. The input snapshot remains unchanged. No production API, balance policy or NPC/Content contract changes.
+
+**Verification:** C# test authored but not locally executed (no dotnet); Unity Editor/Android Build Support/SDK/NDK/adb absent, so Unity compile and APK are BLOCKED. Exact-SHA CI must be checked independently. Android #20 and real Day01 NPC document binding #19 remain outstanding; no main merge or Issue closure.
