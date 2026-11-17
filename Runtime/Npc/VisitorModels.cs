@@ -224,6 +224,23 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a canonical Content visitor definition ID to a read-only card.
+        /// UI identity only; never authorizes a Core decision or confirms art availability.</summary>
+        public static bool TryGetCardByVisitorId(string visitorId, out Day01VisitorCard card)
+        {
+            card = null;
+            if (string.IsNullOrEmpty(visitorId)) return false;
+            foreach (var visitor in Create())
+            {
+                if (string.Equals(visitor.Archetype.DefinitionId, visitorId, StringComparison.Ordinal))
+                {
+                    card = new Day01VisitorCard(visitor);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
