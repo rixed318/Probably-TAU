@@ -430,6 +430,27 @@ namespace TAU.President.Tests.Core
                 before.Header.Metrics.StaffMorale == 50 &&
                 before.Finance.Ledger.Entries.Count == 0 &&
                 before.Finance.Receipts.Count == 0);
+            // Third-choice metric overflow must not publish the first two valid choices.
+            var excessiveMetric = new[] {
+                choices[0], choices[1],
+                new Day01DocumentChoice("doc-3",
+                    new DocumentDecisionEffects("c", 0L, 0, 0, 100, 0, 0))
+            };
+            Throws<ArgumentOutOfRangeException>(() =>
+                DurableDay01Flow.Prepare(before, 0, 0, excessiveMetric));
+            // EndDay command namespace is reserved, even for a document choice.
+            var reservedCommand = new[] {
+                choices[0], choices[1],
+                new Day01DocumentChoice("end-day:campaign:0",
+                    new DocumentDecisionEffects("c", 0L, 0, 0, 0, 0, 0))
+            };
+            Throws<ArgumentException>(() =>
+                DurableDay01Flow.Prepare(before, 0, 0, reservedCommand));
+            Assert(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
+                before.Header.BalanceKopecks == 1000L &&
+                before.Header.Metrics.StaffMorale == 50 &&
+                before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0);
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
