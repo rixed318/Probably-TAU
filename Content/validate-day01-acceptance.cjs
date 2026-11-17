@@ -106,3 +106,11 @@ for (const visit of fixture.visitors) {
 }
 assert.equal(assetIds.size, 9);
 console.log("PASS: Day01 art links 3/3 visits, 9 unique assets, cross-platform IDs");
+
+// Issue #21: every planned Day01 art ID must have an explicit production brief.
+// This checks source text only; it does not establish that PNGs exist.
+const artPrompts = fs.readFileSync(path.join(__dirname, "DAY01_ART_PROMPTS.md"), "utf8");
+for (const id of assetIds) {
+  assert.ok(artPrompts.includes("`" + id + "`"), "missing production brief for " + id);
+}
+console.log("PASS: 9/9 Day01 art IDs have production briefs (PNG delivery not checked)");
