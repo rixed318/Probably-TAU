@@ -420,3 +420,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **Одна задача:** расширена статическая проверка `Content/validate-day01-acceptance.cjs`: все `choiceId` уникальны между посетителями, все `inspection.id` уникальны между документами, а `requiresInspection` ссылается только на документ соответствующего визита. Это защита от неоднозначных UI/Core команд; существующие исходы, суммы, DayIndex=0, Definition IDs и графические ссылки не изменены.
 
 **Commit:** `10f49c3cb82d6418511104347060e3146dde1449`. **Проверки:** GitHub принял изменение файла; Node CLI, CI, Unity и Android в этом проходе не запускались. До интеграции QA 05 должен запустить `node Content/validate-day01-acceptance.cjs` и проверить отрицательные случаи с дублирующимися ID. PR #11 остаётся Draft, без merge в main.
+
+## 17.11.2026 — Full Day01 choice effect coverage (#7)
+
+**One bounded task:** `Content/validate-day01-acceptance.cjs` now statically checks every authored Day01 choice, including those absent from the two acceptance examples: known immediate effect kinds, signed Int64 decimal-string kopecks, valid score names, integer score deltas, and zero signing income for deferred partner revenue. No scenario/balance/ID/DayIndex changes; no Core or EventDirector implementation. Validator commit: `5c6408f0197fc9959fda45e4d22e10357cfccec8`.
+
+**Actual verification:** GitHub accepted validator commit; source readback still required after handoff. **Not run:** Node CLI, CI, Unity, browser, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative cases (invalid money/unknown score/unsupported effect) before integration. PR #11 stays Draft, no main merge.
