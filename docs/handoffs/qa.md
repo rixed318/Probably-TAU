@@ -890,3 +890,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** #21 no actual 3–5 PNG binaries in UI PR changed-file list to validate against manifest SHA and decode.
 - **Blocker 3:** real Unity Editor/APK/Android and integrated Save→Load NOT RUN; await stable approved Core DTO.
 - **Next step:** run `node --test Tests/QA/test_day01_offline_html.cjs` in a checkout containing PR #12 UI HTML and PR #10 QA test, recording exact combined SHA/tree and actual result. Then run pinned Chromium touch scenarios and verify PNG when delivered. **READY_FOR_OWNER_TEST withheld**. No merge/main push or IP approval.
+
+
+## 2026-11-18 — AutoDev 05: pinned Android touch Node gate (#20)
+
+**One bounded change:** QA workflow now checks out UI PR #12 at exact SHA `e09653994625adb6de312b2070b5e7745fc7cd83` (rather than the older UI SHA) and runs `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` in the read-only UI checkout. Commit `d04914c72cd06974b5d8d055f6af2169acc2c8b9` on `feature/save-6`. This is Node regression coverage, **not** Chromium touch emulation or Android APK. Existing Core/Content/NPC refs are deliberately unchanged; workflow is pinned and may lag future upstream changes.
+
+**Evidence:** GitHub source and PR metadata were read; UI PR #12 changed-files list includes the referenced test file. Workflow update was accepted by GitHub. **New CI execution and test results NOT VERIFIED / NOT RUN** at this handoff. No claim of green CI. Unity Editor, APK, device, Chromium 360x800 / 800x360, full Save→Load and actual PNG binary checks **NOT RUN**. No PNG files in the current PR #12 changed-filenames list (this does not establish repository-wide absence).
+
+### Сводка для координатора 00 — 2026-11-18
+
+- **PR heads inspected before QA commit:** #9 Core `2b070e74c3ef`; #10 QA `14dabde68095` → workflow commit `d04914c72cd0` → this handoff commit; #11 Content `d55b16385ce1`; #12 UI `e09653994625`; #14 ADR `ebdc4be28afd`; #16 NPC `a02d2240311d`. Read main AGENTS.md, CHAT_WORKFLOW.md, README and Issues #6/#8/#20/#21. C0-v2/ADR remains feature-only, not authorization to merge.
+- **Blocker 1:** New exact-SHA Android Node gate has no verified Actions result; Chromium mobile touch, ledger replay and EndDay interactive acceptance remain NOT RUN.
+- **Blocker 2:** No actual PNG binaries in UI PR #12 changed-file list to validate signature/dimensions/manifest SHA.
+- **Blocker 3:** No verified Unity Editor APK/device execution or stable complete snapshot DTO for production SaveService; Unity and Save→Load NOT RUN.
+- **Recommended next step:** inspect the GitHub Actions run for QA workflow commit `d04914c72cd0`; fix any actual Node failures, then perform Chromium portrait/landscape checks on the exact self-contained HTML artifact. Request UI 03 to commit 3–5 original PNGs with hashes. No merge/main write.
