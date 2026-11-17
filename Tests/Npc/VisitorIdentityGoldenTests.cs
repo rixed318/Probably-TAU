@@ -246,6 +246,31 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoicePreviewForVisit("D01_LAB", null, out invalidScoped) || invalidScoped != null)
                 throw new Exception("Invalid visit-scoped preview must fail closed.");
 
+            // Document-focused Android/Windows UI must never show another document's choices.
+            string[] scopedDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < scopedDocuments.Length; i++)
+            {
+                foreach (string id in menuChoices[i])
+                {
+                    Day01Visitors.ChoicePreview matched;
+                    if (!Day01Visitors.TryGetChoicePreviewForDocument(scopedDocuments[i], id, out matched) ||
+                        matched == null || matched.ChoiceId != id ||
+                        matched.VisitorCard.DocumentId != scopedDocuments[i])
+                        throw new Exception("Document-scoped preview mismatch: " + id);
+                    Day01Visitors.ChoicePreview wrongDocument;
+                    if (Day01Visitors.TryGetChoicePreviewForDocument(scopedDocuments[(i + 1) % scopedDocuments.Length], id, out wrongDocument) ||
+                        wrongDocument != null)
+                        throw new Exception("Cross-document choice leaked: " + id);
+                }
+            }
+            Day01Visitors.ChoicePreview invalidDocumentScope;
+            if (Day01Visitors.TryGetChoicePreviewForDocument(null, "LAB-1", out invalidDocumentScope) || invalidDocumentScope != null ||
+                Day01Visitors.TryGetChoicePreviewForDocument("doc-01", "LAB-1", out invalidDocumentScope) || invalidDocumentScope != null ||
+                Day01Visitors.TryGetChoicePreviewForDocument("DOC-01", "PARTNER-2", out invalidDocumentScope) || invalidDocumentScope != null ||
+                Day01Visitors.TryGetChoicePreviewForDocument("DOC-01", "lab-1", out invalidDocumentScope) || invalidDocumentScope != null ||
+                Day01Visitors.TryGetChoicePreviewForDocument("DOC-01", null, out invalidDocumentScope) || invalidDocumentScope != null)
+                throw new Exception("Invalid document-scoped preview must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
