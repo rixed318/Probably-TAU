@@ -172,6 +172,32 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByVisitorId(null, out unknownVisitorCard) || unknownVisitorCard != null)
                 throw new Exception("Invalid visitor definition must fail closed.");
 
+            // Day01 visitor menu uses canonical ordered choice IDs without mutable state.
+            string[][] menuChoices =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            string[] menuVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            for (int i = 0; i < menuVisits.Length; i++)
+            {
+                IReadOnlyList<string> menu;
+                if (!Day01Visitors.TryGetChoiceIdsByVisitId(menuVisits[i], out menu) ||
+                    menu == null || menu.Count != 3)
+                    throw new Exception("Missing Day01 choice menu: " + menuVisits[i]);
+                for (int j = 0; j < 3; j++)
+                    if (menu[j] != menuChoices[i][j])
+                        throw new Exception("Day01 choice menu order mismatch: " + menuVisits[i]);
+                if (!(menu is System.Collections.ObjectModel.ReadOnlyCollection<string>))
+                    throw new Exception("Choice menu must be immutable.");
+            }
+            IReadOnlyList<string> invalidMenu;
+            if (Day01Visitors.TryGetChoiceIdsByVisitId("d01_lab", out invalidMenu) || invalidMenu != null ||
+                Day01Visitors.TryGetChoiceIdsByVisitId("D01_UNKNOWN", out invalidMenu) || invalidMenu != null ||
+                Day01Visitors.TryGetChoiceIdsByVisitId(null, out invalidMenu) || invalidMenu != null)
+                throw new Exception("Invalid visit choice menu must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
