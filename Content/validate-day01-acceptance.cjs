@@ -9,6 +9,20 @@ assert.equal(fixture.visitors.length, 3);
 assert.equal(new Set(fixture.documents.map(d => d.id)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitId)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitorId)).size, 3);
+// Cross-document IDs must be globally unique; inspections may only reference their own document.
+const allChoiceIds = fixture.visitors.flatMap(visitor => visitor.choices.map(choice => choice.choiceId));
+assert.equal(new Set(allChoiceIds).size, allChoiceIds.length, "duplicate Day01 choiceId across visitors");
+const inspectionIds = fixture.documents.map(document => document.inspection.id);
+assert.equal(new Set(inspectionIds).size, inspectionIds.length, "duplicate inspection definition ID");
+for (const visitor of fixture.visitors) {
+  const document = fixture.documents.find(item => item.id === visitor.documentId);
+  assert.ok(document, "visitor document must exist");
+  for (const choice of visitor.choices) {
+    if (choice.requiresInspection !== null) {
+      assert.equal(choice.requiresInspection, document.id, "choice must inspect its own document");
+    }
+  }
+}
 assert.equal(fixture.roomConflict.roomId, "L-204");
 assert.equal(fixture.roomConflict.noAutomaticReservation, true);
 assert.equal(fixture.endDayReport.partnerEarnedIncomeKopecks, "0");
