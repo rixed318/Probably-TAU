@@ -875,3 +875,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Issue #20: exact-current-SHA HTML artifact and Chromium touch interactive acceptance remain NOT RUN.
 - **Blocker 3:** Unity Editor/APK/Android and durable integrated Save→Load regression remain NOT RUN; do not implement a parallel GameState.
 - **Recommended next step:** UI 03 deliver 3–5 real original PNG binaries with SHA-256 in PR #12; QA then run header/hash and full decode against actual committed bytes. Separately pin current HTML SHA and perform both Chromium touch viewport scenarios. **READY_FOR_OWNER_TEST withheld.** No main writes, merges, foreign-branch edits or IP approvals.
+
+
+## 2026-11-18 01:38 UTC+4 — QA 05: independent embedded Day01 gateway regression (#20)
+
+**One bounded change:** added `Tests/QA/test_day01_offline_html.cjs` to `feature/save-6`. It reads the *actual checked-out* `prototypes/ui-day-one/day01-android-touch.html`, extracts embedded read-model and gateway scripts into a Node VM context and asserts: exactly three documents and EndDay gate; inspection prerequisite and duplicate-debit rejection; ledger opening+sum=closing, unique ledger keys and zero immediate partner revenue. This is a Node logic regression, **not** a Chromium touch/geometry test or Unity test. Initial commit `39a44b31c7e1ab882b436f30c3be878f744ad8e6`; corrected closing balance fixture in `7dc09e0f44965d4bc6e4243a948e3c8d50ae3b60` (200000000 - 22000000 - 6500000 - 4000000 = 167500000).
+
+**Execution:** GitHub file writes and source inspection confirmed. `node --test Tests/QA/test_day01_offline_html.cjs` **NOT RUN** in a checked-out exact GitHub tree; no Node runtime evidence is claimed. Chromium 360×800 / 800×360, physical Android, Unity Editor/APK, Save→Load and real PNG decoding also **NOT RUN**. No shared contracts or other branches changed.
+
+### Сводка для координатора 00 — 2026-11-18 01:38 UTC+4
+
+- **QA PR #10:** new Node regression test committed as `7dc09e0f44965d4bc6e4243a948e3c8d50ae3b60` before this handoff commit. **UI PR #12:** exact checked-out branch HTML blob `28450454bd89792d1d1ac16413ea6507f8b16dd8`; PR changed-file inventory 31 paths, 0 PNG. PRs #9 (C0-v2), #11 (content), #12 (UI), #14 (ADR) and Issues #6/#8/#20/#21 reviewed; PR branch HEAD SHAs not independently retrieved in this pass. Main README, AGENTS.md and CHAT_WORKFLOW.md read, no main writes.
+- **Blocker 1:** #20 new Node test needs actual execution on exact checked-out UI/QA integration; Chromium touch 360×800 and 800×360, 48dp/overflow and interactive flows NOT RUN.
+- **Blocker 2:** #21 no actual 3–5 PNG binaries in UI PR changed-file list to validate against manifest SHA and decode.
+- **Blocker 3:** real Unity Editor/APK/Android and integrated Save→Load NOT RUN; await stable approved Core DTO.
+- **Next step:** run `node --test Tests/QA/test_day01_offline_html.cjs` in a checkout containing PR #12 UI HTML and PR #10 QA test, recording exact combined SHA/tree and actual result. Then run pinned Chromium touch scenarios and verify PNG when delivered. **READY_FOR_OWNER_TEST withheld**. No merge/main push or IP approval.
