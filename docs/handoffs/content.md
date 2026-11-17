@@ -380,3 +380,8 @@ Added `Content/DAY01_ART_LINKS.json`: three canonical visit/visitor/document IDs
 **Scope / #21:** в `Content/validate-day01-acceptance.cjs` добавлена проверка `DAY01_ART_LINKS.json` против канонического `DAY01_UI_FIXTURE.json`: три точных соответствия visit/visitor/document ID, девять уникальных ссылок на portrait/standing/document, непустые визуальные описания, DayIndex=0, Android+Windows, ART A, 320x180. Проверка не требует UI-ветки или Unity и не доказывает наличие PNG. Баланс, выборы, Core и EventDirector не менялись.
 
 **Запуск QA 05:** `node Content/validate-day01-acceptance.cjs` из корня репозитория. Нужен независимый запуск на текущем SHA. **Ограничение:** GitHub-сверка исходников не равна исполнению Node CLI/CI; наличие реальных PNG и UI-паритет проверяет 03/05.
+
+
+## 17.11.2026 — Three original Day01 art prompts (#21)
+
+Prepared `Content/DAY01_ART_PROMPTS.md` for exactly three review candidates (`irina_korneeva_standing`, `dasha_polynskaya_standing`, `mark_sviridov_standing`) tied to stable canonical visit/visitor/document IDs. Production and PNG upload remain owned by UI 03. No generated binaries, no changes to balances or runtime. Static validation before commit: 3/3 IDs match `DAY01_ART_LINKS.json`; all 3 canonical visit/visitor/document tuples match `DAY01_UI_FIXTURE.json`; no money/schema modifications. Node CLI, Unity, browser, Android and CI not executed. Issue #18 playable parity remains unverified.
