@@ -19,3 +19,18 @@ Original fictional setting; direction A, 320×180 logical world; crisp hard pixe
 
 ## Review checklist
 Compare with the nine stable asset IDs in `DAY01_ART_LINKS.json`; verify original character traits, silhouette readability at native UI size, consistent pixel grid/palette/lighting, no third-party IP or real academy branding, transparent PNG dimensions and manifest provenance. **No changes** to choices, cash deltas, Q/S/M/E/R, room L-204, deferred earned income, Core, or EventDirector.
+
+## Three canonical blank document art briefs (Issue #21)
+
+These are **image-production briefs only**, not documents with preprinted gameplay values. All three IDs exist in UI 03's `docs/art/ASSET_MANIFEST_D01.csv` with native size **192×240 px**, single frame, `70_ui_modal` layer, and blank dynamic text areas. Preserve portrait orientation and identical scale, lighting and paper margins; use transparent outside edges. Text, names, dates, L-204, prices, choice buttons, signatures, inspection findings and financial values **must be rendered from the canonical fixture by UI**, never baked into the PNG. The original fictional documents are distinct visually without real university seals or third-party branding.
+
+### `doc01_procurement_blank` — DOC-01 / D01_LAB
+“Create an original pixel-art **blank procurement request paper template**, 192×240 RGBA, cream paper with muted teal corner tabs, simple ruled boxes for equipment details and a tiny abstract empty grid motif (no numbers or labels). Reserved clear areas for dynamically rendered amount, room, date and inspection result. Restrained institutional stationery, sharp nearest-neighbor pixel edges, no letters, digits, logos, emblems, handwriting or actual signatures. Full page visible with safe margins.”
+
+### `doc02_student_proposal_blank` — DOC-02 / D01_STUDENT
+“Create an original pixel-art **blank student initiative proposal template**, 192×240 RGBA, warm ivory paper with a small indigo-and-copper geometric edge pattern and two large empty proposal panels. Friendly visual rhythm, distinguishable from the procurement sheet; leave uncluttered fields for dynamic project description, budget, room and inspection. No text, numbers, school branding, seals, stamps, logos or signatures; hard pixel edges and consistent lighting.”
+
+### `doc03_partner_letter_blank` — DOC-03 / D01_PARTNER
+“Create an original pixel-art **blank letter of intent for a wholly fictional partner**, 192×240 RGBA, pale cream paper, understated plum header stripe with a small abstract non-logo geometric accent, tidy empty sections for terms and conditional revenue. Clear reserved space for live UI-rendered contract terms and deferred-payment conditions. No preprinted text, currency, digits, real corporate identity, logos, stamps or signatures; crisp pixel-art edges, matching the other two pages.”
+
+**Acceptance / ownership:** UI 03 produces and reviews actual PNG binaries, provenance and SHA256; Content 04 supplies IDs and fictional visual intent only. QA 05 verifies IDs, 192×240 pixel dimensions, text-free blank templates, source-manifest mapping and the fixture's separate live data. No modifications to Core, EventDirector, score or cash effects.
