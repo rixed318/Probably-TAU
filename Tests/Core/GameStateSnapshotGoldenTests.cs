@@ -512,6 +512,30 @@ namespace TAU.President.Tests.Core
                 withPayable.Finance.Ledger.Entries.Count == 0);
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(paidRestored,
                 paidRestored.Header.Revision, 0, choices));
+            // A payable larger than the post-decision cash must remain outstanding.
+            // EndDay still commits exactly once with an empty posting receipt.
+            var withUnpaid = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] { new DurablePayable("day01-large-rent", 0, 800L) }));
+            var unpaidFlow = DurableDay01Flow.Prepare(withUnpaid, 0, 0, choices);
+            Assert(unpaidFlow.Next.Header.DayIndex == 1 &&
+                unpaidFlow.Next.Header.Revision == 4 &&
+                unpaidFlow.Next.Header.BalanceKopecks == 750L &&
+                unpaidFlow.Next.Finance.Ledger.Entries.Count == 3 &&
+                unpaidFlow.Next.Finance.Receipts.Count == 4 &&
+                unpaidFlow.Next.Finance.Receipts[3].PostingKeys.Count == 0 &&
+                unpaidFlow.Report.Postings.Count == 0 &&
+                unpaidFlow.Report.UnpaidPayables.Count == 1 &&
+                unpaidFlow.Report.UnpaidPayables[0].DueKey == "day01-large-rent");
+            var unpaidRestored = unpaidFlow.Next.Restore();
+            Assert(unpaidRestored.Payables.Outstanding.Count == 1 &&
+                unpaidRestored.Payables.Outstanding[0].DueKey == "day01-large-rent" &&
+                unpaidRestored.Header.BalanceKopecks == 750L);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(
+                unpaidRestored, unpaidRestored.Header.Revision, 0, choices));
+            Assert(withUnpaid.Header.Revision == 0 &&
+                withUnpaid.Payables.Outstanding.Count == 1 &&
+                withUnpaid.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
