@@ -502,3 +502,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Verification:** GitHub accepted both commits; source-level inspection only. The new regression test has **not been executed** in this pass, and the full test suite is **not claimed passing**. Reproduce with `cd tools/art && python -m unittest -v test_audit_candidate.py` after installing Pillow. The existing local C001 remains a candidate; no new binary was uploaded or verified in the GitHub tree. Real Android/Unity tests not performed.
 
 **BLOCKED for production art:** C001 PNG is still absent from `feature/ui-5` and requires a verified binary upload plus owner art review. PR #12 remains Draft; no merge or main push.
+
+
+## AutoDev 03 · 2026-11-17 · Issue #21 — RGB palette across alpha variants
+
+- **Single bounded task:** Fix candidate PNG palette counting when one RGB color occurs at several nonzero alpha values. The 24-color RGB budget now merges those alpha variants, while `has_partial_alpha` continues to report them independently. Fully transparent colors remain excluded. No asset, Core, manifest, Unity, Android or gameplay changes.
+- **Commits:** `160eebbd2039137b9b1bec2fff29760fe021deb6` (audit fix), `aab37cabee664809f078e8a8340b5d41f2472ff4` (new regression test); this handoff commit follows.
+- **Actually executed:** local targeted Python/Pillow reproduction of the updated Counter algorithm on a 320x180 RGBA image with alpha 255/128/1: PASS (1 visible RGB color, 57600 pixels). **Full repository unittest suite, GitHub CI, real C001 binary, Android and Unity NOT run** in this pass. The new test was committed but its execution has not been verified.
+- **BLOCKED for Issue #21 delivery:** C001 PNG binary still absent from GitHub; image generator output cannot be read directly by the GitHub connector. Needs binary upload, blob verification and owner visual review. PR #12 remains Draft. No main push/merge.
