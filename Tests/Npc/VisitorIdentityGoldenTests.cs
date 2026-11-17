@@ -130,6 +130,28 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByDocumentId(null, out invalidTap) || invalidTap != null)
                 throw new Exception("Unknown document tap must fail closed.");
 
+            // Portrait/visitor UI navigation resolves canonical Content definition IDs only.
+            string[] visitorDefinitions =
+            {
+                "npc_irina_korneeva", "npc_dasha_polynskaya", "npc_mark_sviridov"
+            };
+            for (int i = 0; i < visitorDefinitions.Length; i++)
+            {
+                Day01VisitorCard byVisitor;
+                if (!Day01Visitors.TryGetCardByVisitorId(visitorDefinitions[i], out byVisitor) ||
+                    byVisitor.VisitorId != visitorDefinitions[i] ||
+                    byVisitor.VisitId != cards[i].VisitId ||
+                    byVisitor.DocumentId != cards[i].DocumentId ||
+                    ReferenceEquals(byVisitor, cards[i]))
+                    throw new Exception("Visitor definition card mismatch: " + visitorDefinitions[i]);
+            }
+            Day01VisitorCard unknownVisitorCard;
+            if (Day01Visitors.TryGetCardByVisitorId("NPC_IRINA_KORNEEVA", out unknownVisitorCard) || unknownVisitorCard != null ||
+                Day01Visitors.TryGetCardByVisitorId("npc_unknown", out unknownVisitorCard) || unknownVisitorCard != null ||
+                Day01Visitors.TryGetCardByVisitorId("", out unknownVisitorCard) || unknownVisitorCard != null ||
+                Day01Visitors.TryGetCardByVisitorId(null, out unknownVisitorCard) || unknownVisitorCard != null)
+                throw new Exception("Invalid visitor definition must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
