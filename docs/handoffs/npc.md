@@ -288,3 +288,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Regression:** `VisitorIdentityGoldenTests` checks each planned portrait ID and replay stability. Manually compared source IDs with Content JSON; **NOT RUN locally:** dotnet/Unity/Android (SDK unavailable). GitHub Actions status must be verified against this new SHA.
 - **Coordination:** UI 03 owns actual PNGs and art manifest; Content 04 owns character/asset mapping. If draft IDs change, update this adapter in a reviewed PR. EventDirector remains **BLOCKED** on Core atomic event/receipt/earned-key ports and E03/E07 provenance.
 - **Safety:** feature/npc-4 only; Draft PR #16; no merge/main writes.
+
+
+## AutoDev 02 — planned blank document art IDs (2026-11-17)
+
+- **Issue #20/#21, one bounded increment:** added `Day01VisitorCard.PlannedDocumentAssetId` in the existing Unity-free read-only DTO. Canonical mapping from Content 04 `Content/DAY01_ART_LINKS.json` (feature/content-7): `D01_LAB` → `doc01_procurement_blank`, `D01_STUDENT` → `doc02_student_proposal_blank`, `D01_PARTNER` → `doc03_partner_letter_blank`. These are planned art references, **not** proof of PNG existence; document text and money remain dynamic UI data.
+- **Regression:** extended `VisitorIdentityGoldenTests` to assert exact planned document art IDs and stable snapshots on repeated creation, alongside portrait IDs. Source manually compared with Content art links; **NOT RUN locally:** .NET, Unity, Android (SDK/Editor unavailable). Check GitHub Actions for this commit before claiming green.
+- **Ownership/dependencies:** UI 03 owns PNGs/manifest; Content 04 owns fictional identities and draft art links. EventDirector remains blocked until Core 01 exposes atomic event/receipt/earned-key ports and confirms E03/E07 provenance. No second GameState, ledger or engine fork. Only `feature/npc-4`; PR #16 stays Draft; no main merge.

@@ -52,6 +52,8 @@ namespace TAU.President.Npc
         public string Role { get; private set; }
         /// <summary>Planned Content art-link ID; does not imply an existing PNG.</summary>
         public string PlannedPortraitAssetId { get; private set; }
+        /// <summary>Planned blank document art-link ID; document content stays in UI.</summary>
+        public string PlannedDocumentAssetId { get; private set; }
         public int DayIndex { get; private set; }
 
         internal Day01VisitorCard(VisitorInstance source)
@@ -62,9 +64,9 @@ namespace TAU.President.Npc
             Role = source.Archetype.Role;
             switch (source.InstanceId)
             {
-                case "D01_LAB": PlannedPortraitAssetId = "irina_korneeva_portrait_neutral"; break;
-                case "D01_STUDENT": PlannedPortraitAssetId = "dasha_polynskaya_portrait_neutral"; break;
-                case "D01_PARTNER": PlannedPortraitAssetId = "mark_sviridov_portrait_neutral"; break;
+                case "D01_LAB": PlannedPortraitAssetId = "irina_korneeva_portrait_neutral"; PlannedDocumentAssetId = "doc01_procurement_blank"; break;
+                case "D01_STUDENT": PlannedPortraitAssetId = "dasha_polynskaya_portrait_neutral"; PlannedDocumentAssetId = "doc02_student_proposal_blank"; break;
+                case "D01_PARTNER": PlannedPortraitAssetId = "mark_sviridov_portrait_neutral"; PlannedDocumentAssetId = "doc03_partner_letter_blank"; break;
                 default: throw new ArgumentException("Unknown Day01 portrait identity.", nameof(source));
             }
             DayIndex = source.DayIndex;

@@ -16,6 +16,12 @@ namespace TAU.President.Tests.Npc
                 "dasha_polynskaya_portrait_neutral",
                 "mark_sviridov_portrait_neutral"
             };
+            string[] plannedDocumentIds =
+            {
+                "doc01_procurement_blank",
+                "doc02_student_proposal_blank",
+                "doc03_partner_letter_blank"
+            };
             if (cards.Count != 3 || repeatedCards.Count != 3)
                 throw new Exception("Read-only visitor card count mismatch.");
             for (int i = 0; i < cards.Count; i++)
@@ -27,6 +33,8 @@ namespace TAU.President.Tests.Npc
                     cards[i].Role != visit.Archetype.Role ||
                     cards[i].DayIndex != 0 ||
                     cards[i].PlannedPortraitAssetId != plannedPortraitIds[i] ||
+                    cards[i].PlannedDocumentAssetId != plannedDocumentIds[i] ||
+                    cards[i].PlannedDocumentAssetId != repeatedCards[i].PlannedDocumentAssetId ||
                     cards[i].PlannedPortraitAssetId != repeatedCards[i].PlannedPortraitAssetId ||
                     cards[i].VisitId != repeatedCards[i].VisitId ||
                     ReferenceEquals(cards[i], repeatedCards[i]))
