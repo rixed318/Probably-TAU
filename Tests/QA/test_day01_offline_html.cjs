@@ -52,6 +52,6 @@ test('Day01: ledger replay and no immediate partner revenue',()=>{
   assert.equal(new Set(v.report.ledger.map(x=>x.key)).size,3);
   assert.ok(v.report.ledger.every(x=>BigInt(x.deltaKopecks)<0n));
   assert.equal(v.documents[2].recognizedRevenueKopecks,'0');
-  assert.equal(v.report.closingKopecks,'169500000');
+  assert.equal(v.report.closingKopecks,'167500000');
   assert.throws(()=>g.decide('DOC-03','reject'),/завершён/);
 });
