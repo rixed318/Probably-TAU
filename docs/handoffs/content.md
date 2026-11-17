@@ -426,3 +426,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** `Content/validate-day01-acceptance.cjs` now statically checks every authored Day01 choice, including those absent from the two acceptance examples: known immediate effect kinds, signed Int64 decimal-string kopecks, valid score names, integer score deltas, and zero signing income for deferred partner revenue. No scenario/balance/ID/DayIndex changes; no Core or EventDirector implementation. Validator commit: `5c6408f0197fc9959fda45e4d22e10357cfccec8`.
 
 **Actual verification:** GitHub accepted validator commit; source readback still required after handoff. **Not run:** Node CLI, CI, Unity, browser, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative cases (invalid money/unknown score/unsupported effect) before integration. PR #11 stays Draft, no main merge.
+
+## 17.11.2026 — Deferred partner provenance guard (#7)
+
+**One bounded task:** extended `Content/validate-day01-acceptance.cjs` to reject deferred partner revenue before `DayIndex=4`, missing either `E03_mentor_paid` or `E07_delivered`, and drift from the canonical `partner/{sourceInstanceId}/delivery` earned receipt key. This is static Content validation only: Core owns receipt provenance, idempotency and all ledger postings. Day01 choices, Q/S/M/E/R, Int64 kopecks, Definition IDs and Windows/Android art references remain unchanged.
+
+**Validator commit:** `5ba31519d0e1ca5cb5c2f20091c5c55f94d227d1`. **Actually checked:** connector-side JS preflight of the existing fixture found 2 deferred choices with earliest day >=4, both facts, and the correct receipt template. GitHub accepted validator update. **Not run:** Node CLI, CI, Unity, browser, Android; QA 05 must run `node Content/validate-day01-acceptance.cjs` and negative fixture mutations before integration. PR #11 remains Draft; no merge or main push. Issue #18 remains NOT READY_FOR_OWNER_TEST.
