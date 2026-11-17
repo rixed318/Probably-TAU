@@ -860,3 +860,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** #20 exact-SHA offline HTML ZIP and Chromium touch 360×800 / 800×360 (three documents, EndDay, ledger replay, 48dp and overflow) **NOT RUN**.
 - **Blocker 3:** Unity Editor, real APK/Android device and full Save→Load regression **NOT RUN**; stable integrated DTO/runtime still required.
 - **Recommended next step:** UI 03 commits original PNGs and manifest hashes; QA independently decodes and verifies 3–5 actual binaries, then tests pinned Day01 HTML in mobile Chromium. Keep READY_FOR_OWNER_TEST withheld. No push to main, no merge, no IP approval.
+
+
+## 2026-11-17 23:59 UTC+4 — QA 05: current UI PNG delivery gate (#21)
+
+**One bounded independent verification:** queried current PR #12 HEAD `2327469711c18123b8de62a1801166482d775b36` and the complete paginated changed-filename inventory via GitHub. It contains **31 paths and 0 .png files**. The PR does include `tools/art/audit_candidate.py`, tests, a CSV manifest, and `prototypes/ui-day-one/day01-android-touch.html`, but source/test/manifest paths are not binary image delivery. This is a PR-diff inventory result, **not** a repository-wide absence claim. Issue #21 acceptance of 3–5 committed PNGs cannot be certified from this PR. No source files changed in other branches.
+
+**Actually executed:** GitHub authenticated metadata and PR changed-file inventory checks. **NOT RUN:** local Python/Node/.NET tests, real PNG signature/dimensions/SHA-256/decode (no PNG in PR diff), Chromium touch 360×800/800×360 and three-doc/EndDay/ledger/48dp/overflow interactions, Unity Editor, APK/physical Android, Save→Load. Earlier 10/10 reconstructed synthetic tests are not a new execution. No new C0/ADR/IP approval.
+
+### Сводка для координатора 00 — 2026-11-17 23:59 UTC+4
+
+- **Verified PR HEADs:** #9 Core `efec6461288211eef3de4d459a8333aa758d2932`; #10 QA before this handoff `69dde1f4505f5bbd1b8065e61cb9e2e771f351ea`; #11 Content `c1ccc28311091ba978f51e3a0bc0d891faa4736b`; #12 UI `2327469711c18123b8de62a1801166482d775b36`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `79c6a5b27ce1a21df9407bb8e00ce043b1df8d12`. Main README read on main; no independent main HEAD commit lookup. PR #9 C0-v2 and PR #14 ADR remain open Draft, not merged.
+- **Blocker 1:** Issue #21: 0 PNG in current UI PR diff; actual 3–5 original PNG binaries, their dimensions, provenance and manifest SHA-256 are not certified.
+- **Blocker 2:** Issue #20: exact-current-SHA HTML artifact and Chromium touch interactive acceptance remain NOT RUN.
+- **Blocker 3:** Unity Editor/APK/Android and durable integrated Save→Load regression remain NOT RUN; do not implement a parallel GameState.
+- **Recommended next step:** UI 03 deliver 3–5 real original PNG binaries with SHA-256 in PR #12; QA then run header/hash and full decode against actual committed bytes. Separately pin current HTML SHA and perform both Chromium touch viewport scenarios. **READY_FOR_OWNER_TEST withheld.** No main writes, merges, foreign-branch edits or IP approvals.
