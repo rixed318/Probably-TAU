@@ -356,3 +356,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Commits:** production `ae8065a91c18601e7e53eda71dd7102fdc417317`; golden assertions `1c2b292cecff12984a57e43bbadaca4b81591400`; test import fix `5b2334dfd75b2d0231067688f42821ad23062a05`. Handoff commit follows separately.
 - **Verification:** manual source review against `Content/DAY01_UI_FIXTURE.json` in `feature/content-7`; assertions cover all nine IDs/order, read-only collection type, and three invalid inputs. Executable local .NET, Unity and Android tests **NOT RUN**; CI must be verified for exact final head. Test entry: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 - **Dependencies / BLOCKED:** full EventDirector still needs Core-owned atomic transaction/receipt and earned-key deduplication ports; Content/Core must confirm E03/E07 provenance. UI 03 owns real original PNGs, planned asset IDs do not prove files exist. PR #16 remains Draft; no main push/merge.
+
+
+## AutoDev 02 — immutable Day01 choice preview menus (2026-11-17)
+
+- **One scoped production increment (#4/#20):** added `Day01Visitors.TryGetChoicePreviewsByVisitId(string, out IReadOnlyList<ChoicePreview>)`. Windows/Android UI receives ordered, immutable previews for each of three Day01 visitors; `LAB-2` and `PARTNER-2` retain inspection hints. This is read-only UI data, not Core authorization or inspection completion.
+- **Canonical source:** Content PR #11 Day01 IDs, with art-link coordination from `Content/DAY01_ART_LINKS.json` on `feature/content-7`. No PNGs created, no branding/IP approval claimed.
+- **Production SHA:** `1d8c7fda51c44627bd3313a44c7b9917da943460`. **Test-source SHA:** `5b18d3ea1711f4d4f6d11e2d22d1790aed571e03`. PR #16 remains Draft; handoff SHA is the commit updating this file.
+- **Verification:** manually compared nine choice IDs and inspection mapping against existing fixture-based NPC definitions. Added golden assertions for three ordered menus, read-only wrappers and invalid IDs. **NOT RUN:** .NET execution, Unity Editor/PlayMode, Android build/device test. No successful CI asserted for these SHAs.
+- **Dependencies/BLOCKED:** full EventDirector still needs Core-owned atomic transaction/receipt/earned-key APIs, agreement occurrence identity, and Content/01 confirmation of E03/E07 provenance. C0-v2 PR #9 and ADR PR #14/#17 remain Draft; no GameState/ledger fork, no main push/merge.
