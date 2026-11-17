@@ -793,3 +793,21 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** exact-SHA Actions single-file ZIP and Chromium touch 360x800/800x360 gameplay/replay/48dp geometry remain NOT RUN.
 - **Blocker 3:** real Unity Editor/APK/Android and Save→Load acceptance NOT RUN.
 - **Next:** UI 03 commits 3–5 PNGs with provenance/hash; QA independently verifies bytes and dimensions. In parallel, retrieve exact-SHA HTML artifact for mobile Chromium acceptance. No READY_FOR_OWNER_TEST, no main push/merge or third-party IP approval.
+
+
+## 2026-11-17 — QA 05: independent alpha-audit logic probe (#21)
+
+**One bounded task:** inspect exact GitHub UI source `tools/art/audit_candidate.py` (blob `9f57e3890aa498cf32b9eea7830b40e8123ed0fb`) and `tools/art/test_audit_candidate.py` (blob `2636e0b4a6b7b48204265fa0fe679fb82905cf5f`) on UI HEAD `0d06323f18f7cac395572482ee22184b62f7a298`. Verify the recently added transparent/partial-alpha counting rules independently. This is NOT binary art acceptance, and no architecture/API change is proposed.
+
+**Actually executed locally:** Python 3 + Pillow 12.3.0, four independent 320x180 image probes using the same Counter/alpha expressions as the GitHub source: RGB opaque -> 0/false; RGBA alpha 0 -> 57600/false; RGBA alpha 128 -> 57600/true; RGBA alpha 255 -> 0/false. **4/4 PASS** for this isolated logic probe. The test uses a locally transcribed/reimplemented expression, not a checkout of the repository module; **the repository's 8-test unittest suite was NOT RUN**. Git clone failed with `Could not resolve host: github.com`; authenticated GitHub connector read succeeded. No actual candidate PNG bytes were read, and PNG signature/dimensions/SHA256 of committed production assets remain **NOT RUN**.
+
+**Source review limitation:** `production_ready: False` is hardcoded, as appropriate for candidate audit. Counts are over raw RGBA tuples; transparent pixels with differing hidden RGB can inflate `unique_colors` (not a blocking defect for this candidate-only diagnostic, but should not be treated as palette certification). No Unity Editor, Android APK/device or Chromium touch runtime test executed in this pass.
+
+### Сводка для координатора 00 — 2026-11-17 17:23 UTC+4
+
+- **Verified branch heads before this QA update:** main `d673322cd9d0d366a27a57b81056504dfb26c731`; PR #9 Core `98ea35dae6b43817eb1f2d140390e6fa1e064e21`; PR #10 QA `448e790f04cf92fdf4af6adf4df47dde20fda842` (handoff commit follows); PR #11 Content `e451699f14cfdcb2c12513d1d2f6619aa32ef5e7`; PR #12 UI `0d06323f18f7cac395572482ee22184b62f7a298`; PR #14 ADR remains unmerged. PRs #9/#10/#11/#12 and Issues #6/#8/#20/#21 were read via GitHub; no merge performed.
+- **Blocker 1:** Issue #21 still lacks verified committed original PNG binaries; synthetic alpha probes do not verify the claimed C001 candidate or manifest SHA.
+- **Blocker 2:** exact-SHA Android single-file artifact and Chromium 360x800 / 800x360 interactive paths (3 docs, EndDay, ledger replay, 48dp/overflow) remain NOT RUN in this pass; container cannot resolve github.com for checkout.
+- **Blocker 3:** Unity Editor APK/Android-device and full Save→Load regression remain NOT RUN; final persistence requires stable integrated DTO and runtime test environment.
+- **Recommended next step:** UI 03 commit real PNG bytes with provenance and SHA256; QA verify 3–5 binaries and run its actual Pillow suite. Independently obtain pinned Android HTML artifact and execute Chromium touch acceptance. Do not grant READY_FOR_OWNER_TEST from source-only checks.
+- **Safety:** only QA handoff changed in `feature/save-6`; no main push/merge, no shared contract approval.
