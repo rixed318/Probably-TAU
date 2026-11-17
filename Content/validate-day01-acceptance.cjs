@@ -27,6 +27,16 @@ assert.equal(fixture.roomConflict.roomId, "L-204");
 assert.equal(fixture.roomConflict.noAutomaticReservation, true);
 assert.equal(fixture.endDayReport.partnerEarnedIncomeKopecks, "0");
 const money = s => { assert.match(s, /^(0|-?[1-9][0-9]*)$/); const n = BigInt(s); assert.ok(n >= -(1n << 63n) && n <= (1n << 63n)-1n); return n; };
+// Every authored document monetary field and the opening balance use canonical Int64 kopecks.
+money(fixture.opening.budgetKopecks);
+for (const document of fixture.documents) {
+  assert.equal(document.visible.dayIndex, document.visible.day - 1, "document day label must be 1-based");
+  for (const section of [document.visible, document.inspection.reveals]) {
+    for (const [key, value] of Object.entries(section)) {
+      if (key.endsWith("Kopecks")) money(value);
+    }
+  }
+}
 const documentIds = new Set(fixture.documents.map(d => d.id));
 for (const visitor of fixture.visitors) {
   assert.ok(documentIds.has(visitor.documentId));
