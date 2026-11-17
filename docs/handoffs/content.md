@@ -401,3 +401,10 @@ UI 03 PR #12 reports an original office-art **candidate**, not a committed produ
 ## 17.11.2026 — neutral portrait briefs (#21)
 
 Three canonical portrait descriptions added to `Content/DAY01_ART_PROMPTS.md`, using the existing portrait IDs and fictional visitor/document mapping. No new IDs, PNGs, Core, EventDirector, financial or score effects. UI 03 owns actual art production and manifest verification. QA 05 owns independent asset/fixture tests. This pass: connector-JS string checks of three portrait IDs; GitHub readback required. Node CLI, CI, browser, Unity, Android NOT RUN. Issue #18 remains NOT READY_FOR_OWNER_TEST.
+
+
+## 17.11.2026 — Art brief coverage guard (#21)
+
+One bounded Content validation change: `Content/validate-day01-acceptance.cjs` now requires a backticked production brief for every one of the nine IDs referenced by `DAY01_ART_LINKS.json` (three portraits, three standing sprites, three blank documents). This is **source-document coverage only**, not a check that PNG files exist or meet dimensions. No runtime, Core, EventDirector, balances, or Day01 choices changed.
+
+**Actual checks:** connector-side JavaScript preflight confirmed 9/9 unique IDs and 9/9 existing prompt references. **Not run:** Node CLI, GitHub Actions, Unity, browser, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on the latest branch SHA and UI 03 must independently produce and verify PNGs. Validator change commit: `acff0d2b5aa6342d3d8fcd6db7c2d5cf65887294`. No merge/main push.
