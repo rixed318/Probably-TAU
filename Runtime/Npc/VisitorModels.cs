@@ -313,6 +313,20 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a Day01 choice only for the document currently displayed.
+        /// Read-only Windows/Android routing guard; not inspection or Core authorization.</summary>
+        public static bool TryGetChoicePreviewForDocument(string documentId, string choiceId, out ChoicePreview preview)
+        {
+            preview = null;
+            if (string.IsNullOrEmpty(documentId)) return false;
+            ChoicePreview candidate;
+            if (!TryGetChoicePreview(choiceId, out candidate) ||
+                !string.Equals(candidate.VisitorCard.DocumentId, documentId, StringComparison.Ordinal))
+                return false;
+            preview = candidate;
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
