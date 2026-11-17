@@ -37,6 +37,11 @@ for (const document of fixture.documents) {
     }
   }
 }
+// Score invariants: the authored opening and every golden Day01 outcome stay within Core Q/S/M/E/R bounds.
+assert.deepEqual(Object.keys(fixture.opening.scores).sort(), ["E", "M", "Q", "R", "S"]);
+for (const [score, value] of Object.entries(fixture.opening.scores)) {
+  assert.ok(Number.isSafeInteger(value) && value >= 0 && value <= 100, "invalid opening score: " + score);
+}
 const documentIds = new Set(fixture.documents.map(d => d.id));
 for (const visitor of fixture.visitors) {
   assert.ok(documentIds.has(visitor.documentId));
@@ -116,6 +121,10 @@ for (const example of fixture.acceptanceExamples) {
   }
   const expected = example.expected;
   assert.equal(budget.toString(), expected.closingBudgetKopecks, example.id);
+  for (const [score, value] of Object.entries(scores)) {
+    assert.ok(Number.isSafeInteger(value) && value >= 0 && value <= 100,
+      "out-of-range closing score " + score + ": " + example.id);
+  }
   assert.deepEqual(scores, expected.closingScores, example.id);
   assert.deepEqual(postings, expected.immediateLedgerPostings, example.id);
   assert.equal(expected.inspectionTokensUsed, inspected.size);
