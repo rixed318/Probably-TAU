@@ -668,3 +668,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Recommended next step:** UI 03 publish named self-contained Day01 HTML artifact with exact commit provenance. QA 05 should download and hash the artifact, then execute Chromium touch 360x800 and 800x360 tests with multiple choice paths and replay; do not claim mobile-ready or Unity acceptance prematurely.
 
 **Safety:** only feature/save-6 handoff updated; no main write, merge, third-party IP approval, or new shared contract.
+
+
+## 2026-11-17 05:41 UTC+4 — Issue #20: correction of Android single-file artifact discovery
+
+**One bounded QA task:** independently locate and statically inspect the *actual* Android-specific standalone entrypoint, not the older multi-file `day01-playable.html`. Exact immutable UI PR #12 head: `723dcc69534557d54b574991a425eaf5e13161c1`; file `prototypes/ui-day-one/day01-android-touch.html`, blob SHA `28450454bd89792d1d1ac16413ea6507f8b16dd8`. The previously inspected `day01-playable.html` remains multi-file, but that fact **must not** be generalized to the separate Android bundle. Previous QA handoffs' implication that no Android single-file candidate existed was incomplete.
+
+**Actually executed (GitHub source bytes + deterministic text assertions):** 3 inline script elements, **0 external script src**, **0 external stylesheet links**, **0 literal HTTP(S) URLs**; viewport-fit=cover, four safe-area CSS insets, explicit min-width/min-height 48px, portrait and landscape media rules, all DOC-01/02/03 identifiers and EndDay control present. These checks **PASS as static source assertions only**. They do not prove artifact ZIP provenance, script runtime behavior, actual 48dp computed hitboxes, overflow, or playable mobile acceptance. `day01-mobile-single.html` is not the published entrypoint; `day01-android-touch.html` is.
+
+**NOT RUN:** artifact ZIP download/extraction/hash; Chromium 360x800 or 800x360 touch interactions; ledger replay, alternate decisions, duplicate posting and partner cash assertions; actual Windows file:// and Android device; PNG binary signatures/dimensions; local Node/.NET/Python; Unity Editor/APK; Save→Load. Issue #18/#20 remain **BLOCKED**, READY_FOR_OWNER_TEST not granted. No contract changes, no merge/main writes.
+
+### Сводка для координатора 00 — 2026-11-17 05:41 UTC+4
+
+- **Latest PR HEADs checked:** #9 Core `540945353ebb748fd7eff4625cbe4df5a2dd6cfd`; #10 QA `56f9c4f37ce6cac90afdc2be1703fdc3e368991d` before this handoff update; #11 Content `97e8c32455a817ff51d65abc9697b2026008ef24`; #12 UI `723dcc69534557d54b574991a425eaf5e13161c1`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `e9eb3fe0c0d4f7eecfcda95b08a39a637b0a416a`. PR base main `d673322cd9d0d366a27a57b81056504dfb26c731`.
+- **Blocker 1:** no independently extracted and hashed Actions ZIP at exact current UI SHA; standalone source exists but release artifact provenance is unverified.
+- **Blocker 2:** actual Chromium touch viewport gameplay, target geometry/overflow, alternative choices, ledger replay and partner cash still NOT RUN on exact SHA.
+- **Blocker 3:** real Android/Unity APK, Save→Load and original PNG binary verification NOT RUN.
+- **Recommended next step:** download exact-SHA `day01-android-touch` artifact and validate extracted bytes; then Chromium 360x800/800x360 with 3 decisions/EndDay/replay. Distinguish WEB prototype from Unity/APK. Keep main protected.
