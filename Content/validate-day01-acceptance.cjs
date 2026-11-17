@@ -48,6 +48,8 @@ for (const visitor of fixture.visitors) {
       }
     }
     if (choice.deferredPartnerRevenue) {
+      assert.ok(!choice.effects.some(effect => effect.kind === "cashDelta"),
+        "partner signing cannot post immediate cash: " + choice.choiceId);
       money(choice.deferredPartnerRevenue.amountKopecks);
       assert.equal(choice.deferredPartnerRevenue.signingCashDeltaKopecks, "0");
       assert.equal(choice.deferredPartnerRevenue.earnedOnlyAfterDelivery, true);
