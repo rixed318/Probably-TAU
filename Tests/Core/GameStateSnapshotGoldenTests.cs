@@ -368,6 +368,24 @@ namespace TAU.President.Tests.Core
                     new DocumentDecisionEffects("out-of-range", 0L, 51, 0, 0, 0, 0)));
             Assert(before.Finance.Ledger.Entries.Count == 0 &&
                 before.Finance.Receipts.Count == 0);
+            // Zero-cash decisions still advance revision and persist an idempotency receipt.
+            // They must not create a zero-value ledger posting or alter the opening cash.
+            var noCashEffects = new DocumentDecisionEffects("day01.document-b.inspect",
+                0L, 0, 1, 0, 0, 0);
+            var noCash = DurableDocumentDecision.Prepare(before, "choice-zero", 0, 0, noCashEffects);
+            Assert(noCash.Header.Revision == 1 &&
+                noCash.Header.BalanceKopecks == 1000L &&
+                noCash.Header.Metrics.StudentSatisfaction == 51 &&
+                noCash.Finance.Ledger.Entries.Count == 0 &&
+                noCash.Finance.Receipts.Count == 1 &&
+                noCash.Finance.Receipts[0].PostingKeys.Count == 0);
+            var noCashRestored = noCash.Restore();
+            Assert(noCashRestored.Finance.Receipts.Count == 1 &&
+                noCashRestored.Header.ProcessedCommandIds.Count == 1);
+            Throws<InvalidOperationException>(() =>
+                DurableDocumentDecision.Prepare(noCashRestored, "choice-zero", 1, 0, noCashEffects));
+            Assert(before.Header.Revision == 0 && before.Finance.Receipts.Count == 0);
+
             var next = DurableDayAdvance.PrepareDay(after, 1, 0);
             Assert(next.Header.DayIndex == 1 && next.Header.Revision == 2 &&
                 next.Header.BalanceKopecks == 750L &&
