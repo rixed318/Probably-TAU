@@ -489,3 +489,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Actually executed locally:** Python unittest with Pillow, eight tests passed (8/8, 0.095 s), covering 320x180, RGB/RGBA, SHA, palette limit, invalid PNG/mode, binary alpha and partial alpha. Local copies of `tools/art/audit_candidate.py` and `tools/art/test_audit_candidate.py` were reconstructed from the authenticated GitHub contents read for this pass; tests were not run in GitHub Actions.
 - **Actual local C001 audit:** `probably_tau_office_c001_320x180_candidate.png`: 320x180 RGB, 32781 bytes, 24 colors, 0 transparent pixels, no partial alpha, SHA256 `e0a1236ee20665f5b063fab7e9b0385cd5842fb03f3a0bcbd20a22d5c7d85232`; `production_ready=false`. This verifies file metadata and palette, not manual pixel cleanup or style approval.
 - **BLOCKED for art delivery:** real PNG binary still not committed to `feature/ui-5`. GitHub connector supports base64 blobs, but no verified bridge from local file bytes to the connector was available in this pass. No Android device, Unity Editor, or CI test performed. Do not merge PR #12 or touch main/Core.
+
+
+---
+
+## AutoDev 03 · 2026-11-17 · Issue #21 — visible palette audit
+
+**Scope:** One bounded PNG-audit correction. Fully transparent RGBA pixels can retain arbitrary invisible RGB values after image editing; those hidden colors should not count against the 24-color *visible* palette budget. The audit now counts only colors with nonzero alpha for `unique_colors`, `top_colors` and `within_24_colors`, while retaining raw transparency counts and partial-alpha detection. Added a regression fixture with 30 distinct invisible RGB values and one visible color.
+
+**Commits:** `5d0d6905befa2130aed2d791c32bd3f53eaa9afe` (audit), `bebee7e2f226330dc6821cb716c374ad7d35ec1c` (test). Files: `tools/art/audit_candidate.py`, `tools/art/test_audit_candidate.py`, this handoff. No manifest semantics, game state, economics or Unity integration changed.
+
+**Verification:** GitHub accepted both commits; source-level inspection only. The new regression test has **not been executed** in this pass, and the full test suite is **not claimed passing**. Reproduce with `cd tools/art && python -m unittest -v test_audit_candidate.py` after installing Pillow. The existing local C001 remains a candidate; no new binary was uploaded or verified in the GitHub tree. Real Android/Unity tests not performed.
+
+**BLOCKED for production art:** C001 PNG is still absent from `feature/ui-5` and requires a verified binary upload plus owner art review. PR #12 remains Draft; no merge or main push.
