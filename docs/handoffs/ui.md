@@ -533,3 +533,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Actually verified:** connector read all four original source files; packager assertions confirmed both inline scripts, one inline stylesheet, `viewport-fit=cover`, mock gateway and no relative `./` script/style links. GitHub file creation returned a commit SHA. **NOT RUN:** Android browser DOM/touch viewport tests (800×360, 360×800), Node tests, Unity, real device, Actions artifact upload or HTTPS deployment. Existing CSS touch sizing still needs visual QA. No claim of playable Android validation.
 
 **Next:** QA 05 should open the downloaded HTML in Chrome on Android or Android-shaped emulation and check inspect/decision/end-day, clipping, 48 CSS px targets and safe areas. Issue #20 still requires a GitHub Actions downloadable build artifact; this committed HTML is directly downloadable from GitHub but no Actions artifact has been published in this pass.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-18 · Issue #20 (offline dependency regression)
+
+**One bounded task:** extended `prototypes/ui-day-one/test-day01-android-touch.cjs` with an offline packaging regression that rejects CSS `@import`, remote CSS `url(http...)`, remote media/frames, runtime `fetch`/XHR/WebSocket/EventSource and external script/link references. The existing canonical three-visitor `day01-android-touch.html` is unchanged; this is a source-level guard, not browser/device proof.
+
+**Code commit:** `195c93ae190b32775b6b1e11d7b4336b4a6fe171` on `feature/ui-5`.
+
+**Actually verified:** GitHub accepted the test-file commit and returned its blob SHA. **Not run:** Node test suite, GitHub Actions, Android viewport/touch emulation, physical Android, Unity. The new assertions need CI execution; no test pass claimed.
+
+**Remaining:** confirm GitHub Actions run/artifact, real Android landscape and portrait viewport checks, Day01 interaction regression. Art #21 still needs real PNG binary commit and artistic review. No Core/GameState/main edits; PR #12 stays Draft.
