@@ -43,6 +43,7 @@ namespace TAU.President.Tests.Core
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
+            DocumentDecisionTransactionGolden();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -328,6 +329,49 @@ namespace TAU.President.Tests.Core
             var quietAfter = DurableDayAdvance.PrepareDay(quietBefore, 0, 0);
             var quietReport = DurableDayReport.Capture(quietBefore, quietAfter);
             Assert(quietReport.Postings.Count == 0 && quietReport.ClosingCashKopecks == 1000L);
+        }
+
+
+        private static void DocumentDecisionTransactionGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var before = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(header, new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
+            var effects = new DocumentDecisionEffects("day01.document-a.accept", -250L, 2, -1, 0, 1, 3);
+            var after = DurableDocumentDecision.Prepare(before, "choice-001", 0, 0, effects);
+            Assert(before.Header.Revision == 0 && before.Header.BalanceKopecks == 1000L);
+            Assert(after.Header.Revision == 1 && after.Header.DayIndex == 0 &&
+                after.Header.BalanceKopecks == 750L &&
+                after.Header.Metrics.EducationQuality == 52 &&
+                after.Header.Metrics.StudentSatisfaction == 49 &&
+                after.Header.Metrics.PublicReputation == 53);
+            Assert(after.Finance.Ledger.Entries.Count == 1 &&
+                after.Finance.Ledger.Entries[0].PostingId == "decision:choice-001" &&
+                after.Finance.Receipts[0].PostingKeys[0] == "decision:choice-001");
+            Assert(after.Restore().Finance.Receipts[0].Fingerprint ==
+                after.Finance.Receipts[0].Fingerprint);
+            Throws<InvalidOperationException>(() =>
+                DurableDocumentDecision.Prepare(after, "choice-001", 1, 0, effects));
+            Throws<InvalidOperationException>(() =>
+                DurableDocumentDecision.Prepare(before, "choice-002", 1, 0, effects));
+            Throws<InvalidOperationException>(() =>
+                DurableDocumentDecision.Prepare(before, "choice-003", 0, 0,
+                    new DocumentDecisionEffects("too-expensive", -1001L, 0, 0, 0, 0, 0)));
+            Throws<ArgumentOutOfRangeException>(() =>
+                DurableDocumentDecision.Prepare(before, "choice-004", 0, 0,
+                    new DocumentDecisionEffects("out-of-range", 0L, 51, 0, 0, 0, 0)));
+            Assert(before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0);
+            var next = DurableDayAdvance.PrepareDay(after, 1, 0);
+            Assert(next.Header.DayIndex == 1 && next.Header.Revision == 2 &&
+                next.Header.BalanceKopecks == 750L &&
+                next.Finance.Receipts.Count == 2);
+            Assert(DurableDayReport.Capture(after, next).Postings.Count == 0);
         }
 
         private static RandomStreamSnapshotDto streamsItem()
