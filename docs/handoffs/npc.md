@@ -341,3 +341,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Production commit:** `0df59a9d3aa10543fb20a3dbc94f22e8a63d7dac`. **Golden assertion commit:** `d1865956bc0c238e920831b6ac8356389f6c82a3`. Tests added for three valid IDs, canonical card identity and invalid IDs. **NOT RUN:** local dotnet/Unity/Android execution; CI for the new SHA not yet verified. Source mapping manually compared with `Content/DAY01_UI_FIXTURE.json` from Content PR #11.
 
 **BLOCKED:** Full EventDirector still requires concrete Core atomic event transaction/receipt and earned-key deduplication ports; E03/E07 provenance and partner agreement source ID require Core/Content alignment. Art IDs are planned only; real PNGs belong to UI #21. No changes to main, no merge. PR #16 remains review-gated.
+
+
+## AutoDev 02 — planned art ID reverse lookup (2026-11-17)
+
+- **One bounded production increment (#20/#21):** added `Day01Visitors.TryGetCardByPlannedAssetId` for the nine canonical portrait, standing and document-blank IDs in Content 04's `Content/DAY01_ART_LINKS.json`. It returns a fresh immutable `Day01VisitorCard` on Windows/Android without UnityEngine or mutable gameplay state. Exact ordinal match; unknown/null/case-mismatched IDs fail closed. Planned IDs do **not** prove PNGs exist.
+- **Production commit:** `2f96c437aaea6d7c2af21a73aa9be73e01464b31`; **golden assertions commit:** `16146738f026a47632ca37de0d48834a556126f7`. Added 9 positive mappings, four invalid cases. Source IDs reviewed against Content's draft art links. **NOT RUN locally:** .NET/Unity/Android executable tests; GitHub Actions must be checked against test SHA before claiming pass.
+- **Ownership:** Content 04 owns final canonical art mapping; UI 03 owns original PNGs/manifest and must verify assets exist before displaying. EventDirector remains BLOCKED on Core atomic transaction/receipt/earned-key API and E03/E07 provenance. PR #16 Draft; no main merge.
