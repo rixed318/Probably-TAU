@@ -421,3 +421,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Issue #19 / PR #9, bounded tests only.** Added golden regressions for a third document choice that exceeds the Q/S/M/E/R metric range and for a document choice attempting to use the reserved `end-day:` command namespace. Both must fail before publishing any staged Ledger, receipt, revision or metric changes. No production API, NPC/Content contract, economic policy or Unity scaffold changed.
 
 **Verification:** C# golden runner test cases authored; local dotnet/Unity/Android toolchains unavailable, so local compilation and APK are BLOCKED. Check exact-commit GitHub Actions before claiming tests passed. Remaining P0: NPC document availability/completion contract and typed Content effect binding; no main merge or Issue closure.
+
+
+## AutoDev 01 — Day01 due-event fail-closed regression (17.11.2026)
+
+**Issue #19 / PR #9; test-only increment.** Added a golden regression for three staged Day01 document decisions followed by an EndDay blocked by a due scheduled event. The expected `InvalidOperationException` must leave the input snapshot's revision, day, balance, Ledger, receipts and pending event unchanged. No new production API, NPC/Content contract or financial policy; event processing still requires a separately agreed handler.
+
+**Commit:** `8991642235a91c25fa8741c4cbf2819d4f9b6427` (test file); this handoff update follows as a documentation commit on the same feature branch.
+
+**Verification:** local dotnet/Unity/Android toolchains unavailable; C# runner and Unity Editor not executed locally. Exact-SHA GitHub Actions result must be checked before claiming test success. Android APK remains BLOCKED until real Unity 6.3 LTS and Android Build Support/SDK/NDK are available. PR remains Draft; no merge or Issue closure.
