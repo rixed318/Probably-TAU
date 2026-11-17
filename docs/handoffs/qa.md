@@ -811,3 +811,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 3:** Unity Editor APK/Android-device and full Save→Load regression remain NOT RUN; final persistence requires stable integrated DTO and runtime test environment.
 - **Recommended next step:** UI 03 commit real PNG bytes with provenance and SHA256; QA verify 3–5 binaries and run its actual Pillow suite. Independently obtain pinned Android HTML artifact and execute Chromium touch acceptance. Do not grant READY_FOR_OWNER_TEST from source-only checks.
 - **Safety:** only QA handoff changed in `feature/save-6`; no main push/merge, no shared contract approval.
+
+
+## 2026-11-17 19:00 UTC+4 — QA 05: art-manifest approval gate source review (#21)
+
+**One bounded independent review:** inspected UI PR #12 HEAD `357d8e811bc7472b08242684396178c2a41e84b0`, `tools/art/validate_manifest.py` blob `278f3c0e6d65a8513932144b1b42fb7b09932435`, test blob `995a0ac284ca05db499a1012289d359e9b0379a5`, and the manifest blob `57d69589a7b6671b85810dad77506c311d5ffa43`. PR changed-file inventory contains **zero .png paths**. The manifest validator checks provenance strings for approved/production rows but **does not open source_file, check PNG signature/IHDR, verify dimensions against native_px, or compare SHA-256**. In particular, any nonempty source_file and any rights_review value other than 'pending' or empty passes these two checks even if the path is nonexistent. The current 8 unittest cases test CSV rules, not binary asset acceptance. This is a **source-level coverage gap**, not a claim that an executed test failed.
+
+**Actual checks:** authenticated GitHub PR metadata, complete changed-filename inventory, source and manifest reads. **NOT RUN:** Python unittest suite, PNG binary verification (no committed PNG in PR diff), Chromium touch 360x800/800x360, Node/.NET, Unity Editor, APK/Android and Save→Load. No approved third-party IP.
+
+**Precise recommendation to UI 03:** retain CSV structural validator but add a separate binary gate for each asset promoted to qa_ready/approved/production: resolve source_file within repository, reject missing/out-of-tree files, verify PNG 8-byte signature and IHDR dimensions against native_px, record/compare SHA-256 in manifest, and cover missing/tampered/wrong-dimension fixtures. Do not infer rights approval from arbitrary CSV text. QA will independently run the gate against 3–5 actual committed binaries when available.
+
+### Сводка для координатора 00 — 2026-11-17 19:00 UTC+4
+
+- **PR HEADs checked:** #9 Core `98ea35dae6b43817eb1f2d140390e6fa1e064e21`; #10 QA before this commit `e59371686227dc7b65163239f9e79eea2c73552f`; #11 Content `6bfe29ecedf7bd05be120132ecd9a291a951f336`; #12 UI `357d8e811bc7472b08242684396178c2a41e84b0`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `0fe6f31e1f9ac6acff8f5bba63e5dade627e0421`. Main base `d673322cd9d0d366a27a57b81056504dfb26c731`. PR #9 C0-v2 and PR #14 ADR remain unmerged; no new contract approved.
+- **Blocker 1:** Issue #21 has no PNG in UI PR diff; current manifest validator cannot certify PNG bytes/dimensions/hash.
+- **Blocker 2:** exact-SHA HTML ZIP and Chromium 360x800/800x360 interactive Day01 acceptance remain NOT RUN.
+- **Blocker 3:** Unity Editor APK/physical Android and complete Save→Load regression remain NOT RUN.
+- **Recommended next step:** UI 03 deliver 3–5 original PNG binaries with SHA-256 and binary validation, then QA audit actual bytes. Separately run exact-SHA HTML mobile interaction tests. **READY_FOR_OWNER_TEST not granted.** QA-only handoff change, no main write/merge.
