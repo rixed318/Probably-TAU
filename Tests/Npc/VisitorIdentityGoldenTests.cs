@@ -9,6 +9,13 @@ namespace TAU.President.Tests.Npc
         {
             var cards = Day01Visitors.CreateReadOnlyCards();
             var repeatedCards = Day01Visitors.CreateReadOnlyCards();
+            // Content 04 DAY01_ART_LINKS.json: planned IDs only, not proof of PNG availability.
+            string[] plannedPortraitIds =
+            {
+                "irina_korneeva_portrait_neutral",
+                "dasha_polynskaya_portrait_neutral",
+                "mark_sviridov_portrait_neutral"
+            };
             if (cards.Count != 3 || repeatedCards.Count != 3)
                 throw new Exception("Read-only visitor card count mismatch.");
             for (int i = 0; i < cards.Count; i++)
@@ -19,6 +26,8 @@ namespace TAU.President.Tests.Npc
                     cards[i].DocumentId != visit.DocumentId ||
                     cards[i].Role != visit.Archetype.Role ||
                     cards[i].DayIndex != 0 ||
+                    cards[i].PlannedPortraitAssetId != plannedPortraitIds[i] ||
+                    cards[i].PlannedPortraitAssetId != repeatedCards[i].PlannedPortraitAssetId ||
                     cards[i].VisitId != repeatedCards[i].VisitId ||
                     ReferenceEquals(cards[i], repeatedCards[i]))
                     throw new Exception("Android/Windows visitor card identity mismatch at " + i);

@@ -280,3 +280,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Validation:** source and fixture manually cross-checked; .NET and Unity/Android execution NOT RUN locally (SDK unavailable). GitHub Actions must be checked for this exact commit before claiming pass.
 - **Dependencies:** UI 03/Content 04 must approve original portrait asset IDs under Issue #21; no image asset invented. EventDirector remains blocked on Core transaction/receipt ports and canonical partner earnedId; E03_mentor_paid/E07_delivered must originate from Core-confirmed facts.
 - **Safety:** only feature/npc-4; Draft PR #16; no main merge, no alternate GameState/ledger.
+
+
+## AutoDev 02 — planned Day01 portrait identity on Windows/Android (2026-11-17)
+
+- **One bounded Issue #20/#21 increment:** `Day01VisitorCard.PlannedPortraitAssetId` exposes three read-only planned IDs exactly as Content 04's `Content/DAY01_ART_LINKS.json` (feature/content-7). The property explicitly does **not** attest that PNGs exist, that a UI manifest has been approved, or that assets are loaded. Same pure-C# DTO on Windows and Android; no engine fork, Core/GameState/ledger/receipts changes.
+- **Regression:** `VisitorIdentityGoldenTests` checks each planned portrait ID and replay stability. Manually compared source IDs with Content JSON; **NOT RUN locally:** dotnet/Unity/Android (SDK unavailable). GitHub Actions status must be verified against this new SHA.
+- **Coordination:** UI 03 owns actual PNGs and art manifest; Content 04 owns character/asset mapping. If draft IDs change, update this adapter in a reviewed PR. EventDirector remains **BLOCKED** on Core atomic event/receipt/earned-key ports and E03/E07 provenance.
+- **Safety:** feature/npc-4 only; Draft PR #16; no merge/main writes.
