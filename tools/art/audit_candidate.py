@@ -23,6 +23,8 @@ def audit(path: Path) -> dict:
             'bytes': len(raw),
             'dimensions': list(im.size),
             'mode': im.mode,
+            'alpha_pixels': sum(count for rgba, count in pixels.items() if len(rgba) == 4 and rgba[3] < 255),
+            'has_partial_alpha': any(len(rgba) == 4 and 0 < rgba[3] < 255 for rgba in pixels),
             'unique_colors': len(pixels),
             'top_colors': [{'rgb': '#'+''.join(f'{c:02X}' for c in rgb[:3]), 'pixels': count}
                            for rgb, count in pixels.most_common(3)],
