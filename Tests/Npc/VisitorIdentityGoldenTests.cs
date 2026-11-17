@@ -246,6 +246,30 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoicePreviewForVisit("D01_LAB", null, out invalidScoped) || invalidScoped != null)
                 throw new Exception("Invalid visit-scoped preview must fail closed.");
 
+            // Document menus must share the canonical visit order and immutable inspection hints.
+            string[] menuDocumentIds = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < menuDocumentIds.Length; i++)
+            {
+                IReadOnlyList<Day01Visitors.ChoicePreview> documentMenu;
+                if (!Day01Visitors.TryGetChoicePreviewsByDocumentId(menuDocumentIds[i], out documentMenu) ||
+                    documentMenu == null || documentMenu.Count != 3 ||
+                    !(documentMenu is System.Collections.ObjectModel.ReadOnlyCollection<Day01Visitors.ChoicePreview>))
+                    throw new Exception("Document menu missing or mutable: " + menuDocumentIds[i]);
+                for (int j = 0; j < 3; j++)
+                {
+                    var preview = documentMenu[j];
+                    if (preview.ChoiceId != menuChoices[i][j] ||
+                        preview.VisitorCard.DocumentId != menuDocumentIds[i] ||
+                        preview.RequiresInspection != (preview.ChoiceId == "LAB-2" || preview.ChoiceId == "PARTNER-2"))
+                        throw new Exception("Document menu identity or inspection mismatch.");
+                }
+            }
+            IReadOnlyList<Day01Visitors.ChoicePreview> unknownDocumentMenu;
+            if (Day01Visitors.TryGetChoicePreviewsByDocumentId(null, out unknownDocumentMenu) || unknownDocumentMenu != null ||
+                Day01Visitors.TryGetChoicePreviewsByDocumentId("doc-01", out unknownDocumentMenu) || unknownDocumentMenu != null ||
+                Day01Visitors.TryGetChoicePreviewsByDocumentId("DOC-04", out unknownDocumentMenu) || unknownDocumentMenu != null)
+                throw new Exception("Unknown document menu must fail closed.");
+
             // Document-focused Android/Windows UI must never show another document's choices.
             string[] scopedDocuments = { "DOC-01", "DOC-02", "DOC-03" };
             for (int i = 0; i < scopedDocuments.Length; i++)
