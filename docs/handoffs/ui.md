@@ -473,3 +473,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Test commit:** `f3709edbedba85cbeff4d7dcd5d5b3ed23eb99b2` on `feature/ui-5`. This handoff is a separate documentation commit (GitHub Contents API only supports one file per commit here).
 - **Actually executed locally:** Python 3 + Pillow 12.3.0, `python -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v`: **6/6 passed** in 0.059s against a local copy of the repository's `audit_candidate.py` fetched and reviewed from GitHub. These synthetic tests do **not** validate the original C001 binary, GitHub CI, Android hardware or Unity.
 - **BLOCKED:** C001 actual PNG binary still absent from GitHub because this authenticated connector cannot ingest the local PNG file bytes. Candidate remains unapproved and production_ready=false. No merge or main changes.
+
+
+## AutoDev 03 · 2026-11-17 · transparent PNG audit guard (#21)
+
+- **One bounded task:** extend the candidate-only Pillow audit to report `alpha_pixels` (number of pixels with alpha < 255) and `has_partial_alpha` (any alpha 1..254). These fields reveal whether candidate art violates the Art Bible's binary-edge preference; they do **not** mark art production-ready. RGB images report 0/false. Existing output fields preserved.
+- **Commits:** `7024b649176086391f571f94c9be237669752bac` (audit) and `95c949469a8db6bf9b80dd12eb345774650fc634` (two synthetic alpha regression tests), plus this handoff commit. Branch: `feature/ui-5`, PR #12 remains Draft.
+- **Actual verification:** fetched current source and tests through authenticated GitHub before editing; GitHub Contents API acknowledged both commits. **Tests NOT RUN** in this pass: 8-test Pillow suite, CI, Android viewport/device, Unity. QA 05 should execute `python -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v` on checkout.
+- **BLOCKED:** actual office C001 PNG binary still not committed to GitHub; this pass does not change manifest status or imply art approval. No GameState/Core/main changes.
