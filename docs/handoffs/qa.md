@@ -734,3 +734,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Chromium touch gameplay (portrait/landscape, 3 decisions, EndDay, replay, no partner immediate cash) and computed 48dp/overflow NOT RUN.
 - **Blocker 3:** PNG binaries, Unity Editor/APK/real Android and Save→Load NOT RUN.
 - **Recommended next step:** download the Actions ZIP associated with UI `1b15c25c...`, verify extracted HTML byte hash and execute the two touch viewport flows; do not treat the web prototype as a Unity build. No main write, merge or external IP authorization.
+
+
+## 2026-11-17 12:23 UTC+4 — Issue #20 latest-head Android source verification
+
+**One bounded independent QA task:** checked current PR #12 HEAD `f509b64ad516f1ba83d84afdfe6af9b9773dc186` and fetched `prototypes/ui-day-one/day01-android-touch.html` by that immutable commit. GitHub returned unchanged blob `28450454bd89792d1d1ac16413ea6507f8b16dd8` (15,520 UTF-8 characters). This is source provenance only, **not** a released ZIP artifact or browser run.
+
+**Actually executed via GitHub connector and JS literal checks:** 3 inline script blocks; 0 external script-src blocks; CSS explicit `min-height:48px` and `min-width:48px`; safe-area references; all three document IDs; `decisions.has(id)` duplicate guard; `decisions.size!==3` EndDay guard; literal recognized partner revenue `0`. All eight named source-presence checks PASS. CSS `overflow-x` declaration absent; this alone does not establish overflow or its absence. **Important:** these are static text assertions, not runtime, hit-target geometry or financial execution.
+
+**Execution environment check:** Chromium and Node are installed in the QA container, but direct GitHub raw-content retrieval failed with DNS/proxy resolution; the connector text cannot automatically be transferred to that browser filesystem. Therefore touch emulation 360×800 / 800×360, three interactive decisions, double-tap, EndDay, ledger replay, horizontal overflow and computed target sizes **NOT RUN**. Exact-SHA Actions ZIP not downloaded or byte-verified. Unity Editor, APK, physical Android, PNG binary signatures and Save→Load **NOT RUN**. No READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-17 12:23 UTC+4
+
+- **Latest PR HEADs verified:** #9 Core `80dd030e630fb61375dec5e0c084ed18b8d2ff85`; #10 QA `1a72df7c7fa33e19f62a25ba86b2ac7e62818d3f` before this update; #11 Content `b91c81e296111f2a092eb281c782b7682752234a`; #12 UI `f509b64ad516f1ba83d84afdfe6af9b9773dc186`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `fd6837dde29ebcfd4bc8d47faa6a54d22ddac83d`. Main read and AGENTS/CHAT_WORKFLOW checked. C0-v2 and ADR are feature-development guidance, not merged approval.
+- **Blocker 1:** exact-UI-SHA release ZIP not extracted and hashed; GitHub raw DNS retrieval failed in browser environment.
+- **Blocker 2:** no actual mobile Chromium 360×800 / 800×360 gameplay, computed touch target, overflow, replay and partner-cash checks.
+- **Blocker 3:** real Unity/APK/Android, PNG binary verification and Save→Load tests absent.
+- **Recommended next step:** retrieve an immutable Actions artifact associated with UI `f509b64a...`, transfer extracted standalone HTML into Chromium test environment, then run both mobile viewports and finance/replay acceptance. Keep web mock distinct from Unity; no main push/merge or IP approvals.
