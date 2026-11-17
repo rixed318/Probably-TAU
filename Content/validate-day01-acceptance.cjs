@@ -33,6 +33,28 @@ for (const visitor of fixture.visitors) {
   assert.equal(visitor.choices.length, 3);
   assert.equal(new Set(visitor.choices.map(c => c.choiceId)).size, 3);
 }
+// Validate every authored choice, not only choices exercised by the two golden examples.
+for (const visitor of fixture.visitors) {
+  for (const choice of visitor.choices) {
+    assert.ok(Array.isArray(choice.effects), "choice effects must be an array: " + choice.choiceId);
+    for (const effect of choice.effects) {
+      if (effect.kind === "cashDelta") {
+        money(effect.deltaKopecks); // signed Int64 decimal-string kopecks
+      } else if (effect.kind === "scoreDelta") {
+        assert.ok(Object.hasOwn(fixture.opening.scores, effect.score), "unknown score: " + effect.score);
+        assert.ok(Number.isSafeInteger(effect.delta), "non-integer score delta: " + choice.choiceId);
+      } else {
+        assert.fail("unsupported immediate effect: " + choice.choiceId);
+      }
+    }
+    if (choice.deferredPartnerRevenue) {
+      money(choice.deferredPartnerRevenue.amountKopecks);
+      assert.equal(choice.deferredPartnerRevenue.signingCashDeltaKopecks, "0");
+      assert.equal(choice.deferredPartnerRevenue.earnedOnlyAfterDelivery, true);
+    }
+  }
+}
+console.log("PASS: all Day01 choice effects have valid types, Int64 kopecks and deferred signing rules");
 assert.equal(fixture.acceptanceExamples.length, 2, "review acceptance oracle count");
 for (const example of fixture.acceptanceExamples) {
   assert.equal(example.dayIndex, 0);
