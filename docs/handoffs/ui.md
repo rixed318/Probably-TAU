@@ -423,3 +423,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Scoped change: extend `test-day01-android-touch.cjs` with explicit checks for 48px minimum width and height, `touch-action:manipulation`, landscape compact layout, portrait stacking, and all four safe-area insets. The existing single-file inline-script and no-external-resource checks remain.
 - This is a **source-level regression guard**, not a real Android viewport rendering or physical-device smoke test. Do not claim it proves usable 48dp targets under browser scaling.
 - Device acceptance still BLOCKED pending offline file open, landscape/portrait interaction, all three documents, room L-204, EndDay and ledger checks on Android. No Unity APK or image PNG is claimed by this change.
+
+
+## AutoDev 03 · 2026-11-17 · Android #20 CI verification for touch-regression commit
+
+- Source commit checked: `91572d56796372883fd43d31504c09c2e8ad869b` on `feature/ui-5`; PR #12 remains Draft.
+- GitHub Actions run [43981459487](https://github.com/rixed318/Probably-TAU/actions/runs/43981459487) (`UI standalone smoke tests`) reports `completed / success` for that exact SHA. This is GitHub-reported CI, not a locally executed test in this pass.
+- The same run publishes two non-expired downloadable artifacts: `day01-android-touch` (ID `14283416899`, 7012 bytes, sha256 `7d532965001b5f345cdbcb73a355c7b17585e9e99873817d010b043d1a98261c`) and `day01-web-demo` (ID `14283193440`, 8484 bytes, sha256 `7a53a4f7a407d00903c8366386f5e62038cd45729e6c1b52c87b511ffe4c5f75`). These are artifact metadata digests, not locally recomputed hashes.
+- **Actually checked:** GitHub PR/Issue/instructions, remote workflow status, artifact IDs, names, sizes, expiration flags, source SHA and digests. **Not executed:** local Node tests, ZIP download/extraction, Android/Windows browser, 360x800 or 800x360 viewport rendering, Unity Editor. The CI's own result is not proof of real-device behavior.
+- **BLOCKED for Android device acceptance:** need actual offline Android file launch and touch playthrough of three visitors/documents, L-204, EndDay, ledger and duplicate-action protection. Do not mark READY_FOR_OWNER_TEST or claim APK. No GameState/Core edits, merge, or third-party artwork.
