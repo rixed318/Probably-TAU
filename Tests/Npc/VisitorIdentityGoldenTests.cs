@@ -16,6 +16,12 @@ namespace TAU.President.Tests.Npc
                 "dasha_polynskaya_portrait_neutral",
                 "mark_sviridov_portrait_neutral"
             };
+            string[] plannedStandingIds =
+            {
+                "irina_korneeva_standing",
+                "dasha_polynskaya_standing",
+                "mark_sviridov_standing"
+            };
             string[] plannedDocumentIds =
             {
                 "doc01_procurement_blank",
@@ -34,6 +40,8 @@ namespace TAU.President.Tests.Npc
                     cards[i].DayIndex != 0 ||
                     cards[i].PlannedPortraitAssetId != plannedPortraitIds[i] ||
                     cards[i].PlannedDocumentAssetId != plannedDocumentIds[i] ||
+                    cards[i].PlannedStandingAssetId != plannedStandingIds[i] ||
+                    cards[i].PlannedStandingAssetId != repeatedCards[i].PlannedStandingAssetId ||
                     cards[i].PlannedDocumentAssetId != repeatedCards[i].PlannedDocumentAssetId ||
                     cards[i].PlannedPortraitAssetId != repeatedCards[i].PlannedPortraitAssetId ||
                     cards[i].VisitId != repeatedCards[i].VisitId ||
