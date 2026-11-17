@@ -34,3 +34,13 @@ These are **image-production briefs only**, not documents with preprinted gamepl
 “Create an original pixel-art **blank letter of intent for a wholly fictional partner**, 192×240 RGBA, pale cream paper, understated plum header stripe with a small abstract non-logo geometric accent, tidy empty sections for terms and conditional revenue. Clear reserved space for live UI-rendered contract terms and deferred-payment conditions. No preprinted text, currency, digits, real corporate identity, logos, stamps or signatures; crisp pixel-art edges, matching the other two pages.”
 
 **Acceptance / ownership:** UI 03 produces and reviews actual PNG binaries, provenance and SHA256; Content 04 supplies IDs and fictional visual intent only. QA 05 verifies IDs, 192×240 pixel dimensions, text-free blank templates, source-manifest mapping and the fixture's separate live data. No modifications to Core, EventDirector, score or cash effects.
+
+## Three canonical neutral portrait briefs (Issue #21)
+
+**Production instructions only; no PNG is claimed.** Each portrait must match its existing standing sprite in costume, proportions, limited palette, pixel grid and warm side lighting. Compose head and shoulders, neutral expression, full silhouette with safe padding, transparent background, no typography, logo, seal, blur or anti-aliasing. UI 03 selects dimensions from the current asset manifest and verifies binaries/provenance before committing to its own branch.
+
+- `irina_korneeva_portrait_neutral` — `D01_LAB / npc_irina_korneeva / DOC-01`: fictional coordinator; short chestnut hair with silver streak, rectangular glasses, teal jacket collar, amber brooch; composed, angular silhouette.
+- `dasha_polynskaya_portrait_neutral` — `D01_STUDENT / npc_dasha_polynskaya / DOC-02`: fictional student organizer; asymmetric copper bob, indigo round hair clip, sand hoodie, diagonal bag strap; alert neutral expression, rounded silhouette.
+- `mark_sviridov_portrait_neutral` — `D01_PARTNER / npc_mark_sviridov / DOC-03`: fictional partner representative; shaved head, short beard, plum blazer, pale turtleneck; reserved expression, broad silhouette.
+
+Compare portrait and standing sprite for identity consistency; preserve all nine asset IDs in `DAY01_ART_LINKS.json`. No gameplay effects, balance, runtime schema, DayIndex or partner cash change.
