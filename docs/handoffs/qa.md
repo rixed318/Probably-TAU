@@ -843,3 +843,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** #20 exact-SHA ZIP and Chromium touch interactive Day01 acceptance (3 docs, EndDay, ledger replay, 48dp, overflow) NOT RUN.
 - **Blocker 3:** Unity Editor APK/physical Android and complete Save→Load regression NOT RUN; stable integrated DTO/runtime needed.
 - **Recommended next step:** UI 03 commit 3–5 real original PNG binaries with expected SHA-256; QA run the new binary header/hash gate **and** full PNG decoding against those bytes, then pinned HTML mobile acceptance. No READY_FOR_OWNER_TEST, no main push/merge, no shared contract or IP approval.
+
+
+## 2026-11-17 22:17 UTC+4 — QA 05: PNG IHDR encoding rejection (#21)
+
+**One bounded QA change:** strengthened `Tests/QA/test_png_integrity.py` to reject illegal PNG IHDR combinations (color type/bit depth, compression, filter and interlace) even when IHDR CRC and file SHA-256 match. Added five negative tests. Commit `8e7505fde12b18de426abab6b98b2884c8fbb8a9` in `feature/save-6`. No shared architecture or SaveService contract changed.
+
+**Actually executed:** local Python 3 standalone equivalent of the changed verification logic and ten test cases: **10/10 PASS** (five previous scenarios + five new invalid IHDR encoding cases). This local probe was manually reconstructed from the same logic; **the exact post-push GitHub file was not downloaded and rerun**, and CI status is unverified. GitHub connector confirmed the file write and returned the commit SHA. The gate still checks only signature/IHDR/CRC/dimensions/SHA; it does not validate IDAT, IEND, full PNG decoding, visual quality, or IP rights. Do not use synthetic header fixtures as evidence of a real image.
+
+**Read-only checks:** main README/AGENTS/CHAT_WORKFLOW, Issues #6/#8/#20/#21 and PR descriptions #9/#10/#11/#12/#14; PR #10 changed-file list includes QA test, PR #12 changed-file list has **0 .png paths**. C0-v2 in #9 and ADR in #14 remain feature-development guidance only, not merge approval.
+
+### Сводка для координатора 00 — 2026-11-17 22:17 UTC+4
+
+- **Latest QA commit:** `8e7505fde12b18de426abab6b98b2884c8fbb8a9` in PR #10 (this handoff update produces the next commit). Other PRs reviewed by number: #9 Core, #11 Content, #12 UI, #14 ADR; exact latest HEAD SHAs for those branches **not independently retrieved this pass**. Last recorded heads from preceding handoff: main `d673322cd9d0`, #9 `2961ab2ece1c`, #11 `baaee3d95714`, #12 `371f8ae0da65`, #14 `ebdc4be28afd`; do not treat them as current.
+- **Blocker 1:** #21 no verified 3–5 real PNG binaries/manifest SHA; current gate is header-level only.
+- **Blocker 2:** #20 exact-SHA offline HTML ZIP and Chromium touch 360×800 / 800×360 (three documents, EndDay, ledger replay, 48dp and overflow) **NOT RUN**.
+- **Blocker 3:** Unity Editor, real APK/Android device and full Save→Load regression **NOT RUN**; stable integrated DTO/runtime still required.
+- **Recommended next step:** UI 03 commits original PNGs and manifest hashes; QA independently decodes and verifies 3–5 actual binaries, then tests pinned Day01 HTML in mobile Chromium. Keep READY_FOR_OWNER_TEST withheld. No push to main, no merge, no IP approval.
