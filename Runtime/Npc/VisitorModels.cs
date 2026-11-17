@@ -299,6 +299,20 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a choice only when it belongs to the currently displayed visit.
+        /// Read-only UI guard; Core still owns all command eligibility and inspection checks.</summary>
+        public static bool TryGetChoicePreviewForVisit(string visitId, string choiceId, out ChoicePreview preview)
+        {
+            preview = null;
+            if (string.IsNullOrEmpty(visitId)) return false;
+            ChoicePreview candidate;
+            if (!TryGetChoicePreview(choiceId, out candidate) ||
+                !string.Equals(candidate.VisitorCard.VisitId, visitId, StringComparison.Ordinal))
+                return false;
+            preview = candidate;
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
