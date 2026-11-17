@@ -437,3 +437,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Issue #19 / PR #9; bounded Core golden-test increment.** Added a zero-cash document-decision case to `DocumentDecisionTransactionGolden`: revision and Q/S/M/E/R update, one durable receipt with no posting keys, no zero-amount Ledger entry, Save→Load receipt persistence and duplicate command rejection. The input snapshot remains unchanged. No production API, balance policy or NPC/Content contract changes.
 
 **Verification:** C# test authored but not locally executed (no dotnet); Unity Editor/Android Build Support/SDK/NDK/adb absent, so Unity compile and APK are BLOCKED. Exact-SHA CI must be checked independently. Android #20 and real Day01 NPC document binding #19 remain outstanding; no main merge or Issue closure.
+
+
+## 18.11.2026 — Core 01 / Day01 payable EndDay golden regression
+
+- Issue #19; branch `feature/core-2`; test commit `d5df8ef96296d85f75424cc2502b5a8406a07b6c`.
+- Added a bounded regression to `Day01FlowGolden`: three approved document choices followed by one affordable due payable, canonical EndDay ledger posting and receipt, report projection, snapshot Restore, and replay rejection. Checks original snapshot stays unchanged.
+- No new production contract, content financial rule, NPC document ownership logic, Unity scaffold or Android build.
+- Local `dotnet`, Unity Editor, Android SDK/NDK and adb not found (Java/Javac present). Test has NOT been executed locally; exact-SHA GitHub CI must be checked before claiming PASS.
+- Remaining integration dependency: NPC/Content-approved typed document availability/completion and due-event/weekly EndDay support. PR #9 stays Draft; no main merge.
