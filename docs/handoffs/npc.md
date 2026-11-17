@@ -332,3 +332,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Issue #20, one bounded increment:** added derived `ChoicePreview.RequiresInspection` to the existing immutable Day01 Windows/Android DTO. It is display-only, computed from `RequiredInspectionDocumentId`, and does not attest inspection completion or authorize a Core command.
 - **Regression added:** all nine canonical Day01 choices must expose the expected boolean (true only for LAB-2 and PARTNER-2) and the unchanged inspection document IDs. No second GameState, ledger, Android fork, or asset claim.
 - **Validation:** source reviewed against Content PR #11. Local .NET/Unity/Android tests NOT RUN in connector runtime; check GitHub Actions for the exact commit. EventDirector BLOCKED on Core atomic receipt/earnedId transaction ports and Content E03/E07 provenance. PR #16 Draft; no main merge.
+
+
+## AutoDev 02 — visitor definition card lookup (2026-11-17)
+
+**One bounded increment (#20, #4):** added `Day01Visitors.TryGetCardByVisitorId(string, out Day01VisitorCard)` to resolve the three canonical Content `visitorId` values into fresh immutable, Unity-free Windows/Android cards. It uses ordinal exact matching and fails closed for unknown, empty, or null IDs. This is read-only navigation, not command eligibility, event settlement or proof that PNG art exists.
+
+**Production commit:** `0df59a9d3aa10543fb20a3dbc94f22e8a63d7dac`. **Golden assertion commit:** `d1865956bc0c238e920831b6ac8356389f6c82a3`. Tests added for three valid IDs, canonical card identity and invalid IDs. **NOT RUN:** local dotnet/Unity/Android execution; CI for the new SHA not yet verified. Source mapping manually compared with `Content/DAY01_UI_FIXTURE.json` from Content PR #11.
+
+**BLOCKED:** Full EventDirector still requires concrete Core atomic event transaction/receipt and earned-key deduplication ports; E03/E07 provenance and partner agreement source ID require Core/Content alignment. Art IDs are planned only; real PNGs belong to UI #21. No changes to main, no merge. PR #16 remains review-gated.
