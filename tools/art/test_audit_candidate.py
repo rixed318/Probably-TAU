@@ -70,6 +70,17 @@ class CandidateAuditTests(unittest.TestCase):
         self.assertTrue(result['within_24_colors'])
         self.assertFalse(result['has_partial_alpha'])
 
+    def test_same_rgb_with_different_alpha_counts_once(self):
+        image = Image.new('RGBA', (320, 180), (24, 57, 47, 255))
+        image.putpixel((0, 0), (24, 57, 47, 128))
+        image.putpixel((1, 0), (24, 57, 47, 1))
+        image.save(self.path)
+        result = audit(self.path)
+        self.assertEqual(result['unique_colors'], 1)
+        self.assertEqual(result['top_colors'][0]['pixels'], 57600)
+        self.assertTrue(result['within_24_colors'])
+        self.assertTrue(result['has_partial_alpha'])
+
     def test_over_24_colors_flagged(self):
         image = Image.new('RGB', (320, 180))
         for i in range(25):
