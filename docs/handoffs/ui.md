@@ -465,3 +465,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Bounded task:** add `tools/art/audit_candidate.py`, a read-only Pillow audit of candidate PNG dimensions, mode, SHA256, byte count, unique colors and most common RGB colors. Output JSON explicitly marks `production_ready: false`; it cannot approve artwork or replace manual pixel/rights QA.
 - **Executed locally:** `python tools/art/audit_candidate.py /mnt/data/probably_tau_office_c001_320x180_candidate.png` (equivalent local copy) and `python -m py_compile tools/art/audit_candidate.py`. Both passed. Observed 320×180, RGB, 24 colors, 32781 bytes, SHA256 `e0a1236ee20665f5b063fab7e9b0385cd5842fb03f3a0bcbd20a22d5c7d85232`.
 - **Still BLOCKED:** actual PNG bytes have not been committed; authenticated GitHub connector cannot directly read container files. No GitHub CI, Android hardware, Unity Editor, pixel-cluster cleanup or production approval claimed. No Core/main changes.
+
+
+## AutoDev 03 · 2026-11-17 · candidate PNG audit regression (#21)
+
+- **One bounded task:** add `tools/art/test_audit_candidate.py` with six synthetic Pillow-based tests for existing read-only `audit_candidate.py`: native 320×180 RGB and SHA256, wrong grid, RGBA, >24 colors, non-PNG content, and palette-mode rejection. No art assets, production manifest entries, gameplay or Core changed.
+- **Test commit:** `f3709edbedba85cbeff4d7dcd5d5b3ed23eb99b2` on `feature/ui-5`. This handoff is a separate documentation commit (GitHub Contents API only supports one file per commit here).
+- **Actually executed locally:** Python 3 + Pillow 12.3.0, `python -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v`: **6/6 passed** in 0.059s against a local copy of the repository's `audit_candidate.py` fetched and reviewed from GitHub. These synthetic tests do **not** validate the original C001 binary, GitHub CI, Android hardware or Unity.
+- **BLOCKED:** C001 actual PNG binary still absent from GitHub because this authenticated connector cannot ingest the local PNG file bytes. Candidate remains unapproved and production_ready=false. No merge or main changes.
