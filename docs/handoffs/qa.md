@@ -776,3 +776,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** no verified Unity APK, signing/install/offline launch or physical Android acceptance; checklist is prepared only.
 - **Blocker 3:** original PNG signatures/dimensions/manifest hashes and real Save→Load still unverified.
 - **Recommended next step:** retrieve exact-UI-SHA single-file Actions ZIP and execute mobile Chromium tests; separately ask Unity integrator to produce an SHA-pinned test APK with signature/hash and install evidence using the checklist above. No READY_FOR_OWNER_TEST, no merge/main write, no third-party IP authorization.
+
+
+## 2026-11-17 15:36 UTC+4 — Issue #21 PNG delivery gate: independent PR tree audit
+
+**One bounded task:** inspect PR #12's paginated changed-filename inventory at immutable UI HEAD `9a80e9360216867c3e6dd7f400b911783bb2d4ae`, and fetch `docs/art/ASSET_MANIFEST_D01.csv` at that SHA. **Result: FAIL for the first-batch binary-delivery gate:** PR #12 changed-file inventory contains **zero paths ending in `.png`**. The manifest's sampled first-batch rows (office_wall, office_floor, office_window, desk_body, NPC portrait) are `planned` with blank `source_file`, `UNASSIGNED` generator and `MASTER_TBD` reference. These are planned entries, not uploaded assets. This is a repository/manifest audit, not image decoding; PNG signature, dimensions, alpha, SHA-256 and visual originality **NOT RUN** because no PNG files were present in the PR changed-file inventory. Do not claim the entire repository has no PNG; scope is PR #12 diff.
+
+**Actual verification:** GitHub connector returned PR #12 HEAD, complete paginated changed filenames and manifest blob `57d69589a7b6671b85810dad77506c311d5ffa43`; exact filename suffix filter found 0 `.png` paths. No local Python/Node, Chromium, Unity or APK tests executed. No rights or IP approval inferred.
+
+**QA request to UI 03:** commit 3–5 actual original PNG binaries to `feature/ui-5` with populated `source_file`, provenance and SHA-256 in the manifest; after commit, QA will retrieve each immutable blob and check PNG signature, IHDR dimensions and manifest SHA-256 before any art-ready assertion.
+
+### Сводка для координатора 00 — 2026-11-17 15:36 UTC+4
+
+- **Verified PR HEADs before QA commit:** Core #9 `98ea35dae6b43817eb1f2d140390e6fa1e064e21`; QA #10 `160923265062cf7c5cbf92b310d62bc979588c74`; Content #11 `165215f13ce85ae0262131d1f92f0c67786f6f6f`; UI #12 `9a80e9360216867c3e6dd7f400b911783bb2d4ae`; ADR #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; NPC #16 `7c78ed88f3324f9018f7233f4877e690a32cd365`. Main AGENTS.md and CHAT_WORKFLOW.md re-read; C0-v2/ADR are not merged authority.
+- **Blocker 1:** Issue #21 PR #12 currently has no changed PNG binaries to verify; manifest entries remain planned.
+- **Blocker 2:** exact-SHA Actions single-file ZIP and Chromium touch 360x800/800x360 gameplay/replay/48dp geometry remain NOT RUN.
+- **Blocker 3:** real Unity Editor/APK/Android and Save→Load acceptance NOT RUN.
+- **Next:** UI 03 commits 3–5 PNGs with provenance/hash; QA independently verifies bytes and dimensions. In parallel, retrieve exact-SHA HTML artifact for mobile Chromium acceptance. No READY_FOR_OWNER_TEST, no main push/merge or third-party IP approval.
