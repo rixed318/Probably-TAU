@@ -221,6 +221,31 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoicePreviewsByVisitId("D01_UNKNOWN", out invalidPreviews) || invalidPreviews != null)
                 throw new Exception("Unknown preview menu must fail closed.");
 
+            // Cross-platform selection must not show a choice from a different visitor.
+            for (int i = 0; i < menuVisits.Length; i++)
+            {
+                foreach (string id in menuChoices[i])
+                {
+                    Day01Visitors.ChoicePreview matched;
+                    if (!Day01Visitors.TryGetChoicePreviewForVisit(menuVisits[i], id, out matched) ||
+                        matched == null || matched.ChoiceId != id ||
+                        matched.VisitorCard.VisitId != menuVisits[i])
+                        throw new Exception("Visit-scoped choice preview mismatch: " + id);
+                    Day01Visitors.ChoicePreview wrongVisit;
+                    string otherVisit = menuVisits[(i + 1) % menuVisits.Length];
+                    if (Day01Visitors.TryGetChoicePreviewForVisit(otherVisit, id, out wrongVisit) ||
+                        wrongVisit != null)
+                        throw new Exception("Cross-visitor choice preview leaked: " + id);
+                }
+            }
+            Day01Visitors.ChoicePreview invalidScoped;
+            if (Day01Visitors.TryGetChoicePreviewForVisit(null, "LAB-1", out invalidScoped) || invalidScoped != null ||
+                Day01Visitors.TryGetChoicePreviewForVisit("d01_lab", "LAB-1", out invalidScoped) || invalidScoped != null ||
+                Day01Visitors.TryGetChoicePreviewForVisit("D01_LAB", "PARTNER-2", out invalidScoped) || invalidScoped != null ||
+                Day01Visitors.TryGetChoicePreviewForVisit("D01_LAB", "lab-1", out invalidScoped) || invalidScoped != null ||
+                Day01Visitors.TryGetChoicePreviewForVisit("D01_LAB", null, out invalidScoped) || invalidScoped != null)
+                throw new Exception("Invalid visit-scoped preview must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
