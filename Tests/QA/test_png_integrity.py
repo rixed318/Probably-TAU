@@ -30,14 +30,21 @@ def verify_png(path, width, height, expected_sha256):
         raise ValueError(f'dimension mismatch: {actual_width}x{actual_height}')
     if not actual_width or not actual_height:
         raise ValueError('zero PNG dimension')
+    bit_depth, color_type, compression, filter_method, interlace = data[24:29]
+    allowed_depths = {0: {1, 2, 4, 8, 16}, 2: {8, 16}, 3: {1, 2, 4, 8}, 4: {8, 16}, 6: {8, 16}}
+    if (bit_depth not in allowed_depths.get(color_type, set()) or compression != 0
+            or filter_method != 0 or interlace not in (0, 1)):
+        raise ValueError('invalid IHDR encoding')
     actual_sha = hashlib.sha256(data).hexdigest()
     if actual_sha.lower() != expected_sha256.lower():
         raise ValueError('SHA-256 mismatch')
     return actual_sha
 
 
-def sample_header(width=320, height=180):
-    payload = struct.pack('>IIBBBBB', width, height, 8, 6, 0, 0, 0)
+def sample_header(width=320, height=180, bit_depth=8, color_type=6,
+                  compression=0, filter_method=0, interlace=0):
+    payload = struct.pack('>IIBBBBB', width, height, bit_depth, color_type,
+                          compression, filter_method, interlace)
     chunk = b'IHDR' + payload
     return SIGNATURE + struct.pack('>I', 13) + chunk + struct.pack('>I', zlib.crc32(chunk) & 0xffffffff)
 
@@ -72,6 +79,27 @@ class TestPngIntegrity(unittest.TestCase):
         self.path.write_bytes(self.data[:29] + b'\x00\x00\x00\x00')
         with self.assertRaisesRegex(ValueError, 'CRC'):
             verify_png(self.path, 320, 180, self.sha)
+
+    def check_invalid_encoding(self, **kwargs):
+        data = sample_header(**kwargs)
+        self.path.write_bytes(data)
+        with self.assertRaisesRegex(ValueError, 'IHDR encoding'):
+            verify_png(self.path, 320, 180, hashlib.sha256(data).hexdigest())
+
+    def test_invalid_color_type(self):
+        self.check_invalid_encoding(color_type=5)
+
+    def test_invalid_bit_depth_for_rgba(self):
+        self.check_invalid_encoding(bit_depth=4)
+
+    def test_invalid_compression_method(self):
+        self.check_invalid_encoding(compression=1)
+
+    def test_invalid_filter_method(self):
+        self.check_invalid_encoding(filter_method=1)
+
+    def test_invalid_interlace_method(self):
+        self.check_invalid_encoding(interlace=2)
 
 
 if __name__ == '__main__':
