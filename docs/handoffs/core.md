@@ -393,3 +393,8 @@ Issue #18, branch feature/core-2, PR #9. A successful PrepareQuietDay now append
 ## AutoDev 01 — settled payable restore invariant (17.11.2026)
 
 **Issue #19 / #18; feature/core-2; PR #9.** `DurableGameStateSnapshot` now rejects an outstanding `DueKey` when its canonical `payable:<DueKey>` posting already exists in the ordered Ledger. This fail-closed validation prevents restoring an inconsistent paid-and-unpaid liability and subsequent duplicate settlement. A targeted golden test covers rejection and a distinct outstanding due key surviving restore. No NPC, UI, weekly settlement, or Unity project touched. The standalone .NET runner invokes the test through `GameStateSnapshotGoldenTests.RunAll()`. Unity/Android toolchain and local dotnet unavailable here; do not claim Unity build or local tests. Await exact-HEAD CI and QA #10 review. Android APK remains BLOCKED without verified Unity 6.3 LTS Editor/Android modules.
+
+
+## 17.11.2026 — Core EndDay report projection (#19)
+
+Added `Runtime/Core/DurableDayReport.cs`: read-only projection of a single prepared EndDay transition, with verified day/revision, ledger-prefix integrity, matching durable receipt and cash delta; exposes ordered postings and remaining payables without replaying settlement. Golden runner adds paid and quiet cases plus invalid transition rejection. No policy numbers, NPC/UI changes or new state writer. Exact .NET CI status must be checked for this commit; local .NET/Unity/Android SDK/NDK unavailable. Android APK BLOCKED pending real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK. Next: agree typed document effect IDs and command transaction with Content #11, NPC #16 and QA #10. No main merge.

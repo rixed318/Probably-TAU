@@ -42,6 +42,7 @@ namespace TAU.President.Tests.Core
             QuietDayAdvanceGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
+            EndDayReportGolden();
         }
 
         private static void DurableFinanceRoundTrip()
@@ -303,6 +304,30 @@ namespace TAU.President.Tests.Core
             Assert(noCashNext.Payables.Outstanding.Count == 1);
             Assert(noCashNext.Restore().Finance.Receipts.Count == 2);
             Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(noCashNext, 1, 0));
+        }
+
+        private static void EndDayReportGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var before = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(header, new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]),
+                new DurablePayablesSnapshot(new[] { new DurablePayable("rent", 0, 200L) }));
+            var after = DurableDayAdvance.PrepareDay(before, 0, 0);
+            var report = DurableDayReport.Capture(before, after.Restore());
+            Assert(report.ClosedDayIndex == 0 && report.OpeningCashKopecks == 1000L &&
+                report.ClosingCashKopecks == 800L && report.Postings.Count == 1 &&
+                report.Postings[0].PostingId == "payable:rent" &&
+                report.UnpaidPayables.Count == 0);
+            Throws<InvalidOperationException>(() => DurableDayReport.Capture(before, before));
+            var quietBefore = new DurableGameStateSnapshot(before.Finance, before.Events);
+            var quietAfter = DurableDayAdvance.PrepareDay(quietBefore, 0, 0);
+            var quietReport = DurableDayReport.Capture(quietBefore, quietAfter);
+            Assert(quietReport.Postings.Count == 0 && quietReport.ClosingCashKopecks == 1000L);
         }
 
         private static RandomStreamSnapshotDto streamsItem()
