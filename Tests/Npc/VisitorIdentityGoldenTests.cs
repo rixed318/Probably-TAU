@@ -48,6 +48,26 @@ namespace TAU.President.Tests.Npc
                     ReferenceEquals(cards[i], repeatedCards[i]))
                     throw new Exception("Android/Windows visitor card identity mismatch at " + i);
             }
+            // Art manifest navigation uses one exact, case-sensitive ID resolver on both platforms.
+            for (int i = 0; i < cards.Count; i++)
+            {
+                foreach (string assetId in new[] { plannedPortraitIds[i], plannedStandingIds[i], plannedDocumentIds[i] })
+                {
+                    Day01VisitorCard fromAsset;
+                    if (!Day01Visitors.TryGetCardByPlannedAssetId(assetId, out fromAsset) ||
+                        fromAsset.VisitId != cards[i].VisitId ||
+                        fromAsset.DocumentId != cards[i].DocumentId ||
+                        ReferenceEquals(fromAsset, cards[i]))
+                        throw new Exception("Planned asset-to-card mismatch: " + assetId);
+                }
+            }
+            Day01VisitorCard invalidAsset;
+            if (Day01Visitors.TryGetCardByPlannedAssetId(null, out invalidAsset) || invalidAsset != null ||
+                Day01Visitors.TryGetCardByPlannedAssetId("", out invalidAsset) || invalidAsset != null ||
+                Day01Visitors.TryGetCardByPlannedAssetId("Irina_korneeva_standing", out invalidAsset) || invalidAsset != null ||
+                Day01Visitors.TryGetCardByPlannedAssetId("missing_asset", out invalidAsset) || invalidAsset != null)
+                throw new Exception("Unknown planned art ID must fail closed.");
+
             var mutableCards = cards as System.Collections.Generic.IList<Day01VisitorCard>;
             if (mutableCards == null || !mutableCards.IsReadOnly)
                 throw new Exception("Visitor cards must be read-only.");
