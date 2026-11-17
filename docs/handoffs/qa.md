@@ -685,3 +685,18 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** actual Chromium touch viewport gameplay, target geometry/overflow, alternative choices, ledger replay and partner cash still NOT RUN on exact SHA.
 - **Blocker 3:** real Android/Unity APK, Save→Load and original PNG binary verification NOT RUN.
 - **Recommended next step:** download exact-SHA `day01-android-touch` artifact and validate extracted bytes; then Chromium 360x800/800x360 with 3 decisions/EndDay/replay. Distinguish WEB prototype from Unity/APK. Keep main protected.
+
+
+## 2026-11-17 07:25 UTC+4 — Issue #20 immutable-head Android source regression
+
+**One bounded QA check:** independently re-fetch Android single-file source at PR #12 exact HEAD `ca6c7ab43d3e2199259167ca097a4b9ffa080fbd`, file `prototypes/ui-day-one/day01-android-touch.html`, GitHub blob `28450454bd89792d1d1ac16413ea6507f8b16dd8`. Compared with previous audit at UI `723dcc69534557d54b574991a425eaf5e13161c1`: same content blob, despite branch HEAD change. This supports *source-byte equivalence*, not equivalence of release artifacts or tests on the new HEAD.
+
+**Executed static assertions (GitHub fetched text, 10/10 PASS):** exactly 3 inline scripts; no script src; no linked external stylesheet; no literal HTTP(S) URL; viewport-fit=cover; CSS min-width/min-height 48px; DOC-01/02/03 identifiers; EndDay button; report ledger rendering; explicit zero immediate partner cash wording. This is a text-level source check, **not computed CSS geometry or functional execution**. All actual mobile Chromium 360×800 and 800×360 gameplay, overflow, double-tap, replay, artifact ZIP hash/extraction, Android device, Unity Editor/APK, PNG binary and Save→Load checks **NOT RUN** this pass. No new READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-17 07:25 UTC+4
+
+- **Latest PR HEADs:** #9 Core `540945353ebb748fd7eff4625cbe4df5a2dd6cfd`; #10 QA `3c038028fb17152352fae2f303a3910a0a1df6a5` before this update; #11 Content `97e8c32455a817ff51d65abc9697b2026008ef24`; #12 UI `ca6c7ab43d3e2199259167ca097a4b9ffa080fbd`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `e7adc9152ad81542acaa9d1faa77b3542e40844f`. Main policy AGENTS.md and CHAT_WORKFLOW.md re-read. No merge/main write.
+- **Blocker 1:** No exact-HEAD UI Actions ZIP downloaded/extracted and byte-hashed against the standalone HTML; artifact provenance not established.
+- **Blocker 2:** Chromium touch 360×800 and 800×360 actual choice/EndDay/replay and computed 48dp/overflow still NOT RUN.
+- **Blocker 3:** Unity Editor/APK, real Android, PNG binary verification and Save→Load still NOT RUN.
+- **Recommended next step:** retrieve downloadable Actions artifact tied to UI `ca6c7ab43d3e2199259167ca097a4b9ffa080fbd`, hash/extract it, then execute portrait/landscape touch and financial replay assertions on extracted bytes. Treat web mock separately from Unity build.
