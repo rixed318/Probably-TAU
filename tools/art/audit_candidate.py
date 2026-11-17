@@ -18,8 +18,11 @@ def audit(path: Path) -> dict:
             raise ValueError(f'Expected RGB/RGBA PNG, got {im.mode}')
         pixels = Counter(im.get_flattened_data())
         # Fully transparent RGB is invisible; it must not consume visible palette slots.
-        visible = Counter({color: count for color, count in pixels.items()
-                           if len(color) == 3 or color[3] != 0})
+        visible = Counter()
+        for color, count in pixels.items():
+            if len(color) == 3 or color[3] != 0:
+                # Palette budget is RGB colors, independent of alpha variants.
+                visible[color[:3]] += count
         partial_alpha = any(len(color) == 4 and 0 < color[3] < 255 for color in pixels)
         return {
             'file': path.name,
