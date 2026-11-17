@@ -444,3 +444,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** validator checks opening budget and all visible/revealed document fields ending in `Kopecks` as signed Int64 decimal strings, plus each document's `visible.dayIndex === visible.day - 1`. This is a static fixture check only; no authored prices, DayIndex values, choices, Core, ledger, runtime or art assets changed.
 
 **Validator commit:** `d6a05fc84eceed11bfb15d9e806d0b7ae96ebad2`. **Verification:** source change accepted by GitHub; Node CLI, CI, Unity and Android not run. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations for fractional/overflow kopecks and mismatched document day labels. PR #11 remains unmerged.
+
+## 18.11.2026 — Day01 Q/S/M/E/R score range guard (#7)
+
+**One bounded task:** `Content/validate-day01-acceptance.cjs` now requires exactly five canonical opening score keys (`Q/S/M/E/R`), opening values as safe integers within 0..100, and all computed scores for both golden Day01 acceptance examples within 0..100. Existing choices, money, DayIndex=0, asset IDs, runtime and Core are unchanged. The validator checks two authored golden paths, **not** all possible choices or real Core clamping behavior.
+
+**Validator commit:** `1ee1e79f2bb451850d7d4142fcb6aee2cc5a31a9`. **Actually checked:** GitHub accepted file update; Node CLI, CI, Unity, browser and Android NOT RUN. QA 05 must run `node Content/validate-day01-acceptance.cjs` plus negative mutations for missing score, non-integer/out-of-range opening score and out-of-range outcome. PR #11 remains Draft; no main merge.
