@@ -299,6 +299,16 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Ordered, read-only choice previews for the currently displayed Day01 document.
+        /// Presentation routing only; inspection and command authorization remain Core-owned.</summary>
+        public static bool TryGetChoicePreviewsByDocumentId(string documentId, out IReadOnlyList<ChoicePreview> previews)
+        {
+            previews = null;
+            VisitorInstance visitor;
+            if (!TryGetByDocumentId(documentId, out visitor)) return false;
+            return TryGetChoicePreviewsByVisitId(visitor.InstanceId, out previews);
+        }
+
         /// <summary>Resolve a choice only when it belongs to the currently displayed visit.
         /// Read-only UI guard; Core still owns all command eligibility and inspection checks.</summary>
         public static bool TryGetChoicePreviewForVisit(string visitId, string choiceId, out ChoicePreview preview)
