@@ -700,3 +700,22 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Chromium touch 360×800 and 800×360 actual choice/EndDay/replay and computed 48dp/overflow still NOT RUN.
 - **Blocker 3:** Unity Editor/APK, real Android, PNG binary verification and Save→Load still NOT RUN.
 - **Recommended next step:** retrieve downloadable Actions artifact tied to UI `ca6c7ab43d3e2199259167ca097a4b9ffa080fbd`, hash/extract it, then execute portrait/landscape touch and financial replay assertions on extracted bytes. Treat web mock separately from Unity build.
+
+
+## 2026-11-17 09:00 UTC+4 — Issue #20 Android gateway static invariant audit
+
+**Bounded task:** re-read actual UI branch `prototypes/ui-day-one/day01-android-touch.html` (GitHub blob `28450454bd89792d1d1ac16413ea6507f8b16dd8`) and inspect six *source-level* finance/replay guards. Exact branch commit HEAD was not independently resolved in this check; do not equate the blob with a branch commit or artifact ZIP.
+
+**Executed via connector-fetched source and literal assertions: 6/6 static PASS:** (1) duplicate decision rejection `decisions.has(id)`; (2) ledger entry key `day0:` + document ID; (3) partner model `recognizedRevenueKopecks: "0"` and no detected `balance+=BigInt(` expression; (4) repeated EndDay returns existing report and initial EndDay requires three decisions; (5) decision cost uses BigInt and subtracts from balance; (6) report notes explicitly disclaim automatic L-204 booking. These assertions **do not establish** runtime idempotency, uniqueness across Save→Load, absence of all possible revenue paths, or real Android usability. No runtime tests were executed in this pass.
+
+**NOT RUN / BLOCKED:** actual exact-commit Actions ZIP provenance and extracted-file hash; Chromium touch 360x800 / 800x360, 48dp computed geometry, overflow, three-document interactions, replay; Android hardware, Unity Editor/APK, Save→Load; PNG binary validation. Do not grant READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-17 09:00 UTC+4
+
+- **PRs:** #9 Core, #10 QA, #11 Content, #12 UI, #14 ADR, #16 NPC remain the integration review set; current exact commit heads **not independently verified in this pass**. QA branch was updated by this handoff commit (SHA in GitHub PR #10). UI Android source blob `28450454bd89792d1d1ac16413ea6507f8b16dd8` checked; do not mistake for commit SHA. C0-v2 and ADR remain upstream decisions, not approved here.
+- **Blocker 1:** exact-commit Android HTML artifact ZIP not downloaded/hashed.
+- **Blocker 2:** interactive Chromium portrait/landscape, double-tap, EndDay, finance replay and computed touch geometry NOT RUN.
+- **Blocker 3:** original PNG binary provenance and real Unity/APK/Android/Save→Load NOT RUN.
+- **Recommended next step:** pin UI PR #12 commit SHA, download its Actions single-file artifact, verify extracted HTML SHA256 and execute 360x800 + 800x360 Chromium touch with three documents, replay and partner-cash assertions. Only after that evaluate WEB_READY; APK remains a separate gate.
+
+**Safety:** no shared architecture contracts approved, no main push/merge, no third-party IP authorization.
