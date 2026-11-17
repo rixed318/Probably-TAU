@@ -183,6 +183,8 @@ namespace TAU.President.Npc
             public string ChoiceId { get; private set; }
             public Day01VisitorCard VisitorCard { get; private set; }
             public string RequiredInspectionDocumentId { get; private set; }
+            /// <summary>Presentation hint only; Core must still authorize the decision.</summary>
+            public bool RequiresInspection { get { return RequiredInspectionDocumentId != null; } }
 
             internal ChoicePreview(ChoiceDescriptor descriptor)
             {

@@ -85,7 +85,8 @@ namespace TAU.President.Tests.Npc
                         preview.VisitorCard == null ||
                         preview.VisitorCard.VisitId != cards[Array.IndexOf(cardChoiceIds, group)].VisitId ||
                         preview.RequiredInspectionDocumentId !=
-                            (id == "LAB-2" ? "DOC-01" : id == "PARTNER-2" ? "DOC-03" : null))
+                            (id == "LAB-2" ? "DOC-01" : id == "PARTNER-2" ? "DOC-03" : null) ||
+                        preview.RequiresInspection != (id == "LAB-2" || id == "PARTNER-2"))
                         throw new Exception("Choice preview identity/inspection mismatch: " + id);
                 }
             Day01Visitors.ChoicePreview invalidPreview;

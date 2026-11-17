@@ -325,3 +325,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Golden regression:** nine canonical choices must map to their visitor and exact Content inspection prerequisite (only LAB-2 → DOC-01 and PARTNER-2 → DOC-03); invalid/room/case-mismatched/null choices fail closed. Added to `VisitorIdentityGoldenTests.RunAll()`.
 - **Verification:** manually compared `Content/DAY01_UI_FIXTURE.json` on `feature/content-7`; executable C#/.NET/Unity/Android tests NOT RUN locally (no SDK/Editor). Check CI for the exact commit before claiming pass.
 - **Dependencies:** UI 03 owns real PNGs; Content 04 owns draft identities/art links and E03/E07 provenance. EventDirector remains BLOCKED on Core-owned atomic settlement/receipt/earned-key ports. Only `feature/npc-4`, Draft PR #16, no main merge.
+
+
+## AutoDev 02 — inspection hint for cross-platform choice preview (2026-11-17)
+
+- **Issue #20, one bounded increment:** added derived `ChoicePreview.RequiresInspection` to the existing immutable Day01 Windows/Android DTO. It is display-only, computed from `RequiredInspectionDocumentId`, and does not attest inspection completion or authorize a Core command.
+- **Regression added:** all nine canonical Day01 choices must expose the expected boolean (true only for LAB-2 and PARTNER-2) and the unchanged inspection document IDs. No second GameState, ledger, Android fork, or asset claim.
+- **Validation:** source reviewed against Content PR #11. Local .NET/Unity/Android tests NOT RUN in connector runtime; check GitHub Actions for the exact commit. EventDirector BLOCKED on Core atomic receipt/earnedId transaction ports and Content E03/E07 provenance. PR #16 Draft; no main merge.
