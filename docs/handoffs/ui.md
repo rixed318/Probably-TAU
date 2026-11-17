@@ -518,3 +518,18 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Code commit:** `a24939cf7d35be8b785a7619ae6e5a1ed4f84577` in `feature/ui-5`; file `prototypes/ui-day-one/styles.css`. No JS fixture, Content, Core/GameState or main edits.
 - **Actually verified:** authenticated GitHub Contents API accepted the code commit. CSS syntax was reviewed at source level; **no** browser rendering, Android viewport, touch hardware, Node, CI or Unity tests executed in this pass. Do not claim 48dp physical size on device until browser/device test.
 - **Remaining #20:** landscape/portrait screenshot regression, safe-area visual inspection, single-file offline bundle and actual Android playtest. **Remaining #21:** C001 real PNG binary upload and manual art review. PR #12 stays Draft; no merge.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-18 · Issue #20 (offline Android HTML artifact)
+
+**One bounded task:** packaged the existing Day01 browser prototype as a real single-file offline HTML artifact, preserving the separate desktop sources unchanged.
+
+**Artifact:** `prototypes/ui-day-one/day01-android-offline.html` (56,675 UTF-16 JS string units at packaging time). Includes original HTML + inline CSS + inline mock fixtures + inline UI controller. Added `viewport-fit=cover` for Android safe-area CSS. No external CSS/JS/CDN/service worker or GameState/Core changes. This remains the legacy one-request mock, **not** the canonical three-visitor Day01 gameplay slice and **not** an APK.
+
+**Artifact commit:** `eca8d53575b05f0eff82e1bf58fdb58afd6aafdb` on `feature/ui-5`. Direct browser/open link: https://github.com/rixed318/Probably-TAU/blob/feature/ui-5/prototypes/ui-day-one/day01-android-offline.html ; download the raw file then open locally in an Android browser. GitHub's blob page is a code viewer, not a playable HTTPS host.
+
+**Actually verified:** connector read all four original source files; packager assertions confirmed both inline scripts, one inline stylesheet, `viewport-fit=cover`, mock gateway and no relative `./` script/style links. GitHub file creation returned a commit SHA. **NOT RUN:** Android browser DOM/touch viewport tests (800×360, 360×800), Node tests, Unity, real device, Actions artifact upload or HTTPS deployment. Existing CSS touch sizing still needs visual QA. No claim of playable Android validation.
+
+**Next:** QA 05 should open the downloaded HTML in Chrome on Android or Android-shaped emulation and check inspect/decision/end-day, clipping, 48 CSS px targets and safe areas. Issue #20 still requires a GitHub Actions downloadable build artifact; this committed HTML is directly downloadable from GitHub but no Actions artifact has been published in this pass.
