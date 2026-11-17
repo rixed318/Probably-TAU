@@ -365,3 +365,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Production SHA:** `1d8c7fda51c44627bd3313a44c7b9917da943460`. **Test-source SHA:** `5b18d3ea1711f4d4f6d11e2d22d1790aed571e03`. PR #16 remains Draft; handoff SHA is the commit updating this file.
 - **Verification:** manually compared nine choice IDs and inspection mapping against existing fixture-based NPC definitions. Added golden assertions for three ordered menus, read-only wrappers and invalid IDs. **NOT RUN:** .NET execution, Unity Editor/PlayMode, Android build/device test. No successful CI asserted for these SHAs.
 - **Dependencies/BLOCKED:** full EventDirector still needs Core-owned atomic transaction/receipt/earned-key APIs, agreement occurrence identity, and Content/01 confirmation of E03/E07 provenance. C0-v2 PR #9 and ADR PR #14/#17 remain Draft; no GameState/ledger fork, no main push/merge.
+
+
+## AutoDev 02 — visit-scoped choice preview guard (2026-11-17)
+
+- **One bounded production increment (#4/#20):** `Day01Visitors.TryGetChoicePreviewForVisit(visitId, choiceId, out preview)` prevents a UI menu for one visitor from resolving another visitor's choice. Exact ordinal Content IDs; immutable presentation snapshot only, not Core command eligibility or proof of inspection. Same pure C# behavior for Windows and Android.
+- **Golden assertions:** nine valid visit-choice pairs, nine cross-visitor rejections, and null/case-mismatch/unknown combinations. Added to `VisitorIdentityGoldenTests.RunAll()`. **NOT RUN:** local .NET, Unity and Android tests; GitHub Actions must be inspected for the exact HEAD SHA.
+- **Dependencies/BLOCKED:** Core atomic settlement/receipt/earnedId APIs and E03/E07 fact provenance remain unresolved; no EventDirector integration. Content 04 owns canonical IDs, UI 03 owns original art assets. No second GameState/ledger, no main push/merge.
