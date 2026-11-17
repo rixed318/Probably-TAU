@@ -487,6 +487,31 @@ namespace TAU.President.Tests.Core
                 dueBefore.Finance.Ledger.Entries.Count == 0 &&
                 dueBefore.Finance.Receipts.Count == 0 &&
                 dueBefore.Events.Pending.Count == 1);
+            // A real payable due on Day01 must settle through the canonical EndDay,
+            // after all three document choices, without mixing its posting into a choice receipt.
+            var withPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] { new DurablePayable("day01-rent", 0, 200L) }));
+            var paidFlow = DurableDay01Flow.Prepare(withPayable, 0, 0, choices);
+            Assert(paidFlow.Next.Header.DayIndex == 1 &&
+                paidFlow.Next.Header.Revision == 4 &&
+                paidFlow.Next.Header.BalanceKopecks == 550L &&
+                paidFlow.Next.Finance.Ledger.Entries.Count == 4 &&
+                paidFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-rent" &&
+                paidFlow.Next.Finance.Receipts.Count == 4 &&
+                paidFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1 &&
+                paidFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-rent" &&
+                paidFlow.Report.Postings.Count == 1 &&
+                paidFlow.Report.Postings[0].PostingId == "payable:day01-rent" &&
+                paidFlow.Report.UnpaidPayables.Count == 0);
+            var paidRestored = paidFlow.Next.Restore();
+            Assert(paidRestored.Header.BalanceKopecks == 550L &&
+                paidRestored.Payables.Outstanding.Count == 0 &&
+                paidRestored.Finance.Ledger.Entries.Count == 4);
+            Assert(withPayable.Header.Revision == 0 &&
+                withPayable.Payables.Outstanding.Count == 1 &&
+                withPayable.Finance.Ledger.Entries.Count == 0);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(paidRestored,
+                paidRestored.Header.Revision, 0, choices));
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
