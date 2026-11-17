@@ -260,6 +260,27 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Canonical choice IDs for one Day01 visit, in Content fixture order.
+        /// Read-only UI navigation only; not an eligibility or Core command check.</summary>
+        public static bool TryGetChoiceIdsByVisitId(string visitId, out IReadOnlyList<string> choiceIds)
+        {
+            choiceIds = null;
+            switch (visitId)
+            {
+                case "D01_LAB":
+                    choiceIds = Array.AsReadOnly(new[] { "LAB-1", "LAB-2", "LAB-3" });
+                    return true;
+                case "D01_STUDENT":
+                    choiceIds = Array.AsReadOnly(new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" });
+                    return true;
+                case "D01_PARTNER":
+                    choiceIds = Array.AsReadOnly(new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" });
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
