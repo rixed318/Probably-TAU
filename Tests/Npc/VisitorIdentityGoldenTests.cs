@@ -75,6 +75,25 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByChoiceId(null, out missingCard) || missingCard != null)
                 throw new Exception("Invalid choice must not resolve to a visitor card.");
 
+            // A single read-only preview includes the canonical card and inspection hint.
+            foreach (string[] group in cardChoiceIds)
+                foreach (string id in group)
+                {
+                    Day01Visitors.ChoicePreview preview;
+                    if (!Day01Visitors.TryGetChoicePreview(id, out preview) ||
+                        preview.ChoiceId != id ||
+                        preview.VisitorCard == null ||
+                        preview.VisitorCard.VisitId != cards[Array.IndexOf(cardChoiceIds, group)].VisitId ||
+                        preview.RequiredInspectionDocumentId !=
+                            (id == "LAB-2" ? "DOC-01" : id == "PARTNER-2" ? "DOC-03" : null))
+                        throw new Exception("Choice preview identity/inspection mismatch: " + id);
+                }
+            Day01Visitors.ChoicePreview invalidPreview;
+            if (Day01Visitors.TryGetChoicePreview("ROOM-1", out invalidPreview) || invalidPreview != null ||
+                Day01Visitors.TryGetChoicePreview("lab-2", out invalidPreview) || invalidPreview != null ||
+                Day01Visitors.TryGetChoicePreview(null, out invalidPreview) || invalidPreview != null)
+                throw new Exception("Unknown choice preview must fail closed.");
+
             // Save/restore navigation uses canonical visit IDs on both platforms.
             string[] restoreVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
             for (int i = 0; i < restoreVisits.Length; i++)

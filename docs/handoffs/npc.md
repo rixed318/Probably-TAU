@@ -317,3 +317,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Golden test:** added three successful visit restore assertions and invalid/case-mismatched/null failure assertions to `VisitorIdentityGoldenTests.RunAll()`. Canonical Content fixture IDs `D01_LAB`, `D01_STUDENT`, `D01_PARTNER` checked against PR #11; art IDs remain planned only.
 - **Validation:** source-to-fixture manual review; local .NET, Unity, Android tests **NOT RUN** in connector runtime. GitHub Actions result must be checked separately for the new SHA. One atomic commit includes runtime, test and handoff; see PR #16 commit history for SHA.
 - **Dependencies:** EventDirector still BLOCKED pending Core atomic transaction/receipt/earnedId ports; Content 04 owns E03/E07 provenance; UI 03 owns actual PNG and art manifest. No second GameState/ledger, no main merge.
+
+
+## AutoDev 02 — unified read-only choice preview (2026-11-17)
+
+- **Issue #20, one bounded production increment:** added `Day01Visitors.TryGetChoicePreview` and immutable `ChoicePreview`, combining the canonical visitor card and inspection hint for a single Windows/Android presentation lookup. This is display metadata only: no eligibility decision, inspection completion, Core mutation, ledger or partner receipts.
+- **Golden regression:** nine canonical choices must map to their visitor and exact Content inspection prerequisite (only LAB-2 → DOC-01 and PARTNER-2 → DOC-03); invalid/room/case-mismatched/null choices fail closed. Added to `VisitorIdentityGoldenTests.RunAll()`.
+- **Verification:** manually compared `Content/DAY01_UI_FIXTURE.json` on `feature/content-7`; executable C#/.NET/Unity/Android tests NOT RUN locally (no SDK/Editor). Check CI for the exact commit before claiming pass.
+- **Dependencies:** UI 03 owns real PNGs; Content 04 owns draft identities/art links and E03/E07 provenance. EventDirector remains BLOCKED on Core-owned atomic settlement/receipt/earned-key ports. Only `feature/npc-4`, Draft PR #16, no main merge.

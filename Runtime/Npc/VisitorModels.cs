@@ -176,6 +176,32 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Immutable UI-only choice preview: canonical visitor and inspection hint.
+        /// The hint is not proof of inspection, eligibility or Core authorization.</summary>
+        public sealed class ChoicePreview
+        {
+            public string ChoiceId { get; private set; }
+            public Day01VisitorCard VisitorCard { get; private set; }
+            public string RequiredInspectionDocumentId { get; private set; }
+
+            internal ChoicePreview(ChoiceDescriptor descriptor)
+            {
+                ChoiceId = descriptor.ChoiceId;
+                VisitorCard = new Day01VisitorCard(descriptor.Visitor);
+                RequiredInspectionDocumentId = descriptor.RequiredInspectionDocumentId;
+            }
+        }
+
+        /// <summary>Resolve a Day01 choice to a platform-neutral preview; reject room/unknown IDs.</summary>
+        public static bool TryGetChoicePreview(string choiceId, out ChoicePreview preview)
+        {
+            preview = null;
+            ChoiceDescriptor descriptor;
+            if (!TryDescribeChoice(choiceId, out descriptor)) return false;
+            preview = new ChoicePreview(descriptor);
+            return true;
+        }
+
         /// <summary>Resolve a saved canonical visit ID to a fresh read-only card; no state mutation.</summary>
         public static bool TryGetCardByVisitId(string visitId, out Day01VisitorCard card)
         {
