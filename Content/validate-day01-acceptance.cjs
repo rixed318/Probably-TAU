@@ -51,9 +51,18 @@ for (const visitor of fixture.visitors) {
       money(choice.deferredPartnerRevenue.amountKopecks);
       assert.equal(choice.deferredPartnerRevenue.signingCashDeltaKopecks, "0");
       assert.equal(choice.deferredPartnerRevenue.earnedOnlyAfterDelivery, true);
+      assert.ok(Number.isSafeInteger(choice.deferredPartnerRevenue.earliestDayIndex) &&
+        choice.deferredPartnerRevenue.earliestDayIndex >= 4,
+        "partner income cannot be earned before DayIndex 4: " + choice.choiceId);
+      assert.deepEqual([...choice.deferredPartnerRevenue.requiredFacts].sort(),
+        ["E03_mentor_paid", "E07_delivered"].sort(),
+        "partner income requires both Core-confirmed facts: " + choice.choiceId);
     }
   }
 }
+assert.equal(fixture.deferredFactProvenance.earnedIdTemplate,
+  "partner/{sourceInstanceId}/delivery",
+  "partner earned receipt must use original Core agreement instance");
 console.log("PASS: all Day01 choice effects have valid types, Int64 kopecks and deferred signing rules");
 assert.equal(fixture.acceptanceExamples.length, 2, "review acceptance oracle count");
 for (const example of fixture.acceptanceExamples) {
