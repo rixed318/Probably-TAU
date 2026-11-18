@@ -152,14 +152,14 @@ jobs:
       - name: Checkout NPC branch read-only
         uses: actions/checkout@v4
         with:
-          ref: d2e022483c462000914806287c2e4c21647e8aeb6b5f25109287
+          ref: fa7452f99cfbee101ae47fd95bd225268cecd5bc
           path: npc
           persist-credentials: false
       - name: Record actual NPC revision
         run: |
           actual=$(git -C npc rev-parse HEAD)
           echo "NPC_SHA=$actual"
-          test "$actual" = "d2e022483c462000914806287c2e4c21647e8aeb6b5f25109287"
+          test "$actual" = "fa7452f99cfbee101ae47fd95bd225268cecd5bc"
       - name: Install .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
