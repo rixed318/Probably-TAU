@@ -434,3 +434,13 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Production SHA:** `ce75dfc5893941b0c5f736426fdec98103e7c387`. **Test-source SHA:** `66925152ee01a4afda7e654d97239ce6c51030b0`. Golden assertions added for three valid triples, nine mismatched triples and three invalid inputs.
 - **Verification:** GitHub accepted source and test commits; executable .NET, Unity and Android tests **NOT RUN in this pass**. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and verify CI for final HEAD before claiming success.
 - **BLOCKED:** EventDirector integration still awaits Core atomic settlement/receipt/earned-key ports and Content/Core E03/E07 provenance; C0-v2 PR #9, ADR PR #14/#17 and Content PR #11 remain governing dependencies. Content owns canonical IDs, UI owns original portrait PNGs (#21). PR #16 stays Draft; no main push/merge, no new GameState/ledger or IP approval.
+
+## AutoDev 02 — NPC-ID inspection preview (2026-11-18)
+
+**One bounded increment (#4, #20):** added `Day01Visitors.TryGetInspectionPreviewByVisitorId(string, out InspectionPreview)` to `Runtime/Npc/VisitorModels.cs`. This returns a read-only inspection hint for each canonical Content `npcId` (Irina / Dasha / Mark) using the existing document mapping. Unknown/case-mismatched IDs fail closed with null output. The helper does not spend inspection tokens, authorize choices, mutate GameState, or claim that art assets exist. Windows/Android share the same pure C# DTO.
+
+**Commits:** production `4a9b66d398a4724d36b853aa0a82cda0dffa6c3f`; golden assertions `34af24c9ed89f8a60a7a30234e4497848294c0ea`; this handoff update is a separate commit. PR #16 stays Draft; no main changes or merges.
+
+**Verification:** read actual feature branch source and Content draft JSON; GitHub accepted the two C# writes. Added 3 positive and 4 negative golden assertions. **NOT RUN:** .NET build/golden execution, Unity Editor, Android runtime. Await CI result for the new head; do not treat assertions added as assertions passed.
+
+**Dependencies:** Core atomic scheduled-event/receipt/earned-key API remains unconfirmed for full EventDirector. Content PR #11 draft remains proposed; portrait IDs and descriptions are only planned references, requiring Content/UI #21 coordination. C0-v2 PR #9 and ADR PR #14 remain unmerged; no second GameState or ledger.
