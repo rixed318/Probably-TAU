@@ -7,3 +7,18 @@ test('Android bundle has no CSS imports, remote media, frames or runtime network
   assert.doesNotMatch(html,/\b(?:fetch\s*\(|XMLHttpRequest\b|WebSocket\s*\(|EventSource\s*\()/);
   assert.doesNotMatch(html,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
 });
+
+// Both published files must remain self-contained; the legacy offline demo has a different script layout.
+test('second packaged Android offline HTML remains standalone and parseable',()=>{
+  const legacy=fs.readFileSync(path.join(__dirname,'day01-android-offline.html'),'utf8');
+  assert.match(legacy,/viewport-fit=cover/);
+  assert.match(legacy,/env\(safe-area-inset-top\)/);
+  assert.match(legacy,/min-height:48px/);
+  assert.doesNotMatch(legacy,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
+  assert.doesNotMatch(legacy,/@import\b|url\s*\(\s*['"]?https?:/i);
+  assert.doesNotMatch(legacy,/<(?:iframe|object|embed|audio|video|img)\b[^>]*(?:src|data)\s*=\s*['"]?https?:/i);
+  assert.doesNotMatch(legacy,/\b(?:fetch\s*\(|XMLHttpRequest\b|WebSocket\s*\(|EventSource\s*\()/);
+  const scripts=[...legacy.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+  assert.ok(scripts.length>0,'expected embedded executable JavaScript');
+  for(const script of scripts)new vm.Script(script);
+});
