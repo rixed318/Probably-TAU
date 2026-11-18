@@ -23,6 +23,12 @@ console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and fee
 
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_UI_FIXTURE.json"), "utf8"));
 assert.equal(fixture.dayIndex, 0);
+// Day labels are 1-based presentation only; canonical state and reports use 0-based DayIndex.
+assert.equal(fixture.displayDay, fixture.dayIndex + 1, "Day01 display day mismatch");
+assert.equal(fixture.roomConflict.displayDay, fixture.roomConflict.dayIndex + 1,
+  "room conflict display day mismatch");
+assert.equal(fixture.endDayReport.dayIndex, fixture.dayIndex,
+  "end-day report must refer to the current DayIndex");
 assert.equal(fixture.documents.length, 3);
 assert.equal(fixture.visitors.length, 3);
 assert.equal(new Set(fixture.documents.map(d => d.id)).size, 3);
