@@ -295,6 +295,27 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoicePreviewForDocument("DOC-01", null, out invalidDocumentScope) || invalidDocumentScope != null)
                 throw new Exception("Invalid document-scoped preview must fail closed.");
 
+            // A stale Android/Windows view must not combine a valid choice with a different document.
+            for (int i = 0; i < menuVisits.Length; i++)
+            {
+                foreach (string id in menuChoices[i])
+                {
+                    Day01Visitors.ChoicePreview valid;
+                    if (!Day01Visitors.TryGetChoicePreviewForVisitDocument(menuVisits[i], scopedDocuments[i], id, out valid) ||
+                        valid == null || valid.ChoiceId != id)
+                        throw new Exception("Visit/document/choice triple mismatch: " + id);
+                    Day01Visitors.ChoicePreview stale;
+                    if (Day01Visitors.TryGetChoicePreviewForVisitDocument(menuVisits[i], scopedDocuments[(i + 1) % 3], id, out stale) || stale != null ||
+                        Day01Visitors.TryGetChoicePreviewForVisitDocument(menuVisits[(i + 1) % 3], scopedDocuments[i], id, out stale) || stale != null)
+                        throw new Exception("Stale Day01 selection leaked: " + id);
+                }
+            }
+            Day01Visitors.ChoicePreview invalidTriple;
+            if (Day01Visitors.TryGetChoicePreviewForVisitDocument(null, "DOC-01", "LAB-1", out invalidTriple) || invalidTriple != null ||
+                Day01Visitors.TryGetChoicePreviewForVisitDocument("D01_LAB", null, "LAB-1", out invalidTriple) || invalidTriple != null ||
+                Day01Visitors.TryGetChoicePreviewForVisitDocument("D01_LAB", "DOC-01", "lab-1", out invalidTriple) || invalidTriple != null)
+                throw new Exception("Invalid Day01 triple must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
