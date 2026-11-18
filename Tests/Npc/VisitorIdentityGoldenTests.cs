@@ -488,6 +488,33 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetVisitScreenPreview("D01_UNKNOWN", out unknownScreen) || unknownScreen != null)
                 throw new Exception("Unknown Day01 screen must fail closed.");
 
+            // Document-driven navigation must resolve the identical immutable Day01 screen
+            // on Windows and Android, without guessing a visit or touching Core state.
+            string[] screenDocumentIds = { "DOC-01", "DOC-02", "DOC-03" };
+            string[] screenVisitIds = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            for (int i = 0; i < screenDocumentIds.Length; i++)
+            {
+                Day01Visitors.VisitScreenPreview byDocument;
+                Day01Visitors.VisitScreenPreview byVisit;
+                if (!Day01Visitors.TryGetVisitScreenPreviewByDocumentId(screenDocumentIds[i], out byDocument) ||
+                    !Day01Visitors.TryGetVisitScreenPreview(screenVisitIds[i], out byVisit) ||
+                    byDocument == null || byVisit == null ||
+                    byDocument.Card.VisitId != byVisit.Card.VisitId ||
+                    byDocument.Card.DocumentId != screenDocumentIds[i] ||
+                    byDocument.Inspection.InspectionId != byVisit.Inspection.InspectionId ||
+                    byDocument.Choices.Count != byVisit.Choices.Count)
+                    throw new Exception("Document screen route differs from visit screen route.");
+                for (int j = 0; j < byVisit.Choices.Count; j++)
+                    if (byDocument.Choices[j].ChoiceId != byVisit.Choices[j].ChoiceId)
+                        throw new Exception("Document screen route changed Content choice order.");
+            }
+            Day01Visitors.VisitScreenPreview invalidDocumentScreen;
+            if (Day01Visitors.TryGetVisitScreenPreviewByDocumentId(null, out invalidDocumentScreen) || invalidDocumentScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByDocumentId("", out invalidDocumentScreen) || invalidDocumentScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByDocumentId("doc-01", out invalidDocumentScreen) || invalidDocumentScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByDocumentId("DOC-04", out invalidDocumentScreen) || invalidDocumentScreen != null)
+                throw new Exception("Unknown document screen route must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
