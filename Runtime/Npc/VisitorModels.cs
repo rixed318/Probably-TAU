@@ -522,6 +522,16 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(visitId, out screen);
         }
 
+        /// <summary>Open the same Day01 read-only screen from a planned portrait, standing or document art ID.
+        /// Asset IDs are routing hints only; this does not assert any PNG exists or authorize a decision.</summary>
+        public static bool TryGetVisitScreenPreviewByPlannedAssetId(string assetId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            Day01VisitorCard card;
+            if (!TryGetCardByPlannedAssetId(assetId, out card)) return false;
+            return TryGetVisitScreenPreview(card.VisitId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
