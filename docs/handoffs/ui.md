@@ -689,3 +689,15 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Guard verifies the head-script/HTML-body ordering and that `inspect`/`end` event wiring and first `render()` remain inside `DOMContentLoaded`. It protects the previously fixed permanent «Загрузка…» failure.
 - Validation performed: GitHub accepted the test-file commit; source HTML inspected and contains the expected deferred handler. Node/CI and real Android tests **not executed in this pass**; success is not claimed.
 - No GameState/Core, Unity runtime, desktop HTML or art assets changed. Android real-device test and Issue #21 real PNGs remain pending.
+
+
+---
+
+## 2026-11-19 — Issue #20: DOM-ready regression confirmed in CI
+
+- Scoped task: verify the newly added Android DOM-ready regression on the actual `feature/ui-5` HEAD, not merely inspect its source.
+- Verified HEAD before this documentation commit: `f9703db638e3275995a73ba52ddca8637c914576`; PR #12 remains Draft.
+- GitHub Actions [run 44411464460](https://github.com/rixed318/Probably-TAU/actions/runs/44411464460): `completed/success`; job `Node UI and art manifest regression (not Unity)` succeeded. The `Node UI mock and canonical Day 01 tests` step succeeded, which includes `test-day01-android-touch.cjs` DOM-ready guard in the current test suite. Art manifest validation/regression, synthetic PNG audit, staged HTML verification, and both artifact upload steps also succeeded.
+- Artifacts verified via GitHub metadata: `day01-android-touch` id `14476189172`, 24,325 bytes, SHA256 archive digest `c4e52db46d8b09356f33d2b26e667f5f219241baff192f5c376488bb06d6915c`; `day01-web-demo` id `14476873919`, 8,484 bytes. Both reported unexpired at this check. The Android archive differs in size from the older broken ZIP; do not reuse old copies.
+- Actual verification performed: live GitHub PR/issue/docs review, CI run/job/step conclusions and artifact metadata. No local Node rerun, downloaded ZIP extraction, physical Android `file://` launch, touch-flow/device test, Unity Editor or APK test in this pass. Synthetic PNG tests are NOT actual original art assets; Issue #21 remains open.
+- Next: owner/QA device test on the new ZIP at 800×360 and 360×800; record screenshots and interactions. Keep C0-v2 / ADR proposals in PR #9/#14 separate from UI mock; no Core/GameState changes or main merge.
