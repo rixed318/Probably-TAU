@@ -719,6 +719,41 @@ namespace TAU.President.Tests.Core
                 withPayable.Finance.Receipts.Count == 0 &&
                 withPayable.Finance.Ledger.Entries.Count == 0);
 
+            // A future scheduled event and a due-now payable must coexist: EndDay
+            // settles only the payable and leaves tomorrow's event unconsumed.
+            var combinedBefore = new DurableGameStateSnapshot(
+                futureEventBefore.Finance,
+                futureEventBefore.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day01-event-rent", 0, 200L)
+                }));
+            var combinedFlow = DurableDay01Flow.Prepare(combinedBefore, 0, 0, choices);
+            Assert(combinedFlow.Next.Header.DayIndex == 1 &&
+                combinedFlow.Next.Header.Revision == 4 &&
+                combinedFlow.Next.Header.BalanceKopecks == 550L &&
+                combinedFlow.Next.Finance.Ledger.Entries.Count == 4 &&
+                combinedFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-event-rent" &&
+                combinedFlow.Next.Finance.Receipts.Count == 4 &&
+                combinedFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1 &&
+                combinedFlow.Report.Postings.Count == 1 &&
+                combinedFlow.Report.UnpaidPayables.Count == 0 &&
+                combinedFlow.Next.Payables.Outstanding.Count == 0 &&
+                combinedFlow.Next.Events.Pending.Count == 1 &&
+                combinedFlow.Next.Events.Pending[0].InstanceId == "event-tomorrow" &&
+                combinedFlow.Next.Events.CompletedIds.Count == 0);
+            var combinedRestored = combinedFlow.Next.Restore();
+            Assert(combinedRestored.Header.BalanceKopecks == 550L &&
+                combinedRestored.Finance.Ledger.Entries.Count == 4 &&
+                combinedRestored.Payables.Outstanding.Count == 0 &&
+                combinedRestored.Events.Pending.Count == 1 &&
+                combinedRestored.Events.Pending[0].DueDayIndex == 1 &&
+                combinedRestored.Events.CompletedIds.Count == 0);
+            Assert(combinedBefore.Header.DayIndex == 0 &&
+                combinedBefore.Header.BalanceKopecks == 1000L &&
+                combinedBefore.Payables.Outstanding.Count == 1 &&
+                combinedBefore.Events.Pending.Count == 1 &&
+                combinedBefore.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
