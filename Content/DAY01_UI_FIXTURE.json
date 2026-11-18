@@ -424,6 +424,43 @@
         "weeklySettlementApplied": false,
         "nextDefinitionId": "E02"
       }
+    },
+    {
+      "id": "DAY01-P0-EXPLICIT-LAB-PRIORITY",
+      "dayIndex": 0,
+      "selectedChoiceIds": [
+        "LAB-1",
+        "STUDENT-1",
+        "PARTNER-1"
+      ],
+      "inspectionDocumentIds": [],
+      "roomResolutionChoiceId": "ROOM-1",
+      "roomStatus": "priority-lab-no-booking",
+      "expected": {
+        "inspectionTokensUsed": 0,
+        "openingBudgetKopecks": "200000000",
+        "immediateLedgerPostings": [
+          {
+            "choiceId": "LAB-1",
+            "deltaKopecks": "-22000000"
+          },
+          {
+            "choiceId": "STUDENT-1",
+            "deltaKopecks": "-6500000"
+          }
+        ],
+        "closingBudgetKopecks": "171500000",
+        "closingScores": {
+          "Q": 55,
+          "S": 51,
+          "M": 52,
+          "E": 47,
+          "R": 48
+        },
+        "partnerEarnedIncomeKopecks": "0",
+        "weeklySettlementApplied": false,
+        "nextDefinitionId": "E02"
+      }
     }
   ]
 }
