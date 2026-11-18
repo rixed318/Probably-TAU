@@ -156,7 +156,7 @@ assert.equal(fixture.deferredFactProvenance.earnedIdTemplate,
   "partner/{sourceInstanceId}/delivery",
   "partner earned receipt must use original Core agreement instance");
 console.log("PASS: all Day01 choice effects have valid types, Int64 kopecks and deferred signing rules");
-assert.equal(fixture.acceptanceExamples.length, 2, "review acceptance oracle count");
+assert.equal(fixture.acceptanceExamples.length, 3, "review acceptance oracle count");
 for (const example of fixture.acceptanceExamples) {
   assert.equal(example.dayIndex, 0);
   assert.equal(example.selectedChoiceIds.length, 3);
@@ -221,13 +221,19 @@ for (const example of fixture.acceptanceExamples) {
     } else {
       assert.notEqual(example.roomResolutionChoiceId, "ROOM-4", "ROOM-4 cannot represent a resolved priority");
     }
-    assert.equal(example.roomStatus, "unresolved-no-booking");
+    if (example.roomResolutionChoiceId === "ROOM-4") {
+      assert.equal(example.roomStatus, "unresolved-no-booking");
+    } else {
+      const priority = fixture.roomResolutionChoices.ifMultiple.find(c => c.id === example.roomResolutionChoiceId).priority;
+      assert.equal(example.roomStatus, "priority-" + priority + "-no-booking",
+        "explicit room priority must not silently become a booking");
+    }
   } else {
     assert.equal(example.roomResolutionChoiceId, "ROOM-AUTO");
     assert.equal(example.roomStatus, "requests-only-no-booking");
   }
 }
-console.log("PASS: 2 Day01 acceptance oracles, 3 visits/docs, budget, scores, postings, inspections, room, no signing income");
+console.log("PASS: 3 Day01 acceptance oracles, 3 visits/docs, budget, scores, postings, inspections, room, no signing income");
 
 // Cross-platform Day01 art-link contract: planned references, not proof of PNG delivery.
 const art = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
