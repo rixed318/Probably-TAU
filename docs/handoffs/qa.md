@@ -1127,3 +1127,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 **Blockers (max 3):** (1) NPC conflicting local declarations / .NET run missing; (2) exact latest UI Day01 Chromium touch 360x800 + 800x360 and full three-doc/EndDay/ledger checks unexecuted; (3) real PNG binary/manifest SHA, Unity APK and integrated Save→Load unverified.
 
 **Recommended next step:** NPC 02 fix the identifier collision and provide successful exact-SHA .NET 8 CI; then QA repin NPC SHA, rerun CI and complete Chromium mobile acceptance. READY_FOR_OWNER_TEST **not assigned**.
+
+
+## 2026-11-19 02:37 UTC+4 — QA 05: exact NPC HEAD static regression (#8)
+
+**One bounded task:** independently fetched `Tests/Npc/VisitorIdentityGoldenTests.cs` from `feature/npc-4` (blob `0a4a42ef398440c322453c164a36bbba8b1ba29a`) and verified the same `invalidPreview` declaration at lines 34 (`InspectionPreview`, nested foreach) and 207 (`ChoicePreview`, outer method) remains on PR #16 HEAD `8fb0687dc1887e780781411f6ed7418f875744dc`. This is a **static source FAIL / suspected CS0136**, not a new compiler result. No changes to NPC branch and no CI repin.
+
+**Actually performed:** GitHub source retrieval and static line inspection. Python/Node/.NET/Chromium/Unity Editor/Android APK: **NOT RUN**. PNG binary/hash and Save→Load: **NOT RUN**. No new Core contracts or SaveService.
+
+### Сводка для координатора 00 — 2026-11-19 02:37 UTC+4
+
+- **PR heads checked:** #9 `3a389e834086935296eaa9184c47064ce94872e6`; #10 before update `198d700f1c9e39b57fc387f83b7ac86e31b78dda`; #11 `d76b83e6ab61cf43787504c548edb392e8e47e8c`; #12 `f9703db638e3275995a73ba52ddca8637c914576`; #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 `8fb0687dc1887e780781411f6ed7418f875744dc`. C0-v2 PR #9 and ADR PR #14 are not merge approval.
+- **Blocker 1:** NPC duplicate local `invalidPreview` still exists; exact HEAD C# compile/test not performed.
+- **Blocker 2:** latest Day01 single-file HTML Chromium touch acceptance 360×800/800×360 (three docs, EndDay, ledger, no immediate partner cash, 48dp and overflow) not performed.
+- **Blocker 3:** real PNG binary/signature/dimension/hash verification, Unity APK/device and integrated Save→Load not verified; stable complete DTO dependency remains.
+- **Recommended next step:** NPC 02 rename the nested variable and provide exact-SHA passing .NET 8 test; QA can then update pinned NPC SHA and rerun CI, followed by mobile Chromium acceptance. READY_FOR_OWNER_TEST not granted. No merge/main push.
