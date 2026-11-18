@@ -27,6 +27,24 @@ namespace TAU.President.Tests.Npc
                     missingInspection != null)
                     throw new Exception("Invalid Day01 inspection ID accepted.");
             }
+            // Visit-scoped inspection previews must agree with canonical document routing.
+            string[] inspectionVisitIds = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            for (int i = 0; i < inspectionVisitIds.Length; i++)
+            {
+                Day01Visitors.InspectionPreview byVisit;
+                if (!Day01Visitors.TryGetInspectionPreviewByVisitId(inspectionVisitIds[i], out byVisit) ||
+                    byVisit == null || byVisit.DocumentId != inspectionDocumentIds[i] ||
+                    byVisit.InspectionId != inspectionActionIds[i] ||
+                    byVisit.CostTokens != 1 || byVisit.RepeatCostTokens != 0)
+                    throw new Exception("Visit inspection preview mismatch: " + inspectionVisitIds[i]);
+            }
+            foreach (string invalid in new[] { null, "", "d01_lab", "D01_UNKNOWN", " D01_LAB" })
+            {
+                Day01Visitors.InspectionPreview missingByVisit;
+                if (Day01Visitors.TryGetInspectionPreviewByVisitId(invalid, out missingByVisit) ||
+                    missingByVisit != null)
+                    throw new Exception("Invalid Day01 visit inspection ID accepted.");
+            }
             var cards = Day01Visitors.CreateReadOnlyCards();
             var repeatedCards = Day01Visitors.CreateReadOnlyCards();
             // Content 04 DAY01_ART_LINKS.json: planned IDs only, not proof of PNG availability.
