@@ -905,3 +905,22 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** No actual PNG binaries in UI PR #12 changed-file list to validate signature/dimensions/manifest SHA.
 - **Blocker 3:** No verified Unity Editor APK/device execution or stable complete snapshot DTO for production SaveService; Unity and Save→Load NOT RUN.
 - **Recommended next step:** inspect the GitHub Actions run for QA workflow commit `d04914c72cd0`; fix any actual Node failures, then perform Chromium portrait/landscape checks on the exact self-contained HTML artifact. Request UI 03 to commit 3–5 original PNGs with hashes. No merge/main write.
+
+
+## 2026-11-18 — QA 05: verified exact-SHA CI evidence (Issue #8 / #20)
+
+**One bounded task:** independently inspect GitHub Actions for QA PR #10 commit `42ec2ed154fcac3145ecabe6c43556bfcad990bd` and audit its pinned cross-branch revisions. No gameplay, Core contract or SaveService change.
+
+**Verified GitHub Actions:** workflow `QA offline regression`, run [44198843105](https://github.com/rixed318/Probably-TAU/actions/runs/44198843105), conclusion **success**. All four jobs completed successfully: Python PCG32 oracle, UI/Content static+Node regressions (including `test-day01-android-touch.cjs`), Core .NET 8 golden suites, NPC .NET 8 golden assertions. This is **CI evidence on pinned source snapshots**, not a test of current feature branch heads or a Unity build. The workflow records exact SHAs and checks them; pinned UI `e09653994625adb6de312b2070b5e7745fc7cd83`, Content `c2d9ba267549c4e1a404fd6fa68a7d1037566597`, Core `0f5a85ef1136fec0cbc0285568b11985f0e7200c`, NPC `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`. Current heads have advanced, so these successes must not be represented as latest-HEAD passes. Node touch tests are **not Chromium emulation**.
+
+**NOT RUN:** Chromium touch 360x800 and 800x360, real-device Android/APK, Unity Editor tests, binary PNG checks on actual submitted assets, integrated Save→Load. No independent local execution in this pass. No shared architecture approved.
+
+### Сводка для координатора 00 — 2026-11-18
+
+- **Current PR heads (read from GitHub):** #9 Core `912be59eff09`; #10 QA before this handoff `42ec2ed154fc`; #11 Content `34edb4fe9203`; #12 UI `133a85bcc673`; #14 ADR `ebdc4be28afd`; #16 NPC `f64514bce12d`. All open/draft; none merged. This handoff commit becomes the new QA head.
+- **Blocker 1:** Exact-SHA CI passes refer to older pinned UI/Core/Content/NPC commits, not current PR heads; re-pin and re-run after controlled review.
+- **Blocker 2:** No verified Chromium touch viewport/overflow/48dp inspection on latest single-file Day01, and no actual Android Unity APK.
+- **Blocker 3:** Actual 3–5 original PNG binaries and complete integrated Save→Load verification remain unconfirmed; stable DTO boundary still requires Core/00 review.
+- **Recommended next step:** Coordinator 00 review SHA drift and authorize QA-only CI pin refresh for the latest vetted revisions, then run real Chromium touch tests on the same exact UI SHA; do not claim Android APK readiness.
+
+**Safety:** feature/save-6 only; no main push, merge, other-branch changes, IP approval or invented test results.
