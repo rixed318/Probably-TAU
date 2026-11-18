@@ -559,3 +559,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Actually verified:** GitHub file read and successful Contents API update. **NOT RUN:** GitHub Actions job/artifact download, Node regression suite, Android viewport/touch emulator or device, Unity. The workflow must run successfully before claiming the ZIP contains both HTML files.
 
 **Next:** verify workflow run and downloaded ZIP contents; test landscape 800×360 and portrait 360×800 interactions and safe areas. Issue #21 PNG binary still pending. No main/Core/GameState changes; PR #12 remains Draft.
+
+
+## 2026-11-18 · Android artifact regression (#20)
+
+- Added one Node smoke case to `prototypes/ui-day-one/test-day01-android-touch.cjs` for the **second** packaged file, `day01-android-offline.html`. It checks viewport safe-area, 48px controls, no external resources/network calls and JavaScript syntax of embedded scripts. The existing `ui-smoke.yml` already invokes this test file and packages both HTML files.
+- Scope: test only; no change to gameplay, Unity, Core, or source HTML.
+- Commit: `4c39761499caa8ae1732fab4013819c3ac49c1ab` (follow-up content update `e2b70bbe66b598c3d1303a102b49cb2faa3528be`).
+- Verified: source and workflow inspected through GitHub; commit writes acknowledged. **Not verified:** Node runner, GitHub Actions execution/artifact ZIP, physical Android touch/viewport, Unity.
+- Next: run Node smoke in CI and inspect artifact ZIP; preserve PR #12 as draft until coordinator review.
