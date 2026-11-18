@@ -610,6 +610,32 @@ namespace TAU.President.Tests.Core
                 futureBefore.Payables.Outstanding.Count == 1 &&
                 futureBefore.Finance.Ledger.Entries.Count == 0);
 
+            // Due-now and future liabilities coexist: settle only today's payable.
+            // The future one must not appear in the EndDay posting or receipt.
+            var staggeredBefore = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-future", 1, 100L),
+                    new DurablePayable("day01-current", 0, 200L)
+                }));
+            var staggeredFlow = DurableDay01Flow.Prepare(staggeredBefore, 0, 0, choices);
+            Assert(staggeredFlow.Next.Header.DayIndex == 1 &&
+                staggeredFlow.Next.Header.BalanceKopecks == 550L &&
+                staggeredFlow.Next.Finance.Ledger.Entries.Count == 4 &&
+                staggeredFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-current" &&
+                staggeredFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1 &&
+                staggeredFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-current" &&
+                staggeredFlow.Report.Postings.Count == 1 &&
+                staggeredFlow.Report.UnpaidPayables.Count == 0 &&
+                staggeredFlow.Next.Payables.Outstanding.Count == 1 &&
+                staggeredFlow.Next.Payables.Outstanding[0].DueKey == "day02-future");
+            var staggeredRestored = staggeredFlow.Next.Restore();
+            Assert(staggeredRestored.Header.BalanceKopecks == 550L &&
+                staggeredRestored.Payables.Outstanding.Count == 1 &&
+                staggeredRestored.Payables.Outstanding[0].DueDayIndex == 1);
+            Assert(staggeredBefore.Header.Revision == 0 &&
+                staggeredBefore.Payables.Outstanding.Count == 2 &&
+                staggeredBefore.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
