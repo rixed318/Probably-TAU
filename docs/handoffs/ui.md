@@ -662,3 +662,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Published artifacts: `day01-android-touch` (24,307 bytes; artifact id `14443001283`; GitHub SHA256 digest `1838e05d660836a90d896a495262f404f89cebaebcac0ccbe37926160e1d7202`) and `day01-web-demo` (8,484 bytes; id `14441794000`). Both reported `expired=false`.
 - **Not tested:** extracted content of this new ZIP, Android 800×360 / 360×800 visual and touch playtest, real original PNG candidate review, Unity Editor, APK. Issue #21 is not resolved by synthetic PNG tests.
 - **Next:** Android device/browser playtest against the documented seven checks; then art candidate generation and owner review. C0-v2 PR #9 and ADR PR #14 remain unmerged proposals; do not wire a real Core adapter yet.
+
+
+---
+
+## AutoDev 03 · 2026-11-18 · Issue #20 — durable Android artifact instructions
+
+**One bounded task:** replace the README's pinned historical Actions run link with the live `ui-smoke.yml` workflow listing. Android testers now select the latest **successful** `feature/ui-5` run, verify its head SHA, and download `day01-android-touch`; instructions also warn that Actions artifacts may require sign-in and expire. Existing desktop demo, HTML, CSS, JS, C0/Core and GameState were not changed.
+
+**Implementation commit:** `a4e5eb72dda5a7dfcaf5f787ceb9198c4672f220` (`prototypes/ui-day-one/README.md`). **Verification actually performed:** fetched original README and workflow from GitHub; GitHub Contents API accepted the README update. No Node, Android viewport, physical-device, Unity, or PNG image generation tests were run. This is a documentation-only change and does not establish Android rendering correctness.
+
+**Next:** QA 05/owner should execute the seven Android checks on a device. Issue #21 still requires real original PNG files, GitHub blob verification, and art review. PR #12 stays Draft; no merge or main push.
