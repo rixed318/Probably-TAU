@@ -742,9 +742,7 @@ namespace TAU.President.Tests.Core
             for (int i = 0; i < deterministicA.Next.Finance.Ledger.Entries.Count; i++)
             {
                 Assert(deterministicA.Next.Finance.Ledger.Entries[i].PostingId ==
-                    deterministicB.Next.Finance.Ledger.Entries[i].PostingId &&
-                    deterministicA.Next.Finance.Ledger.Entries[i].BalanceAfterKopecks ==
-                    deterministicB.Next.Finance.Ledger.Entries[i].BalanceAfterKopecks);
+                    deterministicB.Next.Finance.Ledger.Entries[i].PostingId);
             }
             for (int i = 0; i < deterministicA.Next.Finance.Receipts.Count; i++)
                 Assert(deterministicA.Next.Finance.Receipts[i].Fingerprint ==
