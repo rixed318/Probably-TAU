@@ -94,6 +94,45 @@ namespace TAU.President.Npc
             return false;
         }
 
+        /// <summary>Canonical Content inspection metadata for a Day01 document.
+        /// This is a read-only UI hint, not an inspection receipt or Core command.</summary>
+        public sealed class InspectionPreview
+        {
+            public string DocumentId { get; private set; }
+            public string InspectionId { get; private set; }
+            public int CostTokens { get; private set; }
+            public int RepeatCostTokens { get; private set; }
+
+            internal InspectionPreview(string documentId, string inspectionId, int costTokens, int repeatCostTokens)
+            {
+                DocumentId = documentId;
+                InspectionId = inspectionId;
+                CostTokens = costTokens;
+                RepeatCostTokens = repeatCostTokens;
+            }
+        }
+
+        /// <summary>Read-only inspection metadata from Content Day01 fixture.
+        /// The UI must ask Core for actual token balance and inspection completion.</summary>
+        public static bool TryGetInspectionPreviewByDocumentId(string documentId, out InspectionPreview preview)
+        {
+            preview = null;
+            switch (documentId)
+            {
+                case "DOC-01":
+                    preview = new InspectionPreview("DOC-01", "check_seat_map", 1, 0);
+                    return true;
+                case "DOC-02":
+                    preview = new InspectionPreview("DOC-02", "check_room_calendar", 1, 0);
+                    return true;
+                case "DOC-03":
+                    preview = new InspectionPreview("DOC-03", "check_contract_appendix", 1, 0);
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         /// <summary>Resolve a canonical document to its Day01 visitor without mutable state.</summary>
         public static bool TryGetByDocumentId(string documentId, out VisitorInstance visitor)
         {
