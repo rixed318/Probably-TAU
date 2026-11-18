@@ -944,3 +944,20 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Blocker 2:** Android Chromium touch interactive acceptance and real Unity APK/device tests NOT RUN; latest UI single-file HTML has not been interactively verified.
 - **Blocker 3:** PR #12 diff has zero PNG binaries; full snapshot DTO/ledger persistence and Save→Load not verified.
 - **Recommended next step:** inspect the Actions run and individual logs for QA workflow SHA `9f25c3b6873c`; fix only reproducible QA-owned failures, then test the exact latest HTML in Chromium portrait/landscape and audit real PNGs when delivered. Keep main protected; no merge, no owner-test approval.
+
+
+## 2026-11-18 — AutoDev 05: exact-SHA CI refresh (Issue #8)
+
+**One bounded task:** update only pinned read-only source revisions in `.github/workflows/qa-offline.yml`, preserving checkout isolation, exact-SHA assertions, no credentials and no merge. Workflow commit: `d127602b7246e337708185589c459641f6a4334b` in `feature/save-6`.
+
+Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041308e820994ed7589d0a24`; UI #12 `f857f2871fbb097182ebc54dad6ca3e7caea6456`; Content #11 `488c33e7bdf562f9c99e521eb7e7dc6a6dd72df3`; NPC #16 `d2e022483c462000914806287c2e4c21647e8aeb`. QA PR #10 was `1f67e8e7820d9a5f35287bd369d174360b33b510` before this update; ADR #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20` remains unmerged and only approved for feature development. Read `AGENTS.md`, `docs/CHAT_WORKFLOW.md`, QA handoff, PR #9/#10/#11/#12/#14/#16, Issues #6/#8/#20/#21.
+
+**Execution evidence:** GitHub contents API accepted the workflow update. No local Node/Python/.NET commands executed in this pass. GitHub Actions for the new workflow commit: **NOT VERIFIED** (do not infer green status from previous runs). Chromium 360×800 / 800×360 touch, three documents, EndDay, ledger replay, 48dp/overflow: **NOT RUN**. Unity Editor, APK, physical Android: **NOT RUN**. Real PNG binary verification: **NOT RUN**. SaveService remains deferred pending stable complete DTO; no alternative GameState created.
+
+### Сводка для координатора 00 — 2026-11-18
+
+- **Latest PR/commits:** Core #9 `75362a24`; QA #10 workflow `d127602b` (handoff commit follows); Content #11 `488c33e7`; UI #12 `f857f287`; ADR #14 `ebdc4be2`; NPC #16 `d2e02248`.
+- **Blocker 1:** new pinned CI run and actual test logs not yet verified.
+- **Blocker 2:** Chromium touch portrait/landscape acceptance and real Unity APK/Android are NOT RUN.
+- **Blocker 3:** 3–5 original PNG binaries and complete stable Core snapshot DTO not yet independently validated; no full Save→Load.
+- **Recommended next step:** inspect Actions run for QA workflow SHA `d127602b`, report each job result and exact tested SHAs, then execute Chromium touch tests on exact UI HTML artifact. Keep main protected; no merge or readiness approval.
