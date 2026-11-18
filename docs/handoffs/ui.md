@@ -593,3 +593,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Evidence:** GitHub Actions run [44246139066](https://github.com/rixed318/Probably-TAU/actions/runs/44246139066), job 134605440319: 2/3 Android bundle tests passed; third failed at the strict `env(...)` regex; later jobs and artifact upload were skipped. This is an actual failed CI run, **not** a successful test claim.
 - **Verification:** Source and workflow read through GitHub; code update confirmed. New CI run, Android device/viewport, Unity, and ZIP artifact **not yet verified**. Recheck Actions for the new commit; do not claim artifact readiness until a successful run and ZIP inspection.
 - **Scope:** no GameState/Core changes, no merge, no main push. PR #12 remains draft. Art Issue #21 still needs verified binary PNG and review.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-18 · Issue #20 (CI artifact verification)
+
+**One bounded task:** verify the latest successful UI workflow run and record actual artifact availability; no gameplay/UI/Core code changed.
+
+**Evidence:** GitHub Actions [run 44258000756](https://github.com/rixed318/Probably-TAU/actions/runs/44258000756) for `feature/ui-5` commit `7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3` completed with **success**. GitHub jobs API reports successful Node UI tests, manifest validation/regressions, Pillow install, synthetic PNG audit tests, staging and both artifact upload steps. Artifact API lists `day01-android-touch` (ID `14406184954`, 24,307 bytes, not expired) and `day01-web-demo` (ID `14406389122`, 8,484 bytes, not expired). Download at the run's Artifacts section.
+
+**Limitations:** Artifact ZIP bytes and included file list were NOT independently downloaded/inspected; Android viewport/touch and physical-device checks NOT RUN. This is a web prototype, not APK/Unity. Issue #21 still needs verified original binary PNG assets and art review. No C0/API or Unity adapter claims.
+
+**Next:** QA 05 to download ZIP and validate offline behavior at 800×360 landscape and 360×800 portrait, including tap targets, clipping, decision and EndDay flow. Keep PR #12 draft; no merge.
