@@ -178,9 +178,11 @@ function render(){
  el("report").focus();
  }
 }
+d.addEventListener("DOMContentLoaded",()=>{
 el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);render();}catch(e){el("error").textContent=e.message;}});
 el("end").addEventListener("click",()=>{try{g.endDay();render();}catch(e){el("error").textContent=e.message;}});
 render();
+});
 })(typeof window!=="undefined"?window:globalThis);
 </script></head>
 <body><header><p class="muted">ANDROID TOUCH · автономный единый HTML · откройте файл в браузере после сохранения на телефон; поворот экрана в альбомный режим рекомендован. Это не APK.</p><h1>Кабинет решений · День 01</h1><p class="muted">Вымышленная академия · OFFLINE WEB PROTOTYPE · НЕ Unity-игра · данные и эффекты только mock</p><p id="hud">Загрузка…</p><p class="warning">Л-204, день 04, 14:00–17:00: три конкурирующие заявки. Подписание не бронирует аудиторию. Партнёрские 120 000 ₽ не начисляются сейчас.</p></header>
