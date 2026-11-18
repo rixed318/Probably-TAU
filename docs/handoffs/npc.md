@@ -386,3 +386,14 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Production SHA:** `c7fdee1f30703acf50508ec4eb7c992ab52211cc`. **Golden test-source SHA:** `d920c6eb6e5f0745d2da787f2677a3dfbcf6ddd7`. Tests cover three document menus, all nine choice mappings, inspection hints, read-only collection wrappers and three invalid document IDs.
 - **Verification:** manually checked against existing canonical visit menus and Content fixture mappings. **NOT RUN locally:** .NET golden runner, Unity EditMode/PlayMode or Android device/build. No CI success claimed for this increment. Test command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 - **Dependencies/BLOCKED:** EventDirector still requires concrete Core-owned atomic transaction/receipt and earned-key deduplication ports; Content/Core must agree on E03/E07 provenance. C0-v2 PR #9 and ADR PR #14/#17 remain review-gated. Content 04 owns canonical IDs; UI 03 owns original portrait PNGs (#21), and planned art IDs do not prove asset existence. PR #16 remains Draft. No main push, merge, new GameState/ledger or third-party IP approval.
+
+
+## AutoDev 02 — Day01 triple identity guard (2026-11-18)
+
+**One bounded increment, Issues #4/#20:** added `Day01Visitors.TryGetChoicePreviewForVisitDocument(visitId, documentId, choiceId, out preview)` to reject stale/mismatched Windows/Android UI selections when both the visit and document must match the canonical choice. Read-only DTO only; never an eligibility, inspection or Core authorization check. No new GameState, ledger, RNG, EventDirector or art.
+
+**Commits:** production `9d11c60caa92b45ebe6d367def2c8cc61fe62a51`; golden assertions `ad18c6d05b31badb3e26f8ebf1b53a1752f199e8`. Assertions cover nine valid triples, mismatched visit/document and null/case-invalid IDs.
+
+**Verification:** source edits accepted by GitHub; executable .NET, Unity and Android tests **NOT RUN** during this update. CI outcome must be checked against the final HEAD; assertions added are not evidence of passing tests.
+
+**Dependencies:** PR #9 C0-v2 and PR #14 ADR apply; PR #11 canonical Content fixture IDs remain the source of truth. Full EventDirector remains BLOCKED pending Core atomic settlement/receipt/earned-key APIs and Content E03/E07 provenance. Issue #21 art IDs are only planned links; no asset existence asserted. PR #16 remains Draft; no main push or merge.
