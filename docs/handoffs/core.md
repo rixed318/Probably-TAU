@@ -454,3 +454,8 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 ## AutoDev 01 — mixed affordable/unaffordable Day01 payables (18.11.2026)
 
 **Issue #19 / #3; PR #9; feature/core-2.** Added one bounded golden regression to `Day01FlowGolden`: after three document choices leave 750 kopecks, EndDay pays a 200-kopeck due liability and preserves an 800-kopeck liability. Checks deterministic Ledger posting and receipt, day/revision/cash, report paid/unpaid projections, Restore, replay rejection and immutable input. No production API, balance rules, NPC/UI/Content files or Unity scaffold changed. Local dotnet/Unity Editor/Android SDK/NDK/adb absent (Java/Javac present), so local C# execution, Unity compile and Android APK remain BLOCKED. Check exact-SHA GitHub CI before claiming pass. No merge or issue closure.
+
+
+## AutoDev 01 — payable input-order determinism (18.11.2026)
+
+**Issue #19 / #3; PR #9; feature/core-2.** Added one golden regression to `Day01FlowGolden`: the same two Day01 due liabilities supplied in reverse order must produce identical post-decision cash, settlement posting ID, EndDay receipt fingerprint and unpaid payable. Input snapshots remain immutable. This guards canonical due-key ordering during Day01 EndDay without modifying production rules or public contracts. Local .NET SDK and Unity 6.3 Android build toolchain are unavailable; C# tests and APK not executed locally. Verify exact-SHA CI; no main merge or issue closure.
