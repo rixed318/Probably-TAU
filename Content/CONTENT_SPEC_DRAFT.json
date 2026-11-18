@@ -42,24 +42,24 @@
       "role": "координатор цифровых дисциплин",
       "motivation": "безотказные компьютеры",
       "visitId": "D01_LAB",
-      "portraitAssetId": "portrait_npc_irina_korneeva",
-      "visualDescription": "Короткая тёмно-каштановая стрижка с боковым пробором, круглые очки, бирюзовый жакет поверх светлой рубашки; спокойная прямая осанка, папка с чертежом компьютерного класса."
+      "portraitAssetId": "irina_korneeva_portrait_neutral",
+      "visualDescription": "Вымышленная преподавательница: короткие каштановые волосы с серебристой прядью, прямоугольные очки, тёмно-бирюзовый жакет и янтарная брошь; строгий силуэт воротника и спокойная мимика."
     },
     {
       "id": "npc_dasha_polynskaya",
       "role": "студенческий организатор",
       "motivation": "увидеть реальные проекты",
       "visitId": "D01_STUDENT",
-      "portraitAssetId": "portrait_npc_dasha_polynskaya",
-      "visualDescription": "Густые рыжевато-медные волосы в высоком хвосте, жёлтая ветровка поверх тёмной футболки, тканевая сумка с простыми геометрическими значками; энергичный наклон вперёд."
+      "portraitAssetId": "dasha_polynskaya_portrait_neutral",
+      "visualDescription": "Вымышленная студентка: асимметричное рыжее каре, круглая заколка цвета индиго, светло-песочная толстовка и диагональный ремень сумки; энергичная открытая мимика."
     },
     {
       "id": "npc_mark_sviridov",
       "role": "представитель вымышленной фирмы «Пульс Инжиниринг»",
       "motivation": "найти стажёров",
       "visitId": "D01_PARTNER",
-      "portraitAssetId": "portrait_npc_mark_sviridov",
-      "visualDescription": "Короткие тёмные кудрявые волосы, аккуратная борода, бордовый жилет поверх серой рубашки, тонкий планшет без брендинга; сдержанная открытая жестикуляция."
+      "portraitAssetId": "mark_sviridov_portrait_neutral",
+      "visualDescription": "Вымышленный представитель партнёра: выбритая голова, короткая борода, сливовый пиджак и светлая водолазка; узкий футляр для бумаг и сдержанная мимика."
     }
   ],
   "documentTypes": [
@@ -79,7 +79,7 @@
         "realSeats": 20,
         "phasedPriceKopecks": "16000000"
       },
-      "documentAssetId": "document_doc01_procurement"
+      "documentAssetId": "doc01_procurement_blank"
     },
     {
       "id": "DOC-02",
@@ -97,7 +97,7 @@
         "roomReserved": false,
         "mobilePriceKopecks": "3500000"
       },
-      "documentAssetId": "document_doc02_student_project"
+      "documentAssetId": "doc02_student_proposal_blank"
     },
     {
       "id": "DOC-03",
@@ -115,7 +115,7 @@
         "remoteMentorCostKopecks": "2500000",
         "remoteConditionalRevenueKopecks": "9000000"
       },
-      "documentAssetId": "document_doc03_partner_offer"
+      "documentAssetId": "doc03_partner_letter_blank"
     }
   ],
   "day1": {
