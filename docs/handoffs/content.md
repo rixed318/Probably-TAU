@@ -456,3 +456,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** acceptance validator now sums each selected document's `inspection.costTokens` rather than treating every inspection as exactly one token. It validates nonnegative safe-integer costs, zero repeat cost, available opening tokens and golden `inspectionTokensUsed` against the actual sum. This is fixture-only; no balance, choices, Core, NPC, art, DayIndex or money changed.
 
 **Validator commit:** `abe2fe75a7367874ebe12c356f5fe7725c7ddb87`. **Verification:** GitHub accepted source update; independent Node CLI, Unity, CI, browser and Android NOT RUN. QA 05 should run `node Content/validate-day01-acceptance.cjs` and mutate inspection costs to 2/3, invalid negative/fractional costs, and over-budget examples. PR #11 remains Draft, no main merge.
+
+## 18.11.2026 — Event manifest reference/day guard (#7)
+
+**One bounded task:** added static draft-manifest checks to `Content/validate-day01-acceptance.cjs`: globally unique event/project Definition IDs, 0-based `dayIndex = day - 1`, unique feed targets, and all feeds resolve to an event, project or the explicit `CHAPTER2_HOOK` placeholder. No changes to authored event outcomes, balance, Core, EventDirector, assets or money.
+
+**Validator commit:** `9af9b3fd2092de18bd739b4beda1704818d26e50`. **Actually checked:** independent JavaScript reproduction against the current JSON: valid manifest PASS (13 events), 4/4 negative mutations rejected (wrong dayIndex, unknown target, duplicate feed, duplicate event/project ID). This is not a Node CLI run of the complete validator. Node CLI, CI, Unity and Android NOT RUN. QA 05 should run the full validator and negative fixture tests. PR #11 remains Draft; no main merge.
