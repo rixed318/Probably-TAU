@@ -480,3 +480,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** `Content/validate-day01-acceptance.cjs` now compares the ordered (visitId, npcId, documentId) triples in `CONTENT_SPEC_DRAFT.json` against `DAY01_UI_FIXTURE.json`, and separately verifies the canonical fictional NPC roster. This prevents cross-file identity drift before Windows/Android art mapping and future Core integration. No authored NPCs, choices, scores, DayIndex, money, art assets or runtime code changed.
 
 **Validator commit:** `663e131c09824c05b60b614d057768858edd98f9`. **Actually checked:** GitHub accepted the file update; fixture triples inspected against draft IDs (3/3). **Not run:** full Node CLI, CI, Unity, Android, negative mutation suite. QA 05 should run `node Content/validate-day01-acceptance.cjs` and inject a mismatched NPC/document mapping. PR #11 remains Draft; no main push/merge.
+
+## 18.11.2026 — Stable original Day01 art identities (#7 / #21)
+
+**One bounded task:** `Content/CONTENT_SPEC_DRAFT.json` now specifies three stable fictional portrait asset IDs with visually distinct original character descriptions and three document asset IDs. IDs are content-level proposals, platform-independent across Windows/Android; no image generation, real PNG, Core API, runtime schema or asset path is claimed. No financial amounts, DayIndex, event IDs or choices changed.
+
+**Content commit:** `fc55ad9c0a5dda514aa4223401fb8a13c0a29660`. **Actual verification:** GitHub accepted the content commit; JSON was parsed and serialized in the connector-side JavaScript runtime, and 3 portrait IDs / 3 document IDs were enumerated. **Not run:** Node CLI validator, Unity, CI, Android, image/PNG verification. UI 03 must map these proposed IDs into its art manifest after coordination and generate actual original PNGs; QA 05 verifies consistency. PR #11 remains unmerged; no main push.
