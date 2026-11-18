@@ -2,6 +2,25 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+// Draft event manifest consistency (content only; no EventDirector/runtime behavior).
+const contentSpec = JSON.parse(fs.readFileSync(path.join(__dirname, "CONTENT_SPEC_DRAFT.json"), "utf8"));
+const eventIds = contentSpec.eventManifest.map(event => event.id);
+const projectIds = contentSpec.projects.map(project => project.id);
+assert.equal(new Set([...eventIds, ...projectIds]).size, eventIds.length + projectIds.length,
+  "duplicate event/project Definition ID");
+const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
+for (const event of contentSpec.eventManifest) {
+  assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
+    "invalid event DayIndex: " + event.id);
+  assert.equal(event.dayIndex, event.day - 1, "event day label mismatch: " + event.id);
+  assert.ok(Array.isArray(event.feeds), "event feeds missing: " + event.id);
+  assert.equal(new Set(event.feeds).size, event.feeds.length, "duplicate event feed: " + event.id);
+  for (const target of event.feeds) {
+    assert.ok(validTargets.has(target), "unknown event/project feed: " + event.id + " -> " + target);
+  }
+}
+console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and feed targets");
+
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_UI_FIXTURE.json"), "utf8"));
 assert.equal(fixture.dayIndex, 0);
 assert.equal(fixture.documents.length, 3);
