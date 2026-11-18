@@ -1015,3 +1015,24 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** Actual 3–5 PNG binaries, signatures, dimensions and manifest SHA have not been verified in this pass.
 - **Blocker 3:** Unity Editor APK/device testing and complete Save→Load snapshot DTO integration remain unverified; Unity/Android tests NOT RUN.
 - **Recommended next step:** inspect GitHub Actions run for the new QA head and collect exact test logs; run real Chromium touch acceptance on the same UI SHA; then binary-validate committed PNGs once supplied. Do not grant READY_FOR_OWNER_TEST or merge without evidence and owner approval.
+
+
+## 2026-11-18 14:55 UTC+4 — QA 05: CI run #44274302838 failure triage (#8, #20)
+
+**One bounded task:** independently inspect the actual GitHub Actions job/step results and failure logs for QA PR #10 head `7f34fe9cf1c06d0cfcd78f0e5b0a7b1cb1335cb0`. This is evidence collection only, not a code change or rerun.
+
+**Run:** https://github.com/rixed318/Probably-TAU/actions/runs/44274302838 — completed **FAILURE** (3 jobs SUCCESS, 1 FAILURE):
+- Python PCG32 oracle — **SUCCESS**; Core source audit step passed.
+- UI/Content static regression — **SUCCESS**; Android touch Node static regression, offline entrypoint, gameplay, art manifest and content validation steps passed. **Not Chromium touch, APK, or real PNG binary proof.**
+- Core ledger/snapshot .NET 8 — **SUCCESS**; golden-suite command passed on the workflow's pinned Core revision, not current Core PR HEAD.
+- NPC standalone .NET 8 — **FAILURE during checkout** (job `134698386309`); `/usr/bin/git` exit code 1 at 09:16:05, 09:16:23 and 09:16:40 UTC in job logs. .NET install and NPC golden assertions were **SKIPPED / NOT RUN**. Do not label this an NPC logic failure. Verify pinned ref availability / checkout diagnostics before rerun.
+
+**Execution scope:** GitHub metadata, jobs, steps and failure logs inspected. No local Python/Node/.NET, browser, Unity Editor, Android device/APK, or actual PNG binary tests run by QA in this pass. SaveService deferred pending stable approved Core snapshot DTO; C0-v2 PR #9 and ADR PR #14 are not merged.
+
+### Сводка для координатора 00 — 2026-11-18 14:55 UTC+4
+
+- **PR heads checked:** #9 Core `db287d877c65`, #10 QA `7f34fe9cf1c0` (handoff update commit follows), #11 Content `71eceb4f1d03`, #12 UI `abaf9d1a788d`, #14 ADR `ebdc4be28afd`, #16 NPC `4fca66045950`. These are live heads, **not** the exact SHAs exercised by the pinned CI checkout steps. All PRs open at inspection. No main push or merge.
+- **Blocker 1:** NPC pinned checkout fails before .NET execution; run #44274302838 overall FAILURE despite 3 passing jobs.
+- **Blocker 2:** Latest UI PR head `abaf9d1a788d` and latest Core/Content/NPC heads are not established as tested by the pinned CI; Chromium 360×800 and 800×360 touch/48dp/overflow acceptance remains NOT RUN.
+- **Blocker 3:** 3–5 actual PNG binary signature/dimensions/manifest SHA validation, Unity Editor APK/device testing, and complete Save→Load remain unverified.
+- **Recommended next step:** inspect the exact NPC checkout ref in QA workflow and its existence; repair only QA-owned CI pin if stale, rerun exact-SHA CI, then perform Chromium touch acceptance on the latest single-file HTML. Do not grant READY_FOR_OWNER_TEST without evidence.
