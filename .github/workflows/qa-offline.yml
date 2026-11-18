@@ -48,7 +48,7 @@ jobs:
       - name: Checkout UI branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3
+          ref: 436f823d30d903341323a5e09fcaef9949e9ced3
           path: ui
           persist-credentials: false
       - name: Checkout Content branch read-only
@@ -62,7 +62,7 @@ jobs:
         run: |
           ui_sha=$(git -C ui rev-parse HEAD)
           echo "UI_SHA=$ui_sha"
-          test "$ui_sha" = "7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3"
+          test "$ui_sha" = "436f823d30d903341323a5e09fcaef9949e9ced3"
           content_sha=$(git -C content rev-parse HEAD)
           echo "CONTENT_SHA=$content_sha"
           test "$content_sha" = "488c33e7bdf562f9c99e521eb7e7dc6a6dd72df3"
