@@ -504,3 +504,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Issue #19 / PR #9 / feature/core-2.** One bounded C# golden regression added to `Day01FlowGolden` in `Tests/Core/GameStateSnapshotGoldenTests.cs`, test commit `2d7e85aca945a70bce8c9613ebe263405fda3e61`. After three existing document decisions, EndDay settles a due-now 200-kopeck payable while a scheduled event due on DayIndex 1 remains pending. Assertions cover 550-kopeck balance, single payable posting and EndDay receipt, zero outstanding payable, event queue preservation, Restore and immutable input. No new Core API, financial policy, event handler, NPC/Content/UI code or Unity scaffold.
 
 **Verification:** local dotnet and Unity 6.3 Editor/Android Build Support/SDK/NDK/adb unavailable (Java/Javac present); C# test not run locally and Android APK BLOCKED. Run `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release` with .NET 8 and check CI for the exact handoff HEAD. Due-now event execution still fails closed pending approved typed event contract. QA #10/00 review required; no main push/merge or issue closure.
+
+
+## AutoDev 01 — due-event + payable atomic rollback (18.11.2026)
+
+- Scope: Issue #19, test-only regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`; commit `a7b71e84b3eafc32881b36c7932725ee95c6127a`.
+- Scenario: three valid Day01 document choices, an event due at DayIndex 0 and an affordable payable of 200 kopecks due the same day. The canonical EndDay rejects the unresolved due event. The original durable snapshot must retain revision/day/balance, empty ledger and receipts, pending event and unpaid payable; Restore must preserve both pending items.
+- Contract/policy: no production API, NPC, content, financial rule, Unity scaffold or main changes. This tests atomic failure before due-payable settlement; it does **not** implement scheduled-event resolution.
+- Verification: GitHub source update confirmed. Local C# test **NOT RUN** (dotnet/csc/mcs/mono unavailable); Unity Editor and Android SDK/NDK/adb unavailable, so Unity compilation and APK **BLOCKED**. Java is present. Exact-SHA CI must be checked independently.
+- Next: QA 05/00 review and real NPC event resolution contract before any production integration. PR #9 remains Draft; no merge or issue closure.
