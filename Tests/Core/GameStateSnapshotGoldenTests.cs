@@ -487,6 +487,28 @@ namespace TAU.President.Tests.Core
                 dueBefore.Finance.Ledger.Entries.Count == 0 &&
                 dueBefore.Finance.Receipts.Count == 0 &&
                 dueBefore.Events.Pending.Count == 1);
+            // A due event must also prevent settlement of an otherwise affordable payable.
+            // Neither staged document postings nor the payable may escape a failed EndDay.
+            var dueWithPayable = new DurableGameStateSnapshot(
+                dueBefore.Finance, dueBefore.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day01-blocked-rent", 0, 200L)
+                }));
+            Throws<InvalidOperationException>(() =>
+                DurableDay01Flow.Prepare(dueWithPayable, 0, 0, choices));
+            Assert(dueWithPayable.Header.Revision == 0 &&
+                dueWithPayable.Header.DayIndex == 0 &&
+                dueWithPayable.Header.BalanceKopecks == 1000L &&
+                dueWithPayable.Finance.Ledger.Entries.Count == 0 &&
+                dueWithPayable.Finance.Receipts.Count == 0 &&
+                dueWithPayable.Payables.Outstanding.Count == 1 &&
+                dueWithPayable.Payables.Outstanding[0].DueKey == "day01-blocked-rent" &&
+                dueWithPayable.Events.Pending.Count == 1 &&
+                dueWithPayable.Events.CompletedIds.Count == 0);
+            var dueWithPayableRestored = dueWithPayable.Restore();
+            Assert(dueWithPayableRestored.Payables.Outstanding.Count == 1 &&
+                dueWithPayableRestored.Events.Pending.Count == 1 &&
+                dueWithPayableRestored.Finance.Ledger.Entries.Count == 0);
             // A future event must not block Day01: it stays queued through EndDay and Restore.
             // This complements the due-event fail-closed case without invoking NPC logic.
             var futureEventHeader = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
