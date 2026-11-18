@@ -60,6 +60,23 @@ jobs:
         run: |
           mkdir -p dist/day01-android-touch
           cp prototypes/ui-day-one/day01-android-touch.html prototypes/ui-day-one/day01-android-offline.html dist/day01-android-touch/
+      - name: Verify staged Android artifact files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          source = Path('prototypes/ui-day-one')
+          staged = Path('dist/day01-android-touch')
+          expected = {'day01-android-touch.html', 'day01-android-offline.html'}
+          actual = {p.name for p in staged.iterdir() if p.is_file()}
+          assert actual == expected, f'Unexpected Android artifact files: {actual}'
+          for name in sorted(expected):
+              original = (source / name).read_bytes()
+              packaged = (staged / name).read_bytes()
+              assert packaged == original, f'Staged bytes differ: {name}'
+              assert packaged.lstrip().lower().startswith(b'<!doctype html>'), name
+              print(f'{name}: {len(packaged)} bytes sha256={hashlib.sha256(packaged).hexdigest()}')
+          PY
       - name: Upload Android touch HTML
         uses: actions/upload-artifact@v4
         with:
