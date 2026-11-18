@@ -639,3 +639,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Implementation commit:** `c79e17bc570bf87d1d26f60d6888a2848758c765` on `feature/ui-5`. **Verification:** GitHub accepted the workflow commit; a previously downloaded artifact ZIP was locally inspected (two expected members), but the new GitHub Actions step has **not yet executed**. No successful CI, Android device/viewport, touch, or Unity result is claimed for this change. PR #12 stays Draft; no main push or merge.
 
 **Next:** inspect the new workflow run, then QA 05/owner perform real Android viewport/touch tests. Issue #21 still needs original PNG assets with verified binary commits and art review.
+
+
+## AutoDev 03 — 2026-11-18 · Issue #20 — new staging verifier CI result
+
+**One bounded verification task:** inspect GitHub Actions run [44318829098](https://github.com/rixed318/Probably-TAU/actions/runs/44318829098) for feature/ui-5 SHA `9bdc0bd6376fe7c066dac98d8aefb68860f5d1bb`. The job `Node UI and art manifest regression (not Unity)` completed **success**. Crucially the newly added `Verify staged Android artifact files` step (#11) completed **success**, as did Node UI tests, art manifest validation, synthetic PNG audit, and both upload steps. This confirms staged byte-for-byte source comparison executed in CI, not merely YAML presence.
+
+**Artifacts confirmed by GitHub API:** `day01-android-touch` ID `14434206187`, 24,307 bytes, SHA256 artifact digest `11eed03b1249ca9c9b376be57da6af8d8214d55890b548f03484aece8cc6fd5d`; `day01-web-demo` ID `14433078253`, 8,484 bytes; both `expired=false` at verification. Download via run Artifacts section. These are web HTML artifacts, **not APK**.
+
+**Not executed this pass:** fresh ZIP download or browser/device render; Android viewport 800×360 / 360×800, touch controls, physical Android playtest, Unity Editor/PlayMode. Original art PNG binaries in Issue #21 still need actual generation/upload and owner review. No changes to GameState/Core, main, other branches, or public contracts. PR #12 remains Draft.
