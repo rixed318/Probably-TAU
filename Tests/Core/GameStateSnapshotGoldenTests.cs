@@ -636,6 +636,41 @@ namespace TAU.President.Tests.Core
                 staggeredBefore.Payables.Outstanding.Count == 2 &&
                 staggeredBefore.Finance.Ledger.Entries.Count == 0);
 
+            // Three non-monetary choices still commit three durable decision receipts
+            // and one EndDay receipt, without fabricating zero-value ledger postings.
+            var nonMonetaryChoices = new[] {
+                new Day01DocumentChoice("doc-free-1",
+                    new DocumentDecisionEffects("free-a", 0L, 1, 0, 0, 0, 0)),
+                new Day01DocumentChoice("doc-free-2",
+                    new DocumentDecisionEffects("free-b", 0L, 0, 1, 0, 0, 0)),
+                new Day01DocumentChoice("doc-free-3",
+                    new DocumentDecisionEffects("free-c", 0L, 0, 0, 1, 0, 0))
+            };
+            var nonMonetary = DurableDay01Flow.Prepare(before, 0, 0, nonMonetaryChoices);
+            Assert(nonMonetary.Next.Header.DayIndex == 1 &&
+                nonMonetary.Next.Header.Revision == 4 &&
+                nonMonetary.Next.Header.BalanceKopecks == 1000L &&
+                nonMonetary.Next.Header.Metrics.EducationQuality == 51 &&
+                nonMonetary.Next.Header.Metrics.StudentSatisfaction == 51 &&
+                nonMonetary.Next.Header.Metrics.StaffMorale == 51 &&
+                nonMonetary.Next.Finance.Ledger.Entries.Count == 0 &&
+                nonMonetary.Next.Finance.Receipts.Count == 4 &&
+                nonMonetary.Next.Finance.Receipts[0].PostingKeys.Count == 0 &&
+                nonMonetary.Next.Finance.Receipts[1].PostingKeys.Count == 0 &&
+                nonMonetary.Next.Finance.Receipts[2].PostingKeys.Count == 0 &&
+                nonMonetary.Next.Finance.Receipts[3].PostingKeys.Count == 0 &&
+                nonMonetary.Report.Postings.Count == 0);
+            var nonMonetaryRestored = nonMonetary.Next.Restore();
+            Assert(nonMonetaryRestored.Header.BalanceKopecks == 1000L &&
+                nonMonetaryRestored.Finance.Ledger.Entries.Count == 0 &&
+                nonMonetaryRestored.Finance.Receipts.Count == 4);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(
+                nonMonetaryRestored, nonMonetaryRestored.Header.Revision, 0, nonMonetaryChoices));
+            Assert(before.Header.Revision == 0 &&
+                before.Header.BalanceKopecks == 1000L &&
+                before.Finance.Receipts.Count == 0 &&
+                before.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
