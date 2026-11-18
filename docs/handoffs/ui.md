@@ -628,3 +628,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Actually verified:** GitHub Contents API accepted the README change. The protocol is documentation only, so **zero Android viewport/device tests were executed** in this pass. Existing ZIP integrity evidence is from the preceding pass; it does not establish rendering correctness. Node/Unity/PlayMode **NOT RUN**.
 
 **Next:** QA 05 or owner runs the matrix on real Android/browser, records device/version/screenshots and failures; Issue #21 still needs original PNG binaries, verified GitHub blobs and owner art review.
+
+
+---
+
+## AutoDev 03 — 2026-11-18 · Issue #20 — staged Android artifact regression
+
+**One bounded task:** add a pre-upload verification step to `.github/workflows/ui-smoke.yml` for the Android HTML artifact. It asserts the staging directory contains exactly `day01-android-touch.html` and `day01-android-offline.html`, each staged file is byte-for-byte identical to the corresponding source file, and both begin with an HTML doctype. The workflow prints staged sizes and SHA256 values. Existing desktop demo and all runtime/Core files remain unchanged.
+
+**Implementation commit:** `c79e17bc570bf87d1d26f60d6888a2848758c765` on `feature/ui-5`. **Verification:** GitHub accepted the workflow commit; a previously downloaded artifact ZIP was locally inspected (two expected members), but the new GitHub Actions step has **not yet executed**. No successful CI, Android device/viewport, touch, or Unity result is claimed for this change. PR #12 stays Draft; no main push or merge.
+
+**Next:** inspect the new workflow run, then QA 05/owner perform real Android viewport/touch tests. Issue #21 still needs original PNG assets with verified binary commits and art review.
