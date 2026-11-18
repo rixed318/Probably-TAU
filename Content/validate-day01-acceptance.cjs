@@ -77,6 +77,24 @@ for (const visit of contentSpec.day1.visits) {
   }
 }
 console.log("PASS: Day01 draft/fixture opening, document, immediate and deferred kopeck amounts agree");
+// Guard choice flags, score effects and inspection prerequisites across canonical draft/UI.
+// These are declarative content comparisons; no Core state mutation occurs here.
+for (const visit of contentSpec.day1.visits) {
+  const mock = fixture.visitors.find(v => v.visitId === visit.id);
+  for (const choice of visit.choices) {
+    const mockChoice = mock.choices.find(c => c.choiceId === choice.id);
+    assert.deepEqual(mockChoice.flags, choice.flag, "choice flag drift: " + choice.id);
+    const expectedEffects = choice.effects.map(effect => effect.metric === "budget"
+      ? {kind: "cashDelta", deltaKopecks: effect.deltaKopecks}
+      : {kind: "scoreDelta", score: effect.metric, delta: effect.delta});
+    assert.deepEqual(mockChoice.effects, expectedEffects, "choice effect drift: " + choice.id);
+    const requiredInspection = choice.condition?.startsWith("inspected:") ? visit.documentId : null;
+    assert.equal(mockChoice.requiresInspection, requiredInspection,
+      "choice inspection prerequisite drift: " + choice.id);
+  }
+}
+console.log("PASS: Day01 flags, full choice effects and inspection prerequisites agree");
+
 
 // Cross-document IDs must be globally unique; inspections may only reference their own document.
 const allChoiceIds = fixture.visitors.flatMap(visitor => visitor.choices.map(choice => choice.choiceId));
