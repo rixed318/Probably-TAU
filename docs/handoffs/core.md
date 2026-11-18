@@ -497,3 +497,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - No production API, economy policy, NPC/Content logic, or Unity project changes.
 - Verify: `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release` in a .NET 8 environment; inspect exact-head CI. Local runtime lacks dotnet/mono, Unity Editor, Android SDK/NDK/adb; no local C# run, Unity build, or APK claimed.
 - Still blocked: typed NPC event execution and native Unity Android build require cross-role contracts and real Unity 6.3/Android toolchain. No main merge or Issue closure.
+
+
+## Core 01 — future event + due payable coexistence (18.11.2026)
+
+**Issue #19 / PR #9 / feature/core-2.** One bounded C# golden regression added to `Day01FlowGolden` in `Tests/Core/GameStateSnapshotGoldenTests.cs`, test commit `2d7e85aca945a70bce8c9613ebe263405fda3e61`. After three existing document decisions, EndDay settles a due-now 200-kopeck payable while a scheduled event due on DayIndex 1 remains pending. Assertions cover 550-kopeck balance, single payable posting and EndDay receipt, zero outstanding payable, event queue preservation, Restore and immutable input. No new Core API, financial policy, event handler, NPC/Content/UI code or Unity scaffold.
+
+**Verification:** local dotnet and Unity 6.3 Editor/Android Build Support/SDK/NDK/adb unavailable (Java/Javac present); C# test not run locally and Android APK BLOCKED. Run `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release` with .NET 8 and check CI for the exact handoff HEAD. Due-now event execution still fails closed pending approved typed event contract. QA #10/00 review required; no main push/merge or issue closure.
