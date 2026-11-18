@@ -515,6 +515,33 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetVisitScreenPreviewByDocumentId("DOC-04", out invalidDocumentScreen) || invalidDocumentScreen != null)
                 throw new Exception("Unknown document screen route must fail closed.");
 
+            // NPC ID, visit ID and document ID must produce identical read-only Day01 screens.
+            string[] canonicalNpcIds = { "npc_irina_korneeva", "npc_dasha_polynskaya", "npc_mark_sviridov" };
+            string[] canonicalVisitIds = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            for (int i = 0; i < canonicalNpcIds.Length; i++)
+            {
+                Day01Visitors.VisitScreenPreview byNpc;
+                Day01Visitors.VisitScreenPreview byVisit;
+                if (!Day01Visitors.TryGetVisitScreenPreviewByVisitorId(canonicalNpcIds[i], out byNpc) ||
+                    !Day01Visitors.TryGetVisitScreenPreview(canonicalVisitIds[i], out byVisit) ||
+                    byNpc == null || byVisit == null ||
+                    byNpc.Card.VisitorId != canonicalNpcIds[i] ||
+                    byNpc.Card.VisitId != byVisit.Card.VisitId ||
+                    byNpc.Card.DocumentId != byVisit.Card.DocumentId ||
+                    byNpc.Inspection.InspectionId != byVisit.Inspection.InspectionId ||
+                    byNpc.Choices.Count != byVisit.Choices.Count)
+                    throw new Exception("NPC-routed screen differs from canonical visit screen.");
+                for (int j = 0; j < byVisit.Choices.Count; j++)
+                    if (byNpc.Choices[j].ChoiceId != byVisit.Choices[j].ChoiceId)
+                        throw new Exception("NPC-routed screen changed choice order.");
+            }
+            Day01Visitors.VisitScreenPreview invalidNpcScreen;
+            if (Day01Visitors.TryGetVisitScreenPreviewByVisitorId(null, out invalidNpcScreen) || invalidNpcScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByVisitorId("", out invalidNpcScreen) || invalidNpcScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByVisitorId("NPC_IRINA_KORNEEVA", out invalidNpcScreen) || invalidNpcScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByVisitorId("npc_unknown", out invalidNpcScreen) || invalidNpcScreen != null)
+                throw new Exception("Unknown NPC screen route must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
