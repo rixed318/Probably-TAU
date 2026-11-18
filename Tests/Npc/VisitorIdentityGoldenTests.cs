@@ -576,6 +576,43 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetVisitScreenPreviewByChoiceId("UNKNOWN", out invalidChoiceScreen) || invalidChoiceScreen != null)
                 throw new Exception("Invalid choice-routed Day01 screen must fail closed.");
 
+            // Triple-scoped screen routing must reject stale/mixed UI identities.
+            string[] scopedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            string[] scopedDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            string[][] scopedChoices =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int i = 0; i < scopedVisits.Length; i++)
+            {
+                foreach (string id in scopedChoices[i])
+                {
+                    Day01Visitors.VisitScreenPreview scoped;
+                    if (!Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice(
+                            scopedVisits[i], scopedDocuments[i], id, out scoped) ||
+                        scoped == null || scoped.Card.VisitId != scopedVisits[i] ||
+                        scoped.Card.DocumentId != scopedDocuments[i] ||
+                        scoped.Choices.Count != 3)
+                        throw new Exception("Triple-scoped screen mapping mismatch: " + id);
+                    Day01Visitors.VisitScreenPreview mixed;
+                    if (Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice(
+                            scopedVisits[i], scopedDocuments[(i + 1) % 3], id, out mixed) || mixed != null ||
+                        Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice(
+                            scopedVisits[(i + 1) % 3], scopedDocuments[i], id, out mixed) || mixed != null ||
+                        Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice(
+                            scopedVisits[i], scopedDocuments[i], scopedChoices[(i + 1) % 3][0], out mixed) || mixed != null)
+                        throw new Exception("Mixed triple must not resolve a screen: " + id);
+                }
+            }
+            Day01Visitors.VisitScreenPreview absentScoped;
+            if (Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice(null, "DOC-01", "LAB-1", out absentScoped) || absentScoped != null ||
+                Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice("D01_LAB", null, "LAB-1", out absentScoped) || absentScoped != null ||
+                Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice("D01_LAB", "DOC-01", null, out absentScoped) || absentScoped != null ||
+                Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice("d01_lab", "DOC-01", "LAB-1", out absentScoped) || absentScoped != null)
+                throw new Exception("Invalid triple must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
