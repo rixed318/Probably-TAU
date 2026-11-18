@@ -447,6 +447,39 @@ namespace TAU.President.Npc
             return TryGetInspectionPreviewByDocumentId(documentId, out preview);
         }
 
+        /// <summary>One immutable Day01 screen snapshot for Windows/Android adapters.
+        /// All fields are Content identity/presentation hints, never Core eligibility or state.</summary>
+        public sealed class VisitScreenPreview
+        {
+            public Day01VisitorCard Card { get; private set; }
+            public InspectionPreview Inspection { get; private set; }
+            public IReadOnlyList<ChoicePreview> Choices { get; private set; }
+
+            internal VisitScreenPreview(Day01VisitorCard card, InspectionPreview inspection,
+                IReadOnlyList<ChoicePreview> choices)
+            {
+                Card = card;
+                Inspection = inspection;
+                Choices = choices;
+            }
+        }
+
+        /// <summary>Build a consistent read-only screen from a canonical visit ID.
+        /// Reject unknown visits; no token spending, event scheduling or GameState access.</summary>
+        public static bool TryGetVisitScreenPreview(string visitId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            Day01VisitorCard card;
+            InspectionPreview inspection;
+            IReadOnlyList<ChoicePreview> choices;
+            if (!TryGetCardByVisitId(visitId, out card) ||
+                !TryGetInspectionPreviewByDocumentId(card.DocumentId, out inspection) ||
+                !TryGetChoicePreviewsByVisitId(visitId, out choices))
+                return false;
+            screen = new VisitScreenPreview(card, inspection, choices);
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
