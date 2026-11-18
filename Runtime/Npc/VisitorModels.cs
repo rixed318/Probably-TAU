@@ -510,6 +510,18 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(visitor.InstanceId, out screen);
         }
 
+        /// <summary>Resolve a Day01 screen only when visit, document and choice agree.
+        /// Read-only presentation routing; not Core eligibility or a decision command.</summary>
+        public static bool TryGetVisitScreenPreviewForVisitDocumentChoice(
+            string visitId, string documentId, string choiceId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            ChoicePreview choice;
+            if (!TryGetChoicePreviewForVisitDocument(visitId, documentId, choiceId, out choice))
+                return false;
+            return TryGetVisitScreenPreview(visitId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
