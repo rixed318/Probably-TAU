@@ -513,3 +513,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Contract/policy: no production API, NPC, content, financial rule, Unity scaffold or main changes. This tests atomic failure before due-payable settlement; it does **not** implement scheduled-event resolution.
 - Verification: GitHub source update confirmed. Local C# test **NOT RUN** (dotnet/csc/mcs/mono unavailable); Unity Editor and Android SDK/NDK/adb unavailable, so Unity compilation and APK **BLOCKED**. Java is present. Exact-SHA CI must be checked independently.
 - Next: QA 05/00 review and real NPC event resolution contract before any production integration. PR #9 remains Draft; no merge or issue closure.
+
+## Core 01 — deferred event + unaffordable Day01 payable (18.11.2026)
+
+- Issue #19 / #3; PR #9; branch `feature/core-2`. Test commit `4452285ed8054d9527806f11fa9d3686673e1027`.
+- Added one bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: after three choices leave 750 kopecks, a due-now 800-kopeck liability remains unpaid while a DayIndex=1 event stays queued. Assert no EndDay payable posting, no duplicate receipts, unpaid DayReport projection, durable Restore of both debt and event, replay rejection and immutable input.
+- No production contracts, economy policy, NPC/Content/UI files or Unity scaffold changed.
+- Local toolchain check: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found; Java/Javac available. C# test NOT RUN locally; Unity compile and Android APK BLOCKED. Check exact-head GitHub Actions before claiming test success.
+- Remaining integration: typed NPC event execution and canonical content mapping, independent QA/00 review and real Unity 6.3 Android toolchain. No main push/merge or Issue closure.
