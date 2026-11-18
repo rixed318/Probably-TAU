@@ -615,3 +615,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Verified ZIP members:** `day01-android-offline.html` (63,742 bytes; SHA256 `70d0b663da2bd37cdc1db5960d70ae77f6461eade084d2ac7aa81658d5541383`) and `day01-android-touch.html` (16,954 bytes; SHA256 `4637e2ad709495be2c9380abefe00f3866ec46ab1de8316a0ce0b6bc8b08ff3f`). Both begin with `<!doctype html>`; no additional ZIP members. These checks establish downloadable package integrity and file presence, **not** functional browser correctness.
 
 **Not tested:** Chrome/Android rendering, 800×360 / 360×800 clipping, tap targets, decision/EndDay behavior on device, Unity or APK. Art Issue #21 still requires real approved PNG binaries. No changes to Core/GameState, main, or other branches. PR #12 remains Draft.
+
+
+---
+
+## AutoDev 03 — 2026-11-18 · Issue #20 — Android offline playtest protocol
+
+**One bounded task:** add actionable Android offline opening instructions and a seven-case manual viewport/touch regression matrix to `prototypes/ui-day-one/README.md`. The checklist covers 800×360 landscape, 360×800 portrait, cutouts/safe areas, edge taps, 150% text zoom, and airplane-mode offline reload; it distinguishes the three-visitor touch file from the older one-request offline file. **No HTML/CSS/JS, Core, Unity, GameState, or desktop demo changes.**
+
+**Documentation commit:** `b112064f3a68a3f6456d8fb3e0aee033e7377a30` on `feature/ui-5`. This handoff is a follow-up documentation-only commit. PR #12 remains Draft; no merge/main push.
+
+**Actually verified:** GitHub Contents API accepted the README change. The protocol is documentation only, so **zero Android viewport/device tests were executed** in this pass. Existing ZIP integrity evidence is from the preceding pass; it does not establish rendering correctness. Node/Unity/PlayMode **NOT RUN**.
+
+**Next:** QA 05 or owner runs the matrix on real Android/browser, records device/version/screenshots and failures; Issue #21 still needs original PNG binaries, verified GitHub blobs and owner art review.
