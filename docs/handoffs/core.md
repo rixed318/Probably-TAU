@@ -521,3 +521,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - No production contracts, economy policy, NPC/Content/UI files or Unity scaffold changed.
 - Local toolchain check: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found; Java/Javac available. C# test NOT RUN locally; Unity compile and Android APK BLOCKED. Check exact-head GitHub Actions before claiming test success.
 - Remaining integration: typed NPC event execution and canonical content mapping, independent QA/00 review and real Unity 6.3 Android toolchain. No main push/merge or Issue closure.
+
+## Проход 18.11.2026 — Day02 restored due-event guard (#19)
+
+- Commit теста: `fee584cab8987b3585f1a58faa289a4a13e168b7` (только `feature/core-2`).
+- В `Tests/Core/GameStateSnapshotGoldenTests.cs` дополнен сценарий: Day01 переносит событие на DayIndex=1, Restore сохраняет его, затем попытка EndDay на DayIndex=1 отклоняется до обработки NPC-события. Проверяется отсутствие частичных изменений day/revision/cash/Ledger/receipts/queue.
+- Это **регрессионная проверка защитного поведения**, а не реализация NPC event consumption. Контракты, production API и экономика не изменены.
+- Локально: `.NET SDK`, Unity Editor 6.3 LTS, Android SDK/NDK и `adb` отсутствуют; `java` доступна. C# тесты/Unity build/APK **не запускались**. Нужна CI-проверка exact SHA и QA review.
+- Не выполнялись merge в main, закрытие Issues или изменения чужих подсистем.
