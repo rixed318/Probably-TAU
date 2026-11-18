@@ -648,3 +648,17 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Artifacts confirmed by GitHub API:** `day01-android-touch` ID `14434206187`, 24,307 bytes, SHA256 artifact digest `11eed03b1249ca9c9b376be57da6af8d8214d55890b548f03484aece8cc6fd5d`; `day01-web-demo` ID `14433078253`, 8,484 bytes; both `expired=false` at verification. Download via run Artifacts section. These are web HTML artifacts, **not APK**.
 
 **Not executed this pass:** fresh ZIP download or browser/device render; Android viewport 800×360 / 360×800, touch controls, physical Android playtest, Unity Editor/PlayMode. Original art PNG binaries in Issue #21 still need actual generation/upload and owner review. No changes to GameState/Core, main, other branches, or public contracts. PR #12 remains Draft.
+
+
+---
+
+## AutoDev 03 · 2026-11-18 · Issue #20 — latest CI verification
+
+**Single scoped task:** verify the latest available UI workflow run and artifact metadata on the existing `feature/ui-5` HEAD; no gameplay, Core, art or workflow source modifications.
+
+- Checked commit: `bf46bc65f7ed060a3bc0925692c872abc65b62dc` (PR #12 head before this handoff update).
+- GitHub Actions run [44338441956](https://github.com/rixed318/Probably-TAU/actions/runs/44338441956), job `Node UI and art manifest regression (not Unity)`: `completed/success`.
+- GitHub reports successful steps for Node UI tests, manifest validation, manifest regressions, synthetic PNG candidate audit, staging and verifying Android HTML files, and both uploads. This confirms CI step status only; no local rerun or Android browser execution was performed.
+- Published artifacts: `day01-android-touch` (24,307 bytes; artifact id `14443001283`; GitHub SHA256 digest `1838e05d660836a90d896a495262f404f89cebaebcac0ccbe37926160e1d7202`) and `day01-web-demo` (8,484 bytes; id `14441794000`). Both reported `expired=false`.
+- **Not tested:** extracted content of this new ZIP, Android 800×360 / 360×800 visual and touch playtest, real original PNG candidate review, Unity Editor, APK. Issue #21 is not resolved by synthetic PNG tests.
+- **Next:** Android device/browser playtest against the documented seven checks; then art candidate generation and owner review. C0-v2 PR #9 and ADR PR #14 remain unmerged proposals; do not wire a real Core adapter yet.
