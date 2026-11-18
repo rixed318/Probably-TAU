@@ -534,3 +534,12 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `637f8d8c7df4eadcad089b4ef4cd768b4515ee4c`.
 - **Actually checked:** connector-side JavaScript verified current four room ID/priority pairs (4/4 PASS), and rejected an injected ROOM-1 priority swap (1/1 PASS). This was **not** a run of the checked-in Node CLI.
 - **Not run:** full Node CLI, CI, Unity or Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and inject a ROOM-1/ROOM-2 priority swap. PR #11 remains unmerged; not READY_FOR_OWNER_TEST.
+
+## AutoDev 04 — Day01 choice semantic parity (19.11.2026)
+
+**One bounded Issue #7 task:** updated `Content/validate-day01-acceptance.cjs` to compare all nine Day01 choice flags, ordered full effects (including Q/S/M/E/R score deltas) and inspection prerequisites against `CONTENT_SPEC_DRAFT.json` and `DAY01_UI_FIXTURE.json`. Existing cash parity is retained; no new cash writer, EventDirector, scenario outcome, Definition ID, DayIndex or asset changes. Platform-independent for Windows/Android.
+
+- Validator commit: `2d6881e372658ff2da7067c90309c76e770fbfe5`.
+- **Actually executed:** independent connector-side JavaScript parity check of 9 authored choices PASS; 3 injected mutations (flag, score delta, inspection condition) rejected 3/3 PASS. **Not** the checked-in Node CLI script.
+- **Not run:** full Node CLI, CI, Unity, Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and independently inject flag/score/inspection drift.
+- **Status:** NOT READY_FOR_OWNER_TEST; PR #11 remains draft, no main push/merge. C0-v2 PR #9 and ADR PR #14 remain unmerged.
