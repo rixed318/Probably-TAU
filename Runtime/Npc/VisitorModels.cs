@@ -337,6 +337,20 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Resolve a choice only when both displayed visit and document match Content.
+        /// Presentation consistency guard, never Core authorization or inspection proof.</summary>
+        public static bool TryGetChoicePreviewForVisitDocument(string visitId, string documentId,
+            string choiceId, out ChoicePreview preview)
+        {
+            preview = null;
+            ChoicePreview candidate;
+            if (!TryGetChoicePreviewForVisit(visitId, choiceId, out candidate) ||
+                !string.Equals(candidate.VisitorCard.DocumentId, documentId, StringComparison.Ordinal))
+                return false;
+            preview = candidate;
+            return true;
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
