@@ -53,7 +53,7 @@ jobs:
       - name: Stage single-file Android touch demo
         run: |
           mkdir -p dist/day01-android-touch
-          cp prototypes/ui-day-one/day01-android-touch.html dist/day01-android-touch/
+          cp prototypes/ui-day-one/day01-android-touch.html prototypes/ui-day-one/day01-android-offline.html dist/day01-android-touch/
       - name: Upload Android touch HTML
         uses: actions/upload-artifact@v4
         with:
