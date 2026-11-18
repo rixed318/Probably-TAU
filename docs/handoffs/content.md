@@ -516,3 +516,13 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded P0 content task:** added a third acceptance example `DAY01-P0-EXPLICIT-LAB-PRIORITY` to `Content/DAY01_UI_FIXTURE.json`. It reuses the triple-claim decision and expected financial/score results but explicitly selects `ROOM-1` (lab priority) with status `priority-lab-no-booking`. The static acceptance validator now distinguishes explicit `ROOM-1/2/3` priority outcomes from `ROOM-4` unresolved and `ROOM-AUTO` no-conflict; **priority does not silently create a room booking**. This gives UI 03 a concrete room-priority oracle without duplicating Core's reservation/ledger engine. No changes to financial amounts (Int64 kopecks), Definition IDs, DayIndex=0, fictional NPC/art IDs or runtime.
 
 **Commits:** fixture `eb6ca8e48575624ee4ca3012993bcef2a5f227db`; validator `20dba794161e840f2bb827ea7ce4e685f03c2098`. **Actually checked:** connector-side JS parsed/serialized updated fixture and verified three distinct oracle IDs/statuses, and that the validator source includes the priority/no-booking assertion. **NOT RUN:** full Node CLI validator, negative mutations, GitHub CI, Unity, Windows or Android. Container has Node 22 but cannot resolve github.com to fetch repository; QA 05 must run `node Content/validate-day01-acceptance.cjs` and verify all 3 acceptance paths including a mutated wrong priority status. PR #11 remains unmerged; not READY_FOR_OWNER_TEST.
+
+
+## AutoDev 04 — Day01 room-menu coverage (18.11.2026)
+
+**One bounded Issue #7 task:** expanded the static 27-route acceptance validator to check the room-resolution menu for every triple of document choices. With 2+ competing fictional claimants the menu must contain ROOM-1/2/3/4; with 0–1 claimant it must contain only ROOM-AUTO. Priority labels are checked, but no automatic room booking or EventDirector behavior is introduced. Existing scenario data, money, Definition IDs, DayIndex, and Core contracts were not changed.
+
+- Validator commit: `744b5a7916ed78525d9ad4817055d91b1d5cb897`.
+- **Actually executed:** independent JavaScript equivalent on current `DAY01_UI_FIXTURE.json` fetched from GitHub: **27/27 PASS**, including 11 routes with 2+ claims and 16 with 0–1 claim. This was **not** the checked-in Node CLI script.
+- **Not run:** full `node Content/validate-day01-acceptance.cjs`, negative mutations, CI, Unity/Android; container Git clone failed because `github.com` DNS resolution was unavailable. GitHub connector file read/write succeeded.
+- **Follow-up QA 05:** run the checked-in validator from a real checkout and mutate the ROOM menu to confirm rejection. PR #11 remains Draft; no merge or main push.
