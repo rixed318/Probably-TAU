@@ -468,3 +468,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** static acceptance validator now rejects duplicate visitor `documentId` assignments and orphaned documents; each of the three visits must own exactly one of the three canonical documents. No authored choices, money, `DayIndex`, art, Core or EventDirector changed.
 
 **Validator commit:** `f9d54818d40ec31dd2759e522cbe18636c761b97`. **Actually checked:** connector-side JavaScript preflight of current fixture PASS (3/3 unique assignments); duplicate assignment and unknown/orphaned assignment rejected (2/2 negative mutations). **Not run:** full Node CLI, CI, Unity, browser, Android. QA 05 must run `node Content/validate-day01-acceptance.cjs` and negative fixture tests. PR #11 remains Draft; no main merge.
+
+## 18.11.2026 — Day01 display/report DayIndex alignment (#7)
+
+**One bounded task:** static validator now requires `displayDay = dayIndex + 1` for the Day01 header and room conflict, and `endDayReport.dayIndex = fixture.dayIndex`. Canonical DayIndex stays 0-based; no changes to content outcomes, IDs, kopecks, Core, EventDirector, art or main.
+
+**Validator commit:** `f7817ade15abcaf06ec9a247b2b3ffa9777f5bb4`. **Actually checked:** connector-side JavaScript preflight on the current fixture PASS; three injected day-label/report mismatches rejected (3/3). **Not run:** full Node CLI validator, CI, Unity, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations. PR #11 remains Draft; no merge.
