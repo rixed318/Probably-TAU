@@ -154,6 +154,17 @@ namespace TAU.President.Npc
             return TryGetInspectionPreviewByDocumentId(choice.Visitor.DocumentId, out preview);
         }
 
+        /// <summary>Read-only inspection metadata for a canonical Content NPC definition ID.
+        /// Useful when a Windows/Android card is keyed by npcId rather than visitId;
+        /// never spends tokens, validates eligibility or confirms an inspection receipt.</summary>
+        public static bool TryGetInspectionPreviewByVisitorId(string visitorId, out InspectionPreview preview)
+        {
+            preview = null;
+            Day01VisitorCard card;
+            if (!TryGetCardByVisitorId(visitorId, out card)) return false;
+            return TryGetInspectionPreviewByDocumentId(card.DocumentId, out preview);
+        }
+
         /// <summary>Resolve a canonical document to its Day01 visitor without mutable state.</summary>
         public static bool TryGetByDocumentId(string documentId, out VisitorInstance visitor)
         {
