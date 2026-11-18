@@ -1000,3 +1000,18 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 3:** Chromium touch, real PNG, Unity APK/device and complete Save→Load still lack execution evidence; snapshot DTO stability remains a prerequisite.
 - **Recommended next step:** inspect fresh QA Actions run for `d56faf5a`; if UI Android Node passes, run actual Chromium 360x800 and 800x360 against the exact bundled HTML, then independently verify real PNG binaries when delivered.
 - **Safety:** only `feature/save-6` changed, no main push, no merge, no claims of READY_FOR_OWNER_TEST.
+
+
+## 2026-11-18 — QA 05: exact-SHA UI regression refresh (#8, #20)
+
+**One bounded change:** QA-owned `.github/workflows/qa-offline.yml` now pins UI PR #12 to `436f823d30d903341323a5e09fcaef9949e9ced3` in both the checkout and exact-SHA assertion, replacing `7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3`. Commit `a152f735945508d75f2a8d3c4f103ad420647ee3`, branch `feature/save-6`. No changes to UI or Core code. All other pins remain unchanged; this is **not** an integrated latest-branches test.
+
+**Actual verification:** GitHub returned a successful file-update response with commit SHA. GitHub metadata for PR #12 confirms the new SHA is its head at the time of inspection. No new CI job result was obtained; Python, Node, .NET, Chromium touch (360x800 / 800x360), PNG binary checks, Unity Editor and Android APK all **NOT RUN in this pass**. The workflow change alone does not prove safe-area or Day01 behavior. SaveService remains deferred until stable Core DTO.
+
+### Сводка для координатора 00 — 2026-11-18 13:15 UTC+4
+
+- **PR heads observed before QA update:** #9 Core `6750501c88e4`; #10 QA `c3e9b17c5c73` → new workflow `a152f7359455` → this handoff commit; #11 Content `ab3d4d4fa708`; #12 UI `436f823d30d9`; #14 ADR `ebdc4be28afd`; #16 NPC `79d4fd54590b`. Main was not modified.
+- **Blocker 1:** Fresh pinned UI Node CI execution not yet verified; no Chromium touch/48dp/overflow test evidence for latest single-file Day01.
+- **Blocker 2:** Actual 3–5 PNG binaries, signatures, dimensions and manifest SHA have not been verified in this pass.
+- **Blocker 3:** Unity Editor APK/device testing and complete Save→Load snapshot DTO integration remain unverified; Unity/Android tests NOT RUN.
+- **Recommended next step:** inspect GitHub Actions run for the new QA head and collect exact test logs; run real Chromium touch acceptance on the same UI SHA; then binary-validate committed PNGs once supplied. Do not grant READY_FOR_OWNER_TEST or merge without evidence and owner approval.
