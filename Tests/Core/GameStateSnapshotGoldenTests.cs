@@ -741,6 +741,41 @@ namespace TAU.President.Tests.Core
                 withPayable.Finance.Receipts.Count == 0 &&
                 withPayable.Finance.Ledger.Entries.Count == 0);
 
+            // A future event must remain pending even when today's payable is unaffordable.
+            // The debt and event are independent durable obligations across EndDay/Restore.
+            var deferredUnpaidBefore = new DurableGameStateSnapshot(
+                futureEventBefore.Finance,
+                futureEventBefore.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day01-event-unpaid", 0, 800L)
+                }));
+            var deferredUnpaidFlow = DurableDay01Flow.Prepare(deferredUnpaidBefore, 0, 0, choices);
+            Assert(deferredUnpaidFlow.Next.Header.DayIndex == 1 &&
+                deferredUnpaidFlow.Next.Header.Revision == 4 &&
+                deferredUnpaidFlow.Next.Header.BalanceKopecks == 750L &&
+                deferredUnpaidFlow.Next.Finance.Ledger.Entries.Count == 3 &&
+                deferredUnpaidFlow.Next.Finance.Receipts.Count == 4 &&
+                deferredUnpaidFlow.Next.Finance.Receipts[3].PostingKeys.Count == 0 &&
+                deferredUnpaidFlow.Report.Postings.Count == 0 &&
+                deferredUnpaidFlow.Report.UnpaidPayables.Count == 1 &&
+                deferredUnpaidFlow.Report.UnpaidPayables[0].DueKey == "day01-event-unpaid" &&
+                deferredUnpaidFlow.Next.Events.Pending.Count == 1 &&
+                deferredUnpaidFlow.Next.Events.Pending[0].InstanceId == "event-tomorrow" &&
+                deferredUnpaidFlow.Next.Events.CompletedIds.Count == 0);
+            var deferredUnpaidRestored = deferredUnpaidFlow.Next.Restore();
+            Assert(deferredUnpaidRestored.Payables.Outstanding.Count == 1 &&
+                deferredUnpaidRestored.Payables.Outstanding[0].DueKey == "day01-event-unpaid" &&
+                deferredUnpaidRestored.Events.Pending.Count == 1 &&
+                deferredUnpaidRestored.Events.Pending[0].DueDayIndex == 1 &&
+                deferredUnpaidRestored.Events.CompletedIds.Count == 0);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(
+                deferredUnpaidRestored, deferredUnpaidRestored.Header.Revision, 0, choices));
+            Assert(deferredUnpaidBefore.Header.DayIndex == 0 &&
+                deferredUnpaidBefore.Header.BalanceKopecks == 1000L &&
+                deferredUnpaidBefore.Payables.Outstanding.Count == 1 &&
+                deferredUnpaidBefore.Events.Pending.Count == 1 &&
+                deferredUnpaidBefore.Finance.Ledger.Entries.Count == 0);
+
             // A future scheduled event and a due-now payable must coexist: EndDay
             // settles only the payable and leaves tomorrow's event unconsumed.
             var combinedBefore = new DurableGameStateSnapshot(
