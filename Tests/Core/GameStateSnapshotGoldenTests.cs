@@ -567,6 +567,25 @@ namespace TAU.President.Tests.Core
                 mixedBefore.Payables.Outstanding.Count == 2 &&
                 mixedBefore.Finance.Ledger.Entries.Count == 0);
 
+            // Permuting the input payable list must not change EndDay settlement.
+            // Stable DueKey ordering, not insertion order, determines the ledger and report.
+            var reversedBefore = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day01-large-fee", 0, 800L),
+                    new DurablePayable("day01-small-rent", 0, 200L)
+                }));
+            var reversedFlow = DurableDay01Flow.Prepare(reversedBefore, 0, 0, choices);
+            Assert(reversedFlow.Next.Header.BalanceKopecks == mixedFlow.Next.Header.BalanceKopecks &&
+                reversedFlow.Next.Finance.Ledger.Entries.Count == mixedFlow.Next.Finance.Ledger.Entries.Count &&
+                reversedFlow.Next.Finance.Ledger.Entries[3].PostingId ==
+                    mixedFlow.Next.Finance.Ledger.Entries[3].PostingId &&
+                reversedFlow.Next.Finance.Receipts[3].Fingerprint ==
+                    mixedFlow.Next.Finance.Receipts[3].Fingerprint &&
+                reversedFlow.Report.UnpaidPayables.Count == 1 &&
+                reversedFlow.Report.UnpaidPayables[0].DueKey == "day01-large-fee");
+            Assert(reversedBefore.Payables.Outstanding.Count == 2 &&
+                reversedBefore.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
