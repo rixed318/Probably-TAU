@@ -38,6 +38,7 @@ jobs:
         run: |
           node --test prototypes/ui-day-one/test-fixtures.cjs
           node --test prototypes/ui-day-one/test-day01-read-model.cjs
+          node --test prototypes/ui-day-one/test-day01-selection.cjs
           node --test prototypes/ui-day-one/test-day01-preview.cjs
           node --test prototypes/ui-day-one/test-day01-gameplay.cjs
           node --test prototypes/ui-day-one/test-day01-android-touch.cjs
