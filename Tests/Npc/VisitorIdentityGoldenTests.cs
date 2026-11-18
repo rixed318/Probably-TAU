@@ -135,6 +135,34 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetCardByPlannedAssetId("missing_asset", out invalidAsset) || invalidAsset != null)
                 throw new Exception("Unknown planned art ID must fail closed.");
 
+            // Planned art navigation must resolve the same read-only screen as canonical visit routing.
+            for (int i = 0; i < cards.Count; i++)
+            {
+                Day01Visitors.VisitScreenPreview canonical;
+                if (!Day01Visitors.TryGetVisitScreenPreview(cards[i].VisitId, out canonical))
+                    throw new Exception("Canonical screen missing for planned asset test.");
+                foreach (string assetId in new[] { plannedPortraitIds[i], plannedStandingIds[i], plannedDocumentIds[i] })
+                {
+                    Day01Visitors.VisitScreenPreview byAsset;
+                    if (!Day01Visitors.TryGetVisitScreenPreviewByPlannedAssetId(assetId, out byAsset) ||
+                        byAsset == null || byAsset.Card.VisitId != canonical.Card.VisitId ||
+                        byAsset.Card.DocumentId != canonical.Card.DocumentId ||
+                        byAsset.Inspection.InspectionId != canonical.Inspection.InspectionId ||
+                        byAsset.Choices.Count != canonical.Choices.Count)
+                        throw new Exception("Planned asset screen mismatch: " + assetId);
+                    for (int j = 0; j < canonical.Choices.Count; j++)
+                        if (byAsset.Choices[j].ChoiceId != canonical.Choices[j].ChoiceId)
+                            throw new Exception("Planned asset screen choice order mismatch: " + assetId);
+                }
+            }
+            foreach (string invalid in new[] { null, "", "Irina_korneeva_standing", "missing_asset", " doc01_procurement_blank" })
+            {
+                Day01Visitors.VisitScreenPreview missingScreen;
+                if (Day01Visitors.TryGetVisitScreenPreviewByPlannedAssetId(invalid, out missingScreen) ||
+                    missingScreen != null)
+                    throw new Exception("Invalid planned asset must not resolve a screen.");
+            }
+
             var mutableCards = cards as System.Collections.Generic.IList<Day01VisitorCard>;
             if (mutableCards == null || !mutableCards.IsReadOnly)
                 throw new Exception("Visitor cards must be read-only.");
