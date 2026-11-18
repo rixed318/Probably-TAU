@@ -546,3 +546,16 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Actually verified:** GitHub accepted the test-file commit and returned its blob SHA. **Not run:** Node test suite, GitHub Actions, Android viewport/touch emulation, physical Android, Unity. The new assertions need CI execution; no test pass claimed.
 
 **Remaining:** confirm GitHub Actions run/artifact, real Android landscape and portrait viewport checks, Day01 interaction regression. Art #21 still needs real PNG binary commit and artistic review. No Core/GameState/main edits; PR #12 stays Draft.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-18 · Issue #20 (Android artifact completeness)
+
+**One bounded task:** updated `.github/workflows/ui-smoke.yml` so the existing `day01-android-touch` Actions artifact stages BOTH `day01-android-touch.html` (canonical three-visitor mock) and `day01-android-offline.html` (self-contained earlier prototype). Desktop artifact and original desktop files remain unchanged. This is packaging only, not Android runtime validation.
+
+**Workflow commit:** `7bac2bece0cc80199b0bb5f0cf73090ee4f577f4` on `feature/ui-5`.
+
+**Actually verified:** GitHub file read and successful Contents API update. **NOT RUN:** GitHub Actions job/artifact download, Node regression suite, Android viewport/touch emulator or device, Unity. The workflow must run successfully before claiming the ZIP contains both HTML files.
+
+**Next:** verify workflow run and downloaded ZIP contents; test landscape 800×360 and portrait 360×800 interactions and safe areas. Issue #21 PNG binary still pending. No main/Core/GameState changes; PR #12 remains Draft.
