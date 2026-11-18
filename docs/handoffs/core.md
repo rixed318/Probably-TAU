@@ -480,3 +480,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Issue #19 / PR #9 / branch feature/core-2.** Added one bounded golden regression to `Day01FlowGolden`: three distinct document decisions with zero cash effects must advance Day01 once, increment revision four times, apply Q/S/M metric deltas, preserve 1000 kopecks, create four durable receipts with empty posting keys and zero Ledger entries, survive Restore, reject replay and leave the input snapshot immutable. Test commit: `e442cb6c3eb0be59b60ba7460906929034f12595`.
 
 **Scope:** tests only; no production API, economic policy, NPC/Content mapping or Unity scaffold. **Verification:** local dotnet SDK and Unity 6.3 LTS Editor/Android Build Support/SDK/NDK/adb absent; C# runner and Unity/Android builds NOT RUN locally. Exact-SHA GitHub CI must be checked. Android APK BLOCKED. Pending real Day01 NPC document integration and due-event/weekly EndDay handling. No main push/merge or Issue closure.
+
+
+## Core 01 incremental handoff — 18.11.2026, deterministic Day01 Prepare replay (#19)
+
+- Test commit: `dd1e8431b38453aa986c82d92f237b3a34a9fda4` on `feature/core-2`; PR #9 remains unmerged.
+- Added a bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: two `DurableDay01Flow.Prepare` invocations against the same immutable payable-bearing Day01 snapshot and identical ordered document choices must yield matching revision, balance, ledger posting IDs and running balances, and all durable receipt fingerprints. Original snapshot stays unchanged.
+- No production API, economy policy, content/NPC, Unity project or main changes.
+- Local checks on this run: `dotnet`, `mono`, Unity Editor, Android SDK/NDK/adb not found in executable PATH; Java/Javac found. Thus .NET tests, Unity compile, and Android APK **not run / BLOCKED**. Exact-SHA CI outcome requires independent GitHub Actions verification; no passing claim.
+- Remaining: NPC typed documents/events and EndDay due-event handling, real Unity 6.3 Editor + Android toolchain, independent QA 05 review. Do not merge without owner approval.
