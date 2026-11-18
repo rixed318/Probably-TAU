@@ -95,6 +95,24 @@ namespace TAU.President.Tests.Npc
                 "doc02_student_proposal_blank",
                 "doc03_partner_letter_blank"
             };
+            // Canonical Content IDs must be globally collision-free across the Day01 screen routes.
+            // A collision could silently open the wrong NPC on Windows or Android.
+            var uniqueVisits = new HashSet<string>(StringComparer.Ordinal);
+            var uniqueVisitors = new HashSet<string>(StringComparer.Ordinal);
+            var uniqueDocuments = new HashSet<string>(StringComparer.Ordinal);
+            var uniqueAssets = new HashSet<string>(StringComparer.Ordinal);
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (!uniqueVisits.Add(cards[i].VisitId) ||
+                    !uniqueVisitors.Add(cards[i].VisitorId) ||
+                    !uniqueDocuments.Add(cards[i].DocumentId) ||
+                    !uniqueAssets.Add(cards[i].PlannedPortraitAssetId) ||
+                    !uniqueAssets.Add(cards[i].PlannedStandingAssetId) ||
+                    !uniqueAssets.Add(cards[i].PlannedDocumentAssetId))
+                    throw new Exception("Duplicate canonical Day01 identity or planned art ID.");
+            }
+            if (uniqueAssets.Count != 9)
+                throw new Exception("Day01 art manifest must have nine distinct planned IDs.");
             if (cards.Count != 3 || repeatedCards.Count != 3)
                 throw new Exception("Read-only visitor card count mismatch.");
             for (int i = 0; i < cards.Count; i++)
