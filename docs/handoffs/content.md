@@ -474,3 +474,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** static validator now requires `displayDay = dayIndex + 1` for the Day01 header and room conflict, and `endDayReport.dayIndex = fixture.dayIndex`. Canonical DayIndex stays 0-based; no changes to content outcomes, IDs, kopecks, Core, EventDirector, art or main.
 
 **Validator commit:** `f7817ade15abcaf06ec9a247b2b3ffa9777f5bb4`. **Actually checked:** connector-side JavaScript preflight on the current fixture PASS; three injected day-label/report mismatches rejected (3/3). **Not run:** full Node CLI validator, CI, Unity, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations. PR #11 remains Draft; no merge.
+
+## 18.11.2026 — Day01 cross-file NPC/visit/document ID guard (#7)
+
+**One bounded task:** `Content/validate-day01-acceptance.cjs` now compares the ordered (visitId, npcId, documentId) triples in `CONTENT_SPEC_DRAFT.json` against `DAY01_UI_FIXTURE.json`, and separately verifies the canonical fictional NPC roster. This prevents cross-file identity drift before Windows/Android art mapping and future Core integration. No authored NPCs, choices, scores, DayIndex, money, art assets or runtime code changed.
+
+**Validator commit:** `663e131c09824c05b60b614d057768858edd98f9`. **Actually checked:** GitHub accepted the file update; fixture triples inspected against draft IDs (3/3). **Not run:** full Node CLI, CI, Unity, Android, negative mutation suite. QA 05 should run `node Content/validate-day01-acceptance.cjs` and inject a mismatched NPC/document mapping. PR #11 remains Draft; no main push/merge.
