@@ -1112,3 +1112,18 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** Latest exact-SHA cross-branch CI and Chromium touch acceptance of single-file Day01 at 360×800/800×360 (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) remain unverified.
 - **Blocker 3:** 3–5 real PNG binaries/signatures/dimensions/manifest hashes, Unity APK/device and integrated Save→Load not verified; stable complete DTO required.
 - **Recommended next step:** NPC 02 rename conflicting local, provide exact fix SHA and passing .NET 8 build; QA then pin that SHA and rerun CI. Prioritize separate mobile Chromium acceptance. No main push/merge; READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-19 — QA 05: independent NPC source regression audit (#8)
+
+**Bounded task:** recheck exact current NPC PR #16 HEAD `8855c370d6314efe67761cc3fa01068124fd9e27` for the prior CS0136 source collision; no edits to NPC-owned files. Static JS source scan of `Tests/Npc/VisitorIdentityGoldenTests.cs` found `InspectionPreview invalidPreview` at line 34 (inside foreach block) and `ChoicePreview invalidPreview` at line 207 (enclosing method scope). **STATIC FAIL**: conflicting identifier scopes remain; C# compiler was **NOT RUN** and this is not a new compiler log. NPC owner should rename the inner local and run exact-SHA dotnet tests before QA updates CI pin. No new architecture contracts or SaveService.
+
+**Tests actually executed:** source fetch and deterministic static identifier/line scan (FAIL: 2 conflicting declarations). Python/Node/dotnet/Chromium/Unity Editor/real APK: **NOT RUN** this pass. PNG binary verification and Save→Load: **NOT RUN**. PR #10 remains draft; no merge or main writes.
+
+### Сводка для координатора 00 — 2026-11-19
+
+Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #10 QA before this update `3ed3a987351b8fb67fa156993917ba9b8f04b367`; #11 Content `58a2233765ef36010ff008d440444d76e1fbbab4`; #12 UI `ae32b5a88f72e9cf168f625fbe1b040392ca04f2`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `8855c370d6314efe67761cc3fa01068124fd9e27`. The authoritative QA HEAD after this handoff update is the update commit SHA returned by GitHub, reported in PR #10.
+
+**Blockers (max 3):** (1) NPC conflicting local declarations / .NET run missing; (2) exact latest UI Day01 Chromium touch 360x800 + 800x360 and full three-doc/EndDay/ledger checks unexecuted; (3) real PNG binary/manifest SHA, Unity APK and integrated Save→Load unverified.
+
+**Recommended next step:** NPC 02 fix the identifier collision and provide successful exact-SHA .NET 8 CI; then QA repin NPC SHA, rerun CI and complete Chromium mobile acceptance. READY_FOR_OWNER_TEST **not assigned**.
