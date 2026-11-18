@@ -43,7 +43,7 @@ Mock sums, story, persons and scenes are fictional and not official financial or
 
 ## Android offline HTML playtest (Issue #20)
 
-**Artifact:** open the successful [UI smoke workflow run](https://github.com/rixed318/Probably-TAU/actions/runs/44258000756), download `day01-android-touch` from **Artifacts**, and extract the ZIP. This is a **web prototype, not an APK**. The archive contains two independent entry points:
+**Artifact:** open [UI standalone smoke tests — workflow runs](https://github.com/rixed318/Probably-TAU/actions/workflows/ui-smoke.yml), select the latest **successful run on `feature/ui-5`**, download `day01-android-touch` under **Artifacts**, and extract the ZIP. GitHub may require signing in to download Actions artifacts; artifacts can expire. Do not use a failed or older run as evidence for the current branch. Check the run's head SHA before reporting a result. This is a **web prototype, not an APK**. The archive contains two independent entry points:
 
 - `day01-android-touch.html` — three-visitor canonical Day01 display/mock interactions (preferred Android test).
 - `day01-android-offline.html` — older one-request desktop-style mock packaged as a standalone fallback.
