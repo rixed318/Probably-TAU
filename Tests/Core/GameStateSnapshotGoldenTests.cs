@@ -531,6 +531,18 @@ namespace TAU.President.Tests.Core
             Assert(futureEventRestored.Events.Pending.Count == 1 &&
                 futureEventRestored.Events.Pending[0].DueDayIndex == 1 &&
                 futureEventRestored.Events.CompletedIds.Count == 0);
+            // The deferred event becomes due on DayIndex 1. A second EndDay must
+            // fail closed until NPC/event handling consumes it; Restore cannot bypass
+            // the due-event guard or publish a partial financial/day transition.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                futureEventRestored, futureEventRestored.Header.Revision, 1));
+            Assert(futureEventRestored.Header.DayIndex == 1 &&
+                futureEventRestored.Header.Revision == 4 &&
+                futureEventRestored.Header.BalanceKopecks == 750L &&
+                futureEventRestored.Finance.Ledger.Entries.Count == 3 &&
+                futureEventRestored.Finance.Receipts.Count == 4 &&
+                futureEventRestored.Events.Pending.Count == 1 &&
+                futureEventRestored.Events.CompletedIds.Count == 0);
             Assert(futureEventBefore.Header.DayIndex == 0 &&
                 futureEventBefore.Finance.Ledger.Entries.Count == 0 &&
                 futureEventBefore.Events.Pending.Count == 1);
