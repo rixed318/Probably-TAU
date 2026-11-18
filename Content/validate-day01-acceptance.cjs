@@ -31,6 +31,13 @@ assert.equal(fixture.endDayReport.dayIndex, fixture.dayIndex,
   "end-day report must refer to the current DayIndex");
 assert.equal(fixture.documents.length, 3);
 assert.equal(fixture.visitors.length, 3);
+// Cross-file canonical identity guard: no drift between draft content and UI fixture.
+const canonicalVisits = contentSpec.day1.visits.map(v => [v.id, v.npcId, v.documentId]);
+const fixtureVisits = fixture.visitors.map(v => [v.visitId, v.visitorId, v.documentId]);
+assert.deepEqual(fixtureVisits, canonicalVisits, "Day01 visit/NPC/document identity drift");
+const canonicalNpcVisits = contentSpec.fictionalNpcs.map(npc => [npc.visitId, npc.id]).sort((a,b) => a[0].localeCompare(b[0]));
+assert.deepEqual(fixture.visitors.map(v => [v.visitId, v.visitorId]).sort((a,b) => a[0].localeCompare(b[0])),
+  canonicalNpcVisits, "Day01 NPC roster drift");
 assert.equal(new Set(fixture.documents.map(d => d.id)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitId)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitorId)).size, 3);
