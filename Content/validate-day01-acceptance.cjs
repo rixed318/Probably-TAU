@@ -279,3 +279,47 @@ for (const id of assetIds) {
   assert.equal(matches.length, 1, "expected exactly one production brief heading/bullet for " + id);
 }
 console.log("PASS: 9/9 Day01 art IDs have production briefs (PNG delivery not checked)");
+
+// Exhaustive static Day01 choice-space guard (3 x 3 x 3), not a Core simulation.
+// The fourth room-resolution choice is deliberately outside this matrix.
+let combinationsChecked = 0;
+let lowestClosingCash = money(fixture.opening.budgetKopecks);
+let highestClosingCash = 0n;
+for (const lab of fixture.visitors[0].choices) {
+  for (const student of fixture.visitors[1].choices) {
+    for (const partner of fixture.visitors[2].choices) {
+      const selected = [lab, student, partner];
+      const inspections = new Set(selected.map(choice => choice.requiresInspection).filter(Boolean));
+      const inspectionCost = [...inspections].reduce((total, documentId) => {
+        const document = fixture.documents.find(item => item.id === documentId);
+        assert.ok(document, "unknown inspection document: " + documentId);
+        assert.ok(Number.isSafeInteger(document.inspection.costTokens) && document.inspection.costTokens >= 0);
+        return total + document.inspection.costTokens;
+      }, 0);
+      assert.ok(inspectionCost <= fixture.opening.inspectionTokens,
+        "Day01 choice combination requires unavailable inspections");
+      let cash = money(fixture.opening.budgetKopecks);
+      const scores = {...fixture.opening.scores};
+      for (const choice of selected) {
+        for (const effect of choice.effects) {
+          if (effect.kind === "cashDelta") {
+            cash += money(effect.deltaKopecks);
+            assert.ok(cash >= 0n, "Day01 combination overspends available cash");
+            assert.ok(cash <= (1n << 63n) - 1n, "Day01 cash overflows Int64");
+          } else if (effect.kind === "scoreDelta") {
+            scores[effect.score] += effect.delta;
+            assert.ok(scores[effect.score] >= 0 && scores[effect.score] <= 100,
+              "Day01 combination score outside Core bounds: " + effect.score);
+          } else assert.fail("unknown Day01 effect kind");
+        }
+      }
+      if (cash < lowestClosingCash) lowestClosingCash = cash;
+      if (cash > highestClosingCash) highestClosingCash = cash;
+      combinationsChecked++;
+    }
+  }
+}
+assert.equal(combinationsChecked, 27, "Day01 must enumerate all 27 document-choice combinations");
+assert.equal(lowestClosingCash.toString(), "171500000", "Day01 minimum cash changed: rebalance explicitly");
+assert.equal(highestClosingCash.toString(), "200000000", "Day01 maximum cash changed: rebalance explicitly");
+console.log("PASS: 27/27 Day01 document-choice combinations, inspections, cash and Q/S/M/E/R bounds; closing cash 171500000..200000000 kopecks");
