@@ -16,7 +16,8 @@
     "weeklySettlementClosingDayIndexes": [
       4,
       9
-    ]
+    ],
+    "assetIdentityNote": "Stable fictional content IDs for original UI art across Windows/Android; proposals only, not asset paths, generated PNGs, or approved Unity schema. No real academy marks."
   },
   "opening": {
     "day": 1,
@@ -40,19 +41,25 @@
       "id": "npc_irina_korneeva",
       "role": "координатор цифровых дисциплин",
       "motivation": "безотказные компьютеры",
-      "visitId": "D01_LAB"
+      "visitId": "D01_LAB",
+      "portraitAssetId": "portrait_npc_irina_korneeva",
+      "visualDescription": "Короткая тёмно-каштановая стрижка с боковым пробором, круглые очки, бирюзовый жакет поверх светлой рубашки; спокойная прямая осанка, папка с чертежом компьютерного класса."
     },
     {
       "id": "npc_dasha_polynskaya",
       "role": "студенческий организатор",
       "motivation": "увидеть реальные проекты",
-      "visitId": "D01_STUDENT"
+      "visitId": "D01_STUDENT",
+      "portraitAssetId": "portrait_npc_dasha_polynskaya",
+      "visualDescription": "Густые рыжевато-медные волосы в высоком хвосте, жёлтая ветровка поверх тёмной футболки, тканевая сумка с простыми геометрическими значками; энергичный наклон вперёд."
     },
     {
       "id": "npc_mark_sviridov",
       "role": "представитель вымышленной фирмы «Пульс Инжиниринг»",
       "motivation": "найти стажёров",
-      "visitId": "D01_PARTNER"
+      "visitId": "D01_PARTNER",
+      "portraitAssetId": "portrait_npc_mark_sviridov",
+      "visualDescription": "Короткие тёмные кудрявые волосы, аккуратная борода, бордовый жилет поверх серой рубашки, тонкий планшет без брендинга; сдержанная открытая жестикуляция."
     }
   ],
   "documentTypes": [
@@ -71,7 +78,8 @@
       "revealed": {
         "realSeats": 20,
         "phasedPriceKopecks": "16000000"
-      }
+      },
+      "documentAssetId": "document_doc01_procurement"
     },
     {
       "id": "DOC-02",
@@ -88,7 +96,8 @@
       "revealed": {
         "roomReserved": false,
         "mobilePriceKopecks": "3500000"
-      }
+      },
+      "documentAssetId": "document_doc02_student_project"
     },
     {
       "id": "DOC-03",
@@ -105,7 +114,8 @@
         "onsiteMentorCostKopecks": "4000000",
         "remoteMentorCostKopecks": "2500000",
         "remoteConditionalRevenueKopecks": "9000000"
-      }
+      },
+      "documentAssetId": "document_doc03_partner_offer"
     }
   ],
   "day1": {
