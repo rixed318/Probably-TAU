@@ -133,6 +133,16 @@ namespace TAU.President.Npc
             }
         }
 
+        /// <summary>Read-only inspection metadata for a canonical Day01 visit.
+        /// Resolves through the Content document ID; never spends tokens or confirms a receipt.</summary>
+        public static bool TryGetInspectionPreviewByVisitId(string visitId, out InspectionPreview preview)
+        {
+            preview = null;
+            VisitorInstance visitor;
+            if (!TryGetByVisitId(visitId, out visitor)) return false;
+            return TryGetInspectionPreviewByDocumentId(visitor.DocumentId, out preview);
+        }
+
         /// <summary>Resolve a canonical document to its Day01 visitor without mutable state.</summary>
         public static bool TryGetByDocumentId(string documentId, out VisitorInstance visitor)
         {
