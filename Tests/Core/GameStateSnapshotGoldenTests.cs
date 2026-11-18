@@ -671,6 +671,29 @@ namespace TAU.President.Tests.Core
                 before.Finance.Receipts.Count == 0 &&
                 before.Finance.Ledger.Entries.Count == 0);
 
+            // Replaying the same immutable input with the same ordered choices must
+            // produce byte-for-byte stable financial identifiers and receipt fingerprints.
+            // This checks deterministic Prepare without requiring SaveService or Unity.
+            var deterministicA = DurableDay01Flow.Prepare(withPayable, 0, 0, choices);
+            var deterministicB = DurableDay01Flow.Prepare(withPayable, 0, 0, choices);
+            Assert(deterministicA.Next.Header.Revision == deterministicB.Next.Header.Revision &&
+                deterministicA.Next.Header.BalanceKopecks == deterministicB.Next.Header.BalanceKopecks &&
+                deterministicA.Next.Finance.Ledger.Entries.Count == deterministicB.Next.Finance.Ledger.Entries.Count &&
+                deterministicA.Next.Finance.Receipts.Count == deterministicB.Next.Finance.Receipts.Count);
+            for (int i = 0; i < deterministicA.Next.Finance.Ledger.Entries.Count; i++)
+            {
+                Assert(deterministicA.Next.Finance.Ledger.Entries[i].PostingId ==
+                    deterministicB.Next.Finance.Ledger.Entries[i].PostingId &&
+                    deterministicA.Next.Finance.Ledger.Entries[i].BalanceAfterKopecks ==
+                    deterministicB.Next.Finance.Ledger.Entries[i].BalanceAfterKopecks);
+            }
+            for (int i = 0; i < deterministicA.Next.Finance.Receipts.Count; i++)
+                Assert(deterministicA.Next.Finance.Receipts[i].Fingerprint ==
+                    deterministicB.Next.Finance.Receipts[i].Fingerprint);
+            Assert(withPayable.Header.Revision == 0 &&
+                withPayable.Finance.Receipts.Count == 0 &&
+                withPayable.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
