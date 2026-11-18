@@ -529,3 +529,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Это **регрессионная проверка защитного поведения**, а не реализация NPC event consumption. Контракты, production API и экономика не изменены.
 - Локально: `.NET SDK`, Unity Editor 6.3 LTS, Android SDK/NDK и `adb` отсутствуют; `java` доступна. C# тесты/Unity build/APK **не запускались**. Нужна CI-проверка exact SHA и QA review.
 - Не выполнялись merge в main, закрытие Issues или изменения чужих подсистем.
+
+
+## Core 01 — fix CI CS1061 in deterministic Day01 replay test (18.11.2026)
+
+- Issue #19 / PR #9 / branch `feature/core-2`. GitHub Actions Core .NET 8 golden runner #44364185017 on prior HEAD `3ecd82c8cfb69fee0ffdf51cb6ee5367048b91bc` **FAILED** compilation with CS1061 at `Tests/Core/GameStateSnapshotGoldenTests.cs:746-747`: `LedgerEntry` has no `BalanceAfterKopecks` property.
+- Bounded repair commit `94b64faf28c5e3775ca69edf768b6aeeecef9651`: remove the invalid per-entry running-balance assertion from the deterministic Prepare replay golden test. Keep per-entry posting-ID equality, total balance/revision, entry counts and all receipt fingerprints. No production Core API or economy policy changes.
+- Verification: prior CI failure confirmed from actual job logs; new SHA CI **not yet verified**. Local .NET SDK, Unity Editor, Android SDK/NDK/adb unavailable; no local C# execution, Unity compile or APK. Recheck exact-head CI and QA review before any readiness claim.
+- NPC integration remains separately blocked by NPC PR #16 CS0136 according to QA #10; no NPC file changes. No main push/merge or Issue closure.
