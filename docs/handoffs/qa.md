@@ -1052,3 +1052,16 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 3:** Unity Editor APK/device tests NOT RUN; full Save→Load waits on stable Core DTO.
 - **Recommended next step:** inspect jobs/logs for CI triggered by the new QA commit; if NPC checkout succeeds, record exact NPC .NET test results. Then run Chromium mobile acceptance on exact latest single-file UI HTML. No READY_FOR_OWNER_TEST or merge.
 - **Safety:** only QA feature branch updated; no main push, merge, branch deletion or shared architecture approval.
+
+
+## 2026-11-18 — AutoDev 05: independent NPC CI compile failure triage (#8)
+
+**One bounded QA task:** inspected the completed exact-SHA CI runs [44306232247](https://github.com/rixed318/Probably-TAU/actions/runs/44306232247) and [44306251805](https://github.com/rixed318/Probably-TAU/actions/runs/44306251805). Both: Python PCG32 SUCCESS; UI/Content static SUCCESS; Core .NET 8 SUCCESS; NPC .NET 8 FAILURE. Actual NPC checkout and SHA assertion PASS for pinned `fa7452f99cfbee101ae47fd95bd225268cecd5bc`. The .NET SDK 8.0.428 compiler fails with **CS0136** at `Tests/Npc/VisitorIdentityGoldenTests.cs:34` (local `invalidPreview` conflicts with line 179 declaration in enclosing scope). Source read at pinned SHA and current NPC HEAD `98e7d982ded8fdbad30e23ea71d75a8ab6a4cd21` confirms both declarations. NPC tests **NOT RUN (compile failed)**. Exact finding sent to [NPC PR #16 comment](https://github.com/rixed318/Probably-TAU/pull/16#issuecomment-6981320041); fix belongs to NPC owner. No QA code changes, no new test executions locally, no Unity Editor/Chromium/Android tests.
+
+### Сводка для координатора 00 — 2026-11-18 18:21 UTC+4
+
+- **PR HEAD at audit:** Core #9 `5901e06e4014668a0a77b8131b321191226ac9b8`; QA #10 before this handoff `d552c175b53b58041814dca7a940fb189ff6e133`; Content #11 `bd714d68a60dcc334465deb048b305e6a40267c1`; UI #12 `9bdc0bd6376fe7c066dac98d8aefb68860f5d1bb`; ADR #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; NPC #16 `98e7d982ded8fdbad30e23ea71d75a8ab6a4cd21`. QA branch handoff commit follows this report. PR #9 C0-v2 and PR #14 ADR remain non-merged guidance, not new QA-approved contracts.
+- **Blocker 1:** NPC pinned SHA compile failure CS0136 prevents NPC golden assertions; owner should rename conflicting local and rerun.
+- **Blocker 2:** CI pins older Core/UI/Content/NPC SHAs; green suites are not proof of current PR heads; mobile Chromium 360x800 / 800x360 remains NOT RUN.
+- **Blocker 3:** real PNG binary validation, Unity Editor APK/Android device tests, and complete stable Save/Load DTO/integration remain NOT RUN/BLOCKED.
+- **Recommended next step:** NPC owner fix CS0136 on feature/npc-4 with exact SHA and standalone .NET evidence; QA then pin verified new NPC SHA and rerun CI, followed by Chromium Day01 mobile acceptance. Do not merge or claim READY_FOR_OWNER_TEST.
