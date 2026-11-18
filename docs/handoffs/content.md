@@ -543,3 +543,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Actually executed:** independent connector-side JavaScript parity check of 9 authored choices PASS; 3 injected mutations (flag, score delta, inspection condition) rejected 3/3 PASS. **Not** the checked-in Node CLI script.
 - **Not run:** full Node CLI, CI, Unity, Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and independently inject flag/score/inspection drift.
 - **Status:** NOT READY_FOR_OWNER_TEST; PR #11 remains draft, no main push/merge. C0-v2 PR #9 and ADR PR #14 remain unmerged.
+
+## AutoDev 04 — Day01 room-priority narrative parity (19.11.2026)
+
+**One bounded Issue #7 task:** corrected `Content/DAY_01.md` room choice table: ROOM-1/2/3/4 have **zero immediate DayIndex=0 money/score effects**, do not book L-204, and their previously described reputation penalties are explicitly **proposed later E02 outcomes**, not Day01 postings. ROOM-AUTO for <=1 claimant is a display outcome, not a reservation. This resolves contradiction with the existing canonical `DAY01_UI_FIXTURE.json` acceptance examples and avoids a second cash/score writer in Content. Deferred E02 penalties remain proposals requiring Core/NPC/00 review; no event engine added.
+
+- Narrative commit: `765f170fe63c891013b89d0be34cca613fb16b12`.
+- **Actually checked:** GitHub file fetched, exact four-row previous table matched before replacement; updated text constructed with four distinct ROOM rows and explicit no-booking/no-Day01-effects statement. No Node CLI, CI, Unity, Windows or Android test executed; narrative-only edit.
+- **Unchanged:** `CONTENT_SPEC_DRAFT.json`, `DAY01_UI_FIXTURE.json`, canonical Definition IDs, DayIndex=0, Int64 kopecks, Core/EventDirector, main. PR #11 stays Draft, no merge. QA 05 should confirm room-choice narrative and fixture behavior, while 00/01/02 decide whether E02 reputation effects should exist.
