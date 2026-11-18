@@ -606,3 +606,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Limitations:** Artifact ZIP bytes and included file list were NOT independently downloaded/inspected; Android viewport/touch and physical-device checks NOT RUN. This is a web prototype, not APK/Unity. Issue #21 still needs verified original binary PNG assets and art review. No C0/API or Unity adapter claims.
 
 **Next:** QA 05 to download ZIP and validate offline behavior at 800×360 landscape and 360×800 portrait, including tap targets, clipping, decision and EndDay flow. Keep PR #12 draft; no merge.
+
+
+## AutoDev 03 — 2026-11-18 · Issue #20 — downloaded Android artifact ZIP integrity
+
+**One bounded verification task:** downloaded GitHub Actions artifact `day01-android-touch` (ID `14406184954`) from successful run [44258000756](https://github.com/rixed318/Probably-TAU/actions/runs/44258000756), branch `feature/ui-5`, workflow head `7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3`. Locally opened the actual 24,307-byte ZIP with Python `zipfile`; `testzip()` returned `None` (no corrupt member).
+
+**Verified ZIP members:** `day01-android-offline.html` (63,742 bytes; SHA256 `70d0b663da2bd37cdc1db5960d70ae77f6461eade084d2ac7aa81658d5541383`) and `day01-android-touch.html` (16,954 bytes; SHA256 `4637e2ad709495be2c9380abefe00f3866ec46ab1de8316a0ce0b6bc8b08ff3f`). Both begin with `<!doctype html>`; no additional ZIP members. These checks establish downloadable package integrity and file presence, **not** functional browser correctness.
+
+**Not tested:** Chrome/Android rendering, 800×360 / 360×800 clipping, tap targets, decision/EndDay behavior on device, Unity or APK. Art Issue #21 still requires real approved PNG binaries. No changes to Core/GameState, main, or other branches. PR #12 remains Draft.
