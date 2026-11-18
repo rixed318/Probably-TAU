@@ -46,6 +46,11 @@ jobs:
       - name: Art manifest regression tests
         run: python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
 
+      - name: Install PNG audit test dependency
+        run: python3 -m pip install 'Pillow>=10,<13'
+      - name: PNG candidate audit regression tests (synthetic fixtures)
+        run: python3 -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v
+
       - name: Stage offline demo
         run: |
           mkdir -p dist/day01-web-demo
