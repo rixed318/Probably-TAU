@@ -62,6 +62,12 @@ for (const [score, value] of Object.entries(fixture.opening.scores)) {
   assert.ok(Number.isSafeInteger(value) && value >= 0 && value <= 100, "invalid opening score: " + score);
 }
 const documentIds = new Set(fixture.documents.map(d => d.id));
+// One-to-one visit/document mapping: no shared or orphaned Day01 documents.
+const assignedDocumentIds = fixture.visitors.map(visitor => visitor.documentId);
+assert.equal(new Set(assignedDocumentIds).size, assignedDocumentIds.length,
+  "multiple Day01 visitors share a document");
+assert.deepEqual([...assignedDocumentIds].sort(), [...documentIds].sort(),
+  "Day01 visits must cover every document exactly once");
 for (const visitor of fixture.visitors) {
   assert.ok(documentIds.has(visitor.documentId));
   assert.equal(visitor.choices.length, 3);
