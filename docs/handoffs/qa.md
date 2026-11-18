@@ -982,3 +982,21 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** NPC checkout failed before tests; latest NPC regression status unknown.
 - **Blocker 3:** Chromium touch 360x800/800x360, actual 3–5 PNG binary/manifest checks, Unity APK/Android and integrated Save→Load remain unverified; stable persistence DTO gate still required.
 - **Recommended next step:** UI 03 fix or justify the missing `env(safe-area-inset-top)` in the exact offline HTML artifact; retry NPC checkout separately; then QA re-run exact-SHA CI and actual Chromium touch checks. No main push/merge; READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-18 11:43 UTC+4 — QA 05: pin Android bundle regression to current reviewed UI SHA (#8, #20)
+
+**One bounded change:** updated only the UI revision (both checkout ref and exact-SHA assertion) in `.github/workflows/qa-offline.yml` from `f857f2871fbb097182ebc54dad6ca3e7caea6456` to `7bfffdb59dccb2256e7d58196d95d5aa9bd3e6b3`. Workflow commit: `d56faf5af06dfa4932e25dcee1a8efee98295c44`. Core, Content and NPC pins intentionally unchanged; no cross-branch merge.
+
+**Independent evidence:** inspected GitHub Actions run [44237151006](https://github.com/rixed318/Probably-TAU/actions/runs/44237151006): Core and PCG32 SUCCESS; UI/Content FAIL at Android bundle assertion `/env\\(safe-area-inset-top\\)/` on old UI SHA `f857f287`; NPC FAIL during checkout of `d2e02248`, before C# execution. Fetched current UI `test-day01-android-touch.cjs` (blob `224b544f`) and `day01-android-touch.html` (blob `28450454`) at `7bfffdb5`: source text contains exact `env(safe-area-inset-top)` and the test expects it. **This is a static source observation, NOT a successful Node or Chromium run.** The old failure must not be assigned to the new UI revision. A separate fresh CI run is required.
+
+**Tests actually executed this pass:** GitHub Actions logs reviewed, current UI source fetched and inspected; no local Node/Python/.NET execution. Fresh CI at `d56faf5a` NOT VERIFIED. Chromium touch 360x800/800x360, 3 docs, EndDay, ledger replay, 48dp/overflow, actual PNG signatures/manifest SHA, Unity Editor/APK/Android and Save→Load all **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-18 11:43 UTC+4
+
+- **PR heads read before change:** #9 Core `f22f2afbee30`; #10 QA `ad52349d6fb3` -> QA workflow `d56faf5af06d` (handoff commit follows); #11 Content `3311b3a14714`; #12 UI `7bfffdb59dcc`; #14 ADR `ebdc4be28afd`; #16 NPC `7723a66afe65`. C0-v2/ADR remain unmerged; no architecture approval by QA.
+- **Blocker 1:** fresh exact-SHA UI Node/Android CI not yet verified; prior UI failure belongs to old pinned SHA.
+- **Blocker 2:** NPC checkout of pinned `d2e02248` failed before tests; distinguish checkout failure from NPC logic, rerun with a valid exact SHA after review.
+- **Blocker 3:** Chromium touch, real PNG, Unity APK/device and complete Save→Load still lack execution evidence; snapshot DTO stability remains a prerequisite.
+- **Recommended next step:** inspect fresh QA Actions run for `d56faf5a`; if UI Android Node passes, run actual Chromium 360x800 and 800x360 against the exact bundled HTML, then independently verify real PNG binaries when delivered.
+- **Safety:** only `feature/save-6` changed, no main push, no merge, no claims of READY_FOR_OWNER_TEST.
