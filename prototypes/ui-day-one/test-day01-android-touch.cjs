@@ -12,7 +12,7 @@ test('Android bundle has no CSS imports, remote media, frames or runtime network
 test('second packaged Android offline HTML remains standalone and parseable',()=>{
   const legacy=fs.readFileSync(path.join(__dirname,'day01-android-offline.html'),'utf8');
   assert.match(legacy,/viewport-fit=cover/);
-  assert.match(legacy,/env\(safe-area-inset-top\)/);
+  assert.match(legacy,/env\(safe-area-inset-top(?:\s*,\s*[^)]*)?\)/);
   assert.match(legacy,/min-height:48px/);
   assert.doesNotMatch(legacy,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
   assert.doesNotMatch(legacy,/@import\b|url\s*\(\s*['"]?https?:/i);
