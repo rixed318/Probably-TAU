@@ -673,3 +673,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Implementation commit:** `a4e5eb72dda5a7dfcaf5f787ceb9198c4672f220` (`prototypes/ui-day-one/README.md`). **Verification actually performed:** fetched original README and workflow from GitHub; GitHub Contents API accepted the README update. No Node, Android viewport, physical-device, Unity, or PNG image generation tests were run. This is a documentation-only change and does not establish Android rendering correctness.
 
 **Next:** QA 05/owner should execute the seven Android checks on a device. Issue #21 still requires real original PNG files, GitHub blob verification, and art review. PR #12 stays Draft; no merge or main push.
+
+
+## 2026-11-19 — Issue #20: Android Day01 DOM initialization bug
+
+- **Fix:** `prototypes/ui-day-one/day01-android-touch.html` now attaches its UI event handlers and calls `render()` from `DOMContentLoaded`, after the body elements exist. Previously its inline head script accessed `#inspect` before body parsing, causing `Cannot read properties of null (reading 'addEventListener')` and leaving the demo at “Загрузка…”.
+- **Code commit:** `637dc9ac099b9da0418adf64c0d79bd9ba4ba48d` in `feature/ui-5`. No Core/GameState changes.
+- **Actually executed locally:** Chromium headless via Python Playwright `page.set_content` on the patched standalone HTML at 800×360 and 360×800, touch/mobile emulation. Both had zero page errors, document width equal to viewport width, and visible button bounding boxes at least 48×48 CSS px. Screenshots saved locally. Initial run on the old artifact reproduced the null addEventListener error at both sizes.
+- **Limitations:** `file://` navigation was blocked by local browser administrator policy; `set_content` validates DOM execution/layout, **not** Android local-file launch. No physical Android, complete tap-through, Unity, APK, or new GitHub Actions run verified. Existing downloaded ZIP remains the old broken build until CI publishes a new artifact. A regression test guarding DOM-ready initialization should follow.
