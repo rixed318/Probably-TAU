@@ -961,3 +961,24 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** Chromium touch portrait/landscape acceptance and real Unity APK/Android are NOT RUN.
 - **Blocker 3:** 3–5 original PNG binaries and complete stable Core snapshot DTO not yet independently validated; no full Save→Load.
 - **Recommended next step:** inspect Actions run for QA workflow SHA `d127602b`, report each job result and exact tested SHAs, then execute Chromium touch tests on exact UI HTML artifact. Keep main protected; no merge or readiness approval.
+
+
+## 2026-11-18 — AutoDev 05: investigate failing exact-SHA CI (#8)
+
+**One bounded task:** independently inspect the completed GitHub Actions run [44237151006](https://github.com/rixed318/Probably-TAU/actions/runs/44237151006) for QA branch SHA `5d797098a0ff86bf775ec00524c78912124b66ee`. This is a CI failure triage, not a code fix or a claim that all tests passed.
+
+**Observed jobs (GitHub Actions actual logs):**
+- Core ledger/snapshot .NET 8 — **SUCCESS**.
+- Python PCG32 oracle — **SUCCESS**.
+- UI/Content static regression — **FAILURE**. Earlier UI Node suites reported zero failures; the Android touch static assertion failed: `AssertionError: The input did not match the regular expression /env\\(safe-area-inset-top\\)/`. This is evidence of an unmet assertion on the pinned HTML/CSS artifact, not evidence of a Chromium touch test. UI owner should verify safe-area CSS and test expectations at the pinned UI SHA.
+- NPC standalone .NET 8 — **FAILURE at checkout**: `/usr/bin/git` exit code 1 during fetch, after retry; NPC C# tests **NOT RUN**, so this is not an NPC regression verdict. Re-run checkout before diagnosing NPC logic.
+
+**Execution:** only remote GitHub Actions jobs above were executed; this pass performed read-only GitHub metadata/log inspection. No local Node/Python/.NET, Chromium, Unity Editor, APK, Android device, or real-PNG binary tests were run. No shared C0/ADR contracts approved, no SaveService implemented.
+
+### Сводка для координатора 00 — 2026-11-18 09:59 UTC+4
+
+- **Latest PR heads observed:** #9 Core `2fd4f9e810f2`; #10 QA `5d797098a0ff` (this handoff commit follows); #11 Content `1ce07eda2f62`; #12 UI `d3f695073b2c`; #14 ADR `ebdc4be28afd`; #16 NPC `7c720f11617b`. All observed open. Main was read only.
+- **Blocker 1:** CI run 44237151006 has UI touch assertion failure; cannot mark Android-ready or overall CI green.
+- **Blocker 2:** NPC checkout failed before tests; latest NPC regression status unknown.
+- **Blocker 3:** Chromium touch 360x800/800x360, actual 3–5 PNG binary/manifest checks, Unity APK/Android and integrated Save→Load remain unverified; stable persistence DTO gate still required.
+- **Recommended next step:** UI 03 fix or justify the missing `env(safe-area-inset-top)` in the exact offline HTML artifact; retry NPC checkout separately; then QA re-run exact-SHA CI and actual Chromium touch checks. No main push/merge; READY_FOR_OWNER_TEST not granted.
