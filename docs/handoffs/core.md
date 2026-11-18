@@ -459,3 +459,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 ## AutoDev 01 — payable input-order determinism (18.11.2026)
 
 **Issue #19 / #3; PR #9; feature/core-2.** Added one golden regression to `Day01FlowGolden`: the same two Day01 due liabilities supplied in reverse order must produce identical post-decision cash, settlement posting ID, EndDay receipt fingerprint and unpaid payable. Input snapshots remain immutable. This guards canonical due-key ordering during Day01 EndDay without modifying production rules or public contracts. Local .NET SDK and Unity 6.3 Android build toolchain are unavailable; C# tests and APK not executed locally. Verify exact-SHA CI; no main merge or issue closure.
+
+
+## AutoDev 01 — future payable boundary at Day01 EndDay (18.11.2026)
+
+**Issue #19 / #3; PR #9; branch `feature/core-2`.** Added a bounded golden regression in `Day01FlowGolden`: a 200-kopeck liability due on DayIndex 1 must NOT settle when DayIndex 0 closes after three decisions. The EndDay receipt has no payable posting, cash remains at the post-decision 750 kopecks, the future obligation survives Restore, and the original snapshot stays immutable. This guards the due-day boundary without changing production API, payment policy or NPC/Content contracts.
+
+**Test commit:** `91fb44393ed54689c13e8b873ea989fdd10550eb`. Local .NET SDK and Unity Editor/Android Build Support/SDK/NDK/adb are unavailable, so local C#/Unity tests and Android APK are BLOCKED; check exact-SHA CI before claiming PASS. Still outstanding: typed NPC/Content document binding, due-event handling, weekly EndDay and real Android build. No main merge or Issue closure.
