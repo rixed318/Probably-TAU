@@ -500,6 +500,16 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(card.VisitId, out screen);
         }
 
+        /// <summary>Route a canonical Day01 decision ID to the same immutable screen as its visit.
+        /// Navigation only: not a Core command, inspection receipt or eligibility check.</summary>
+        public static bool TryGetVisitScreenPreviewByChoiceId(string choiceId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            VisitorInstance visitor;
+            if (!TryGetByChoiceId(choiceId, out visitor)) return false;
+            return TryGetVisitScreenPreview(visitor.InstanceId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
