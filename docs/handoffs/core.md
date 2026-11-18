@@ -450,3 +450,7 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 ## AutoDev 01 — Day01 insufficient payable golden regression (18.11.2026)
 
 **Issue:** #19 / #3. Added one bounded golden regression in `Day01FlowGolden`: after three document decisions leave 750 kopecks, a due payable of 800 kopecks remains outstanding; EndDay advances exactly once, emits a receipt with no posting keys, creates no extra ledger posting, and reports the unpaid payable. Restore preserves the debt and replay rejects; original snapshot stays unchanged. No new policy or public API; no NPC/UI/Content changes. Local dotnet/Unity/Android toolchain unavailable; source-only review, exact-SHA CI to be checked. No Unity build or APK claimed.
+
+## AutoDev 01 — mixed affordable/unaffordable Day01 payables (18.11.2026)
+
+**Issue #19 / #3; PR #9; feature/core-2.** Added one bounded golden regression to `Day01FlowGolden`: after three document choices leave 750 kopecks, EndDay pays a 200-kopeck due liability and preserves an 800-kopeck liability. Checks deterministic Ledger posting and receipt, day/revision/cash, report paid/unpaid projections, Restore, replay rejection and immutable input. No production API, balance rules, NPC/UI/Content files or Unity scaffold changed. Local dotnet/Unity Editor/Android SDK/NDK/adb absent (Java/Javac present), so local C# execution, Unity compile and Android APK remain BLOCKED. Check exact-SHA GitHub CI before claiming pass. No merge or issue closure.

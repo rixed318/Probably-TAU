@@ -536,6 +536,37 @@ namespace TAU.President.Tests.Core
                 withUnpaid.Payables.Outstanding.Count == 1 &&
                 withUnpaid.Finance.Ledger.Entries.Count == 0);
 
+            // Mixed due liabilities: pay only the affordable one, keep the other intact.
+            // The selected posting and remaining debt must survive Restore without duplication.
+            var mixedBefore = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day01-small-rent", 0, 200L),
+                    new DurablePayable("day01-large-fee", 0, 800L)
+                }));
+            var mixedFlow = DurableDay01Flow.Prepare(mixedBefore, 0, 0, choices);
+            Assert(mixedFlow.Next.Header.DayIndex == 1 &&
+                mixedFlow.Next.Header.Revision == 4 &&
+                mixedFlow.Next.Header.BalanceKopecks == 550L &&
+                mixedFlow.Next.Finance.Ledger.Entries.Count == 4 &&
+                mixedFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-small-rent" &&
+                mixedFlow.Next.Finance.Receipts.Count == 4 &&
+                mixedFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1 &&
+                mixedFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-small-rent" &&
+                mixedFlow.Report.Postings.Count == 1 &&
+                mixedFlow.Report.UnpaidPayables.Count == 1 &&
+                mixedFlow.Report.UnpaidPayables[0].DueKey == "day01-large-fee");
+            var mixedRestored = mixedFlow.Next.Restore();
+            Assert(mixedRestored.Header.BalanceKopecks == 550L &&
+                mixedRestored.Payables.Outstanding.Count == 1 &&
+                mixedRestored.Payables.Outstanding[0].DueKey == "day01-large-fee" &&
+                mixedRestored.Finance.Ledger.Entries.Count == 4);
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(
+                mixedRestored, mixedRestored.Header.Revision, 0, choices));
+            Assert(mixedBefore.Header.Revision == 0 &&
+                mixedBefore.Header.BalanceKopecks == 1000L &&
+                mixedBefore.Payables.Outstanding.Count == 2 &&
+                mixedBefore.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
