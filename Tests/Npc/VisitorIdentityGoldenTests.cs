@@ -641,6 +641,32 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetVisitScreenPreviewForVisitDocumentChoice("d01_lab", "DOC-01", "LAB-1", out absentScoped) || absentScoped != null)
                 throw new Exception("Invalid triple must fail closed.");
 
+            // Planned art links must not route a different visitor's screen on either platform.
+            foreach (var card in Day01Visitors.CreateReadOnlyCards())
+            {
+                foreach (var assetId in new[] { card.PlannedPortraitAssetId, card.PlannedStandingAssetId, card.PlannedDocumentAssetId })
+                {
+                    Day01Visitors.VisitScreenPreview matched;
+                    if (!Day01Visitors.TryGetVisitScreenPreviewForVisitAsset(card.VisitId, assetId, out matched) ||
+                        matched == null || matched.Card.VisitId != card.VisitId ||
+                        matched.Card.DocumentId != card.DocumentId || matched.Choices.Count != 3)
+                        throw new Exception("Matching visit/asset route failed: " + assetId);
+                    foreach (var other in Day01Visitors.CreateReadOnlyCards())
+                    {
+                        if (other.VisitId == card.VisitId) continue;
+                        Day01Visitors.VisitScreenPreview mismatch;
+                        if (Day01Visitors.TryGetVisitScreenPreviewForVisitAsset(other.VisitId, assetId, out mismatch) ||
+                            mismatch != null)
+                            throw new Exception("Cross-visitor asset route accepted: " + assetId);
+                    }
+                }
+            }
+            Day01Visitors.VisitScreenPreview missingAssetScreen;
+            if (Day01Visitors.TryGetVisitScreenPreviewForVisitAsset(null, null, out missingAssetScreen) || missingAssetScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewForVisitAsset("D01_LAB", "unknown_asset", out missingAssetScreen) || missingAssetScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewForVisitAsset("d01_lab", Day01Visitors.CreateReadOnlyCards()[0].PlannedPortraitAssetId, out missingAssetScreen) || missingAssetScreen != null)
+                throw new Exception("Invalid visit/asset pair must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
