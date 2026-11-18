@@ -216,6 +216,21 @@ for (const visit of fixture.visitors) {
   }
 }
 assert.equal(assetIds.size, 9);
+// Draft content and planned art links must agree; this does not verify PNG delivery.
+const draftNpcsByVisit = new Map(contentSpec.fictionalNpcs.map(npc => [npc.visitId, npc]));
+const draftDocumentsById = new Map(contentSpec.documentTypes.map(doc => [doc.id, doc]));
+assert.equal(draftNpcsByVisit.size, art.visits.length, "draft NPC visit count mismatch");
+assert.equal(draftDocumentsById.size, art.visits.length, "draft document count mismatch");
+for (const link of art.visits) {
+  const npc = draftNpcsByVisit.get(link.visitId);
+  const doc = draftDocumentsById.get(link.documentId);
+  assert.ok(npc && doc, "art link missing draft NPC/document: " + link.visitId);
+  assert.equal(npc.id, link.visitorId, "draft NPC identity mismatch: " + link.visitId);
+  assert.equal(npc.portraitAssetId, link.portraitAssetId, "draft portrait ID mismatch: " + link.visitId);
+  assert.equal(npc.visualDescription, link.visualBrief, "draft visual brief mismatch: " + link.visitId);
+  assert.equal(doc.documentAssetId, link.documentAssetId, "draft document asset ID mismatch: " + link.visitId);
+}
+console.log("PASS: content draft and art links 3 NPC portraits/briefs and 3 document asset IDs");
 console.log("PASS: Day01 art links 3/3 visits, 9 unique assets, cross-platform IDs");
 
 // Issue #21: every planned Day01 art ID must have an explicit production brief.
