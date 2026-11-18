@@ -473,3 +473,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Issue #19 / #3; PR #9; feature/core-2.** Added a single golden regression to `Day01FlowGolden` for a mixed payable queue: a 200-kopeck obligation due on DayIndex 0 and a 100-kopeck obligation due on DayIndex 1. After three existing approved test choices, EndDay must settle only the due-now obligation, leave 550 kopecks, emit one payable ledger posting and one EndDay posting key, retain the future obligation, and preserve it through Restore. The input snapshot must remain unchanged. No production contract, financial policy, NPC or Content subsystem changed.
 
 **Test commit:** `b4bde5e9022a5290afee273119f021edfa5b21b0`. Local .NET SDK and Unity Editor/Android Build Support/SDK/NDK/adb absent: C# tests and Unity/Android build **NOT RUN** locally. Check exact-SHA CI; no APK, no main merge or Issue closure. Remaining integration blockers: typed NPC/Content documents, due-event handling, weekly EndDay, actual Unity/Android toolchain.
+
+
+## AutoDev 01 — three non-monetary Day01 choices (18.11.2026)
+
+**Issue #19 / PR #9 / branch feature/core-2.** Added one bounded golden regression to `Day01FlowGolden`: three distinct document decisions with zero cash effects must advance Day01 once, increment revision four times, apply Q/S/M metric deltas, preserve 1000 kopecks, create four durable receipts with empty posting keys and zero Ledger entries, survive Restore, reject replay and leave the input snapshot immutable. Test commit: `e442cb6c3eb0be59b60ba7460906929034f12595`.
+
+**Scope:** tests only; no production API, economic policy, NPC/Content mapping or Unity scaffold. **Verification:** local dotnet SDK and Unity 6.3 LTS Editor/Android Build Support/SDK/NDK/adb absent; C# runner and Unity/Android builds NOT RUN locally. Exact-SHA GitHub CI must be checked. Android APK BLOCKED. Pending real Day01 NPC document integration and due-event/weekly EndDay handling. No main push/merge or Issue closure.
