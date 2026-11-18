@@ -584,3 +584,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - CI change commit: `284f1f457191e9fa091387dec7a6d59368a1e28d`.
 - Verified: workflow YAML was read back from GitHub and the new command is present. **Not verified:** Node runner execution, GitHub Actions outcome, Android browser/viewport, artifact ZIP, Unity.
 - PR #12 remains draft. C0-v2 PR #9 and ADR PR #14 remain pending integration. Real art PNG and device playtest are still outstanding.
+
+
+## AutoDev 03 — 2026-11-18 · CI regression diagnosis (Issue #20)
+
+- **One bounded fix:** `test-day01-android-touch.cjs` now accepts valid CSS `env(safe-area-inset-top, 0px)` fallback syntax in the legacy single-file Android demo. Previous regex required `env(safe-area-inset-top)` without fallback and falsely failed.
+- **Code commit:** `f7706f5d2d66b76147bf1ff7a4025f600a4ea4fc` on `feature/ui-5`.
+- **Evidence:** GitHub Actions run [44246139066](https://github.com/rixed318/Probably-TAU/actions/runs/44246139066), job 134605440319: 2/3 Android bundle tests passed; third failed at the strict `env(...)` regex; later jobs and artifact upload were skipped. This is an actual failed CI run, **not** a successful test claim.
+- **Verification:** Source and workflow read through GitHub; code update confirmed. New CI run, Android device/viewport, Unity, and ZIP artifact **not yet verified**. Recheck Actions for the new commit; do not claim artifact readiness until a successful run and ZIP inspection.
+- **Scope:** no GameState/Core changes, no merge, no main push. PR #12 remains draft. Art Issue #21 still needs verified binary PNG and review.
