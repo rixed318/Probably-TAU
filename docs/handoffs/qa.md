@@ -1065,3 +1065,20 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** CI pins older Core/UI/Content/NPC SHAs; green suites are not proof of current PR heads; mobile Chromium 360x800 / 800x360 remains NOT RUN.
 - **Blocker 3:** real PNG binary validation, Unity Editor APK/Android device tests, and complete stable Save/Load DTO/integration remain NOT RUN/BLOCKED.
 - **Recommended next step:** NPC owner fix CS0136 on feature/npc-4 with exact SHA and standalone .NET evidence; QA then pin verified new NPC SHA and rerun CI, followed by Chromium Day01 mobile acceptance. Do not merge or claim READY_FOR_OWNER_TEST.
+
+
+## 2026-11-18 19:57 UTC+4 — QA 05: exact-SHA checkout pin guard (#8)
+
+**One bounded change:** Added `Tests/QA/test_workflow_pins.py` (commit `8eba90eec261d9e33127d72646068dfec5971be5`) and wired it into the Python CI job in `.github/workflows/qa-offline.yml` (commit `d2339071abce520a3b19ba02f46ed83ade336ff9`). This prevents a recurrence of the malformed 52-character NPC checkout ref and detects a stale equality assertion when a checkout pin changes. No source pins or architecture contracts changed.
+
+**Actually executed:** Local Python 3 unittest on a representative workflow fixture: **3 PASS** (valid pins, malformed 52-character ref rejected, mismatched assertion rejected). Initial local invocation without the repository fixture failed with FileNotFoundError; fixed the test layout before the successful run. Independently checked the **actual fetched QA workflow** through a JavaScript source inspection: five checkout refs are 40-character lowercase hex and match per-job exact-SHA assertions, **0 discrepancies**. GitHub accepted both commits. **CI execution for new workflow: NOT VERIFIED**; Python tests on exact GitHub checkout: NOT RUN. This does not validate that a referenced commit exists or that any downstream test passes.
+
+**Current known NPC blocker:** At current NPC branch HEAD `678d5d2cf12ad276bb4772321cbb2ebff5298c6d`, `Tests/Npc/VisitorIdentityGoldenTests.cs` still has `invalidPreview` declarations in conflicting scopes (observed around lines 34 and 179). Previous pinned CI failed CS0136; a new NPC compile at latest HEAD was **NOT RUN**. Chromium touch 360×800/800×360, 3 docs, EndDay, ledger replay, 48dp/overflow, actual PNG signatures/dimensions/manifest SHA, Unity Editor/APK/Android device and complete Save→Load: **NOT RUN**. SaveService deferred until stable Core DTO.
+
+### Сводка для координатора 00 — 2026-11-18 19:57 UTC+4
+
+- **Branch heads observed:** main `d673322cd9d0`; Core PR #9 `ce6e1c72ca81`; QA PR #10 `4d5b8625353b` before changes → `8eba90eec261` → `d2339071abce` → this handoff commit; Content PR #11 `bed8f38f6bd3`; UI PR #12 `bf46bc65f7ed`; ADR PR #14 last verified `ebdc4be28afd`; NPC PR #16 `678d5d2cf12a`. C0-v2 and ADR are feature guidance, not merged.
+- **Blocker 1:** NPC CS0136 on pinned revision; latest NPC branch source still shows conflicting locals, new compile not executed.
+- **Blocker 2:** Fresh CI on QA pin-guard commits and latest cross-branch SHA revisions not yet verified; Chromium touch acceptance NOT RUN.
+- **Blocker 3:** Actual PNG binaries, Unity Editor APK/device and integrated Save→Load DTO remain unverified.
+- **Recommended next step:** verify new QA Actions run and guard test, have NPC owner fix CS0136 and supply passing standalone .NET evidence, then update exact NPC pin; prioritize Chromium touch acceptance on latest single-file Day01. No merge, main push, READY_FOR_OWNER_TEST or new architecture approvals.
