@@ -451,6 +451,43 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetInspectionPreviewByVisitorId("npc_unknown", out invalidNpcHint) || invalidNpcHint != null)
                 throw new Exception("Unknown NPC inspection hint must fail closed.");
 
+            // A single immutable screen snapshot keeps Android and Windows visit routing consistent.
+            string[] screenVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            string[] screenDocs = { "DOC-01", "DOC-02", "DOC-03" };
+            string[] screenChecks = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            string[][] screenChoices = {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int i = 0; i < screenVisits.Length; i++)
+            {
+                Day01Visitors.VisitScreenPreview screen;
+                if (!Day01Visitors.TryGetVisitScreenPreview(screenVisits[i], out screen) ||
+                    screen == null || screen.Card.VisitId != screenVisits[i] ||
+                    screen.Card.DocumentId != screenDocs[i] ||
+                    screen.Inspection.DocumentId != screenDocs[i] ||
+                    screen.Inspection.InspectionId != screenChecks[i] ||
+                    screen.Choices.Count != 3)
+                    throw new Exception("Day01 screen snapshot identity mismatch: " + screenVisits[i]);
+                for (int j = 0; j < 3; j++)
+                    if (screen.Choices[j].ChoiceId != screenChoices[i][j] ||
+                        screen.Choices[j].VisitorCard.DocumentId != screenDocs[i])
+                        throw new Exception("Day01 screen snapshot choice mismatch.");
+                if (screen.Choices is System.Collections.Generic.IList<Day01Visitors.ChoicePreview>)
+                {
+                    var list = (System.Collections.Generic.IList<Day01Visitors.ChoicePreview>)screen.Choices;
+                    try { list[0] = null; throw new Exception("Screen choices must be read-only."); }
+                    catch (NotSupportedException) { }
+                }
+            }
+            Day01Visitors.VisitScreenPreview unknownScreen;
+            if (Day01Visitors.TryGetVisitScreenPreview(null, out unknownScreen) || unknownScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreview("", out unknownScreen) || unknownScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreview("d01_lab", out unknownScreen) || unknownScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreview("D01_UNKNOWN", out unknownScreen) || unknownScreen != null)
+                throw new Exception("Unknown Day01 screen must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
