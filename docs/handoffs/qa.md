@@ -1036,3 +1036,19 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** Latest UI PR head `abaf9d1a788d` and latest Core/Content/NPC heads are not established as tested by the pinned CI; Chromium 360×800 and 800×360 touch/48dp/overflow acceptance remains NOT RUN.
 - **Blocker 3:** 3–5 actual PNG binary signature/dimensions/manifest SHA validation, Unity Editor APK/device testing, and complete Save→Load remain unverified.
 - **Recommended next step:** inspect the exact NPC checkout ref in QA workflow and its existence; repair only QA-owned CI pin if stale, rerun exact-SHA CI, then perform Chromium touch acceptance on the latest single-file HTML. Do not grant READY_FOR_OWNER_TEST without evidence.
+
+
+## 2026-11-18 16:40 UTC+4 — QA 05: fix invalid NPC CI checkout ref (#8)
+
+**One bounded fix:** In `.github/workflows/qa-offline.yml`, replaced the malformed 52-character NPC checkout and equality-assertion ref `d2e022483c462000914806287c2e4c21647e8aeb6b5f25109287` with the actual 40-character PR #16 HEAD `fa7452f99cfbee101ae47fd95bd225268cecd5bc`. Workflow commit: `1d5149a3101ba12f3aa7cae2c03431ddf92f1f84` on `feature/save-6`. No other workflow pins changed. The invalid length explains why checkout could not resolve that ref; no NPC code defect inferred.
+
+**Executed checks:** GitHub read of workflow and PR #16 metadata; verified old ref length = 52, two exact occurrences in workflow, and replacement SHA length = 40. GitHub accepted workflow commit. Two previous runs for QA head `4f913b73` (#44290103292, #44290095058) show overall FAILURE; job logs not inspected this pass. Fresh CI for `1d5149a3` **NOT VERIFIED**. Local Python/Node/.NET and Chromium 360x800 / 800x360 **NOT RUN**; Unity Editor/APK/Android device **NOT RUN**. No actual PNG binary signature/dimension/manifest SHA verification. SaveService not implemented: stable complete Core snapshot DTO still prerequisite. C0-v2 PR #9 and ADR #14 remain unmerged.
+
+### Сводка для координатора 00 — 2026-11-18 16:40 UTC+4
+
+- **Current PR heads observed:** #9 Core `382f54fdd46b`; #10 QA `4f913b73e27b` before fix → `1d5149a3101b` workflow commit → this handoff commit; #11 Content `d4257e1bbcba`; #12 UI `3271debc0619`; #14 ADR `ebdc4be28afd`; #16 NPC `fa7452f99cfb`. Main `d673322cd9d0`, unchanged by QA.
+- **Blocker 1:** New exact-SHA NPC CI after malformed-ref repair has no confirmed execution result; latest PR revisions beyond pinned workflow remain untested.
+- **Blocker 2:** Real Chromium touch 360x800/800x360 Day01, three documents, EndDay, ledger replay, partner cash, 48dp/overflow and actual 3–5 PNG binary checks not verified.
+- **Blocker 3:** Unity Editor APK/device tests NOT RUN; full Save→Load waits on stable Core DTO.
+- **Recommended next step:** inspect jobs/logs for CI triggered by the new QA commit; if NPC checkout succeeds, record exact NPC .NET test results. Then run Chromium mobile acceptance on exact latest single-file UI HTML. No READY_FOR_OWNER_TEST or merge.
+- **Safety:** only QA feature branch updated; no main push, merge, branch deletion or shared architecture approval.
