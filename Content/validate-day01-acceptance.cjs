@@ -319,6 +319,31 @@ for (const lab of fixture.visitors[0].choices) {
           } else assert.fail("unknown Day01 effect kind");
         }
       }
+      // Every choice triple must expose only valid room outcomes; priority never books a room.
+      const claimants = selected.flatMap(choice => {
+        const [kind, value] = Object.entries(choice.flags)[0];
+        return (kind === "LAB" && ["full", "phased"].includes(value)) ||
+          (kind === "STUDENT" && value === "full") ||
+          (kind === "PARTNER" && value === "onsite") ? [kind.toLowerCase()] : [];
+      });
+      const availableRoomChoices = claimants.length > 1
+        ? fixture.roomResolutionChoices.ifMultiple
+        : fixture.roomResolutionChoices.ifAtMostOne;
+      const expectedRoomIds = claimants.length > 1
+        ? ["ROOM-1", "ROOM-2", "ROOM-3", "ROOM-4"]
+        : ["ROOM-AUTO"];
+      assert.deepEqual(availableRoomChoices.map(choice => choice.id).sort(), expectedRoomIds.sort(),
+        "room choice IDs must be stable for every Day01 route");
+      for (const roomChoice of availableRoomChoices) {
+        if (roomChoice.id === "ROOM-AUTO") {
+          assert.equal(roomChoice.priority, "only-request-or-none");
+        } else if (roomChoice.id === "ROOM-4") {
+          assert.equal(roomChoice.priority, "unresolved");
+        } else {
+          assert.ok(["lab", "student", "partner"].includes(roomChoice.priority),
+            "room priority must name a fictional claimant type");
+        }
+      }
       if (cash < lowestClosingCash) lowestClosingCash = cash;
       if (cash > highestClosingCash) highestClosingCash = cash;
       combinationsChecked++;
