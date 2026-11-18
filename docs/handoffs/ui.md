@@ -576,3 +576,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Workflow commit:** `35fe65fe58141f1a8c6e0ca0fd0bf3ef028c7510` in `feature/ui-5`; PR #12 remains Draft.
 - **Actually verified:** GitHub Contents API accepted the workflow edit. **Not executed in this pass:** GitHub Actions workflow, Pillow suite, Node tests, Android viewport/device, Unity, artifact ZIP download. CI success is unconfirmed.
 - **Still blocked for #21:** original C001 PNG binary is not verified in GitHub; requires authenticated binary upload, tree/blob verification, and owner art review. No GameState/Core/main edits or merge.
+
+
+### 2026-11-18 · CI selection regression wiring (#20)
+
+- One bounded change: `.github/workflows/ui-smoke.yml` now runs existing `node --test prototypes/ui-day-one/test-day01-selection.cjs` alongside the other Day01 smoke tests; test implementation and GameState/Core unchanged.
+- CI change commit: `284f1f457191e9fa091387dec7a6d59368a1e28d`.
+- Verified: workflow YAML was read back from GitHub and the new command is present. **Not verified:** Node runner execution, GitHub Actions outcome, Android browser/viewport, artifact ZIP, Unity.
+- PR #12 remains draft. C0-v2 PR #9 and ADR PR #14 remain pending integration. Real art PNG and device playtest are still outstanding.
