@@ -480,6 +480,16 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Build the same read-only Windows/Android visit screen from a canonical document ID.
+        /// A stale or unknown document fails closed; this is not Core command authorization.</summary>
+        public static bool TryGetVisitScreenPreviewByDocumentId(string documentId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            VisitorInstance visitor;
+            if (!TryGetByDocumentId(documentId, out visitor)) return false;
+            return TryGetVisitScreenPreview(visitor.InstanceId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
