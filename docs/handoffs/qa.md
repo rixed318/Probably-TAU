@@ -924,3 +924,23 @@ GitHub Actions [run 43645584031](https://github.com/rixed318/Probably-TAU/action
 - **Recommended next step:** Coordinator 00 review SHA drift and authorize QA-only CI pin refresh for the latest vetted revisions, then run real Chromium touch tests on the same exact UI SHA; do not claim Android APK readiness.
 
 **Safety:** feature/save-6 only; no main push, merge, other-branch changes, IP approval or invented test results.
+
+
+## 2026-11-18 — QA 05: refresh exact-SHA offline CI matrix (Issue #8)
+
+**One bounded change:** updated only QA-owned `.github/workflows/qa-offline.yml` to replace stale pinned cross-branch revisions with independently fetched PR heads, without merging branches or changing game contracts. Workflow commit: `9f25c3b6873cb5f4eced014aaf9469a6a6db2716` on `feature/save-6`.
+
+- Core PR #9: `5a57f3ae963002901595894b3aef9c4e5d993a16` (previous `0f5a85ef1136fec0cbc0285568b11985f0e7200c`).
+- UI PR #12: `8364b9445d6ef7bfe04b1f758ebbbc27b150958a` (previous `e09653994625adb6de312b2070b5e7745fc7cd83`).
+- Content PR #11: `a1646a221695e143b6f7b94006874ca7a704da8f` (previous `c2d9ba267549c4e1a404fd6fa68a7d1037566597`).
+- NPC PR #16: `628f0e6fe4140abfedce2ad7b4636b5f25109287` (previous `d82bc6ee4bfc82d6bcfcccfd6c84760a5d58761c`).
+
+**Evidence:** GitHub source fetch and PR-head metadata verified; PR #12 changed-file list contains 31 paths and **zero PNG paths**, so 3–5 binary art assets are still not independently verified. Prior QA SHA `cf515bd4895c28437d259e66cfc8909768fa4b91` has a completed successful workflow run `44211811079`, but this does **not** verify the new pinned matrix. **New CI execution: NOT YET VERIFIED**. Local Python/Node/.NET: NOT RUN in this pass. Chromium touch 360×800 and 800×360, Unity Editor, APK/Android, actual PNG binary validation and integrated Save→Load: NOT RUN. No new shared contracts or SaveService.
+
+### Сводка для координатора 00 — 2026-11-18 06:40 +04
+
+- **Latest reviewed heads:** main `d673322cd9d0`; #9 Core `5a57f3ae9630`; #10 QA workflow `9f25c3b6873c` (this handoff commit follows); #11 Content `a1646a221695`; #12 UI `8364b9445d6e`; #14 ADR `ebdc4be28afd`; #16 NPC `628f0e6fe414`; #17 ADR-C0-002 `bc9db999b419`. Gate C0-v2 and ADR remain feature-development guidance, not permission to merge.
+- **Blocker 1:** newly refreshed exact-SHA CI run not yet verified; green historical CI is not evidence for current heads.
+- **Blocker 2:** Android Chromium touch interactive acceptance and real Unity APK/device tests NOT RUN; latest UI single-file HTML has not been interactively verified.
+- **Blocker 3:** PR #12 diff has zero PNG binaries; full snapshot DTO/ledger persistence and Save→Load not verified.
+- **Recommended next step:** inspect the Actions run and individual logs for QA workflow SHA `9f25c3b6873c`; fix only reproducible QA-owned failures, then test the exact latest HTML in Chromium portrait/landscape and audit real PNGs when delivered. Keep main protected; no merge, no owner-test approval.
