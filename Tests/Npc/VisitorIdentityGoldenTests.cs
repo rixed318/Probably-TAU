@@ -405,6 +405,32 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetInspectionPreviewForVisitDocument("D01_UNKNOWN", "DOC-01", out invalidInspectionPair) || invalidInspectionPair != null)
                 throw new Exception("Invalid visit/document inspection preview must fail closed.");
 
+            // Triple-scoped inspection metadata must never leak to a stale UI selection.
+            string[] tripleVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            string[] tripleDocs = { "DOC-01", "DOC-02", "DOC-03" };
+            string[] tripleChoices = { "LAB-1", "STUDENT-2", "PARTNER-3" };
+            for (int i = 0; i < tripleVisits.Length; i++)
+            {
+                Day01Visitors.InspectionPreview ok;
+                if (!Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice(
+                    tripleVisits[i], tripleDocs[i], tripleChoices[i], out ok) ||
+                    ok == null || ok.DocumentId != tripleDocs[i])
+                    throw new Exception("Triple-scoped inspection metadata mismatch.");
+                Day01Visitors.InspectionPreview wrong;
+                if (Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice(
+                    tripleVisits[i], tripleDocs[i], tripleChoices[(i + 1) % 3], out wrong) || wrong != null ||
+                    Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice(
+                    tripleVisits[i], tripleDocs[(i + 1) % 3], tripleChoices[i], out wrong) || wrong != null ||
+                    Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice(
+                    tripleVisits[(i + 1) % 3], tripleDocs[i], tripleChoices[i], out wrong) || wrong != null)
+                    throw new Exception("Stale triple leaked inspection metadata.");
+            }
+            Day01Visitors.InspectionPreview invalidTripleInspection;
+            if (Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice(null, "DOC-01", "LAB-1", out invalidTripleInspection) || invalidTripleInspection != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice("D01_LAB", null, "LAB-1", out invalidTripleInspection) || invalidTripleInspection != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice("D01_LAB", "DOC-01", "lab-1", out invalidTripleInspection) || invalidTripleInspection != null)
+                throw new Exception("Invalid triple inspection metadata must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
