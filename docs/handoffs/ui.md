@@ -681,3 +681,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Code commit:** `637dc9ac099b9da0418adf64c0d79bd9ba4ba48d` in `feature/ui-5`. No Core/GameState changes.
 - **Actually executed locally:** Chromium headless via Python Playwright `page.set_content` on the patched standalone HTML at 800×360 and 360×800, touch/mobile emulation. Both had zero page errors, document width equal to viewport width, and visible button bounding boxes at least 48×48 CSS px. Screenshots saved locally. Initial run on the old artifact reproduced the null addEventListener error at both sizes.
 - **Limitations:** `file://` navigation was blocked by local browser administrator policy; `set_content` validates DOM execution/layout, **not** Android local-file launch. No physical Android, complete tap-through, Unity, APK, or new GitHub Actions run verified. Existing downloaded ZIP remains the old broken build until CI publishes a new artifact. A regression test guarding DOM-ready initialization should follow.
+
+
+## 2026-11-19 — Android DOM-ready regression guard (#20)
+
+- Branch: `feature/ui-5`; PR #12 remains Draft. Commit `4856318532676d43c69ea9a25ccb2aacb7d07dc3` adds one static Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`.
+- Guard verifies the head-script/HTML-body ordering and that `inspect`/`end` event wiring and first `render()` remain inside `DOMContentLoaded`. It protects the previously fixed permanent «Загрузка…» failure.
+- Validation performed: GitHub accepted the test-file commit; source HTML inspected and contains the expected deferred handler. Node/CI and real Android tests **not executed in this pass**; success is not claimed.
+- No GameState/Core, Unity runtime, desktop HTML or art assets changed. Android real-device test and Issue #21 real PNGs remain pending.
