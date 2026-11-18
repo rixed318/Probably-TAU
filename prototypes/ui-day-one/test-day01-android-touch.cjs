@@ -22,3 +22,18 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
   assert.ok(scripts.length>0,'expected embedded executable JavaScript');
   for(const script of scripts)new vm.Script(script);
 });
+
+// Regression for the loading-screen failure: scripts are in <head>, so DOM nodes
+// do not exist until DOMContentLoaded. Keep event wiring and first render deferred.
+test('Android Day01 defers DOM wiring and first render until DOMContentLoaded',()=>{
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+  const ui=scripts[2];
+  assert.match(html,/<\/script><\/head>\s*<body>/i,'UI script must remain before body for this regression');
+  assert.match(ui,/d\.addEventListener\(["']DOMContentLoaded["'],\s*\(\)\s*=>\s*\{/);
+  const handler=ui.match(/d\.addEventListener\(["']DOMContentLoaded["'],\s*\(\)\s*=>\s*\{([\s\S]*?)\n\}\);/);
+  assert.ok(handler,'expected explicit DOM-ready handler');
+  assert.match(handler[1],/el\(["']inspect["']\)\.addEventListener/);
+  assert.match(handler[1],/el\(["']end["']\)\.addEventListener/);
+  assert.match(handler[1],/render\(\)/);
+  assert.doesNotMatch(ui.slice(0,ui.indexOf('d.addEventListener("DOMContentLoaded"')),/\nrender\(\);/);
+});
