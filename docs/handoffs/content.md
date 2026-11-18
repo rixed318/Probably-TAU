@@ -462,3 +462,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** added static draft-manifest checks to `Content/validate-day01-acceptance.cjs`: globally unique event/project Definition IDs, 0-based `dayIndex = day - 1`, unique feed targets, and all feeds resolve to an event, project or the explicit `CHAPTER2_HOOK` placeholder. No changes to authored event outcomes, balance, Core, EventDirector, assets or money.
 
 **Validator commit:** `9af9b3fd2092de18bd739b4beda1704818d26e50`. **Actually checked:** independent JavaScript reproduction against the current JSON: valid manifest PASS (13 events), 4/4 negative mutations rejected (wrong dayIndex, unknown target, duplicate feed, duplicate event/project ID). This is not a Node CLI run of the complete validator. Node CLI, CI, Unity and Android NOT RUN. QA 05 should run the full validator and negative fixture tests. PR #11 remains Draft; no main merge.
+
+## 18.11.2026 — Day01 one-to-one visitor/document mapping (#7)
+
+**One bounded task:** static acceptance validator now rejects duplicate visitor `documentId` assignments and orphaned documents; each of the three visits must own exactly one of the three canonical documents. No authored choices, money, `DayIndex`, art, Core or EventDirector changed.
+
+**Validator commit:** `f9d54818d40ec31dd2759e522cbe18636c761b97`. **Actually checked:** connector-side JavaScript preflight of current fixture PASS (3/3 unique assignments); duplicate assignment and unknown/orphaned assignment rejected (2/2 negative mutations). **Not run:** full Node CLI, CI, Unity, browser, Android. QA 05 must run `node Content/validate-day01-acceptance.cjs` and negative fixture tests. PR #11 remains Draft; no main merge.
