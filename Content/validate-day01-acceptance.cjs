@@ -86,10 +86,17 @@ for (const example of fixture.acceptanceExamples) {
   assert.equal(example.dayIndex, 0);
   assert.equal(example.selectedChoiceIds.length, 3);
   assert.equal(new Set(example.selectedChoiceIds).size, 3);
-  assert.ok(example.inspectionDocumentIds.length <= fixture.opening.inspectionTokens);
+  assert.ok(Number.isSafeInteger(fixture.opening.inspectionTokens) && fixture.opening.inspectionTokens >= 0, "invalid opening inspection tokens");
   const inspected = new Set(example.inspectionDocumentIds);
   assert.equal(inspected.size, example.inspectionDocumentIds.length);
-  for (const id of inspected) assert.ok(documentIds.has(id));
+  const inspectionTokensUsed = [...inspected].reduce((sum, id) => {
+    const document = fixture.documents.find(d => d.id === id);
+    assert.ok(document, "inspection references unknown document: " + id);
+    assert.ok(Number.isSafeInteger(document.inspection.costTokens) && document.inspection.costTokens >= 0, "invalid inspection cost: " + id);
+    assert.equal(document.inspection.repeatCostTokens, 0, "repeated inspection must be free: " + id);
+    return sum + document.inspection.costTokens;
+  }, 0);
+  assert.ok(inspectionTokensUsed <= fixture.opening.inspectionTokens, "inspection exceeds token budget: " + example.id);
   let budget = money(fixture.opening.budgetKopecks);
   const scores = {...fixture.opening.scores};
   const postings = [];
@@ -127,7 +134,7 @@ for (const example of fixture.acceptanceExamples) {
   }
   assert.deepEqual(scores, expected.closingScores, example.id);
   assert.deepEqual(postings, expected.immediateLedgerPostings, example.id);
-  assert.equal(expected.inspectionTokensUsed, inspected.size);
+  assert.equal(expected.inspectionTokensUsed, inspectionTokensUsed);
   assert.equal(expected.openingBudgetKopecks, fixture.opening.budgetKopecks);
   assert.equal(expected.partnerEarnedIncomeKopecks, "0");
   assert.equal(expected.weeklySettlementApplied, false);
