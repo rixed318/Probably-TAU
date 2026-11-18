@@ -568,3 +568,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Commit: `4c39761499caa8ae1732fab4013819c3ac49c1ab` (follow-up content update `e2b70bbe66b598c3d1303a102b49cb2faa3528be`).
 - Verified: source and workflow inspected through GitHub; commit writes acknowledged. **Not verified:** Node runner, GitHub Actions execution/artifact ZIP, physical Android touch/viewport, Unity.
 - Next: run Node smoke in CI and inspect artifact ZIP; preserve PR #12 as draft until coordinator review.
+
+
+## 2026-11-18 · Issue #21 — CI coverage for candidate PNG audit
+
+- **One bounded task:** add the existing `tools/art/test_audit_candidate.py` synthetic Pillow regression suite to `.github/workflows/ui-smoke.yml`. Installs Pillow 10–12 on the Ubuntu runner and executes `python3 -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v` before packaging Android artifacts. This checks PNG audit logic only; it does not imply an actual art binary was generated or approved.
+- **Workflow commit:** `35fe65fe58141f1a8c6e0ca0fd0bf3ef028c7510` in `feature/ui-5`; PR #12 remains Draft.
+- **Actually verified:** GitHub Contents API accepted the workflow edit. **Not executed in this pass:** GitHub Actions workflow, Pillow suite, Node tests, Android viewport/device, Unity, artifact ZIP download. CI success is unconfirmed.
+- **Still blocked for #21:** original C001 PNG binary is not verified in GitHub; requires authenticated binary upload, tree/blob verification, and owner art review. No GameState/Core/main edits or merge.
