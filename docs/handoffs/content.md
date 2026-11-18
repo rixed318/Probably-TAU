@@ -498,3 +498,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** `Content/validate-day01-acceptance.cjs` now cross-checks `CONTENT_SPEC_DRAFT.json` against `DAY01_ART_LINKS.json`: three fictional NPC visit/identity/portrait/visual-brief mappings and three document asset IDs. The draft art contract is platform-independent (Windows/Android), not a runtime schema or evidence of real PNGs. No changes to choices, money (Int64 kopecks), DayIndex (0-based), Core, EventDirector or main.
 
 **Validator commit:** `24d409bf4cb76a1e27ea5ce3230832f1a49b0828`. **Actually checked:** connector-side JavaScript reproduction: current 3/3 mappings PASS; injected mismatches in portrait ID, visual brief and document asset ID rejected 3/3. GitHub source re-read confirmed guard. **Not run:** complete Node CLI validator, CI, Unity, Android, PNG existence checks. QA 05 should run `node Content/validate-day01-acceptance.cjs` plus negative fixture mutations. PR #11 remains Draft, no merge.
+
+## 18.11.2026 — Day01 draft/UI money parity (#7)
+
+**One bounded task:** static acceptance validator now compares opening budget, all authored document visible/revealed `*Kopecks` values, immediate cash deltas for all nine choices, and conditional partner revenue against the UI fixture. This detects cross-file money drift without introducing a second cash engine; Core alone owns ledger postings. Canonical values remain signed Int64 decimal-string kopecks, `DayIndex` remains 0-based. No gameplay amounts or outcomes changed.
+
+**Validator commit:** `c506b2b6d1ecefb6d63151567e5c6109f4bca595`. **Verification:** GitHub accepted the validator commit; independent connector-side JS parity and negative mutations are pending separate execution below. **Not run:** complete Node CLI, CI, Unity, Android. QA 05 must run `node Content/validate-day01-acceptance.cjs` and injected monetary drift tests. PR #11 remains unmerged; no main push/merge.
