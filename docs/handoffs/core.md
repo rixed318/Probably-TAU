@@ -489,3 +489,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - No production API, economy policy, content/NPC, Unity project or main changes.
 - Local checks on this run: `dotnet`, `mono`, Unity Editor, Android SDK/NDK/adb not found in executable PATH; Java/Javac found. Thus .NET tests, Unity compile, and Android APK **not run / BLOCKED**. Exact-SHA CI outcome requires independent GitHub Actions verification; no passing claim.
 - Remaining: NPC typed documents/events and EndDay due-event handling, real Unity 6.3 Editor + Android toolchain, independent QA 05 review. Do not merge without owner approval.
+
+
+### Core 01 — Day01 future scheduled event regression (18.11.2026)
+- Issue #19; branch `feature/core-2`; test commit `ef3e93157a2ccff907b8d83f401fbbd444a6d1e6`.
+- Added one bounded golden regression to `Tests/Core/GameStateSnapshotGoldenTests.cs`: an event due on DayIndex 1 must not block closing DayIndex 0 after three document decisions. The pending event remains queued and unconsumed across `Restore()`; the original durable snapshot is not mutated. Complements the existing due-now event fail-closed test.
+- No production API, economy policy, NPC/Content logic, or Unity project changes.
+- Verify: `dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release` in a .NET 8 environment; inspect exact-head CI. Local runtime lacks dotnet/mono, Unity Editor, Android SDK/NDK/adb; no local C# run, Unity build, or APK claimed.
+- Still blocked: typed NPC event execution and native Unity Android build require cross-role contracts and real Unity 6.3/Android toolchain. No main merge or Issue closure.
