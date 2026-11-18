@@ -586,6 +586,30 @@ namespace TAU.President.Tests.Core
             Assert(reversedBefore.Payables.Outstanding.Count == 2 &&
                 reversedBefore.Finance.Ledger.Entries.Count == 0);
 
+            // A liability due tomorrow must not be settled during Day01's EndDay.
+            // The day advances once, and the future obligation survives Restore.
+            var futureBefore = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-maintenance", 1, 200L)
+                }));
+            var futureFlow = DurableDay01Flow.Prepare(futureBefore, 0, 0, choices);
+            Assert(futureFlow.Next.Header.DayIndex == 1 &&
+                futureFlow.Next.Header.Revision == 4 &&
+                futureFlow.Next.Header.BalanceKopecks == 750L &&
+                futureFlow.Next.Finance.Ledger.Entries.Count == 3 &&
+                futureFlow.Next.Finance.Receipts[3].PostingKeys.Count == 0 &&
+                futureFlow.Report.Postings.Count == 0 &&
+                futureFlow.Next.Payables.Outstanding.Count == 1 &&
+                futureFlow.Next.Payables.Outstanding[0].DueKey == "day02-maintenance" &&
+                futureFlow.Next.Payables.Outstanding[0].DueDayIndex == 1);
+            var futureRestored = futureFlow.Next.Restore();
+            Assert(futureRestored.Payables.Outstanding.Count == 1 &&
+                futureRestored.Payables.Outstanding[0].DueKey == "day02-maintenance" &&
+                futureRestored.Header.BalanceKopecks == 750L);
+            Assert(futureBefore.Header.DayIndex == 0 &&
+                futureBefore.Payables.Outstanding.Count == 1 &&
+                futureBefore.Finance.Ledger.Entries.Count == 0);
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
