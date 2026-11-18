@@ -8,6 +8,35 @@ namespace TAU.President.Tests.Npc
     {
         public static void RunAll()
         {
+            // Choice-level inspection lookup must be document-consistent even for choices
+            // that do not require inspection to become eligible.
+            string[][] inspectionChoiceGroups =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            string[] expectedInspectionIds =
+                { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            string[] expectedInspectionDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int group = 0; group < inspectionChoiceGroups.Length; group++)
+                foreach (string choiceId in inspectionChoiceGroups[group])
+                {
+                    Day01Visitors.InspectionPreview byChoice;
+                    if (!Day01Visitors.TryGetInspectionPreviewByChoiceId(choiceId, out byChoice) ||
+                        byChoice == null || byChoice.DocumentId != expectedInspectionDocuments[group] ||
+                        byChoice.InspectionId != expectedInspectionIds[group] ||
+                        byChoice.CostTokens != 1 || byChoice.RepeatCostTokens != 0)
+                        throw new Exception("Choice inspection mapping mismatch: " + choiceId);
+                }
+            foreach (string invalidChoice in new[] { null, "", "lab-1", "LAB-4", "ROOM-1", " LAB-1" })
+            {
+                Day01Visitors.InspectionPreview invalidPreview;
+                if (Day01Visitors.TryGetInspectionPreviewByChoiceId(invalidChoice, out invalidPreview) ||
+                    invalidPreview != null)
+                    throw new Exception("Invalid choice must not resolve an inspection preview.");
+            }
+
             // Canonical Content Day01 inspection IDs and token costs; presentation only.
             string[] inspectionDocumentIds = { "DOC-01", "DOC-02", "DOC-03" };
             string[] inspectionActionIds = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
