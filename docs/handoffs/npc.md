@@ -397,3 +397,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Verification:** source edits accepted by GitHub; executable .NET, Unity and Android tests **NOT RUN** during this update. CI outcome must be checked against the final HEAD; assertions added are not evidence of passing tests.
 
 **Dependencies:** PR #9 C0-v2 and PR #14 ADR apply; PR #11 canonical Content fixture IDs remain the source of truth. Full EventDirector remains BLOCKED pending Core atomic settlement/receipt/earned-key APIs and Content E03/E07 provenance. Issue #21 art IDs are only planned links; no asset existence asserted. PR #16 remains Draft; no main push or merge.
+
+## AutoDev 02 — canonical Day01 inspection previews (2026-11-18)
+
+- **One bounded increment (#4/#20):** `Day01Visitors.TryGetInspectionPreviewByDocumentId` returns immutable, Unity-free document/inspection IDs and first/repeat token costs from Content `DAY01_UI_FIXTURE.json`: DOC-01/check_seat_map, DOC-02/check_room_calendar, DOC-03/check_contract_appendix; all first costs 1 token, repeat costs 0. Invalid IDs fail closed. Read-only metadata only: does not authorize an inspection, spend tokens or assert a completed receipt. Same C# contract for Windows and Android.
+- **Production commit:** `cb46947f4da11454dcdaa9dcce43c1afb0ba3e10`; **golden assertion commit:** `52a0dfeac6031ad65dc7dec90ff016000e9ab08e`. Changed `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`, and this handoff.
+- **Validation:** manual comparison with Content Day01 fixture (three IDs, costs 1/0); assertions added for three positive and five negative inputs. **NOT RUN:** local dotnet, Unity EditMode/PlayMode, Android build/device; CI not assumed green. Runner: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
+- **BLOCKED for EventDirector:** Core atomic settlement, receipts and earnedId deduplication ports; Content/Core provenance of E03/E07 and original agreement occurrence. C0-v2 PR #9 and ADR PR #14/#17 still govern feature work. Content 04 owns canonical IDs; UI 03 owns real art (#21), no PNG generated. PR #16 Draft; no main push or merge.
