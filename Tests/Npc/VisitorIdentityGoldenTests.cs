@@ -542,6 +542,40 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetVisitScreenPreviewByVisitorId("npc_unknown", out invalidNpcScreen) || invalidNpcScreen != null)
                 throw new Exception("Unknown NPC screen route must fail closed.");
 
+            // Every canonical decision opens the identical read-only Day01 screen on Windows/Android.
+            string[] choiceScreenVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            string[][] choiceScreenIds = {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int i = 0; i < choiceScreenVisits.Length; i++)
+            {
+                Day01Visitors.VisitScreenPreview byVisit;
+                if (!Day01Visitors.TryGetVisitScreenPreview(choiceScreenVisits[i], out byVisit))
+                    throw new Exception("Missing canonical visit screen.");
+                foreach (string choiceId in choiceScreenIds[i])
+                {
+                    Day01Visitors.VisitScreenPreview byChoice;
+                    if (!Day01Visitors.TryGetVisitScreenPreviewByChoiceId(choiceId, out byChoice) ||
+                        byChoice == null || byChoice.Card.VisitId != byVisit.Card.VisitId ||
+                        byChoice.Card.DocumentId != byVisit.Card.DocumentId ||
+                        byChoice.Inspection.InspectionId != byVisit.Inspection.InspectionId ||
+                        byChoice.Choices.Count != byVisit.Choices.Count)
+                        throw new Exception("Choice-routed Day01 screen mismatch: " + choiceId);
+                    for (int j = 0; j < byVisit.Choices.Count; j++)
+                        if (byChoice.Choices[j].ChoiceId != byVisit.Choices[j].ChoiceId)
+                            throw new Exception("Choice-routed Day01 menu order changed.");
+                }
+            }
+            Day01Visitors.VisitScreenPreview invalidChoiceScreen;
+            if (Day01Visitors.TryGetVisitScreenPreviewByChoiceId(null, out invalidChoiceScreen) || invalidChoiceScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByChoiceId("", out invalidChoiceScreen) || invalidChoiceScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByChoiceId("lab-1", out invalidChoiceScreen) || invalidChoiceScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByChoiceId("ROOM-1", out invalidChoiceScreen) || invalidChoiceScreen != null ||
+                Day01Visitors.TryGetVisitScreenPreviewByChoiceId("UNKNOWN", out invalidChoiceScreen) || invalidChoiceScreen != null)
+                throw new Exception("Invalid choice-routed Day01 screen must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
