@@ -493,3 +493,12 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Production SHA:** `81acac71f3a6b1608470ba4e85879b55e49a8331`; **golden test-source SHA:** `b2fb643df0a8013e1d8b913c88e7d6671838f299`. Added 9 matching asset/visit checks, 18 cross-visitor rejections, and 3 invalid pair checks.
 - **Actual checks:** GitHub accepted two source commits; `dotnet`, `mono` and `Unity` executables absent in available container. **NOT RUN:** executable golden tests, Unity, Android; no successful CI claimed. Intended runner: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`.
 - **BLOCKED for full EventDirector:** Core atomic event settlement/receipts/earned-key deduplication and Content/Core E03/E07 provenance/original agreement occurrence. C0-v2 PR #9, ADR PR #14/#17 and Content PR #11 remain unmerged dependencies. UI/Content Issue #21 owns actual original PNGs; planned IDs do not prove assets exist. PR #16 remains Draft; no main push/merge or second GameState/ledger.
+
+
+## AutoDev 02 — Day01 identity uniqueness regression (2026-11-19)
+
+**One bounded increment (#4/#20/#21):** added a deterministic golden assertion that all three canonical Day01 visit IDs, visitor definition IDs, document IDs and all nine planned portrait/standing/document asset IDs are unique (ordinal comparison). Prevents ambiguous cross-platform screen routing if Content fixtures change. No runtime API, Core state, ledger, art file or gameplay behavior changed.
+
+**Test source commit:** `9fdffe72098c4d560fc09030cfbe6c4925850abe` on `feature/npc-4`, `Tests/Npc/VisitorIdentityGoldenTests.cs`. **Verification:** GitHub accepted the source update. **NOT RUN:** .NET golden runner, Unity Editor, Windows or Android builds; no passing test claim. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. Handoff commit is the subsequent branch HEAD.
+
+**Dependencies / BLOCKED:** EventDirector still requires Core atomic settlement, persisted event receipts and earned-key deduplication; E03/E07 source identity must be reconciled with Content. Planned art IDs do not establish real PNG availability or asset ownership. PR #16 stays Draft; main unchanged.
