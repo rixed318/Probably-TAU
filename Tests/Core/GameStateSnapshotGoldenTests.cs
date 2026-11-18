@@ -677,16 +677,20 @@ namespace TAU.President.Tests.Core
                     new DurablePayable("day01-current", 0, 200L)
                 }));
             var staggeredFlow = DurableDay01Flow.Prepare(staggeredBefore, 0, 0, choices);
-            Assert(staggeredFlow.Next.Header.DayIndex == 1 &&
-                staggeredFlow.Next.Header.BalanceKopecks == 550L &&
-                staggeredFlow.Next.Finance.Ledger.Entries.Count == 4 &&
-                staggeredFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-current" &&
-                staggeredFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1 &&
-                staggeredFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-current" &&
-                staggeredFlow.Report.Postings.Count == 1 &&
-                staggeredFlow.Report.UnpaidPayables.Count == 0 &&
-                staggeredFlow.Next.Payables.Outstanding.Count == 1 &&
-                staggeredFlow.Next.Payables.Outstanding[0].DueKey == "day02-future");
+            AssertNamed(staggeredFlow.Next.Header.DayIndex == 1, "staggered day index");
+            AssertNamed(staggeredFlow.Next.Header.BalanceKopecks == 550L, "staggered cash");
+            AssertNamed(staggeredFlow.Next.Finance.Ledger.Entries.Count == 4, "staggered ledger count");
+            AssertNamed(staggeredFlow.Next.Finance.Ledger.Entries[3].PostingId == "payable:day01-current",
+                "staggered ledger posting ID");
+            AssertNamed(staggeredFlow.Next.Finance.Receipts[3].PostingKeys.Count == 1,
+                "staggered EndDay receipt posting count");
+            AssertNamed(staggeredFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-current",
+                "staggered EndDay receipt posting key");
+            AssertNamed(staggeredFlow.Report.Postings.Count == 1, "staggered report posting count");
+            AssertNamed(staggeredFlow.Report.UnpaidPayables.Count == 0, "staggered report unpaid count");
+            AssertNamed(staggeredFlow.Next.Payables.Outstanding.Count == 1, "staggered outstanding count");
+            AssertNamed(staggeredFlow.Next.Payables.Outstanding[0].DueKey == "day02-future",
+                "staggered future payable key");
             var staggeredRestored = staggeredFlow.Next.Restore();
             Assert(staggeredRestored.Header.BalanceKopecks == 550L &&
                 staggeredRestored.Payables.Outstanding.Count == 1 &&
@@ -846,6 +850,11 @@ namespace TAU.President.Tests.Core
             return new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
                 new AcademyMetricsDto(50, 50, 50, 50, 50), 10000L, 9000L,
                 streams, commands, new string[0], pending, completed);
+        }
+
+        private static void AssertNamed(bool condition, string invariant)
+        {
+            if (!condition) throw new Exception("GameState snapshot assertion failed: " + invariant);
         }
 
         private static void Assert(bool condition)
