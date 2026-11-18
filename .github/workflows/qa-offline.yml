@@ -29,14 +29,14 @@ jobs:
       - name: Checkout actual Core branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 5a57f3ae963002901595894b3aef9c4e5d993a16
+          ref: 75362a245ed4ec5a041308e820994ed7589d0a24
           path: core-source
           persist-credentials: false
       - name: Record actual Core revision
         run: |
           actual=$(git -C core-source rev-parse HEAD)
           echo "CORE_ORACLE_SHA=$actual"
-          test "$actual" = "5a57f3ae963002901595894b3aef9c4e5d993a16"
+          test "$actual" = "75362a245ed4ec5a041308e820994ed7589d0a24"
       - name: Audit real Core C# PCG32 source (not C# execution)
         run: python3 Tests/QA/test_pcg32_contract.py --core-source core-source/Runtime/Core/Pcg32.cs
 
@@ -48,13 +48,13 @@ jobs:
       - name: Checkout UI branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 8364b9445d6ef7bfe04b1f758ebbbc27b150958a
+          ref: f857f2871fbb097182ebc54dad6ca3e7caea6456
           path: ui
           persist-credentials: false
       - name: Checkout Content branch read-only
         uses: actions/checkout@v4
         with:
-          ref: a1646a221695e143b6f7b94006874ca7a704da8f
+          ref: 488c33e7bdf562f9c99e521eb7e7dc6a6dd72df3
           path: content
           persist-credentials: false
       - name: Record exact source revisions
@@ -62,10 +62,10 @@ jobs:
         run: |
           ui_sha=$(git -C ui rev-parse HEAD)
           echo "UI_SHA=$ui_sha"
-          test "$ui_sha" = "8364b9445d6ef7bfe04b1f758ebbbc27b150958a"
+          test "$ui_sha" = "f857f2871fbb097182ebc54dad6ca3e7caea6456"
           content_sha=$(git -C content rev-parse HEAD)
           echo "CONTENT_SHA=$content_sha"
-          test "$content_sha" = "a1646a221695e143b6f7b94006874ca7a704da8f"
+          test "$content_sha" = "488c33e7bdf562f9c99e521eb7e7dc6a6dd72df3"
       - name: UI Node mock regression
         run: node --test prototypes/ui-day-one/test-fixtures.cjs
         working-directory: ui
@@ -122,14 +122,14 @@ jobs:
       - name: Checkout actual Core branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 5a57f3ae963002901595894b3aef9c4e5d993a16
+          ref: 75362a245ed4ec5a041308e820994ed7589d0a24
           path: core
           persist-credentials: false
       - name: Record exact Core revision
         run: |
           actual=$(git -C core rev-parse HEAD)
           echo "CORE_SHA=$actual"
-          test "$actual" = "5a57f3ae963002901595894b3aef9c4e5d993a16"
+          test "$actual" = "75362a245ed4ec5a041308e820994ed7589d0a24"
       - name: Install .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -152,14 +152,14 @@ jobs:
       - name: Checkout NPC branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 628f0e6fe4140abfedce2ad7b4636b5f25109287
+          ref: d2e022483c462000914806287c2e4c21647e8aeb6b5f25109287
           path: npc
           persist-credentials: false
       - name: Record actual NPC revision
         run: |
           actual=$(git -C npc rev-parse HEAD)
           echo "NPC_SHA=$actual"
-          test "$actual" = "628f0e6fe4140abfedce2ad7b4636b5f25109287"
+          test "$actual" = "d2e022483c462000914806287c2e4c21647e8aeb6b5f25109287"
       - name: Install .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
