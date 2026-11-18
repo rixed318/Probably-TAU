@@ -1097,3 +1097,18 @@ Pinned source heads read from GitHub PRs this pass: Core #9 `75362a245ed4ec5a041
 - **Blocker 2:** Latest cross-PR exact-SHA CI and Chromium touch 360×800 / 800×360 acceptance for single-file Day01 (three docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) NOT RUN in this pass.
 - **Blocker 3:** 3–5 real PNG signatures/dimensions/manifest SHA, Unity Editor Android APK/device, and full Save→Load remain unverified; stable complete snapshot DTO still required.
 - **Recommended next step:** NPC 02 fix the conflicting variable name, publish exact SHA and a passing pure .NET 8 build; QA then update its NPC pin and rerun exact-SHA CI. Separately schedule mobile browser acceptance. No merge/main write; READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-18 — QA 05: NPC source re-audit on new PR head (#8)
+
+**One bounded task:** independently recheck the exact latest NPC test source before moving the QA CI pin. GitHub PR #16 HEAD `028a0919c62647e2a9c07dbab20dc776bf1cb066` still contains `invalidPreview` declarations at lines **34** (`InspectionPreview`) and **179** (`ChoicePreview`) of `Tests/Npc/VisitorIdentityGoldenTests.cs`. Both declarations remain in the same enclosing method's nested/outer scopes; prior exact-SHA CI reported CS0136. This pass is a **source-level observation only**; no new C# compilation was executed. The QA workflow continues to pin NPC `fa7452f99cfbee101ae47fd95bd225268cecd5bc`, and must not be advanced without a verified fix. No SaveService or alternative GameState created.
+
+**Executed:** GitHub connector fetched main README, AGENTS, CHAT_WORKFLOW, QA handoff, QA CI workflow, PRs #9/#10/#11/#12/#14/#16, Issues #6/#8/#20/#21 and exact latest NPC C# source; static inspection of two declaration locations **CONFIRMED**. Python, Node, .NET, Chromium, Unity Editor, APK and real Android: **NOT RUN** in this pass. PNG signature/dimension/hash verification: **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-18 23:21 UTC+4
+
+- **Latest PR heads:** Core #9 `3ecd82c8cfb69fee0ffdf51cb6ee5367048b91bc`; QA #10 `8ec621f69a7a5757887ec8c0fe5098937cdf991d` before this handoff; Content #11 `44fbf1be0797f617259440b3abc81484fb19b4b8`; UI #12 `81789177cf54998a6f3d07d7eb0569987104d7e9`; ADR #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; NPC #16 `028a0919c62647e2a9c07dbab20dc776bf1cb066`. C0-v2/ADR are guidance for feature development only; no merge.
+- **Blocker 1:** NPC CS0136 risk persists at latest source; no new passing .NET build, CI NPC pin must stay unchanged.
+- **Blocker 2:** Latest exact-SHA cross-branch CI and Chromium touch acceptance of single-file Day01 at 360×800/800×360 (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) remain unverified.
+- **Blocker 3:** 3–5 real PNG binaries/signatures/dimensions/manifest hashes, Unity APK/device and integrated Save→Load not verified; stable complete DTO required.
+- **Recommended next step:** NPC 02 rename conflicting local, provide exact fix SHA and passing .NET 8 build; QA then pin that SHA and rerun CI. Prioritize separate mobile Chromium acceptance. No main push/merge; READY_FOR_OWNER_TEST not granted.
