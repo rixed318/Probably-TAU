@@ -450,3 +450,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **One bounded task:** `Content/validate-day01-acceptance.cjs` now requires exactly five canonical opening score keys (`Q/S/M/E/R`), opening values as safe integers within 0..100, and all computed scores for both golden Day01 acceptance examples within 0..100. Existing choices, money, DayIndex=0, asset IDs, runtime and Core are unchanged. The validator checks two authored golden paths, **not** all possible choices or real Core clamping behavior.
 
 **Validator commit:** `1ee1e79f2bb451850d7d4142fcb6aee2cc5a31a9`. **Actually checked:** GitHub accepted file update; Node CLI, CI, Unity, browser and Android NOT RUN. QA 05 must run `node Content/validate-day01-acceptance.cjs` plus negative mutations for missing score, non-integer/out-of-range opening score and out-of-range outcome. PR #11 remains Draft; no main merge.
+
+## 18.11.2026 — Day01 inspection token cost accounting (#7)
+
+**One bounded task:** acceptance validator now sums each selected document's `inspection.costTokens` rather than treating every inspection as exactly one token. It validates nonnegative safe-integer costs, zero repeat cost, available opening tokens and golden `inspectionTokensUsed` against the actual sum. This is fixture-only; no balance, choices, Core, NPC, art, DayIndex or money changed.
+
+**Validator commit:** `abe2fe75a7367874ebe12c356f5fe7725c7ddb87`. **Verification:** GitHub accepted source update; independent Node CLI, Unity, CI, browser and Android NOT RUN. QA 05 should run `node Content/validate-day01-acceptance.cjs` and mutate inspection costs to 2/3, invalid negative/fractional costs, and over-budget examples. PR #11 remains Draft, no main merge.
