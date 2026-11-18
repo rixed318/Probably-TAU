@@ -382,6 +382,29 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetChoicePreviewForVisitDocument("D01_LAB", "DOC-01", "lab-1", out invalidTriple) || invalidTriple != null)
                 throw new Exception("Invalid Day01 triple must fail closed.");
 
+            // Inspection metadata must not leak across a stale visit/document pairing.
+            string[] inspectionVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
+            string[] inspectionDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < inspectionVisits.Length; i++)
+            {
+                Day01Visitors.InspectionPreview matched;
+                if (!Day01Visitors.TryGetInspectionPreviewForVisitDocument(
+                    inspectionVisits[i], inspectionDocuments[i], out matched) ||
+                    matched == null || matched.DocumentId != inspectionDocuments[i])
+                    throw new Exception("Visit/document inspection preview mismatch: " + inspectionVisits[i]);
+                Day01Visitors.InspectionPreview stale;
+                if (Day01Visitors.TryGetInspectionPreviewForVisitDocument(
+                    inspectionVisits[i], inspectionDocuments[(i + 1) % 3], out stale) || stale != null)
+                    throw new Exception("Cross-document inspection preview leaked.");
+            }
+            Day01Visitors.InspectionPreview invalidInspectionPair;
+            if (Day01Visitors.TryGetInspectionPreviewForVisitDocument(null, "DOC-01", out invalidInspectionPair) || invalidInspectionPair != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocument("D01_LAB", null, out invalidInspectionPair) || invalidInspectionPair != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocument("d01_lab", "DOC-01", out invalidInspectionPair) || invalidInspectionPair != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocument("D01_LAB", "doc-01", out invalidInspectionPair) || invalidInspectionPair != null ||
+                Day01Visitors.TryGetInspectionPreviewForVisitDocument("D01_UNKNOWN", "DOC-01", out invalidInspectionPair) || invalidInspectionPair != null)
+                throw new Exception("Invalid visit/document inspection preview must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
