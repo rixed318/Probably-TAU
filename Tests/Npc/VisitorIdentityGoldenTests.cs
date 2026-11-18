@@ -8,6 +8,25 @@ namespace TAU.President.Tests.Npc
     {
         public static void RunAll()
         {
+            // Canonical Content Day01 inspection IDs and token costs; presentation only.
+            string[] inspectionDocumentIds = { "DOC-01", "DOC-02", "DOC-03" };
+            string[] inspectionActionIds = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            for (int i = 0; i < inspectionDocumentIds.Length; i++)
+            {
+                Day01Visitors.InspectionPreview inspection;
+                if (!Day01Visitors.TryGetInspectionPreviewByDocumentId(inspectionDocumentIds[i], out inspection) ||
+                    inspection == null || inspection.DocumentId != inspectionDocumentIds[i] ||
+                    inspection.InspectionId != inspectionActionIds[i] ||
+                    inspection.CostTokens != 1 || inspection.RepeatCostTokens != 0)
+                    throw new Exception("Day01 inspection fixture mismatch: " + inspectionDocumentIds[i]);
+            }
+            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04", " DOC-01" })
+            {
+                Day01Visitors.InspectionPreview missingInspection;
+                if (Day01Visitors.TryGetInspectionPreviewByDocumentId(invalid, out missingInspection) ||
+                    missingInspection != null)
+                    throw new Exception("Invalid Day01 inspection ID accepted.");
+            }
             var cards = Day01Visitors.CreateReadOnlyCards();
             var repeatedCards = Day01Visitors.CreateReadOnlyCards();
             // Content 04 DAY01_ART_LINKS.json: planned IDs only, not proof of PNG availability.
