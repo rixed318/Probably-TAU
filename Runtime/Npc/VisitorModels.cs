@@ -411,6 +411,19 @@ namespace TAU.President.Npc
             return true;
         }
 
+        /// <summary>Read-only inspection metadata only when the visit and document agree.
+        /// This does not spend tokens, prove inspection or authorize a Core command.</summary>
+        public static bool TryGetInspectionPreviewForVisitDocument(string visitId, string documentId,
+            out InspectionPreview preview)
+        {
+            preview = null;
+            VisitorInstance visitor;
+            if (!TryGetByVisitId(visitId, out visitor) ||
+                !string.Equals(visitor.DocumentId, documentId, StringComparison.Ordinal))
+                return false;
+            return TryGetInspectionPreviewByDocumentId(documentId, out preview);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
