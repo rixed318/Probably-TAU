@@ -537,3 +537,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Bounded repair commit `94b64faf28c5e3775ca69edf768b6aeeecef9651`: remove the invalid per-entry running-balance assertion from the deterministic Prepare replay golden test. Keep per-entry posting-ID equality, total balance/revision, entry counts and all receipt fingerprints. No production Core API or economy policy changes.
 - Verification: prior CI failure confirmed from actual job logs; new SHA CI **not yet verified**. Local .NET SDK, Unity Editor, Android SDK/NDK/adb unavailable; no local C# execution, Unity compile or APK. Recheck exact-head CI and QA review before any readiness claim.
 - NPC integration remains separately blocked by NPC PR #16 CS0136 according to QA #10; no NPC file changes. No main push/merge or Issue closure.
+
+
+## 19.11.2026 — Day01 staggered-payable CI failure isolation (#19)
+
+**One bounded task:** prior exact-head Core .NET 8 workflow [44383622311](https://github.com/rixed318/Probably-TAU/actions/runs/44383622311) failed inside the multi-predicate staggered payable assertion in `Day01FlowGolden`. Changed only `Tests/Core/GameStateSnapshotGoldenTests.cs` in commit `aea5a31c0a427b1e2c03d5853581696116f115a9`: replaced that compound assertion with individually named checks and added `AssertNamed` to print the first failed invariant. This is **diagnostics only**: no production code, economic policy, test expectation, public C0 contract, or other subsystem changed. Do not treat it as a fix to the underlying failing assertion.
+
+**Verification:** local `dotnet`, Unity Editor and Android SDK/NDK/adb not found (Java available). .NET tests and Unity/Android build **NOT RUN locally**. Exact new commit CI must run and identify the failing predicate before implementing a targeted fix. APK **BLOCKED**. No main push, merge, or Issue closure.
