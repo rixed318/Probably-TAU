@@ -143,6 +143,17 @@ namespace TAU.President.Npc
             return TryGetInspectionPreviewByDocumentId(visitor.DocumentId, out preview);
         }
 
+        /// <summary>Read-only inspection metadata for a canonical Day01 choice.
+        /// This describes the associated document's optional inspection, not a requirement
+        /// to perform it, a receipt, or permission to execute the choice.</summary>
+        public static bool TryGetInspectionPreviewByChoiceId(string choiceId, out InspectionPreview preview)
+        {
+            preview = null;
+            ChoiceDescriptor choice;
+            if (!TryDescribeChoice(choiceId, out choice)) return false;
+            return TryGetInspectionPreviewByDocumentId(choice.Visitor.DocumentId, out preview);
+        }
+
         /// <summary>Resolve a canonical document to its Day01 visitor without mutable state.</summary>
         public static bool TryGetByDocumentId(string documentId, out VisitorInstance visitor)
         {
