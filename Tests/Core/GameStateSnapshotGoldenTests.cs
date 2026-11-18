@@ -487,6 +487,31 @@ namespace TAU.President.Tests.Core
                 dueBefore.Finance.Ledger.Entries.Count == 0 &&
                 dueBefore.Finance.Receipts.Count == 0 &&
                 dueBefore.Events.Pending.Count == 1);
+            // A future event must not block Day01: it stays queued through EndDay and Restore.
+            // This complements the due-event fail-closed case without invoking NPC logic.
+            var futureEventHeader = new GameStateSnapshotDto(0, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new[] { "event-tomorrow" }, new string[0]);
+            var futureEventBefore = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(futureEventHeader, new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new DurableCommandReceipt[0]),
+                new ScheduledEventQueueSnapshot(
+                    new[] { new ScheduledEventOccurrence("event-tomorrow", "event.day02", 1, 1) },
+                    new string[0]));
+            var futureEventFlow = DurableDay01Flow.Prepare(futureEventBefore, 0, 0, choices);
+            Assert(futureEventFlow.Next.Header.DayIndex == 1 &&
+                futureEventFlow.Next.Header.BalanceKopecks == 750L &&
+                futureEventFlow.Next.Events.Pending.Count == 1 &&
+                futureEventFlow.Next.Events.Pending[0].InstanceId == "event-tomorrow" &&
+                futureEventFlow.Next.Events.CompletedIds.Count == 0);
+            var futureEventRestored = futureEventFlow.Next.Restore();
+            Assert(futureEventRestored.Events.Pending.Count == 1 &&
+                futureEventRestored.Events.Pending[0].DueDayIndex == 1 &&
+                futureEventRestored.Events.CompletedIds.Count == 0);
+            Assert(futureEventBefore.Header.DayIndex == 0 &&
+                futureEventBefore.Finance.Ledger.Entries.Count == 0 &&
+                futureEventBefore.Events.Pending.Count == 1);
             // A real payable due on Day01 must settle through the canonical EndDay,
             // after all three document choices, without mixing its posting into a choice receipt.
             var withPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
