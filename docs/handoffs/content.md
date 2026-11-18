@@ -526,3 +526,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Actually executed:** independent JavaScript equivalent on current `DAY01_UI_FIXTURE.json` fetched from GitHub: **27/27 PASS**, including 11 routes with 2+ claims and 16 with 0–1 claim. This was **not** the checked-in Node CLI script.
 - **Not run:** full `node Content/validate-day01-acceptance.cjs`, negative mutations, CI, Unity/Android; container Git clone failed because `github.com` DNS resolution was unavailable. GitHub connector file read/write succeeded.
 - **Follow-up QA 05:** run the checked-in validator from a real checkout and mutate the ROOM menu to confirm rejection. PR #11 remains Draft; no merge or main push.
+
+## AutoDev 04 — Canonical room-priority mapping guard (18.11.2026)
+
+**One bounded Issue #7 task:** strengthened `Content/validate-day01-acceptance.cjs` to require the exact Day01 room menu ID-to-priority mapping ROOM-1=lab, ROOM-2=student, ROOM-3=partner (ROOM-4 remains unresolved). This prevents swapping claimant priorities while keeping valid IDs. No booking, Core, EventDirector, DayIndex, money, choices or asset definitions changed.
+
+- Validator commit: `637f8d8c7df4eadcad089b4ef4cd768b4515ee4c`.
+- **Actually checked:** connector-side JavaScript verified current four room ID/priority pairs (4/4 PASS), and rejected an injected ROOM-1 priority swap (1/1 PASS). This was **not** a run of the checked-in Node CLI.
+- **Not run:** full Node CLI, CI, Unity or Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and inject a ROOM-1/ROOM-2 priority swap. PR #11 remains unmerged; not READY_FOR_OWNER_TEST.
