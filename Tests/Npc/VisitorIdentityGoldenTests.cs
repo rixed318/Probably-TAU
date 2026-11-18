@@ -431,6 +431,26 @@ namespace TAU.President.Tests.Npc
                 Day01Visitors.TryGetInspectionPreviewForVisitDocumentChoice("D01_LAB", "DOC-01", "lab-1", out invalidTripleInspection) || invalidTripleInspection != null)
                 throw new Exception("Invalid triple inspection metadata must fail closed.");
 
+            // NPC definition IDs also resolve inspection hints for Windows/Android cards.
+            string[] inspectionNpcIds = { "npc_irina_korneeva", "npc_dasha_polynskaya", "npc_mark_sviridov" };
+            string[] inspectionNpcDocs = { "DOC-01", "DOC-02", "DOC-03" };
+            string[] inspectionNpcChecks = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            for (int i = 0; i < inspectionNpcIds.Length; i++)
+            {
+                Day01Visitors.InspectionPreview hint;
+                if (!Day01Visitors.TryGetInspectionPreviewByVisitorId(inspectionNpcIds[i], out hint) ||
+                    hint == null || hint.DocumentId != inspectionNpcDocs[i] ||
+                    hint.InspectionId != inspectionNpcChecks[i] ||
+                    hint.CostTokens != 1 || hint.RepeatCostTokens != 0)
+                    throw new Exception("NPC inspection hint mismatch: " + inspectionNpcIds[i]);
+            }
+            Day01Visitors.InspectionPreview invalidNpcHint;
+            if (Day01Visitors.TryGetInspectionPreviewByVisitorId(null, out invalidNpcHint) || invalidNpcHint != null ||
+                Day01Visitors.TryGetInspectionPreviewByVisitorId("", out invalidNpcHint) || invalidNpcHint != null ||
+                Day01Visitors.TryGetInspectionPreviewByVisitorId("NPC_IRINA_KORNEEVA", out invalidNpcHint) || invalidNpcHint != null ||
+                Day01Visitors.TryGetInspectionPreviewByVisitorId("npc_unknown", out invalidNpcHint) || invalidNpcHint != null)
+                throw new Exception("Unknown NPC inspection hint must fail closed.");
+
             var first = Day01Visitors.Create();
             var replay = Day01Visitors.Create();
             string[] expectedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
