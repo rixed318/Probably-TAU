@@ -490,6 +490,16 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(visitor.InstanceId, out screen);
         }
 
+        /// <summary>Resolve the same read-only Day01 screen from the canonical Content NPC ID.
+        /// Identity routing only; Core remains responsible for decisions and receipts.</summary>
+        public static bool TryGetVisitScreenPreviewByVisitorId(string visitorId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            Day01VisitorCard card;
+            if (!TryGetCardByVisitorId(visitorId, out card)) return false;
+            return TryGetVisitScreenPreview(card.VisitId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
