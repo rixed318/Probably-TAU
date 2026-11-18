@@ -41,6 +41,43 @@ assert.deepEqual(fixture.visitors.map(v => [v.visitId, v.visitorId]).sort((a,b) 
 assert.equal(new Set(fixture.documents.map(d => d.id)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitId)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitorId)).size, 3);
+// Guard canonical Day01 money against drift between authored content and UI mock.
+// This is static data comparison only: Core remains the sole cash/ledger writer.
+assert.equal(fixture.opening.budgetKopecks, contentSpec.opening.budgetKopecks,
+  "Day01 opening budget drift");
+const draftDocs = new Map(contentSpec.documentTypes.map(d => [d.id, d]));
+for (const document of fixture.documents) {
+  const draft = draftDocs.get(document.id);
+  assert.ok(draft, "missing canonical document: " + document.id);
+  for (const section of ["visible", "revealed"]) {
+    const fixtureSection = section === "visible" ? document.visible : document.inspection.reveals;
+    for (const [key, value] of Object.entries(draft[section])) {
+      if (key.endsWith("Kopecks")) {
+        assert.equal(fixtureSection[key], value, "document money drift: " + document.id + "/" + key);
+      }
+    }
+  }
+}
+for (const visit of contentSpec.day1.visits) {
+  const mock = fixture.visitors.find(v => v.visitId === visit.id);
+  assert.ok(mock, "missing Day01 visitor: " + visit.id);
+  for (const choice of visit.choices) {
+    const mockChoice = mock.choices.find(c => c.choiceId === choice.id);
+    assert.ok(mockChoice, "missing Day01 choice: " + choice.id);
+    const draftCash = choice.effects.filter(e => e.metric === "budget").map(e => e.deltaKopecks);
+    const mockCash = mockChoice.effects.filter(e => e.kind === "cashDelta").map(e => e.deltaKopecks);
+    assert.deepEqual(mockCash, draftCash, "choice cash drift: " + choice.id);
+    if (Object.hasOwn(choice, "conditionalRevenueKopecks")) {
+      assert.equal(mockChoice.deferredPartnerRevenue?.amountKopecks, choice.conditionalRevenueKopecks,
+        "deferred partner revenue drift: " + choice.id);
+    } else {
+      assert.equal(mockChoice.deferredPartnerRevenue, undefined,
+        "unexpected deferred partner revenue: " + choice.id);
+    }
+  }
+}
+console.log("PASS: Day01 draft/fixture opening, document, immediate and deferred kopeck amounts agree");
+
 // Cross-document IDs must be globally unique; inspections may only reference their own document.
 const allChoiceIds = fixture.visitors.flatMap(visitor => visitor.choices.map(choice => choice.choiceId));
 assert.equal(new Set(allChoiceIds).size, allChoiceIds.length, "duplicate Day01 choiceId across visitors");
