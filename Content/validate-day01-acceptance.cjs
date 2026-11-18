@@ -340,8 +340,9 @@ for (const lab of fixture.visitors[0].choices) {
         } else if (roomChoice.id === "ROOM-4") {
           assert.equal(roomChoice.priority, "unresolved");
         } else {
-          assert.ok(["lab", "student", "partner"].includes(roomChoice.priority),
-            "room priority must name a fictional claimant type");
+          const expectedPriority = {"ROOM-1": "lab", "ROOM-2": "student", "ROOM-3": "partner"}[roomChoice.id];
+          assert.equal(roomChoice.priority, expectedPriority,
+            "room choice ID must preserve its canonical priority: " + roomChoice.id);
         }
       }
       if (cash < lowestClosingCash) lowestClosingCash = cash;
