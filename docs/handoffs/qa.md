@@ -1285,3 +1285,17 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** PR #12 has no committed PNG binaries; 3–5 PNG signatures/dimensions/manifest SHA remain unverified.
 - **Blocker 3:** stable full snapshot DTO / real Save→Load and Unity Editor APK/device tests are not evidenced; CI result for new pin unverified.
 - **Recommended next step:** inspect GitHub Actions run for QA commit `a9ac9bfa3071` and perform actual Chromium touch tests on `day01-android-offline.html` from UI SHA `31fc7bac62e9`; report measured results, not CSS inference. Preserve main protection; no merge.
+
+## 2026-11-19 — QA 05: executable static gate for distributed Android HTML (#8, #20)
+
+**One bounded increment:** added `Tests/QA/test_android_offline_artifact.cjs` and a separate `android-offline-artifact-static` job in `.github/workflows/qa-offline.yml`. The job checks out the actual single-file `prototypes/ui-day-one/day01-android-offline.html` from UI PR #12 at **exact commit `4c8666f24117d3e7dd8c0ba06308fca8894112f9`**. It asserts the revision, checks the absence of external resource/script references and known network APIs, verifies viewport and mobile CSS markers, and parses every inline JS block with Node `vm.Script` without running gameplay. This explicitly closes a *static CI coverage gap* for the distributed HTML, not the Chromium acceptance gap.
+
+**Commits:** test `364b2585e4ddc8f4e8d6d6af4f6d2c2d9488cd7a`; workflow `b4a459ed91624aec64a7643666fa8bdfa210ac5b`; this handoff commit follows. **Checks actually performed:** GitHub read of UI HTML at pinned revision: 2 inline scripts; viewport, safe-area, touch-action, EndDay and ledger strings found; no matching external resources or listed network API patterns. These are static source checks, **not Node execution**. Node/Chromium/.NET/Unity/APK/Save→Load **NOT RUN**; GitHub Actions result **NOT VERIFIED**. To reproduce on a checkout: `node --test Tests/QA/test_android_offline_artifact.cjs` after placing the pinned UI checkout at `ui-source/` as in the workflow.
+
+### Сводка для координатора 00 — 19.11.2026
+
+- **PR heads at read:** #9 Core `ec181538cee535a87daba109c08566a4186ffcc6`; #10 QA `b4a459ed91624aec64a7643666fa8bdfa210ac5b` before this handoff update; #11 Content `26123b0c58152636e47d3df3f0aba408e2a621d7`; #12 UI `4c8666f24117d3e7dd8c0ba06308fca8894112f9`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `b96ba7ec15378d1d2e5c17800b427072835ac322`. Main and AGENTS/workflow checked. No merge.
+- **Blocker 1:** Chromium touch acceptance for exact distributed HTML (360×800, 800×360, 3 docs, EndDay, ledger replay, partner cash, 48dp, overflow) NOT RUN.
+- **Blocker 2:** Actual PNG binary signature/dimensions/manifest SHA validation not verified; Issue #21 open.
+- **Blocker 3:** Unity Editor APK/device and stable integrated Save→Load regression NOT RUN; stable DTO acceptance still requires Core coordination.
+- **Next:** Inspect actual Actions outcome for QA commit, then run Chromium touch acceptance on the pinned offline HTML. No READY_FOR_OWNER_TEST and no architectural approval by QA.
