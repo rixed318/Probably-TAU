@@ -30,9 +30,9 @@ namespace TAU.President.Tests.Npc
                     }
             foreach (string invalid in new[] { null, "", "doc-01", "DOC-04" })
             {
-                Day01Visitors.VisitScreenPreview missing;
+                Day01Visitors.VisitScreenPreview missingDocumentArtScreen;
                 if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
-                    invalid, artByDocument[0][0], out missing) || missing != null)
+                    invalid, artByDocument[0][0], out missingDocumentArtScreen) || missingDocumentArtScreen != null)
                     throw new Exception("Invalid document/art route accepted.");
             }
             Day01Visitors.VisitScreenPreview unknownArt;
@@ -63,9 +63,9 @@ namespace TAU.President.Tests.Npc
                 }
             foreach (string invalidChoice in new[] { null, "", "lab-1", "LAB-4", "ROOM-1", " LAB-1" })
             {
-                Day01Visitors.InspectionPreview invalidPreview;
-                if (Day01Visitors.TryGetInspectionPreviewByChoiceId(invalidChoice, out invalidPreview) ||
-                    invalidPreview != null)
+                Day01Visitors.InspectionPreview invalidChoiceInspection;
+                if (Day01Visitors.TryGetInspectionPreviewByChoiceId(invalidChoice, out invalidChoiceInspection) ||
+                    invalidChoiceInspection != null)
                     throw new Exception("Invalid choice must not resolve an inspection preview.");
             }
 
@@ -656,7 +656,7 @@ namespace TAU.President.Tests.Npc
 
             // Triple-scoped screen routing must reject stale/mixed UI identities.
             string[] scopedVisits = { "D01_LAB", "D01_STUDENT", "D01_PARTNER" };
-            string[] scopedDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            // Reuse scopedDocuments declared above for the same canonical Day01 fixture.
             string[][] scopedChoices =
             {
                 new[] { "LAB-1", "LAB-2", "LAB-3" },
