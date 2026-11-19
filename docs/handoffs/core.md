@@ -640,3 +640,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - One bounded verification task; no C# code, public contract, NPC/UI/Content or economy changes. Typed NPC due-event EndDay transaction remains pending agreed interface and QA/00 review; do not invent event API.
 - Current environment checked: `dotnet`, `csc`, `mcs`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` available. Local C# tests, Unity Editor/Windows and Android APK builds NOT RUN. Native Android BLOCKED on verified Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK.
 - No main push, merge or Issue closure. CI for this handoff-only commit must be checked separately.
+
+## Core 01 — 20.11.2026: Day02 stale-revision guard regression (#19)
+
+- Scope: one additional pure-C# golden assertion in `Tests/Core/GameStateSnapshotGoldenTests.cs`; code commit `6c6ccad859a48f3b927fa3fa80c8ffb67d578e35` on `feature/core-2` only.
+- Scenario: after Day01 three decisions, Day02 pending 200-kopeck payable, `DurableDayAdvance.PrepareDay` receives correct DayIndex=1 but stale `expectedRevision=Header.Revision-1`. Expect `InvalidOperationException` and unchanged day, cash (750), payable, ledger (3 entries) and receipts (4).
+- Prior HEAD `2779ea1a0003bc8d30e6504b092b16f2593136ff`: GitHub Actions run #44627577277 `completed/success` (standalone .NET 8 golden tests). New code SHA CI not yet verified; do not mark new regression PASS before exact-SHA CI.
+- Environment checked this run: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local C# tests, Unity Editor build and Android APK NOT RUN / BLOCKED. No Unity project fabricated.
+- No public API, NPC, UI, Content, `main`, merge or Issue closure changes. Next P0 remains approved typed NPC due-event integration in atomic EndDay after contract review and QA/00 signoff.
