@@ -726,3 +726,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - GitHub Actions [run #44450388944](https://github.com/rixed318/Probably-TAU/actions/runs/44450388944) on HEAD: `completed/success`. Job `Node UI and art manifest regression (not Unity)` and its `Node UI mock and canonical Day 01 tests` step passed; art manifest checks, synthetic PNG audit, staged Android HTML verification and artifact uploads also passed. Earlier runs #44450349312 and #44450342754 for initial test commit `e074692d` failed; they do not establish current status.
 - **Actually verified:** live GitHub branch SHA, workflow run conclusion, individual job/step conclusions and corrected test source. **Not executed here:** local Node/Chromium, real Android `file://`, physical touch, Unity Editor or APK. This is static source regression coverage, not proof of real-device interaction.
 - Next: QA/owner tests Android on device; Issue #21 requires actual original PNG generation, binary commit and art review. C0-v2 PR #9 and ADR PR #14 remain integration gates; no Core/GameState or main modifications.
+
+
+## 2026-11-19 — Issue #20: Android physical-device evidence template
+
+- Scoped change: added a copyable L1/L2/P1/P2/S1/T1/O1 test record to `prototypes/ui-day-one/README.md`, requiring run head SHA, artifact identity, Android/browser versions, `file://` or `content://` launch method, orientation viewport dimensions, screenshots, offline mode and failure reproduction.
+- Implementation commit: `c1cec6f96e7b83cf1a39c9013d54d698d7935958` on `feature/ui-5`.
+- Actually verified: GitHub Contents API accepted the README update; no automated test, Android hardware, Chromium or Unity Editor executed for this documentation-only change. All device cases remain UNTESTED, not PASS.
+- Next: QA/owner should fill the evidence record against the latest successful Android artifact. Issue #21 still requires real original PNGs; no Core/GameState/main changes, PR #12 remains Draft.
