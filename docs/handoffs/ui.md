@@ -779,3 +779,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Candidate only**: 320×180 downscale is a review preview, NOT manually pixel-cleaned production art; scene composition, palette conformity, world-layer registration and quality at 1× remain unapproved. No manifest row marked approved/production.
 - **BLOCKED binary upload**: image generation succeeded, but the generated PNG is available only in the execution container; its GitHub CLI cannot reach github.com, and the GitHub connector cannot read container bytes. Therefore **no PNG was committed to `feature/ui-5`**. Do not claim Issue #21 binary acceptance is met.
 - Next: transfer the actual PNG bytes to GitHub via authenticated `create_blob(base64)` → `create_tree` → `create_commit` → `update_ref(expected_sha)`, then re-fetch binary to verify SHA and update the asset manifest. Do not merge PR #12 or modify Core.
+
+
+---
+
+## 2026-11-19 · Issue #21 · office candidate review gate
+
+One bounded documentation task: added `docs/art/reviews/office_background_candidate_2026-11-19.md` with exact prior ImageGen provenance, local 320×180 RGB preview SHA-256, and explicit binary/pixel-cleaning/owner-review acceptance gates. Documentation commit: `246e172a659502ec94d2b2ccae0674f75e476c87` in `feature/ui-5`.
+
+**Actual checks:** live GitHub AGENTS/workflow/PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest and pipeline inspected; local preview `file`/SHA256 checked (320×180 RGB PNG; `90b9c982fbf507bce26efb16cd3927ba44bd437f11ebd3057024a7e8c6b822d3`). Review record created through authenticated GitHub connector. **Not performed:** binary GitHub upload, art approval, Node/CI/Android/Unity tests. Do not mark the RGB preview as production RGBA8 or a GitHub asset.
+
+**BLOCKED for binary acceptance:** GitHub connector has no access to local image bytes; PNG remains only in the execution container. Need authenticated binary transfer and GitHub blob re-verification. PR #12 stays Draft; no Core/GameState/main edits or merge.
