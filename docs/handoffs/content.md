@@ -632,3 +632,12 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Коммит проверки: `0b4a2e87ce41d83793fa1fc8fae96005c249a7b8` (ветка `feature/content-7`, PR #11).
 - Фактически выполнена независимая проверка данных JSON через JavaScript: 13 событий, 23 межсобытийные связи — PASS; отрицательный пример `E03 -> E02` (одинаковый DayIndex) отклонён — PASS. Полный Node CLI, CI, Unity и Android не запускались.
 - Риск: правило строгого увеличения DayIndex является статическим ограничением **чернового** manifest, а не утверждённой схемой EventDirector; при необходимости событий в один день согласовать отдельное изменение с 00/02.
+
+
+## Автономный проход 04 — event choice Definition IDs (19.11.2026)
+
+**Одна задача:** добавлена статическая проверка уникальности 52 choice Definition ID в 13 событиях E02–E14 и принадлежности ID своему событию (формат `E02-A` и т. п.) в `Content/validate-day01-acceptance.cjs`. Только контентный валидатор; Core/EventDirector, DayIndex, деньги и исходы не менялись.
+
+**Коммит валидатора:** `6b5f28d0ad3505f63fe4272d75e8e3375fb5655e`.
+
+**Фактически проверено:** независимая JS-проверка прочитанного из GitHub JSON: 13 событий / 52 choice ID, уникальность и формат PASS; синтетический дубликат обнаружен PASS. **Не запускались:** полный checked-in Node CLI, CI, Unity, Android. QA 05 должен запустить валидатор на HEAD и отрицательный тест с подменой choice ID. **NOT READY_FOR_OWNER_TEST**. Только `feature/content-7`; без merge.
