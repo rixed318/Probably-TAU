@@ -701,3 +701,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Artifacts verified via GitHub metadata: `day01-android-touch` id `14476189172`, 24,325 bytes, SHA256 archive digest `c4e52db46d8b09356f33d2b26e667f5f219241baff192f5c376488bb06d6915c`; `day01-web-demo` id `14476873919`, 8,484 bytes. Both reported unexpired at this check. The Android archive differs in size from the older broken ZIP; do not reuse old copies.
 - Actual verification performed: live GitHub PR/issue/docs review, CI run/job/step conclusions and artifact metadata. No local Node rerun, downloaded ZIP extraction, physical Android `file://` launch, touch-flow/device test, Unity Editor or APK test in this pass. Synthetic PNG tests are NOT actual original art assets; Issue #21 remains open.
 - Next: owner/QA device test on the new ZIP at 800×360 and 360×800; record screenshots and interactions. Keep C0-v2 / ADR proposals in PR #9/#14 separate from UI mock; no Core/GameState changes or main merge.
+
+
+## 2026-11-19 — Issue #20: clear stale error messages on successful touch actions
+
+- Scoped UI-only fix: Android Day01 `inspect` and `end` click handlers now clear `#error` after a successful gateway operation, matching the already-correct dynamically generated decision buttons. Previously a validation error could remain visible even after a successful inspection or day completion.
+- Implementation commit: `b9adbe4d5a40e8f6e04e99a0acf42192ac01f81d` on `feature/ui-5`; no desktop prototype, GameState, Core or Unity API changes.
+- Actually verified: fetched original Android HTML from GitHub, matched exact old handler expressions, changed only two success paths, GitHub Contents API accepted the commit. No Node, browser, physical Android, Unity or CI run executed for this commit; no runtime PASS claimed.
+- Remaining: execute browser regression at 800×360 and 360×800, test a failed then successful action with error clearance, Android local-file playtest, and Issue #21 original pixel-art PNG review. PR #12 stays Draft; C0-v2 PR #9 and ADR PR #14 are not merged.
