@@ -130,7 +130,7 @@ D01_INTRO
  -> DOC-02 / инспекция? / STUDENT decision
  -> DOC-03 / инспекция? / PARTNER decision
  -> D01_CLASH_REVEAL
- -> if 2+ active claims: ROOM choice; else AUTO_ASSIGN
+ -> if 2+ active claims: ROOM-1/2/3/4 (priority only, no booking); else ROOM-AUTO (display only, no booking)
  -> DAY_REPORT_01 -> E02_ROOM_HEARING on Day 02
 ~~~
 
