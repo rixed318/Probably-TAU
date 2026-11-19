@@ -1314,3 +1314,20 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Блокировка 2:** NPC .NET regression в том же run FAILURE; требуется анализ отдельного job log и исправление владельцем NPC.
 - **Блокировка 3:** Chromium 360×800/800×360, реальные PNG SHA, Unity APK и интегрированный Save→Load не подтверждены.
 - **Следующий шаг:** проверить новый CI на текущем QA SHA и при необходимости устранить конкретную причину; затем браузерный acceptance распространяемого HTML. Не объявлять READY_FOR_OWNER_TEST без реальных тестов.
+
+
+## 2026-11-19 — QA 05: NPC exact-SHA CI pin refresh (#8)
+
+**One bounded change:** updated the NPC checkout and exact-SHA assertion in `.github/workflows/qa-offline.yml` from `fa7452f99cfbee101ae47fd95bd225268cecd5bc` to current `feature/npc-4` HEAD `bc39db86b2aa2b5c31c0733269d2d9d88bf85818`. Workflow commit: `6e2ee58d32425a0a30454ee39ef6b453cee68aa4`. This does not change NPC code, contracts, or the Core/UI/Content pins.
+
+**Evidence:** QA Actions run [44571825535](https://github.com/rixed318/Probably-TAU/actions/runs/44571825535) for QA SHA `18df46d8799804130410c95aabd03a9d93d907aa` completed failure. Four jobs passed (UI/Content static, Android HTML static, Core .NET 8, Python PCG32); NPC .NET 8 failed while compiling the **old pinned NPC SHA** `fa7452f...`: `Tests/Npc/VisitorIdentityGoldenTests.cs:34:49 CS0136`, duplicate local `invalidPreview` (also declared at line 179). GitHub source read of the current NPC HEAD showed the earlier declaration removed, but this is **not** proof of successful compilation. New QA workflow CI after this pin update: **NOT VERIFIED**. Local Node/.NET/Chromium/Unity tests: **NOT RUN** in this pass.
+
+**C0/ADR:** PR #9 C0-v2 and PR #14 ADR authorize feature development only. No SaveService or alternative GameState created. No merge, no main write.
+
+### Сводка для координатора 00 — 2026-11-19
+
+- **Checked branch HEADs:** main `d673322cd9d0`; PR #9 Core `acaf0b59efbb`; PR #10 QA `6e2ee58d3242` (workflow commit; handoff update follows); PR #11 Content `9fb8749b5bba`; PR #12 UI `c1e8af6878f5`; PR #16 NPC `bc39db86b2aa`. PR #14 ADR previously recorded `ebdc4be28afd`; not re-fetched as exact head in this pass.
+- **Blocker 1:** updated NPC CI compile/test result not yet verified; old pinned NPC failed CS0136.
+- **Blocker 2:** Chromium touch acceptance for exact distributed offline HTML at 360×800 and 800×360 (3 docs, EndDay, ledger replay, no partner immediate cash, 48dp/overflow) remains NOT RUN.
+- **Blocker 3:** real PNG signatures/dimensions/manifest hashes, Unity Editor/APK and integrated Save→Load remain unverified.
+- **Recommended next step:** inspect the new QA Actions run at the new QA commit and verify NPC compile; then run browser touch acceptance. Real Android device/APK tests remain NOT RUN until an actual Unity Editor-built APK exists.
