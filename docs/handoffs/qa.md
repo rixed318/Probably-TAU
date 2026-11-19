@@ -1191,3 +1191,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Recommended next step:** run Playwright/Chromium touch emulation at 360x800 and 800x360 on UI SHA `9b8738ca`, capture DOM assertions/screenshots, then report exact failures to UI owner; keep APK and device tests NOT RUN until genuine build.
 
 **Safety:** QA branch only; no merge/main push, no third-party IP approval, no READY_FOR_OWNER_TEST claim.
+
+
+## 2026-11-19 09:18 UTC+4 — QA 05: Android touch CSS source acceptance (#8, #20)
+
+**One bounded independent source check:** read exact UI PR #12 HEAD `65e669ce24d013100a184bc35eb4e45cfd4aa3a0`, file `prototypes/ui-day-one/day01-android-offline.html`, blob `5fd425b0b683353fcf5a1e83339426679b457126`. Deterministic source-pattern checks executed against the fetched file: coarseRule=PASS, min48=PASS, touchManipulation=PASS, landscapeRule=PASS, safeArea=PASS, viewport=PASS. In particular lines 247–265 contain coarse-pointer 48px minimum width and height for buttons/tabs/close/link controls and 96x64px document hotspot; lines 266–272 include a coarse-pointer landscape max-height 500px override. These are **CSS declarations only**: cascade, actual DOM rectangles, 48dp compliance, clipping and touch operation remain unverified until Chromium emulation. No files in UI branch modified.
+
+**Execution:** GitHub exact-SHA fetch and JavaScript regex source assertions PASS (6/6); Python CLI, Node CLI, .NET, Chromium 360x800/800x360, Unity Editor, APK/device, PNG binary checks, Save→Load **NOT RUN**. No architecture or GameState introduced.
+
+### Сводка для координатора 00 — 2026-11-19 09:18 UTC+4
+
+- **PR HEADs verified before QA write:** #9 231361bc127e8345d8d6256a93d0734ebd2ae9be; #10 82a5ff5bc2403ace0002b565449569363fd60ffd; #11 d2a2cd924cea41457b91ff0a24e71251a864f7b4; #12 65e669ce24d013100a184bc35eb4e45cfd4aa3a0; #14 ebdc4be28afd56e82bc14ca397af88376ae59d20; #16 b6cfd4afd07dd4d9c8f8b3633cf9461f66d3bf34. QA handoff commit follows this report; main not changed.
+- **Blocker 1:** Chromium 360x800 portrait and 800x360 landscape touch acceptance on exact latest single-file HTML still NOT RUN; CSS declarations cannot prove target rectangles, overflow, three documents, EndDay, ledger replay or partner cash behavior.
+- **Blocker 2:** Fresh exact-SHA NPC .NET compile/golden evidence still NOT VERIFIED; old pinned workflow SHA does not test latest NPC HEAD.
+- **Blocker 3:** Real PNG signature/dimensions/manifest SHA, Unity APK/device and integrated Save→Load remain NOT VERIFIED; stable Core DTO contract required before real SaveService.
+- **Recommended next step:** run Chromium touch emulation at both dimensions on UI `65e669ce`, capture DOM hit-target geometry and overflow screenshots plus three-doc/EndDay/ledger assertions; report any failing selectors to UI PR #12. Do not grant READY_FOR_OWNER_TEST or merge.
