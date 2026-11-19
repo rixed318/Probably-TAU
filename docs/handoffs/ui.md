@@ -827,3 +827,11 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 **Implementation commit:** `ba26abef0f58a972104e9a35526209e3be55f560` on `feature/ui-5`; handoff updated separately. Only `prototypes/ui-day-one/test-day01-android-touch.cjs` and this handoff changed. No GameState/Core, desktop prototype, art or Unity changes.
 
 **Verification:** source read from live GitHub and corrected test file committed. Test suite execution, CI, browser, Android/TalkBack and Unity **not run in this connector pass**; positive controls are source assertions, not an observed test result. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and inspect CI. Existing Issue #21 PNG delivery and real-device Android playtest remain pending. PR #12 remains Draft, no merge.
+
+
+## 2026-11-19 · Role 03 · Issue #20 · offline escape-route regression
+
+- Commit `d70b9d4746cfc038c0002dc43cf8283286de8077` adds static guards to `prototypes/ui-day-one/test-day01-android-touch.cjs` against `navigator.sendBeacon`, `importScripts`, `new Worker`, and protocol-relative CSS `url(//...)` in the main standalone Android HTML.
+- Scope: regression-test source only; no HTML behavior, Core/GameState, art assets, or Unity changes.
+- Verification: GitHub contents API accepted the source commit. Full Node test suite, browser, real Android, CI for this SHA, and Unity were **not run** in this pass. The guards are static heuristics, not a security sandbox; legacy HTML is not covered by these two added assertions.
+- Follow-up: run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and verify Android viewport/device; PNG delivery for #21 remains pending.
