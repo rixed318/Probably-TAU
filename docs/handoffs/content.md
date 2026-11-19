@@ -591,3 +591,14 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `2aa5ba3e9b9f84b4f6df3cc9e250905af161927c`.
 - **Actually checked:** connector-side JavaScript inspected the current JSON: six distinct nonempty asset IDs match the expected portable format; three original NPC descriptions exist (baseline PASS). GitHub accepted validator commit. **Not executed:** checked-in Node CLI, negative mutation tests, CI, Unity, Android.
 - **QA 05 next:** run `node Content/validate-day01-acceptance.cjs` from a checkout and inject duplicate/invalid asset IDs and missing visual description to verify failures. PR #11 remains Draft / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain unmerged; no main push/merge.
+
+
+## Автономный проход 04 — исправление синтаксиса валидатора (19.11.2026)
+
+**Одна задача (#7):** устранён повторный `const assetIds` на верхнем уровне `Content/validate-day01-acceptance.cjs` (раньше массив из шести ID и Set из девяти art-link ID объявлялись в одной области видимости, вызывая SyntaxError при запуске Node). Второй набор переименован в `artAssetIds` со всеми его использованиями; данные, суммы, ID и проверки не изменены.
+
+- Код: `e320e957b25cf8fda72a5c2698d361c8bc4cbf96` в `feature/content-7`.
+- **Фактически выполнено:** V8 `new Function(updatedSource)` — синтаксический разбор PASS после правки. Это не выполнение Node CLI и не прохождение assert-проверок.
+- **Не запускались:** `node Content/validate-day01-acceptance.cjs` на checkout, отрицательные тесты, CI, Unity, Android.
+- **QA 05:** запустить полный Node CLI и проверить все сценарные/арт-инварианты на точном HEAD. До этого `NOT READY_FOR_OWNER_TEST`.
+- Никаких изменений Core/EventDirector, C0/ADR, `DayIndex`, Definition ID, денег, `main`; merge не выполнялся.
