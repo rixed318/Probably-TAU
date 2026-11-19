@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — padded document ID regression (2026-11-20)
+
+**Bounded task (#4/#20):** Added fail-closed golden assertions for leading and trailing whitespace in canonical `DOC-01` when resolving a document-scoped Day01 art screen. Exact IDs remain ordinal and are not normalized by NPC routing. Test commit: `dc6dc04d3541b68b37da7020188bb90d5dba27df`; file: `Tests/Npc/VisitorIdentityGoldenTests.cs`. No production, Core, ledger, art, or main changes.
+
+**Validation:** source commit accepted by GitHub. .NET golden CI for this SHA not confirmed at handoff update; local .NET, Unity, Windows and Android tests NOT RUN. **BLOCKED:** full EventDirector still needs Core atomic event/receipt/earned-key API and Content E03/E07 origin agreement. PR #16 remains Draft; C0-v2 PR #9 and ADR PR #14 are integration inputs, not merged. No main push or merge.
+
+
 ## AutoDev 02 — Day01 padded art ID regression (2026-11-20)
 
 **One bounded task:** added two fail-closed golden assertions for leading/trailing whitespace in a known portrait asset ID when resolving a document-scoped Day01 screen. Exact ordinal asset IDs must not be silently trimmed on Windows or Android. Test file: `Tests/Npc/VisitorIdentityGoldenTests.cs`; code commit `9cac0588f6cf1c85f7c83a6930b0acfacf942f27`. No production/Core changes.
