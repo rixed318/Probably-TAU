@@ -118,6 +118,8 @@ for (const document of fixture.documents) {
 for (const visit of contentSpec.day1.visits) {
   const mock = fixture.visitors.find(v => v.visitId === visit.id);
   assert.ok(mock, "missing Day01 visitor: " + visit.id);
+  assert.deepEqual(mock.choices.map(c => c.choiceId).sort(), visit.choices.map(c => c.id).sort(),
+    "Day01 canonical/UI choice Definition ID roster drift: " + visit.id);
   for (const choice of visit.choices) {
     const mockChoice = mock.choices.find(c => c.choiceId === choice.id);
     assert.ok(mockChoice, "missing Day01 choice: " + choice.id);
