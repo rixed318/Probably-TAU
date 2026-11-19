@@ -617,3 +617,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `73fa285e4cf470bacd4403a1a24c574548e4ede1` on `feature/content-7`.
 - **Actually checked:** current GitHub JSON versions match (`content-draft-0.3`); isolated JavaScript equality test rejects a synthetic stale `content-draft-0.2`; committed validator source was re-read from GitHub and contains the new assertion. These are static/isolated checks, **not** a checked-in Node CLI execution.
 - **Not run:** full `node Content/validate-day01-acceptance.cjs`, CI, Unity, Windows, Android. QA 05 should run the full validator and mutation test on checkout. PR #11 remains Draft / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain separate; no Core, EventDirector, money, Definition ID, DayIndex, main push or merge.
+
+## AutoDev 04 — Day01 event self-feed guard (2026-11-19)
+
+- **One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` rejects `event.feeds` containing its own `event.id`. This prevents trivial self-referential event dependency in the draft content manifest; no runtime EventDirector or cash engine added. C0-v2/ADR remain separate in PR #9/#14.
+- Validator commit: `de29f216e2726f42976a3ac06fe199b699b3e241` on `feature/content-7`.
+- **Actually checked:** connector-side isolated JavaScript parsed current `CONTENT_SPEC_DRAFT.json`: 13 event manifest entries, zero self-feeds (PASS); synthetic self-feed inserted into first event detected (PASS). This is **not** a run of the checked-in Node CLI.
+- **Not run:** full Node CLI, CI, Unity, Android. QA 05: execute `node Content/validate-day01-acceptance.cjs` on exact HEAD and negative mutation for an event feeding itself. PR #11 stays Draft / NOT READY_FOR_OWNER_TEST. No Definition ID, DayIndex, kopecks, Core, main push or merge changes.
