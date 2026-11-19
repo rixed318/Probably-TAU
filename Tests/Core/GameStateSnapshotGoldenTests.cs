@@ -931,6 +931,17 @@ namespace TAU.President.Tests.Core
                 shortfallRestored.Finance.Receipts.Count == 5,
                 "Day02 insufficient payable stale replay leaves snapshot unchanged");
 
+            // A stale revision on the correct Day02 must fail before settlement.
+            // This protects against concurrent UI submissions using an old read model.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                day02Input, day02Input.Header.Revision - 1, 1));
+            AssertNamed(day02Input.Header.DayIndex == 1 &&
+                day02Input.Header.BalanceKopecks == 750L &&
+                day02Input.Payables.Outstanding.Count == 1 &&
+                day02Input.Finance.Ledger.Entries.Count == 3 &&
+                day02Input.Finance.Receipts.Count == 4,
+                "Day02 stale revision rejected without financial mutation");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
