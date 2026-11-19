@@ -20,6 +20,9 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
   assert.doesNotMatch(legacy,/@import\b|url\s*\(\s*['"]?https?:/i);
   assert.doesNotMatch(legacy,/<(?:iframe|object|embed|audio|video|img)\b[^>]*(?:src|data)\s*=\s*['"]?https?:/i);
   assert.doesNotMatch(legacy,/\b(?:fetch\s*\(|XMLHttpRequest\b|WebSocket\s*\(|EventSource\s*\()/);
+  // Apply the same offline escape-route checks to the second distributed HTML.
+  assert.doesNotMatch(legacy,/\b(?:navigator\s*\.\s*sendBeacon\s*\(|importScripts\s*\(|new\s+Worker\s*\()/i);
+  assert.doesNotMatch(legacy,/url\s*\(\s*['\"]?\/\//i);
   const scripts=[...legacy.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   assert.ok(scripts.length>0,'expected embedded executable JavaScript');
   for(const script of scripts)new vm.Script(script);
