@@ -854,6 +854,46 @@ namespace TAU.President.Tests.Core
                 futureWorkBefore.Finance.Ledger.Entries.Count == 0,
                 "Day01 future work restore and input immutability");
 
+            // A future payable must settle exactly once on Day02 after a clean Day01.
+            // This is the Core-only path: no NPC due-event is present in this fixture.
+            var tomorrowPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-settlement", 1, 200L)
+                }));
+            var day01Prepared = DurableDay01Flow.Prepare(tomorrowPayable, 0, 0, choices);
+            AssertNamed(day01Prepared.Next.Header.BalanceKopecks == 750L &&
+                day01Prepared.Next.Payables.Outstanding.Count == 1 &&
+                day01Prepared.Next.Finance.Ledger.Entries.Count == 3,
+                "Day02 payable deferred through Day01");
+            var day02Input = day01Prepared.Next.Restore();
+            var day02Closed = DurableDayAdvance.PrepareDay(day02Input,
+                day02Input.Header.Revision, 1);
+            AssertNamed(day02Closed.Header.DayIndex == 2 &&
+                day02Closed.Header.Revision == 5 &&
+                day02Closed.Header.BalanceKopecks == 550L &&
+                day02Closed.Payables.Outstanding.Count == 0 &&
+                day02Closed.Finance.Ledger.Entries.Count == 4 &&
+                day02Closed.Finance.Ledger.Entries[3].PostingId == "payable:day02-settlement" &&
+                day02Closed.Finance.Receipts.Count == 5 &&
+                day02Closed.Finance.Receipts[4].PostingKeys.Count == 1 &&
+                day02Closed.Finance.Receipts[4].PostingKeys[0] == "payable:day02-settlement",
+                "Day02 payable settled once");
+            var day02Restored = day02Closed.Restore();
+            AssertNamed(day02Restored.Header.BalanceKopecks == 550L &&
+                day02Restored.Payables.Outstanding.Count == 0 &&
+                day02Restored.Finance.Ledger.Entries.Count == 4 &&
+                day02Restored.Finance.Receipts.Count == 5,
+                "Day02 payable restore");
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                day02Restored, day02Restored.Header.Revision, 1));
+            AssertNamed(day02Input.Header.DayIndex == 1 &&
+                day02Input.Header.BalanceKopecks == 750L &&
+                day02Input.Payables.Outstanding.Count == 1 &&
+                day02Input.Finance.Ledger.Entries.Count == 3 &&
+                tomorrowPayable.Header.DayIndex == 0 &&
+                tomorrowPayable.Finance.Ledger.Entries.Count == 0,
+                "Day02 settlement input immutability");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
