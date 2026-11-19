@@ -526,3 +526,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - This run changes only the handoff/PR verification record; no new runtime code or tests. No local .NET, Unity Editor or Android tests executed. Do not infer Core/EventDirector integration from this success.
 - **BLOCKED for EventDirector:** await concrete Core atomic scheduled-event settlement, receipt and earned-key deduplication ports; E03/E07 provenance requires Content/Core agreement. Planned art IDs are not evidence of shipped image assets.
 - Next: Core/Content review of receipt and agreement-occurrence identifiers, then one isolated integration step. No main merge.
+
+
+## 2026-11-19 — document/art fail-closed regression (#4 / #20 / #21)
+- **One bounded change:** extended existing `VisitorIdentityGoldenTests.RunAll` document-scoped asset routing negatives to reject null, empty and wrong-case planned asset IDs, retaining unknown-ID coverage. Expected output is null on failure; canonical Day01 identifiers and production code are unchanged.
+- **Test source SHA:** `50848181edf758cef833b6ad7cb7d9edc1dbe918` on `feature/npc-4`. This adds three negative inputs beyond the previously tested unknown asset (four total in that group).
+- **Actually checked:** GitHub accepted the source commit; reviewed the literal test change. **NOT RUN:** .NET golden runner for this new SHA, Unity Editor, Android build/device. Prior successful .NET workflow #44448434879 belongs to older SHA `2be35a4dd8255785b88930b84c60031d74eaedea`, not this change. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` or verify a new exact-SHA CI run.
+- **Dependencies / BLOCKED for full EventDirector:** Core-owned atomic due-event settlement/receipts/earned-key deduplication and Content/Core E03/E07 original agreement occurrence. C0-v2 PR #9, ADR PR #14/#17 and Content PR #11 remain governing unmerged contracts. Planned portrait IDs do not prove PNG availability (#21). No GameState/ledger fork, art upload, main push or merge. PR #16 remains Draft.
