@@ -53,3 +53,14 @@ test('Android successful inspect and end-day clear stale validation errors',()=>
     assert.ok(op>=0 && clear>op && paint>clear,id+' must clear stale error after success, before render');
   }
 });
+
+
+// Accessibility regression for #20: the progress count is announced as a single
+// polite status update, without moving keyboard focus after each decision.
+test('Android decision progress is a polite atomic live status',()=>{
+  assert.match(html,/<p\s+id="progress"\s+role="status"\s+aria-live="polite"\s+aria-atomic="true"\s*>\s*<\/p>/i);
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+  const ui=scripts[2];
+  assert.match(ui,/el\("progress"\)\.textContent="Решений: "\+done\.size\+" из 3"/);
+  assert.match(html,/<p\s+id="error"\s+role="alert"\s*>/i);
+});
