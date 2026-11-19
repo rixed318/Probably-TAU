@@ -574,3 +574,12 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Narrative commit: `8c3311328f1d0941d3cdb1cb0d973bf85396c8d3`.
 - Actual check: exact old contradictory sentence occurred once; replacement was verified in constructed text and GitHub accepted commit. Not run: Node CLI, CI, Unity, Android. QA 05 should verify narrative versus 27-route fixture and negative cases.
 - Status: NOT READY_FOR_OWNER_TEST; PR remains Draft, no main push/merge.
+
+
+## Автономный проход 04 — уточнение реплики ROOM (19.11.2026)
+
+**Одна задача (#7):** устранена противоречивая реплика Веры о «трёх владельцах» Л-204: теперь она называет три **предварительные заявки** и подчёркивает отсутствие подтверждённой брони. Сюжетная улика сохраняется; активные претенденты по-прежнему определяются решениями LAB/STUDENT/PARTNER, ROOM-AUTO не бронирует помещение. Только `Content/DAY_01.md`, без изменений Core, EventDirector, C0 schema, Definition ID, DayIndex или денежных сумм.
+
+- Сценарный commit: `59556ec8a3264bf2631140d2dabc1053da324184`.
+- Проверка: исходная реплика встретилась ровно один раз и была заменена; требуется отдельная повторная проверка чтением GitHub. Node CLI, CI, Unity и Android **не запускались**.
+- Статус: **NOT READY_FOR_OWNER_TEST**. QA 05 проверить реплику с 0/1/2/3 активными претендентами и соответствие `ROOM-AUTO`/`ROOM-1..4`.
