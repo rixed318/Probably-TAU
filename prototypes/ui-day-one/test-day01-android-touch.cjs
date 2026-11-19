@@ -5,6 +5,8 @@ test('Android bundle has no CSS imports, remote media, frames or runtime network
   assert.doesNotMatch(html,/url\s*\(\s*['\"]?https?:/i);
   assert.doesNotMatch(html,/<(?:iframe|object|embed|audio|video|img)\b[^>]*(?:src|data)\s*=\s*['\"]?https?:/i);
   assert.doesNotMatch(html,/\b(?:fetch\s*\(|XMLHttpRequest\b|WebSocket\s*\(|EventSource\s*\()/);
+  assert.doesNotMatch(html,/\b(?:navigator\s*\.\s*sendBeacon\s*\(|importScripts\s*\(|new\s+Worker\s*\()/i);
+  assert.doesNotMatch(html,/url\s*\(\s*['\"]?\/\//i);
   assert.doesNotMatch(html,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
 });
 
