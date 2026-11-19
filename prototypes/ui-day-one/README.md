@@ -74,6 +74,10 @@ node --test prototypes/ui-day-one/test-day01-android-touch.cjs
 
 Report findings to QA 05 and coordinator 00 in PR #12. Keep the original desktop `index.html` unchanged; never treat a passed ZIP integrity check as a completed Android playtest.
 
+### TalkBack accessibility check (physical Android only)
+
+This is a **manual acceptance procedure**, not a passed test. On an Android device with TalkBack enabled, open the **extracted** canonical `day01-android-touch.html` in a browser that permits local files. Complete one decision with swipe navigation and double-tap (without relying on color), and listen for the polite `Решений: 1 из 3` status announcement. Repeat for decisions 2 and 3. Confirm the announcement does not unexpectedly steal accessibility focus; inspect the error message after an invalid action and check whether it is announced as an alert. Record exact browser/TalkBack versions, focus order, any missing/duplicate announcement, and a screen recording if possible. A static `aria-live` attribute or headless DOM assertion **does not prove** TalkBack behavior. If the browser blocks `file://`, mark this check BLOCKED with the actual error.
+
 ### Device evidence record (copy once per physical Android test)
 
 Fill this in after testing the **extracted** `day01-android-touch.html` file, not the ZIP preview. A CI PASS or desktop emulator result must not be recorded as a physical-device PASS.
