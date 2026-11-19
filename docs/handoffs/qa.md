@@ -1268,3 +1268,20 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** PR #12 changed-file inventory has no actual PNG binaries; Issue #21 signature/dimension/manifest-SHA gate remains NOT RUN.
 - **Blocker 3:** Real Unity APK/device and integrated Save→Load remain NOT RUN; do not write SaveService until stable Core DTO/transaction snapshot boundary is reviewed.
 - **Recommended next step:** run Playwright/Chromium touch automation against the **exact** `day01-android-offline.html` at UI `6295a841bbafa7e9036868ceca91881c3dd08c2b`, record 360x800 and 800x360 geometry and all gameplay invariants; then request UI 03 to reconcile touch/offline artifact coverage. No READY_FOR_OWNER_TEST; no main push/merge.
+
+
+## 2026-11-19 — QA 05: exact-SHA UI offline CI pin refresh (#8, #20)
+
+**One bounded change:** refreshed the read-only UI checkout pin in `.github/workflows/qa-offline.yml` from `6fb678cd9e52675e03ab430ea59269ff9f5d1bcf` to PR #12 HEAD `31fc7bac62e969cc4bd1c8ab58e7038409abf42f`. Both the checkout ref and equality assertion were updated together; Core, Content, NPC pins and commands remain unchanged. Workflow commit: `a9ac9bfa30714bde89a4d82c66dd77a10abc259a` on `feature/save-6`.
+
+**Actually performed:** GitHub PR metadata reads for #9/#10/#11/#12/#14/#16; GitHub file reads for main AGENTS.md and docs/CHAT_WORKFLOW.md and QA handoff; Issues #6/#8/#20/#21; changed-file list for PR #12. Local static transformation assertions: old UI pin occurred exactly twice (PASS); new UI pin occurs exactly twice (PASS); Core pin remains unchanged (PASS). GitHub accepted the workflow commit (PASS). Local git clone attempt failed: `Could not resolve host: github.com` (BLOCKED). **GitHub Actions execution NOT VERIFIED; Node, Python regression, .NET, Chromium touch, Unity, APK, real device and Save→Load NOT RUN in this pass.** This pin does not establish any game acceptance result.
+
+**Art review:** PR #12 changed-file list has 32 files and zero PNG binaries; candidate review markdown is not a committed PNG. Do not mark Issue #21 complete or claim signatures/dimensions/hash verification.
+
+### Сводка для координатора 00 — 2026-11-19
+
+- **PR HEADs checked before handoff:** #9 Core `de78b576d314`; #10 QA new workflow `a9ac9bfa3071` (handoff commit follows); #11 Content `82a16db91225`; #12 UI `31fc7bac62e9`; #14 ADR `ebdc4be28afd`; #16 NPC `01291d5f486b`. main base observed `d673322cd9d0`. C0-v2 in #9 and ADR #14 are not treated as merged contracts.
+- **Blocker 1:** no Chromium touch acceptance for exact offline HTML at 360×800 and 800×360, including three docs, EndDay, ledger replay, partner cash, 48dp targets and overflow.
+- **Blocker 2:** PR #12 has no committed PNG binaries; 3–5 PNG signatures/dimensions/manifest SHA remain unverified.
+- **Blocker 3:** stable full snapshot DTO / real Save→Load and Unity Editor APK/device tests are not evidenced; CI result for new pin unverified.
+- **Recommended next step:** inspect GitHub Actions run for QA commit `a9ac9bfa3071` and perform actual Chromium touch tests on `day01-android-offline.html` from UI SHA `31fc7bac62e9`; report measured results, not CSS inference. Preserve main protection; no merge.
