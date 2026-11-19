@@ -545,6 +545,19 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(visitId, out screen);
         }
 
+        /// <summary>Route a planned Day01 art ID only for its matching canonical document.
+        /// Windows/Android navigation consistency only; not proof of PNG or Core authorization.</summary>
+        public static bool TryGetVisitScreenPreviewForDocumentAsset(
+            string documentId, string assetId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            Day01VisitorCard card;
+            if (!TryGetCardByPlannedAssetId(assetId, out card) ||
+                !string.Equals(card.DocumentId, documentId, StringComparison.Ordinal))
+                return false;
+            return TryGetVisitScreenPreview(card.VisitId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
