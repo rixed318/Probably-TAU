@@ -279,7 +279,7 @@ assert.equal(art.artDirection, "A");
 assert.equal(art.visits.length, fixture.visitors.length);
 const artByVisit = new Map(art.visits.map(v => [v.visitId, v]));
 assert.equal(artByVisit.size, art.visits.length);
-const assetIds = new Set();
+const artAssetIds = new Set();
 for (const visit of fixture.visitors) {
   const link = artByVisit.get(visit.visitId);
   assert.ok(link, "missing art mapping: " + visit.visitId);
@@ -289,11 +289,11 @@ for (const visit of fixture.visitors) {
   for (const field of ["portraitAssetId", "standingAssetId", "documentAssetId"]) {
     const id = link[field];
     assert.match(id, /^[a-z][a-z0-9_]*$/);
-    assert.ok(!assetIds.has(id), "duplicate asset ID: " + id);
-    assetIds.add(id);
+    assert.ok(!artAssetIds.has(id), "duplicate asset ID: " + id);
+    artAssetIds.add(id);
   }
 }
-assert.equal(assetIds.size, 9);
+assert.equal(artAssetIds.size, 9);
 // Draft content and planned art links must agree; this does not verify PNG delivery.
 const draftNpcsByVisit = new Map(contentSpec.fictionalNpcs.map(npc => [npc.visitId, npc]));
 const draftDocumentsById = new Map(contentSpec.documentTypes.map(doc => [doc.id, doc]));
@@ -315,7 +315,7 @@ console.log("PASS: Day01 art links 3/3 visits, 9 unique assets, cross-platform I
 // This checks source text only; it does not establish that PNGs exist.
 const artPrompts = fs.readFileSync(path.join(__dirname, "DAY01_ART_PROMPTS.md"), "utf8");
 const briefLines = artPrompts.split(/\r?\n/).filter(line => /^(?:## Candidate \d+ — |### |- )/.test(line));
-for (const id of assetIds) {
+for (const id of artAssetIds) {
   const matches = briefLines.filter(line => line.includes("`" + id + "`"));
   assert.equal(matches.length, 1, "expected exactly one production brief heading/bullet for " + id);
 }
