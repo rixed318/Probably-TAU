@@ -8,6 +8,38 @@ namespace TAU.President.Tests.Npc
     {
         public static void RunAll()
         {
+            // Document-scoped art routing must reject cross-document images on both platforms.
+            string[][] artByDocument =
+            {
+                new[] { "irina_korneeva_portrait_neutral", "irina_korneeva_standing", "doc01_procurement_blank" },
+                new[] { "dasha_polynskaya_portrait_neutral", "dasha_polynskaya_standing", "doc02_student_proposal_blank" },
+                new[] { "mark_sviridov_portrait_neutral", "mark_sviridov_standing", "doc03_partner_agreement_blank" }
+            };
+            string[] artDocuments = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < artByDocument.Length; i++)
+                foreach (string artId in artByDocument[i])
+                    for (int j = 0; j < artDocuments.Length; j++)
+                    {
+                        Day01Visitors.VisitScreenPreview screen;
+                        bool found = Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
+                            artDocuments[j], artId, out screen);
+                        if (found != (i == j) || (found &&
+                            (screen == null || screen.Card.DocumentId != artDocuments[i])) ||
+                            (!found && screen != null))
+                            throw new Exception("Document/art routing mismatch: " + artDocuments[j] + "/" + artId);
+                    }
+            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04" })
+            {
+                Day01Visitors.VisitScreenPreview missing;
+                if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
+                    invalid, artByDocument[0][0], out missing) || missing != null)
+                    throw new Exception("Invalid document/art route accepted.");
+            }
+            Day01Visitors.VisitScreenPreview unknownArt;
+            if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
+                "DOC-01", "unknown_asset", out unknownArt) || unknownArt != null)
+                throw new Exception("Unknown art ID accepted.");
+
             // Choice-level inspection lookup must be document-consistent even for choices
             // that do not require inspection to become eligible.
             string[][] inspectionChoiceGroups =
