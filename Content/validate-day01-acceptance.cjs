@@ -22,6 +22,8 @@ for (const event of contentSpec.eventManifest) {
 console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and feed targets");
 
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_UI_FIXTURE.json"), "utf8"));
+assert.equal(fixture.sourceSpecVersion, contentSpec.meta.specVersion,
+  "Day01 UI fixture sourceSpecVersion drift from canonical content draft");
 assert.equal(fixture.dayIndex, 0);
 // Day labels are 1-based presentation only; canonical state and reports use 0-based DayIndex.
 assert.equal(fixture.displayDay, fixture.dayIndex + 1, "Day01 display day mismatch");
