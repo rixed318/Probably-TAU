@@ -919,6 +919,17 @@ namespace TAU.President.Tests.Core
                 shortfallDay02Input.Payables.Outstanding.Count == 1 &&
                 tomorrowShortfall.Header.DayIndex == 0,
                 "Day02 shortfall restore and source immutability");
+            // A committed Day02 with insufficient cash cannot be applied twice.
+            // The outstanding debt remains, but a stale EndDay must not create
+            // a second receipt, mutate cash, or advance the day again.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                shortfallRestored, shortfallRestored.Header.Revision, 1));
+            AssertNamed(shortfallRestored.Header.DayIndex == 2 &&
+                shortfallRestored.Header.BalanceKopecks == 750L &&
+                shortfallRestored.Payables.Outstanding.Count == 1 &&
+                shortfallRestored.Finance.Ledger.Entries.Count == 3 &&
+                shortfallRestored.Finance.Receipts.Count == 5,
+                "Day02 insufficient payable stale replay leaves snapshot unchanged");
 
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
