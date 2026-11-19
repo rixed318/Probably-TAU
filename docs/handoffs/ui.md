@@ -842,3 +842,10 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 One bounded regression-test change: `prototypes/ui-day-one/test-day01-android-touch.cjs` now applies existing `sendBeacon` / `importScripts` / `new Worker` and CSS protocol-relative `url(//...)` source guards to **both** distributed Android offline HTML variants, not only `day01-android-touch.html`. Implementation commit `b7f87fcf427c9710ef0f83c0898b669227245ef1` in `feature/ui-5`. No production HTML, desktop demo, Core/GameState, Unity or art changed.
 
 Verification: live GitHub source read and authenticated test-file commit confirmed. **Node suite NOT executed** in this run; no browser, CI, real Android/TalkBack, or Unity execution. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and perform physical Android playtest before marking device-ready. Static patterns do not prove network isolation. Issue #21 office PNG still not verified as committed. PR #12 remains Draft; no main merge.
+
+
+## 2026-11-20 · Role 03 · Issue #20 · offline navigation parity
+
+One scoped test-only change: apply the existing `forbiddenNavigation` source checks to the second distributed `prototypes/ui-day-one/day01-android-offline.html` file, so both Android HTML variants reject form elements, meta-refresh, direct location/window navigation, and external anchors. The checks are static heuristics, not runtime isolation. Test source commit: `450bd1fc3aba03cbc2727b13564a244f26c53037` in `feature/ui-5`.
+
+Verification: GitHub accepted the test-file commit. Node test suite, CI, browser, physical Android/TalkBack and Unity were **not executed** in this run. Reproduce with `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; validate on device separately. Issue #21 original PNG remains a candidate, not verified in GitHub. C0-v2 PR #9 and ADR PR #14 remain integration references. No GameState/Core edits, no main push or merge; PR #12 remains Draft.
