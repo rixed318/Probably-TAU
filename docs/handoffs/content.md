@@ -624,3 +624,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `de29f216e2726f42976a3ac06fe199b699b3e241` on `feature/content-7`.
 - **Actually checked:** connector-side isolated JavaScript parsed current `CONTENT_SPEC_DRAFT.json`: 13 event manifest entries, zero self-feeds (PASS); synthetic self-feed inserted into first event detected (PASS). This is **not** a run of the checked-in Node CLI.
 - **Not run:** full Node CLI, CI, Unity, Android. QA 05: execute `node Content/validate-day01-acceptance.cjs` on exact HEAD and negative mutation for an event feeding itself. PR #11 stays Draft / NOT READY_FOR_OWNER_TEST. No Definition ID, DayIndex, kopecks, Core, main push or merge changes.
+
+
+## Проход 19.11.2026 — направленность event feeds (#7)
+
+- В `Content/validate-day01-acceptance.cjs` добавлен статический инвариант: ссылка `event.feeds` на другое событие допускается только при `target.dayIndex > source.dayIndex`. Ссылки на проекты и `CHAPTER2_HOOK` по-прежнему проверяются только на существование; runtime-планирование не реализовано.
+- Коммит проверки: `0b4a2e87ce41d83793fa1fc8fae96005c249a7b8` (ветка `feature/content-7`, PR #11).
+- Фактически выполнена независимая проверка данных JSON через JavaScript: 13 событий, 23 межсобытийные связи — PASS; отрицательный пример `E03 -> E02` (одинаковый DayIndex) отклонён — PASS. Полный Node CLI, CI, Unity и Android не запускались.
+- Риск: правило строгого увеличения DayIndex является статическим ограничением **чернового** manifest, а не утверждённой схемой EventDirector; при необходимости событий в один день согласовать отдельное изменение с 00/02.
