@@ -641,3 +641,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **Коммит валидатора:** `6b5f28d0ad3505f63fe4272d75e8e3375fb5655e`.
 
 **Фактически проверено:** независимая JS-проверка прочитанного из GitHub JSON: 13 событий / 52 choice ID, уникальность и формат PASS; синтетический дубликат обнаружен PASS. **Не запускались:** полный checked-in Node CLI, CI, Unity, Android. QA 05 должен запустить валидатор на HEAD и отрицательный тест с подменой choice ID. **NOT READY_FOR_OWNER_TEST**. Только `feature/content-7`; без merge.
+
+
+## AutoDev 04 — project launch choice references (2026-11-19)
+
+- Issue #7 / PR #11: one static guard in `Content/validate-day01-acceptance.cjs` ensures every authored `project.launchChoices` is nonempty, unique, and references an existing Day01 or E02–E14 choice Definition ID. No schema, runtime project launcher, Core, EventDirector, money or DayIndex changes.
+- Validator commit: `a35976cd9b7010c1d2c198d9dd58062c4b38553a`.
+- Actual connector-side JS baseline: P01 has 3 launch references, all resolved and unique (PASS). Full checked-in Node CLI, CI, Unity and Android not run. QA 05: execute complete validator and negative tests for unknown/duplicate project launch choice IDs. NOT READY_FOR_OWNER_TEST. No main push or merge.
