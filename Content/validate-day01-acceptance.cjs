@@ -6,6 +6,18 @@ const path = require("node:path");
 const contentSpec = JSON.parse(fs.readFileSync(path.join(__dirname, "CONTENT_SPEC_DRAFT.json"), "utf8"));
 const eventIds = contentSpec.eventManifest.map(event => event.id);
 const projectIds = contentSpec.projects.map(project => project.id);
+// Draft choice Definition IDs must not collide across different events.
+const eventChoiceIds = contentSpec.eventManifest.flatMap(event => event.choices);
+assert.equal(new Set(eventChoiceIds).size, eventChoiceIds.length,
+  "duplicate event choice Definition ID across event manifest");
+for (const event of contentSpec.eventManifest) {
+  assert.ok(Array.isArray(event.choices) && event.choices.length > 0,
+    "missing event choices: " + event.id);
+  for (const choiceId of event.choices) {
+    assert.match(choiceId, new RegExp("^" + event.id + "-[A-Z]+$"),
+      "event choice Definition ID must belong to its event: " + choiceId);
+  }
+}
 assert.equal(new Set([...eventIds, ...projectIds]).size, eventIds.length + projectIds.length,
   "duplicate event/project Definition ID");
 const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
