@@ -64,3 +64,12 @@ test('Android decision progress is a polite atomic live status',()=>{
   assert.match(ui,/el\("progress"\)\.textContent="Решений: "\+done\.size\+" из 3"/);
   assert.match(html,/<p\s+id="error"\s+role="alert"\s*>/i);
 });
+
+// Offline distribution must not silently navigate away or submit visitor decisions
+// to a remote endpoint. This is a static guard, not a browser/device test.
+test('Android touch bundle has no remote forms, redirects or external navigation',()=>{
+  assert.doesNotMatch(html,/<form\\b/i);
+  assert.doesNotMatch(html,/<meta\\b[^>]*http-equiv\\s*=\\s*["']?refresh/i);
+  assert.doesNotMatch(html, /\\b(?:location\\.(?:href|assign|replace)|window\\.open)\\s*(?:=|\\()/i);
+  assert.doesNotMatch(html, /<a\\b[^>]*href\\s*=\\s*["']?(?:https?:|\\/\\/)/i);
+});
