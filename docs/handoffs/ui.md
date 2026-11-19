@@ -709,3 +709,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Implementation commit: `b9adbe4d5a40e8f6e04e99a0acf42192ac01f81d` on `feature/ui-5`; no desktop prototype, GameState, Core or Unity API changes.
 - Actually verified: fetched original Android HTML from GitHub, matched exact old handler expressions, changed only two success paths, GitHub Contents API accepted the commit. No Node, browser, physical Android, Unity or CI run executed for this commit; no runtime PASS claimed.
 - Remaining: execute browser regression at 800×360 and 360×800, test a failed then successful action with error clearance, Android local-file playtest, and Issue #21 original pixel-art PNG review. PR #12 stays Draft; C0-v2 PR #9 and ADR PR #14 are not merged.
+
+
+## 2026-11-19 — Issue #20: stale-error regression coverage
+
+- One scoped task: add a Node source-level regression for Android touch inspect and end handlers, requiring a successful gateway call to clear #error before render(). Production HTML unchanged; this guards UI fix b9adbe4d5a40e8f6e04e99a0acf42192ac01f81d.
+- Branch feature/ui-5; test commits e074692d9a4c1a33f5310408ab310fc898ed592e (initial guard) and 32e43b210f222719fb96abffd0da786fdb1b8623 (correct inline-script capture regex). File: prototypes/ui-day-one/test-day01-android-touch.cjs.
+- Verified via GitHub Contents API: updated test file accepted and re-read; existing HTML handler ordering inspected. Node tests, CI, Chromium and physical Android NOT executed for these commits; no runtime PASS claimed. This is static regression coverage, not proof of touch behavior.
+- Next: run node --test prototypes/ui-day-one/test-day01-android-touch.cjs and check fresh CI; then actual Android device playtest. Issue #21 still needs original PNG generation, binary upload and owner art review. C0-v2 PR #9 / ADR PR #14 not merged. No changes to GameState/Core or main.
