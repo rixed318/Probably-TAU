@@ -18,6 +18,11 @@ for (const event of contentSpec.eventManifest) {
   for (const target of event.feeds) {
     assert.ok(validTargets.has(target), "unknown event/project feed: " + event.id + " -> " + target);
     assert.notEqual(target, event.id, "event cannot feed itself: " + event.id);
+    const nextEvent = contentSpec.eventManifest.find(candidate => candidate.id === target);
+    if (nextEvent) {
+      assert.ok(nextEvent.dayIndex > event.dayIndex,
+        "event feed must point to a later DayIndex: " + event.id + " -> " + target);
+    }
   }
 }
 console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and feed targets");
