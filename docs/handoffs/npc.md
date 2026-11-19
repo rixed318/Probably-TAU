@@ -1,6 +1,6 @@
 # Chat 02 — NPC/EventDirector handoff
 
-**Updated:** 2026-11-19. **Issues:** #4, #18. **Branch:** `feature/npc-4`. **PR:** #16 (Draft). **Status:** immutable Day01 visitor models, typed condition evaluator, read-only choice/document adapters and golden tests implemented; full EventDirector integration BLOCKED on Core atomic settlement/receipt/earned-key ports. Content typed predicates are implemented as a proposed adapter, not an approved runtime wire schema. Latest verified NPC .NET golden CI: `01291d5f486b9cfc9813f27943ddbaf98f13b730` — [Actions #44528775443](https://github.com/rixed318/Probably-TAU/actions/runs/44528775443) `completed/success`; Unity/PlayMode and Android NOT RUN.
+**Updated:** 2026-11-19. **Issues:** #4, #18. **Branch:** `feature/npc-4`. **PR:** #16 (Draft). **Status:** immutable Day01 visitor models, typed condition evaluator, read-only choice/document adapters and golden tests implemented; full EventDirector integration BLOCKED on Core atomic settlement/receipt/earned-key ports. Content typed predicates are implemented as a proposed adapter, not an approved runtime wire schema. Latest verified NPC .NET golden CI: `b96ba7ec15378d1d2e5c17800b427072835ac322` — [Actions #44545966216](https://github.com/rixed318/Probably-TAU/actions/runs/44545966216) `completed/success`; Unity/PlayMode and Android NOT RUN.
 
 ## Completed in this run
 - Reviewed main README, AGENTS, CHAT_WORKFLOW, GDD and ARCHITECTURE; Core Gate C0-v2 in PR #9 and ADR-C0-001 in PR #14; Content PR #11 and its `CONTENT_SPEC_DRAFT.json`.
@@ -558,3 +558,9 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **One bounded task:** verified branch HEAD `6f9076b78366f1a4355b46f90f4e0eac72c4edef` against GitHub Actions run [#44513994487](https://github.com/rixed318/Probably-TAU/actions/runs/44513994487): `completed/success`. This is the GitHub NPC .NET workflow result associated with the pre-handoff SHA, not Unity Editor, Windows player, Android APK or device testing.
 - **Scope:** synchronize the stale PR #16 verification text and this handoff with the current verified workflow. No C# production source, assertions, Core, ledger, Content IDs or art changed. The documentation commit produced by this update is not itself covered by the verified earlier SHA.
 - **BLOCKED for EventDirector:** Core 01 atomic scheduled-event settlement/receipt/earned-key deduplication ports and Content/Core E03/E07 original agreement occurrence provenance. C0-v2 PR #9 and ADR PR #14/#17 govern feature work only; no main merge. Planned portrait asset IDs (#21) are not actual PNG evidence.
+
+## 2026-11-19 — exact-head CI status, no runtime integration (#4 / #20)
+- **One bounded verification task:** checked `feature/npc-4` at `b96ba7ec15378d1d2e5c17800b427072835ac322`. GitHub Actions [NPC golden run #44545966216](https://github.com/rixed318/Probably-TAU/actions/runs/44545966216) reports `completed/success` (run 234) for that SHA. This is a GitHub .NET workflow result, not Unity/Windows/Android validation.
+- **Scope:** verified CI and recorded provenance; no NPC runtime/Content/Core, test assertions, asset files or mutable state changed. This documentation update has a later SHA not covered by the reported run. No local tests executed.
+- **Integration remains BLOCKED:** require Core-owned atomic due-event settlement, durable receipt and earned-key deduplication API; E03/E07 original agreement occurrence provenance from Core/Content. C0-v2 PR #9 and ADR PR #14/#17 remain unmerged. No main push/merge; PR #16 remains Draft.
+
