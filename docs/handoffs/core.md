@@ -557,3 +557,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 ## Core 01 — exact-head CI verification (19.11.2026)
 
 **Issue #19 / PR #9 / `feature/core-2`.** Verified GitHub Actions `Core .NET 8 golden tests` run [#44431140510](https://github.com/rixed318/Probably-TAU/actions/runs/44431140510): `status=completed`, `conclusion=success` for commit `1c5cf0064133a13c59a468750343321819e794ac`. This verifies the previously failing staggered Day01 payable-report assertion after test correction (`Count == 1` with future DueKey `day02-future`) in the standalone CI suite; it does **not** verify Unity Editor compilation, Unity EditMode/PlayMode, Android packaging, or NPC integration. No new C# changes in this verification pass; CI validation is the single bounded task. Local environment check: dotnet/mono/csc/Unity Editor/adb/sdkmanager absent; Java present. Android APK remains BLOCKED by missing real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK toolchain verification. Follow-up P0: approved NPC/Core typed due-event integration and Day01 document binding, with QA/00 review; no main merge or Issue closure.
+
+
+## Core 01 — simultaneous future event and payable Day01 regression (19.11.2026)
+
+- Issue #19 / PR #9 / branch `feature/core-2`. Test commit `37877bc41ee9872470d8d728eacf69d5867b9106`.
+- Added one bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: a scheduled NPC event and a mandatory payable both due on DayIndex=1 survive three approved Day01 decisions and EndDay on DayIndex=0. Day01 cash stays at 750 kopecks; no payable posting is generated; the report still projects the future outstanding payable. Both survive Restore, the event is not marked completed, and original input is immutable.
+- No production API, financial policy, event handler, NPC/Content/UI changes, or fabricated Unity project. This does **not** implement due-event consumption.
+- Local toolchain check: `dotnet`, Unity Editor, Android SDK/NDK/adb unavailable; Java/Javac available. Local .NET golden tests, Unity build and Android APK **NOT RUN**. Exact-head CI verification and QA/00 review required; do not claim PASS before workflow success. No main push, merge, or Issue closure.
