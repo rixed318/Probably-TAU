@@ -128,7 +128,7 @@ jobs:
       - name: Checkout exact UI artifact revision read-only
         uses: actions/checkout@v4
         with:
-          ref: 4c8666f24117d3e7dd8c0ba06308fca8894112f9
+          ref: 231ce3c671e5256033dfe93eadc56e762602342e
           path: ui-source
           persist-credentials: false
       - name: Assert UI revision and parse distributed inline scripts
@@ -136,7 +136,7 @@ jobs:
         run: |
           actual=$(git -C ui-source rev-parse HEAD)
           echo "UI_ARTIFACT_SHA=$actual"
-          test "$actual" = "4c8666f24117d3e7dd8c0ba06308fca8894112f9"
+          test "$actual" = "231ce3c671e5256033dfe93eadc56e762602342e"
           node --test Tests/QA/test_android_offline_artifact.cjs
 
   core-ledger-regression:
