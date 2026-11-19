@@ -37,6 +37,18 @@ for (const project of contentSpec.projects) {
     }
   }
 }
+// Project monetary proposals must use signed Int64 decimal-string kopecks, not JSON numbers.
+// This is content validation only; Core owns actual project payments and ledger postings.
+for (const project of contentSpec.projects) {
+  for (const [key, value] of Object.entries(project)) {
+    if (!key.endsWith("Kopecks")) continue;
+    assert.equal(typeof value, "string", "project money must be a decimal string: " + project.id + "/" + key);
+    assert.match(value, /^(0|-?[1-9][0-9]*)$/, "invalid project kopecks: " + project.id + "/" + key);
+    const amount = BigInt(value);
+    assert.ok(amount >= -(1n << 63n) && amount <= (1n << 63n) - 1n,
+      "project kopecks exceed Int64: " + project.id + "/" + key);
+  }
+}
 const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
 for (const event of contentSpec.eventManifest) {
   assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
