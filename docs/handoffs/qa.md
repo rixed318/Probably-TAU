@@ -1142,3 +1142,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** latest Day01 single-file HTML Chromium touch acceptance 360×800/800×360 (three docs, EndDay, ledger, no immediate partner cash, 48dp and overflow) not performed.
 - **Blocker 3:** real PNG binary/signature/dimension/hash verification, Unity APK/device and integrated Save→Load not verified; stable complete DTO dependency remains.
 - **Recommended next step:** NPC 02 rename the nested variable and provide exact-SHA passing .NET 8 test; QA can then update pinned NPC SHA and rerun CI, followed by mobile Chromium acceptance. READY_FOR_OWNER_TEST not granted. No merge/main push.
+
+
+## 2026-11-19 04:20 UTC+4 — QA 05: Android build/signing checklist (#8, #20)
+
+**One bounded task:** created docs/QA_ANDROID_BUILD_CHECKLIST.md in feature/save-6 at commit 476c787c5c07ae2ce85058272f07712e170616f4. Checklist specifies immutable source SHA, real PNG binary signature/dimension/SHA-256 checks, Unity 6 Android module/build and APK SHA evidence, signing-key secrecy, distinct Chromium and real APK gates, 48dp touch/overflow, three documents, EndDay, ledger replay and no immediate partner cash. No new GameState contract or SaveService. No files in other branches changed.
+
+**Actually performed:** GitHub reads of main README.md, AGENTS.md, docs/CHAT_WORKFLOW.md, docs/DECISIONS.md, QA handoff, Issues #6/#8, PR #9/#10/#11/#12/#14/#16 metadata and NPC source; static content assertion on the new checklist PASS. Python, Node, dotnet, Chromium, Unity Editor, Android APK/device, PNG binary and Save→Load tests **NOT RUN**. Checklist is not a passing acceptance result.
+
+### Сводка для координатора 00 — 2026-11-19 04:20 UTC+4
+
+- **Observed PR HEADs before QA write:** #9 Core 38dd6eb3f8b70d95cf8eb2c705e578fb4330f78a; #10 QA 3117ebfa1e256d985ce1f621c5bceb25e89cc929 (followed by checklist commit 476c787c5c07ae2ce85058272f07712e170616f4 and this handoff); #11 Content 50641581f5ea9addcddda324c9da477416ccb37e; #12 UI aa7b9e73a135045109e4b8984ea31634830a3e92; #14 ADR ebdc4be28afd56e82bc14ca397af88376ae59d20; #16 NPC 5cb02d4f831c77874ba547830bb76734cfd4df0d. Recheck moving heads before integration.
+- **Blocker 1:** No fresh passing exact-SHA NPC .NET test evidence; earlier CS0136 risk needs compiler verification, not inference from prior scan.
+- **Blocker 2:** Chromium touch acceptance at 360x800/800x360 on latest single-file Day01 HTML not run.
+- **Blocker 3:** Actual PNG signatures/hashes, Unity Editor APK/device and complete Core DTO Save→Load remain unverified.
+- **Recommended next step:** run the latest Day01 HTML Chromium mobile acceptance and attach exact UI SHA/logs; in parallel NPC owner supplies passing exact-SHA dotnet evidence. Unity build and real Android device testing only after actual Unity APK. READY_FOR_OWNER_TEST not assigned; no merge/main push.
