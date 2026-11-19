@@ -1236,3 +1236,20 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** Chromium touch acceptance at 360×800 and 800×360 on latest exact single-file Day01 HTML remains NOT RUN (three documents, EndDay, ledger replay, deferred partner cash, 48dp and overflow unverified).
 - **Blocker 3:** latest-HEAD .NET/Node CI pins remain stale; Unity APK/device and integrated Save→Load unverified, with stable Core DTO prerequisite for real SaveService.
 - **Recommended next step:** UI 03 commit first 3–5 original PNG binaries in PR #12 with manifest source_file and SHA-256; QA then verify PNG signature, IHDR dimensions and exact SHA. Independently prioritize Chromium touch test on the latest HTML. Keep READY_FOR_OWNER_TEST withheld.
+
+
+## 2026-11-19 — QA 05: exact-SHA Android offline HTML source audit (#8, #20)
+
+**One bounded task:** read `prototypes/ui-day-one/day01-android-offline.html` directly from UI PR #12 at exact commit `da5a1ec9ccf372c0586a0536626ed6d65b1f49da` (GitHub blob `5fd425b0b683353fcf5a1e83339426679b457126`). Source has 56,675 JavaScript-string characters / 793 lines. In a literal source-pattern audit: 2 inline script tags, 0 external script `src` attributes, 0 external stylesheet links, 0 matches for direct `fetch/XMLHttpRequest/WebSocket/EventSource` calls, and viewport, touch handling, EndDay and ledger markers present. **Static source-pattern PASS only; no browser execution or gameplay correctness inferred.** No `partner` literal was matched; this is not evidence that partner cash behavior is correct or incorrect.
+
+UI PR #12 changed-file list currently contains **zero PNG files** (30 paths returned); binary PNG signature/dimensions/SHA validation remains NOT RUN. Existing C0-v2 PR #9 and ADR PR #14 remain open; no new architecture or GameState model proposed.
+
+**Actual tests this pass:** connector-backed source-pattern audit (PASS on the patterns above); PR changed-file inventory (PASS, 0 PNG). Python/Node/.NET/Chromium/Unity Editor/Android APK/Save→Load **NOT RUN**. In particular, 360×800 portrait and 800×360 landscape touch acceptance, 3 docs, EndDay, ledger replay, no immediate partner cash, actual 48dp targets/overflow are NOT RUN. Do not mark READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-19
+
+- **Latest checked PR heads before QA commit:** #9 `a297b394677a9a34ab8272be3d673f56570eea2a`; #10 `99d4d9cab364aa38052a962bdddb1b1b4ed22b13` (this handoff update creates the new QA HEAD); #11 `b46af4ca1ffbf39bfc192b55a0030780090e1a8b`; #12 `da5a1ec9ccf372c0586a0536626ed6d65b1f49da`; #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 `a5e45120e6a1787a17906ef86dc0f5148619e9e6`. All these PRs are open/draft at inspection.
+- **Blocker 1:** Browser touch acceptance on exact latest Day01 HTML is not run; static source patterns do not verify UI geometry, three documents, EndDay, replay or partner-cash invariants.
+- **Blocker 2:** PR #12 has no real PNG binaries in its changed-file inventory; original-art validation (3–5 PNG signatures, dimensions, manifest SHA) cannot be completed.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load are not verified; Core snapshot DTO readiness still requires explicit review.
+- **Recommended next step:** run Chromium touch emulation at 360×800 and 800×360 on UI SHA `da5a1ec9ccf372c0586a0536626ed6d65b1f49da` with recorded gameplay assertions and element bounds; ask UI 03 to commit real original PNG files for Issue #21 before asset acceptance. Keep main protected; no merge.
