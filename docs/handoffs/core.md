@@ -575,3 +575,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Verified preceding HEAD `4323078d6c15de8a1a32386ca108e3cc7ec65f02` via [Core .NET 8 golden run #44466951168](https://github.com/rixed318/Probably-TAU/actions/runs/44466951168): completed/success. **New test SHA CI not yet verified**; do not claim its PASS until exact-head run completes.
 - Local toolchain check: `dotnet`, `mono`, `csc`, Unity Editor, `adb`, `sdkmanager` unavailable; Java/Javac available. Local C# tests and Unity/Android build NOT RUN; real APK BLOCKED by missing Unity 6.3 LTS Editor and Android SDK/NDK/Build Support.
 - Next: exact-head CI + QA/00 review, approved typed NPC event handler contract for Day01/EndDay. No main push, merge, or Issue closure.
+
+
+## Core 01 — exact-head Day02 deferred payable CI verification (19.11.2026)
+
+- Issue #19 / PR #9 / `feature/core-2`. One bounded verification task: checked GitHub Actions `Core .NET 8 golden tests` run [#44479241744](https://github.com/rixed318/Probably-TAU/actions/runs/44479241744), `status=completed`, `conclusion=success`, associated with code/handoff HEAD `d3b7bca3195bc9c9baabde31d2232d292b0594a4` (test commit `4af4bd394c0a0b3fae0723aa506e4cddc9803491`). Thus the new Day02 deferred-payable golden regression passed in CI; no C# code changes needed for this pass.
+- Local toolchain rechecked: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` present. No local C# tests, Unity Editor compilation, Windows player build or Android APK. Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK verification and native APK remain BLOCKED.
+- Remaining P0: approved typed NPC due-event transaction contract / Core EndDay integration, canonical Day01 content binding, independent QA/00 review. No new API or other subsystem changes, no push/merge to main, no Issue closure.
