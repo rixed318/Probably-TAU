@@ -624,3 +624,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Bounded task this pass: verify exact-HEAD CI and record evidence; no C# source, contract, NPC/UI/QA or economy changes. Independent QA/00 review and approved typed due-NPC event transaction remain pending.
 - Toolchain check in current runtime: `dotnet`, `Unity`, `unity-editor`, `adb`, `sdkmanager` absent; `javac` available. Local C# tests, Unity Editor/Windows build and Android APK NOT RUN. Android remains BLOCKED on real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK verification.
 - No push/merge to `main`, PR merge or Issue closure.
+
+
+## Core 01 — CI verification for 20.11.2026
+
+- Issue #19 / PR #9 / branch `feature/core-2`. Verified exact previous HEAD `bd8db10c0562ebcaedad27bf1a0ec6fb25d9a272` with [Core .NET 8 golden run #44593617110](https://github.com/rixed318/Probably-TAU/actions/runs/44593617110): `completed/success`, run 241. This validates standalone .NET tests only, not Unity compilation or an APK.
+- One bounded verification task; no new C# code, API or economic-policy changes. NPC due-event transaction remains dependent on coordinated typed handler contract and QA/00 review. Avoid creating speculative public interfaces.
+- Current runtime: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET tests, Windows/Unity build and Android APK NOT RUN; Android BLOCKED on Unity 6.3 LTS Editor plus Android Build Support/SDK/NDK/OpenJDK validation.
+- No main push/merge, PR merge or Issue closure. Subsequent CI for this documentation-only HEAD is not claimed successful.
