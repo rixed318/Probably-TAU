@@ -28,6 +28,31 @@ namespace TAU.President.Tests.Npc
                             (!found && screen != null))
                             throw new Exception("Document/art routing mismatch: " + artDocuments[j] + "/" + artId);
                     }
+            // A document-scoped art tap must preserve the complete canonical screen,
+            // including inspection hint and ordered choices, not just the visitor card.
+            for (int scopedIndex = 0; scopedIndex < artDocuments.Length; scopedIndex++)
+            {
+                Day01Visitors.VisitScreenPreview scopedCanonicalScreen;
+                if (!Day01Visitors.TryGetVisitScreenPreviewByDocumentId(
+                    artDocuments[scopedIndex], out scopedCanonicalScreen) || scopedCanonicalScreen == null)
+                    throw new Exception("Canonical document screen missing: " + artDocuments[scopedIndex]);
+                foreach (string scopedAssetId in artByDocument[scopedIndex])
+                {
+                    Day01Visitors.VisitScreenPreview scopedArtScreen;
+                    if (!Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
+                        artDocuments[scopedIndex], scopedAssetId, out scopedArtScreen) ||
+                        scopedArtScreen == null ||
+                        scopedArtScreen.Card.VisitId != scopedCanonicalScreen.Card.VisitId ||
+                        scopedArtScreen.Inspection.InspectionId != scopedCanonicalScreen.Inspection.InspectionId ||
+                        scopedArtScreen.Inspection.CostTokens != scopedCanonicalScreen.Inspection.CostTokens ||
+                        scopedArtScreen.Choices.Count != scopedCanonicalScreen.Choices.Count)
+                        throw new Exception("Document art screen metadata mismatch: " + scopedAssetId);
+                    for (int scopedChoiceIndex = 0; scopedChoiceIndex < scopedCanonicalScreen.Choices.Count; scopedChoiceIndex++)
+                        if (scopedArtScreen.Choices[scopedChoiceIndex].ChoiceId !=
+                            scopedCanonicalScreen.Choices[scopedChoiceIndex].ChoiceId)
+                            throw new Exception("Document art choice order mismatch: " + scopedAssetId);
+                }
+            }
             foreach (string invalid in new[] { null, "", "doc-01", "DOC-04" })
             {
                 Day01Visitors.VisitScreenPreview missingDocumentArtScreen;
