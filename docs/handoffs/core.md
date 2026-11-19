@@ -632,3 +632,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - One bounded verification task; no new C# code, API or economic-policy changes. NPC due-event transaction remains dependent on coordinated typed handler contract and QA/00 review. Avoid creating speculative public interfaces.
 - Current runtime: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET tests, Windows/Unity build and Android APK NOT RUN; Android BLOCKED on Unity 6.3 LTS Editor plus Android Build Support/SDK/NDK/OpenJDK validation.
 - No main push/merge, PR merge or Issue closure. Subsequent CI for this documentation-only HEAD is not claimed successful.
+
+
+## Core 01 — exact-head CI verification (20.11.2026, 02:19 Samara)
+
+- Issue #19 / PR #9 / `feature/core-2`: GitHub Actions [Core .NET 8 golden tests #44610651034](https://github.com/rixed318/Probably-TAU/actions/runs/44610651034) for prior exact HEAD `b2d8aa9bc3e4762046a1ba8099606f5f67456429` returned `completed/success`. Standalone .NET CI only, not Unity Editor verification.
+- One bounded verification task; no C# code, public contract, NPC/UI/Content or economy changes. Typed NPC due-event EndDay transaction remains pending agreed interface and QA/00 review; do not invent event API.
+- Current environment checked: `dotnet`, `csc`, `mcs`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` available. Local C# tests, Unity Editor/Windows and Android APK builds NOT RUN. Native Android BLOCKED on verified Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK.
+- No main push, merge or Issue closure. CI for this handoff-only commit must be checked separately.
