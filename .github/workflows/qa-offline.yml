@@ -134,7 +134,9 @@ jobs:
       - name: Assert UI revision and parse distributed inline scripts
         shell: bash
         run: |
-          test "$(git -C ui-source rev-parse HEAD)" = "4c8666f24117d3e7dd8c0ba06308fca8894112f9"
+          actual=$(git -C ui-source rev-parse HEAD)
+          echo "UI_ARTIFACT_SHA=$actual"
+          test "$actual" = "4c8666f24117d3e7dd8c0ba06308fca8894112f9"
           node --test Tests/QA/test_android_offline_artifact.cjs
 
   core-ledger-regression:
