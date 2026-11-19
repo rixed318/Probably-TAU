@@ -734,3 +734,11 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Implementation commit: `c1cec6f96e7b83cf1a39c9013d54d698d7935958` on `feature/ui-5`.
 - Actually verified: GitHub Contents API accepted the README update; no automated test, Android hardware, Chromium or Unity Editor executed for this documentation-only change. All device cases remain UNTESTED, not PASS.
 - Next: QA/owner should fill the evidence record against the latest successful Android artifact. Issue #21 still requires real original PNGs; no Core/GameState/main changes, PR #12 remains Draft.
+
+
+## 2026-11-19 — Issue #20: accessible Day01 decision progress
+
+- **One scoped change:** `prototypes/ui-day-one/day01-android-touch.html` progress counter (`Решений: N из 3`) now has `role="status" aria-live="polite" aria-atomic="true"`. The existing `render()` text updates can be announced to assistive technologies without stealing focus; no visual design, mock gameplay, Core/GameState, or desktop demo changes.
+- **Implementation commit:** `7792aea3a08d9afd0350b7b8abfa5caa9ea1f814` on `feature/ui-5` (PR #12). This is a web accessibility improvement, **not** proof of Android TalkBack behavior.
+- **Actual verification:** live GitHub source read before edit; exactly one `id="progress"` element replaced; GitHub accepted the commit. No Node/browser/physical Android/TalkBack/Unity tests executed in this pass; all runtime accessibility checks remain UNTESTED.
+- **Follow-up:** QA/owner should check TalkBack announcement after each decision and ensure no duplicate/spam announcements in Android Chrome; execute L1/L2/P1/P2/S1/T1/O1 on device. Issue #21 original PNGs remain outstanding. C0-v2 PR #9 and ADR PR #14 are not merged; no main push or merge.
