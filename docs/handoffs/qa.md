@@ -1331,3 +1331,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Chromium touch acceptance for exact distributed offline HTML at 360×800 and 800×360 (3 docs, EndDay, ledger replay, no partner immediate cash, 48dp/overflow) remains NOT RUN.
 - **Blocker 3:** real PNG signatures/dimensions/manifest hashes, Unity Editor/APK and integrated Save→Load remain unverified.
 - **Recommended next step:** inspect the new QA Actions run at the new QA commit and verify NPC compile; then run browser touch acceptance. Real Android device/APK tests remain NOT RUN until an actual Unity Editor-built APK exists.
+
+
+## 2026-11-20 — QA 05: verified exact-SHA GitHub Actions result (#8)
+
+**One bounded independent verification (no code changes):** GitHub Actions run [44590015341](https://github.com/rixed318/Probably-TAU/actions/runs/44590015341) for QA commit `d75c5fda2e5f8030e0618195380750bed5abd291` reports **completed / success**. Independently fetched its jobs: all five are **completed / success**: Core ledger/snapshot .NET 8, Python PCG32 oracle, distributed Android HTML static gate, NPC standalone .NET 8, UI+Content static regression. This confirms the previously unverified NPC pin fix at the tested QA SHA. GitHub Actions results are remote CI evidence, **not locally executed tests**; individual assertions beyond job conclusions are not inferred.
+
+**Actual operations:** read main README.md, AGENTS.md, docs/CHAT_WORKFLOW.md; read QA handoff and workflow on `feature/save-6`; checked Issues #6/#8/#20/#21 and PR #9/#10/#11/#12/#14/#16; fetched exact QA commit's workflow runs and job conclusions; inspected PR #12 changed filenames (no .png). No local Python/Node/.NET, Chromium, Unity, APK, Android device or Save→Load tests run in this pass. No new GameState contract or SaveService; C0-v2 in PR #9 and ADR PR #14 remain feature-development references only.
+
+### Сводка для координатора 00 — 2026-11-20
+
+- **Verified QA:** PR #10 tested commit `d75c5fda2e5f8030e0618195380750bed5abd291`; Actions run 44590015341: **5/5 jobs SUCCESS**. This handoff-only commit follows. **Other PR last recorded heads (not revalidated as exact HEAD today):** #9 `acaf0b59`, #11 `9fb8749b`, #12 `c1e8af68`, #14 `ebdc4be2`, #16 `bc39db86`. Never treat these as fresh SHA pins; query GitHub before further CI refresh or integration.
+- **Blocker 1:** Chromium touch acceptance on exact latest distributed Day01 HTML (360×800 and 800×360; 3 docs, EndDay, ledger replay, no partner immediate cash, 48dp targets and overflow) **NOT RUN**.
+- **Blocker 2:** PR #12 changed-file list still contains **zero PNG files** at inspection; 3–5 PNG binary signatures/dimensions/manifest SHA not verifiable.
+- **Blocker 3:** Unity Editor Android APK/real-device tests and integrated Save→Load remain **NOT RUN / NOT VERIFIED**; stable Core DTO integration still requires coordination.
+- **Recommended next step:** run Chromium touch acceptance on latest single-file HTML at a recorded exact UI SHA; do not call WEB_READY or READY_FOR_OWNER_TEST on static CI alone. Keep main protected; no merge.
