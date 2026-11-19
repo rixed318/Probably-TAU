@@ -502,3 +502,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 **Test source commit:** `9fdffe72098c4d560fc09030cfbe6c4925850abe` on `feature/npc-4`, `Tests/Npc/VisitorIdentityGoldenTests.cs`. **Verification:** GitHub accepted the source update. **NOT RUN:** .NET golden runner, Unity Editor, Windows or Android builds; no passing test claim. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. Handoff commit is the subsequent branch HEAD.
 
 **Dependencies / BLOCKED:** EventDirector still requires Core atomic settlement, persisted event receipts and earned-key deduplication; E03/E07 source identity must be reconciled with Content. Planned art IDs do not establish real PNG availability or asset ownership. PR #16 stays Draft; main unchanged.
+
+
+## AutoDev 02 — document-scoped Day01 art routing (2026-11-19)
+
+- **One bounded production increment (#4/#20/#21):** `Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(documentId, assetId, out screen)` returns the existing read-only visit screen only when a canonical document and planned portrait/standing/document art ID belong to the same Day01 visitor. It fails closed on unknown, null or cross-document IDs. Pure C#, no UnityEngine, GameState, ledger, Core command or PNG assumption.
+- **Commits on feature/npc-4:** production `e3455a34e2fdf54900232d137572dbd8d0845a1c`; test additions `9a086555fc17b5b3a4a04ac9b4600ed0ee223d8e`; canonical partner fixture correction `1c4a08363ed4a357043d819ddb9f0f3710b712d1`. 27 positive/cross-document combinations plus five negative inputs are encoded as assertions.
+- **Actual verification:** GitHub accepted source updates; manually compared partner art ID against existing golden fixture. **NOT RUN:** dotnet runner, Unity Editor, Android build/device, CI at final HEAD. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` in .NET 8 environment.
+- **Dependencies/BLOCKED for EventDirector:** Core-owned atomic settlement/receipts/earnedId deduplication, E03/E07 provenance and original agreement occurrence with Content. C0-v2 PR #9, ADR PR #14/#17 and Content PR #11 govern feature development pending integration. Content/UI #21 own original art; planned IDs do not establish actual PNG existence. PR #16 Draft; no main push/merge.
