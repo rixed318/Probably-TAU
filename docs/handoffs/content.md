@@ -648,3 +648,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Issue #7 / PR #11: one static guard in `Content/validate-day01-acceptance.cjs` ensures every authored `project.launchChoices` is nonempty, unique, and references an existing Day01 or E02–E14 choice Definition ID. No schema, runtime project launcher, Core, EventDirector, money or DayIndex changes.
 - Validator commit: `a35976cd9b7010c1d2c198d9dd58062c4b38553a`.
 - Actual connector-side JS baseline: P01 has 3 launch references, all resolved and unique (PASS). Full checked-in Node CLI, CI, Unity and Android not run. QA 05: execute complete validator and negative tests for unknown/duplicate project launch choice IDs. NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+
+## 2026-11-20 — Day01 choice roster guard (Issue #7)
+
+- Добавлена строгая сверка полного набора `Definition ID` вариантов каждого посетителя между `CONTENT_SPEC_DRAFT.json` и `DAY01_UI_FIXTURE.json`: лишние UI-варианты теперь запрещены наряду с пропущенными. Контракт только контентный; C0-v2/ADR #9/#14 и Core/EventDirector не изменены.
+- Коммит валидатора: `ff8f1435716fbb0f3a0a914cba15eec64f062a30` (`feature/content-7`).
+- Проверки: изменение и наличие assertion проверены в исходном тексте перед записью; полный Node CLI/CI/Unity/Android пока не выполнялись. QA 05: запустить валидатор и отрицательную мутацию с лишним choiceId. Статус: NOT READY_FOR_OWNER_TEST.
