@@ -602,3 +602,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Не запускались:** `node Content/validate-day01-acceptance.cjs` на checkout, отрицательные тесты, CI, Unity, Android.
 - **QA 05:** запустить полный Node CLI и проверить все сценарные/арт-инварианты на точном HEAD. До этого `NOT READY_FOR_OWNER_TEST`.
 - Никаких изменений Core/EventDirector, C0/ADR, `DayIndex`, Definition ID, денег, `main`; merge не выполнялся.
+
+
+## AutoDev 04 — Day01 document Definition ID roster guard (2026-11-19)
+
+- **One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` now rejects duplicate canonical document Definition IDs and missing/extra document IDs between `CONTENT_SPEC_DRAFT.json` and `DAY01_UI_FIXTURE.json`. This closes a gap where extra canonical document definitions were silently ignored. No C0 schema, Core, EventDirector, monetary, DayIndex, art or scenario changes.
+- Validator commit: `cf52f5d8e8a5855ffec1c577f69d8c2057994693` on `feature/content-7`.
+- **Actually checked:** connector-side JS baseline document ID parity (3/3 PASS), injected extra ID detected (PASS), injected duplicate ID detected (PASS). GitHub accepted commit. **Not executed:** checked-in Node CLI, CI, Unity, Windows or Android.
+- **QA 05 next:** run `node Content/validate-day01-acceptance.cjs` at this HEAD and negative cases (duplicate and extra document ID). PR #11 remains Draft / NOT READY_FOR_OWNER_TEST; no main push or merge.
