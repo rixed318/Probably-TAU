@@ -1359,3 +1359,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Original 3–5 PNG binaries and manifest signature/dimension/hash verification **NOT VERIFIED** at current UI SHA; prior PR review found zero PNG, but this pass did not re-audit its file list.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load **NOT RUN**; do not infer readiness from standalone .NET/Node tests.
 - **Recommended next step:** Run Chromium touch acceptance on the exact latest `day01-android-offline.html` from UI HEAD `d5be01a2a415`; record screenshots, interaction results and measured touch sizes. No main push/merge, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — QA 05: refresh exact-SHA Android HTML static gate (#8, #20)
+
+**One bounded change:** updated only the two UI artifact SHA references (read-only checkout and equality assertion) in `.github/workflows/qa-offline.yml` from `4c8666f24117d3e7dd8c0ba06308fca8894112f9` to latest inspected PR #12 HEAD `231ce3c671e5256033dfe93eadc56e762602342e`. Workflow commit: `1e94842500c09aa85bbffd7ac15c233af69fc4a4` in `feature/save-6`. Verified through GitHub fetch that `prototypes/ui-day-one/day01-android-offline.html` exists at the new exact SHA (blob `5fd425b0b683353fcf5a1e83339426679b457126`); inspected its initial viewport/CSS lines. The replacement count was exactly **2/2**. This is source inspection and a pin update, **not** an executed HTML/Node/Chromium test. New GitHub Actions result **NOT VERIFIED**; local Python, Node, .NET, Chromium and Unity **NOT RUN**. Android APK/device **NOT RUN**. No SaveService, alternative GameState, contract approval or merge.
+
+### Сводка для координатора 00 — 2026-11-20 (QA pin refresh)
+
+- **Fresh GitHub PR HEADs before QA update:** #9 Core `2779ea1a0003bc8d30e6504b092b16f2593136ff`; #10 QA `74add3d21147a655b8a94a3c0e707754e0b75a6b` (new workflow commit `1e94842500c09aa85bbffd7ac15c233af69fc4a4`, this handoff follows); #11 Content `6507a99bbb0fd9c0912789dbaec5baebcdd9b17b`; #12 UI `231ce3c671e5256033dfe93eadc56e762602342e`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `23af70e0cf7b8ef84835d3c491b49ac51cd62fe3`. Main base `d673322cd9d0d366a27a57b81056504dfb26c731`. C0-v2/ADR authorize feature work only.
+- **Blocker 1:** New CI at updated UI artifact pin has not been checked for a completed result; Chromium touch 360×800 and 800×360 (3 docs, EndDay, ledger replay, deferred partner cash, 48dp/overflow) **NOT RUN**.
+- **Blocker 2:** Actual original 3–5 PNG signatures/dimensions/manifest SHA remain **NOT VERIFIED** for latest UI HEAD.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load remain **NOT RUN**; no stable final Core DTO integration confirmed.
+- **Recommended next step:** check QA Actions at new QA SHA, then run actual Chromium touch acceptance on the exact distributed HTML at UI SHA `231ce3c6`; do not claim READY_FOR_OWNER_TEST from static checks.
