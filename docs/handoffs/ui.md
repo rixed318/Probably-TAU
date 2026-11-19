@@ -803,3 +803,16 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 - PR #9 C0-v2 and PR #14 ADR remain unmerged integration references. PR #11 content remains draft; do not promote mock data into canonical runtime behavior.
 - Verification in this pass: live GitHub source reads of main README/AGENTS/DECISIONS, workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, pipeline and this handoff. No Node, CI, Android, TalkBack or Unity tests run in this pass.
 - Next: owner/QA real-device Android playtest; authenticated binary transfer and review of first original office candidate; Unity UI Toolkit only after real Editor and stable API. PR #12 stays Draft, no merge.
+
+
+---
+
+## AutoDev 03 · 2026-11-19 · Issue #20 — offline navigation guard
+
+**One scoped task:** add a source-level Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` rejecting HTML forms, meta-refresh, direct location navigation/window.open, and absolute/protocol-relative anchor destinations in the self-contained Android touch bundle. It guards against accidental network/navigation regressions; it is **not** a runtime sandbox or a security audit.
+
+**UI test commit:** `8999e77cf712d9d73d8a130abe14cb30d1961204` in `feature/ui-5`. No Core, GameState, desktop demo, art manifest or production asset changes.
+
+**Actual verification:** GitHub accepted the test commit; source was inspected. **Node tests NOT RUN** in this pass, nor CI, Chromium, physical Android/TalkBack or Unity. Reproduce with `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; check Android browser separately. Keep WEB_READY distinct from ANDROID_DEVICE_TESTED and APK_BUILT.
+
+**Art #21:** office preview remains candidate only, with no verified PNG binary in the repository. PR #12 stays Draft; C0-v2 PR #9 and ADR PR #14 are references, not a merge authorization.
