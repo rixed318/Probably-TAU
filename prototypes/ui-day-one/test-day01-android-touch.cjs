@@ -66,10 +66,22 @@ test('Android decision progress is a polite atomic live status',()=>{
 });
 
 // Offline distribution must not silently navigate away or submit visitor decisions
-// to a remote endpoint. This is a static guard, not a browser/device test.
+// to a remote endpoint. These are static guards, not browser/device tests.
+const forbiddenNavigation = [
+  /<form\b/i,
+  /<meta\b[^>]*http-equiv\s*=\s*["']?refresh/i,
+  /\b(?:location\.(?:href|assign|replace)|window\.open)\s*(?:=|\()/i,
+  /<a\b[^>]*href\s*=\s*["']?(?:https?:|\/\/)/i,
+];
 test('Android touch bundle has no remote forms, redirects or external navigation',()=>{
-  assert.doesNotMatch(html,/<form\\b/i);
-  assert.doesNotMatch(html,/<meta\\b[^>]*http-equiv\\s*=\\s*["']?refresh/i);
-  assert.doesNotMatch(html, /\\b(?:location\\.(?:href|assign|replace)|window\\.open)\\s*(?:=|\\()/i);
-  assert.doesNotMatch(html, /<a\\b[^>]*href\\s*=\\s*["']?(?:https?:|\\/\\/)/i);
+  for(const pattern of forbiddenNavigation) assert.doesNotMatch(html,pattern);
+});
+test('offline navigation guards reject representative forbidden snippets',()=>{
+  const forbidden = [
+    '<form action="https://example.invalid">',
+    '<meta http-equiv="refresh" content="0;url=https://example.invalid">',
+    'location.href="https://example.invalid"',
+    '<a href="//example.invalid">external</a>',
+  ];
+  forbidden.forEach((snippet,i)=>assert.match(snippet,forbiddenNavigation[i]));
 });
