@@ -53,7 +53,7 @@ namespace TAU.President.Tests.Npc
                             throw new Exception("Document art choice order mismatch: " + scopedAssetId);
                 }
             }
-            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04" })
+            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04", " DOC-01", "DOC-01 " })
             {
                 Day01Visitors.VisitScreenPreview missingDocumentArtScreen;
                 if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
