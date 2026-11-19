@@ -518,3 +518,11 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Evidence:** GitHub Actions NPC .NET 8 run [#44436740987](https://github.com/rixed318/Probably-TAU/actions/runs/44436740987) on previous PR head `70dc27cd0e23dd65b43f4e2ae94ad80b3ded2757` failed to compile with CS0136 at lines 33/66 and CS0128 at line 659. **Fix commit:** `6146f43249647e47e136dd888a2a996bb388cdd4` on `feature/npc-4`.
 - **Actual verification:** prior failing workflow logs inspected and GitHub accepted the source update. **NOT RUN/NOT YET CONFIRMED:** new-head .NET golden execution, Unity Editor/PlayMode, Windows or Android builds. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and verify Actions for exact final HEAD.
 - **Dependencies/BLOCKED for EventDirector:** Core 01 must expose an approved atomic due-event/receipt/earned-key integration port; Content 04 must settle E03/E07 agreement occurrence provenance. C0-v2 PR #9 and ADR PR #14/#17 govern until integration; PR #11 remains Content source. Planned original portrait IDs under #21 do not establish existing PNGs. PR #16 remains Draft; no main push/merge.
+
+
+## 2026-11-19 — CI verification of prior compile fix (Issue #4 / #20)
+- Verified current `feature/npc-4` head before this documentation update: `2be35a4dd8255785b88930b84c60031d74eaedea`.
+- GitHub Actions run [#44448434879](https://github.com/rixed318/Probably-TAU/actions/runs/44448434879) reports `completed/success` for that SHA (`NPC condition golden tests`, run #223). This verifies the branch's .NET NPC workflow after the prior `CS0136`/`CS0128` name-collision fix; it is not a Unity or Android build.
+- This run changes only the handoff/PR verification record; no new runtime code or tests. No local .NET, Unity Editor or Android tests executed. Do not infer Core/EventDirector integration from this success.
+- **BLOCKED for EventDirector:** await concrete Core atomic scheduled-event settlement, receipt and earned-key deduplication ports; E03/E07 provenance requires Content/Core agreement. Planned art IDs are not evidence of shipped image assets.
+- Next: Core/Content review of receipt and agreement-occurrence identifiers, then one isolated integration step. No main merge.
