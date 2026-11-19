@@ -41,7 +41,7 @@ test('Android Day01 defers DOM wiring and first render until DOMContentLoaded',(
 // Regression for #20: a failed action may leave #error populated; a subsequent
 // successful inspect/end-day must clear it before repainting the view.
 test('Android successful inspect and end-day clear stale validation errors',()=>{
-  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]);
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   const ui=scripts[2];
   for(const [id,operation] of [['inspect','g.inspect(g.view().selected)'],['end','g.endDay()']]){
     const handler=ui.match(new RegExp('el\\("'+id+'"\\)\\.addEventListener\\("click",\\(\\)=>\\{try\\{([^}]+)\\}catch\\(e\\)'));
