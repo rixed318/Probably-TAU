@@ -81,6 +81,11 @@ const forbiddenNavigation = [
 test('Android touch bundle has no remote forms, redirects or external navigation',()=>{
   for(const pattern of forbiddenNavigation) assert.doesNotMatch(html,pattern);
 });
+// Keep both downloadable Android HTML variants under the same navigation policy.
+test('legacy offline bundle has no forms or navigation escapes',()=>{
+  const legacy=fs.readFileSync(path.join(__dirname,'day01-android-offline.html'),'utf8');
+  for(const pattern of forbiddenNavigation) assert.doesNotMatch(legacy,pattern);
+});
 test('offline navigation guards reject representative forbidden snippets',()=>{
   const forbidden = [
     '<form action="https://example.invalid">',
