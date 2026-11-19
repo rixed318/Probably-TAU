@@ -687,7 +687,9 @@ namespace TAU.President.Tests.Core
             AssertNamed(staggeredFlow.Next.Finance.Receipts[3].PostingKeys[0] == "payable:day01-current",
                 "staggered EndDay receipt posting key");
             AssertNamed(staggeredFlow.Report.Postings.Count == 1, "staggered report posting count");
-            AssertNamed(staggeredFlow.Report.UnpaidPayables.Count == 0, "staggered report unpaid count");
+            AssertNamed(staggeredFlow.Report.UnpaidPayables.Count == 1, "staggered report unpaid count");
+            AssertNamed(staggeredFlow.Report.UnpaidPayables[0].DueKey == "day02-future",
+                "staggered report future payable key");
             AssertNamed(staggeredFlow.Next.Payables.Outstanding.Count == 1, "staggered outstanding count");
             AssertNamed(staggeredFlow.Next.Payables.Outstanding[0].DueKey == "day02-future",
                 "staggered future payable key");
