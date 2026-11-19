@@ -37,3 +37,19 @@ test('Android Day01 defers DOM wiring and first render until DOMContentLoaded',(
   assert.match(handler[1],/render\(\)/);
   assert.doesNotMatch(ui.slice(0,ui.indexOf('d.addEventListener("DOMContentLoaded"')),/\nrender\(\);/);
 });
+
+// Regression for #20: a failed action may leave #error populated; a subsequent
+// successful inspect/end-day must clear it before repainting the view.
+test('Android successful inspect and end-day clear stale validation errors',()=>{
+  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]);
+  const ui=scripts[2];
+  for(const [id,operation] of [['inspect','g.inspect(g.view().selected)'],['end','g.endDay()']]){
+    const handler=ui.match(new RegExp('el\\("'+id+'"\\)\\.addEventListener\\("click",\\(\\)=>\\{try\\{([^}]+)\\}catch\\(e\\)'));
+    assert.ok(handler,id+' click handler must retain success/error branches');
+    const success=handler[1];
+    const op=success.indexOf(operation);
+    const clear=success.indexOf('el("error").textContent=""');
+    const paint=success.indexOf('render()');
+    assert.ok(op>=0 && clear>op && paint>clear,id+' must clear stale error after success, before render');
+  }
+});
