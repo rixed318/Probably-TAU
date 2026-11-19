@@ -61,7 +61,7 @@ namespace TAU.President.Tests.Npc
                     throw new Exception("Invalid document/art route accepted.");
             }
             // Missing and case-mismatched art IDs must fail closed on Windows and Android.
-            foreach (string invalidDocumentAssetId in new[] { null, "", "unknown_asset", "IRINA_KORNEEVA_PORTRAIT_NEUTRAL" })
+            foreach (string invalidDocumentAssetId in new[] { null, "", "unknown_asset", "IRINA_KORNEEVA_PORTRAIT_NEUTRAL", " irina_korneeva_portrait_neutral", "irina_korneeva_portrait_neutral " })
             {
                 Day01Visitors.VisitScreenPreview invalidArtScreen;
                 if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
