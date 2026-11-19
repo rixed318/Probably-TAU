@@ -742,3 +742,18 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - **Implementation commit:** `7792aea3a08d9afd0350b7b8abfa5caa9ea1f814` on `feature/ui-5` (PR #12). This is a web accessibility improvement, **not** proof of Android TalkBack behavior.
 - **Actual verification:** live GitHub source read before edit; exactly one `id="progress"` element replaced; GitHub accepted the commit. No Node/browser/physical Android/TalkBack/Unity tests executed in this pass; all runtime accessibility checks remain UNTESTED.
 - **Follow-up:** QA/owner should check TalkBack announcement after each decision and ensure no duplicate/spam announcements in Android Chrome; execute L1/L2/P1/P2/S1/T1/O1 on device. Issue #21 original PNGs remain outstanding. C0-v2 PR #9 and ADR PR #14 are not merged; no main push or merge.
+
+
+---
+
+## AutoDev 03 · 2026-11-19 · Issue #20 — Android progress accessibility regression
+
+**Scope:** one Node static regression test for the existing Android Day01 decision-progress live region. No gameplay, Core, HTML styling, assets, or Unity changes.
+
+**Implementation commit:** `f8c7b933252f5fd30e77ce1da9e285a1eba5a7f8` in `feature/ui-5`.
+
+**Changed file:** `prototypes/ui-day-one/test-day01-android-touch.cjs`. The new test asserts `#progress` has `role=status`, `aria-live=polite`, `aria-atomic=true`, that the progress count updates via `textContent`, and that `#error` remains an alert. These attributes were already in the HTML; this pass only prevents accidental regression.
+
+**Verification:** GitHub accepted the test commit and the updated test file was fetched again, confirming the new assertions are present. **Node tests, CI on this commit, Android Chrome, physical TalkBack, and Unity were NOT executed/verified in this pass.** Static assertions are not evidence that TalkBack announces the status correctly.
+
+**Run:** `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; then inspect the Android offline artifact and verify progress announcements with TalkBack on a real device. Keep PR #12 Draft. C0-v2 (PR #9), ADR (PR #14) and content PR #11 remain pending for runtime integration. Original pixel-art PNGs for #21 remain unverified/not delivered.
