@@ -1172,3 +1172,22 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** actual Chromium touch acceptance of this exact HTML at 360×800 and 800×360, three docs, EndDay, ledger replay, partner no immediate cash, 48dp and overflow **NOT RUN**.
 - **Blocker 3:** actual PNG binary/signature/dimensions/manifest SHA, Unity APK/device and integrated Save→Load remain unverified; complete stable Core DTO required for SaveService.
 - **Recommended next step:** execute Playwright/Chromium touch on exact UI SHA and attach screenshots, DOM hit-target measurements, transaction/ledger logs. Then refresh exact-SHA CI after NPC fix. READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-19 — QA 05: latest Day01 HTML static regression (#8, #20)
+
+**One bounded check:** read the actual `prototypes/ui-day-one/day01-android-offline.html` from UI PR #12 at exact commit `9b8738ca5b9980a36a6b0f39f3b9764d2514fc66` (GitHub blob `5fd425b0b683353fcf5a1e83339426679b457126`, 56,675 JavaScript string code units). Performed literal source inspection, **not browser execution**.
+
+**Observed static checks:** viewport meta present; 0 external `<script src>` references; 0 external stylesheet links; no literal `fetch(`, `XMLHttpRequest(` or `WebSocket(` matches; media rules, touch-related markup/styles, EndDay and ledger tokens present. A literal case-insensitive `partner` search returned no matches: this does **not** prove a partner-income defect, since the concept may be named in Russian or implemented indirectly. These checks do **not** prove offline behavior, three completed documents, ledger replay, tap target dimensions, overflow or runtime cash rules.
+
+**Execution:** GitHub source fetch and deterministic text-pattern checks performed. Python/Node/.NET test runners **NOT RUN** in this pass; Chromium touch emulation 360x800 / 800x360 **NOT RUN**; PNG signature/dimensions/SHA **NOT RUN**; Unity Editor/APK/real Android **NOT RUN**. No SaveService implemented; no new architecture approved. C0-v2 PR #9 and ADR PR #14 remain unmerged.
+
+### Сводка для координатора 00 — 2026-11-19
+
+- **Latest verified PR HEADs before this handoff:** #9 Core `231361bc127e8345d8d6256a93d0734ebd2ae9be`; #10 QA `e274f3969ef4b4a00f149e91ec0c8e0b90dcda1d` (new handoff commit follows); #11 Content `9abf7f75427caeb72ef644e19980008ea02ca662`; #12 UI `9b8738ca5b9980a36a6b0f39f3b9764d2514fc66`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `2be35a4dd8255785b88930b84c60031d74eaedea`. Main `d673322cd9d0d366a27a57b81056504dfb26c731`.
+- **Blocker 1:** No Chromium touch acceptance on exact latest Day01 HTML; static inspection cannot establish three docs, EndDay, ledger replay, no immediate partner cash, 48dp and no overflow.
+- **Blocker 2:** No verified fresh exact-SHA NPC .NET regression; earlier CS0136 history must not be assumed to describe current NPC HEAD without compilation.
+- **Blocker 3:** Actual PNG binaries / Unity APK / full Core Save→Load integration not verified; stable persistence DTO boundary remains prerequisite.
+- **Recommended next step:** run Playwright/Chromium touch emulation at 360x800 and 800x360 on UI SHA `9b8738ca`, capture DOM assertions/screenshots, then report exact failures to UI owner; keep APK and device tests NOT RUN until genuine build.
+
+**Safety:** QA branch only; no merge/main push, no third-party IP approval, no READY_FOR_OWNER_TEST claim.
