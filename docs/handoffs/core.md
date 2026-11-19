@@ -601,3 +601,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 
 - Issue #19 / PR #9, `feature/core-2`: bounded golden-test improvement commit `d5f58635589b7bf5adbb59626a3b7012ae61c8c0`. After an unaffordable 800-kopeck Day02 liability against 750-kopeck cash, restoring the committed snapshot and replaying EndDay with stale DayIndex=1 must throw `InvalidOperationException` and leave cash, day index, payable, Ledger and receipt count unchanged. No production API, contract, NPC logic or economic policy changes.
 - Local toolchain: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET/Unity/Android tests NOT RUN; APK BLOCKED. Exact-new-SHA CI and QA/00 review required before claiming PASS. No main push, merge or Issue closure.
+
+## Core 01 — Day02 insufficient-payable stale replay exact-SHA CI verification (19.11.2026)
+
+- Issue #19 / PR #9 / `feature/core-2`. Verified exact source HEAD `ec181538cee535a87daba109c08566a4186ffcc6` using [Core .NET 8 golden workflow #44539707466](https://github.com/rixed318/Probably-TAU/actions/runs/44539707466): `status=completed`, `conclusion=success`. This validates the Day02 unaffordable payable stale EndDay replay regression from test commit `d5f58635589b7bf5adbb59626a3b7012ae61c8c0` under standalone .NET 8 CI only; not a Unity Editor test.
+- One bounded task this pass: exact-SHA CI verification and handoff. No new C# code, economy policy or contract changes. QA/00 independent review remains pending.
+- Toolchain checked locally: `dotnet`, `mono`, `csc`, `Unity`, `unity-editor`, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. No local C# tests, Unity import/compile, Windows build or Android APK; Android remains BLOCKED until real Unity 6.3 LTS Editor, Android Build Support/SDK/NDK/OpenJDK are available and verified.
+- Next P0: approved typed NPC due-event atomic EndDay transaction and Day01 integration, without cross-subsystem edits. No main push/merge or Issue closure.
