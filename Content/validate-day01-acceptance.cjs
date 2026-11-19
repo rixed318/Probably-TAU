@@ -41,6 +41,23 @@ assert.deepEqual(fixture.visitors.map(v => [v.visitId, v.visitorId]).sort((a,b) 
 assert.equal(new Set(fixture.documents.map(d => d.id)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitId)).size, 3);
 assert.equal(new Set(fixture.visitors.map(v => v.visitorId)).size, 3);
+// Stable fictional asset identities are authored in Content, never inferred from display names.
+// UI/Android/Windows can resolve these IDs to original art without changing the Core schema.
+const portraitIds = contentSpec.fictionalNpcs.map(npc => npc.portraitAssetId);
+const documentAssetIds = contentSpec.documentTypes.map(doc => doc.documentAssetId);
+const assetIds = [...portraitIds, ...documentAssetIds];
+assert.equal(portraitIds.length, fixture.visitors.length, "Day01 portrait roster mismatch");
+assert.equal(documentAssetIds.length, fixture.documents.length, "Day01 document art roster mismatch");
+assert.equal(new Set(assetIds).size, assetIds.length, "duplicate Day01 asset ID");
+for (const assetId of assetIds) {
+  assert.match(assetId, /^[a-z0-9]+(?:_[a-z0-9]+)*$/, "invalid platform-independent asset ID");
+}
+for (const npc of contentSpec.fictionalNpcs) {
+  assert.ok(typeof npc.visualDescription === "string" && npc.visualDescription.trim().length > 0,
+    "missing original character visual description: " + npc.id);
+}
+console.log("PASS: stable fictional Day01 portrait/document asset IDs and descriptions");
+
 // Guard canonical Day01 money against drift between authored content and UI mock.
 // This is static data comparison only: Core remains the sole cash/ledger writer.
 assert.equal(fixture.opening.budgetKopecks, contentSpec.opening.budgetKopecks,
