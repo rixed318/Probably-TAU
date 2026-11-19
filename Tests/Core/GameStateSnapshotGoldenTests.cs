@@ -894,6 +894,32 @@ namespace TAU.President.Tests.Core
                 tomorrowPayable.Finance.Ledger.Entries.Count == 0,
                 "Day02 settlement input immutability");
 
+            // An unaffordable Day02 liability stays payable, never creating negative cash.
+            // Day01 must not charge the future liability, and Restore must not replay it.
+            var tomorrowShortfall = new DurableGameStateSnapshot(before.Finance, before.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-shortfall", 1, 800L)
+                }));
+            var shortfallDay01 = DurableDay01Flow.Prepare(tomorrowShortfall, 0, 0, choices);
+            var shortfallDay02Input = shortfallDay01.Next.Restore();
+            var shortfallDay02 = DurableDayAdvance.PrepareDay(shortfallDay02Input,
+                shortfallDay02Input.Header.Revision, 1);
+            AssertNamed(shortfallDay02.Header.DayIndex == 2 &&
+                shortfallDay02.Header.BalanceKopecks == 750L &&
+                shortfallDay02.Payables.Outstanding.Count == 1 &&
+                shortfallDay02.Payables.Outstanding[0].DueKey == "day02-shortfall" &&
+                shortfallDay02.Finance.Ledger.Entries.Count == 3 &&
+                shortfallDay02.Finance.Receipts.Count == 5,
+                "Day02 insufficient mandatory payable remains outstanding");
+            var shortfallRestored = shortfallDay02.Restore();
+            AssertNamed(shortfallRestored.Header.BalanceKopecks == 750L &&
+                shortfallRestored.Payables.Outstanding.Count == 1 &&
+                shortfallRestored.Finance.Ledger.Entries.Count == 3 &&
+                shortfallDay02Input.Header.DayIndex == 1 &&
+                shortfallDay02Input.Payables.Outstanding.Count == 1 &&
+                tomorrowShortfall.Header.DayIndex == 0,
+                "Day02 shortfall restore and source immutability");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
