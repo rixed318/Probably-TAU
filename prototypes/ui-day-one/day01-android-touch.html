@@ -179,8 +179,8 @@ function render(){
  }
 }
 d.addEventListener("DOMContentLoaded",()=>{
-el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);render();}catch(e){el("error").textContent=e.message;}});
-el("end").addEventListener("click",()=>{try{g.endDay();render();}catch(e){el("error").textContent=e.message;}});
+el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});
+el("end").addEventListener("click",()=>{try{g.endDay();el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});
 render();
 });
 })(typeof window!=="undefined"?window:globalThis);
