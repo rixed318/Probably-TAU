@@ -827,6 +827,33 @@ namespace TAU.President.Tests.Core
                 combinedBefore.Events.Pending.Count == 1 &&
                 combinedBefore.Finance.Ledger.Entries.Count == 0);
 
+            // Both a future payable and a future NPC event must survive Day01 together.
+            // Neither becomes due during DayIndex 0, and the report still projects debt.
+            var futureWorkBefore = new DurableGameStateSnapshot(
+                futureEventBefore.Finance, futureEventBefore.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-shared-future", 1, 200L)
+                }));
+            var futureWork = DurableDay01Flow.Prepare(futureWorkBefore, 0, 0, choices);
+            AssertNamed(futureWork.Next.Header.DayIndex == 1 &&
+                futureWork.Next.Header.BalanceKopecks == 750L &&
+                futureWork.Next.Finance.Ledger.Entries.Count == 3 &&
+                futureWork.Report.Postings.Count == 0 &&
+                futureWork.Report.UnpaidPayables.Count == 1 &&
+                futureWork.Report.UnpaidPayables[0].DueKey == "day02-shared-future" &&
+                futureWork.Next.Events.Pending.Count == 1 &&
+                futureWork.Next.Events.Pending[0].InstanceId == "event-tomorrow",
+                "Day01 future payable and event coexist");
+            var futureWorkRestored = futureWork.Next.Restore();
+            AssertNamed(futureWorkRestored.Payables.Outstanding.Count == 1 &&
+                futureWorkRestored.Payables.Outstanding[0].DueDayIndex == 1 &&
+                futureWorkRestored.Events.Pending.Count == 1 &&
+                futureWorkRestored.Events.Pending[0].DueDayIndex == 1 &&
+                futureWorkRestored.Events.CompletedIds.Count == 0 &&
+                futureWorkBefore.Header.Revision == 0 &&
+                futureWorkBefore.Finance.Ledger.Entries.Count == 0,
+                "Day01 future work restore and input immutability");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
