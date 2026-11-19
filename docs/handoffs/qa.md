@@ -1253,3 +1253,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** PR #12 has no real PNG binaries in its changed-file inventory; original-art validation (3–5 PNG signatures, dimensions, manifest SHA) cannot be completed.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load are not verified; Core snapshot DTO readiness still requires explicit review.
 - **Recommended next step:** run Chromium touch emulation at 360×800 and 800×360 on UI SHA `da5a1ec9ccf372c0586a0536626ed6d65b1f49da` with recorded gameplay assertions and element bounds; ask UI 03 to commit real original PNG files for Issue #21 before asset acceptance. Keep main protected; no merge.
+
+
+## 2026-11-19 15:56 UTC+4 — QA 05: Android acceptance test coverage gap (#8, #20)
+
+**One bounded independent review:** inspected the actual UI branch test file `prototypes/ui-day-one/test-day01-android-touch.cjs` (blob `508029f406dcdef47ec8e76286140cf6924bf4e0`) and the separately distributed `prototypes/ui-day-one/day01-android-offline.html` (blob `5fd425b0b683353fcf5a1e83339426679b457126`). The Node test suite's primary gameplay/DOM-ready/error/accessibility assertions target **`day01-android-touch.html`**, not the separately packaged **`day01-android-offline.html`**. The latter is covered by a separate **static** test for self-containment and parseable inline scripts only. Therefore a green Node test cannot be cited as 360x800/800x360 Chromium touch acceptance of the exact offline artifact. This is a **test-coverage gap**, not proof of a runtime bug. UI 03 should identify the single canonical distributed artifact and QA should run the browser acceptance against that exact blob/SHA, including three documents, EndDay, ledger replay, no immediate partner cash, real tap rectangles and overflow.
+
+**Evidence actually obtained:** GitHub connector fetched both files and inspected source/test assertions; enumerated PR #12 changed paths (0 `.png` files). No Node process, browser, .NET, Unity, Android device, PNG binary or Save→Load test was executed. Test status: **STATIC REVIEW PASS / BROWSER ACCEPTANCE NOT RUN**. No GameState/ADR contract created or changed. PR #9 C0-v2 and PR #14 ADR remain feature-development guidance, not merge approval.
+
+### Сводка для координатора 00 — 2026-11-19 15:56 UTC+4
+
+- **Verified branch HEADs:** main `d673322cd9d0d366a27a57b81056504dfb26c731`; #9 Core `9687b7f80eb8b5d61db62a0507b54eae28b05b44`; #10 QA `b9948e9834e3b4ba3da54e8115cb620972bca141` (before this handoff commit); #11 Content `b8312c48977bf6c37f5e6cfb73cace644460a8f6`; #12 UI `6295a841bbafa7e9036868ceca91881c3dd08c2b`; #16 NPC `6f9076b78366f1a4355b46f90f4e0eac72c4edef`. ADR #14 previously observed `ebdc4be28afd56e82bc14ca397af88376ae59d20` (not re-fetched this pass).
+- **Blocker 1:** Current Android Node tests do not perform Chromium 360x800/800x360 runtime acceptance on the distributed offline HTML; gameplay/geometry/ledger assertions remain NOT RUN.
+- **Blocker 2:** PR #12 changed-file inventory has no actual PNG binaries; Issue #21 signature/dimension/manifest-SHA gate remains NOT RUN.
+- **Blocker 3:** Real Unity APK/device and integrated Save→Load remain NOT RUN; do not write SaveService until stable Core DTO/transaction snapshot boundary is reviewed.
+- **Recommended next step:** run Playwright/Chromium touch automation against the **exact** `day01-android-offline.html` at UI `6295a841bbafa7e9036868ceca91881c3dd08c2b`, record 360x800 and 800x360 geometry and all gameplay invariants; then request UI 03 to reconcile touch/offline artifact coverage. No READY_FOR_OWNER_TEST; no main push/merge.
