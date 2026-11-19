@@ -35,10 +35,14 @@ namespace TAU.President.Tests.Npc
                     invalid, artByDocument[0][0], out missingDocumentArtScreen) || missingDocumentArtScreen != null)
                     throw new Exception("Invalid document/art route accepted.");
             }
-            Day01Visitors.VisitScreenPreview unknownArt;
-            if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
-                "DOC-01", "unknown_asset", out unknownArt) || unknownArt != null)
-                throw new Exception("Unknown art ID accepted.");
+            // Missing and case-mismatched art IDs must fail closed on Windows and Android.
+            foreach (string invalidAsset in new[] { null, "", "unknown_asset", "IRINA_KORNEEVA_PORTRAIT_NEUTRAL" })
+            {
+                Day01Visitors.VisitScreenPreview invalidArtScreen;
+                if (Day01Visitors.TryGetVisitScreenPreviewForDocumentAsset(
+                    "DOC-01", invalidAsset, out invalidArtScreen) || invalidArtScreen != null)
+                    throw new Exception("Invalid document art ID accepted.");
+            }
 
             // Choice-level inspection lookup must be document-consistent even for choices
             // that do not require inspection to become eligible.
