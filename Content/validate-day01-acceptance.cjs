@@ -17,6 +17,7 @@ for (const event of contentSpec.eventManifest) {
   assert.equal(new Set(event.feeds).size, event.feeds.length, "duplicate event feed: " + event.id);
   for (const target of event.feeds) {
     assert.ok(validTargets.has(target), "unknown event/project feed: " + event.id + " -> " + target);
+    assert.notEqual(target, event.id, "event cannot feed itself: " + event.id);
   }
 }
 console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and feed targets");
