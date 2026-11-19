@@ -610,3 +610,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `cf52f5d8e8a5855ffec1c577f69d8c2057994693` on `feature/content-7`.
 - **Actually checked:** connector-side JS baseline document ID parity (3/3 PASS), injected extra ID detected (PASS), injected duplicate ID detected (PASS). GitHub accepted commit. **Not executed:** checked-in Node CLI, CI, Unity, Windows or Android.
 - **QA 05 next:** run `node Content/validate-day01-acceptance.cjs` at this HEAD and negative cases (duplicate and extra document ID). PR #11 remains Draft / NOT READY_FOR_OWNER_TEST; no main push or merge.
+
+## AutoDev 04 — Day01 UI source version parity (2026-11-19)
+
+- **One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` now asserts that `DAY01_UI_FIXTURE.json.sourceSpecVersion` equals `CONTENT_SPEC_DRAFT.json.meta.specVersion`, preventing stale UI mocks from silently passing later content changes. No runtime schema or scenario changes.
+- Validator commit: `73fa285e4cf470bacd4403a1a24c574548e4ede1` on `feature/content-7`.
+- **Actually checked:** current GitHub JSON versions match (`content-draft-0.3`); isolated JavaScript equality test rejects a synthetic stale `content-draft-0.2`; committed validator source was re-read from GitHub and contains the new assertion. These are static/isolated checks, **not** a checked-in Node CLI execution.
+- **Not run:** full `node Content/validate-day01-acceptance.cjs`, CI, Unity, Windows, Android. QA 05 should run the full validator and mutation test on checkout. PR #11 remains Draft / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain separate; no Core, EventDirector, money, Definition ID, DayIndex, main push or merge.
