@@ -116,6 +116,27 @@ jobs:
         run: node Content/validate-money-wire.cjs
         working-directory: content
 
+  android-offline-artifact-static:
+    name: Distributed Android HTML static gate (not Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout QA test code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout exact UI artifact revision read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 4c8666f24117d3e7dd8c0ba06308fca8894112f9
+          path: ui-source
+          persist-credentials: false
+      - name: Assert UI revision and parse distributed inline scripts
+        shell: bash
+        run: |
+          test "$(git -C ui-source rev-parse HEAD)" = "4c8666f24117d3e7dd8c0ba06308fca8894112f9"
+          node --test Tests/QA/test_android_offline_artifact.cjs
+
   core-ledger-regression:
     name: Core ledger and snapshot .NET 8 regression (not Unity)
     runs-on: ubuntu-latest
