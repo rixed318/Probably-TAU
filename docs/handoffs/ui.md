@@ -816,3 +816,14 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 **Actual verification:** GitHub accepted the test commit; source was inspected. **Node tests NOT RUN** in this pass, nor CI, Chromium, physical Android/TalkBack or Unity. Reproduce with `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; check Android browser separately. Keep WEB_READY distinct from ANDROID_DEVICE_TESTED and APK_BUILT.
 
 **Art #21:** office preview remains candidate only, with no verified PNG binary in the repository. PR #12 stays Draft; C0-v2 PR #9 and ADR PR #14 are references, not a merge authorization.
+
+
+---
+
+## AutoDev 03 · 2026-11-19 · Issue #20 — repair offline navigation regression
+
+**One bounded fix:** the four regular-expression literals added by the previous offline-navigation guard used doubled backslashes (for example `/<form\\b/`), so they matched literal backslash sequences rather than HTML word boundaries / JavaScript navigation. Corrected these expressions and added positive-control test snippets for form, meta refresh, location assignment and protocol-relative external anchor.
+
+**Implementation commit:** `ba26abef0f58a972104e9a35526209e3be55f560` on `feature/ui-5`; handoff updated separately. Only `prototypes/ui-day-one/test-day01-android-touch.cjs` and this handoff changed. No GameState/Core, desktop prototype, art or Unity changes.
+
+**Verification:** source read from live GitHub and corrected test file committed. Test suite execution, CI, browser, Android/TalkBack and Unity **not run in this connector pass**; positive controls are source assertions, not an observed test result. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and inspect CI. Existing Issue #21 PNG delivery and real-device Android playtest remain pending. PR #12 remains Draft, no merge.
