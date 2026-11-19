@@ -596,3 +596,8 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - No C# code or public contract changes in this pass. Regression keeps 800-kopeck payable outstanding against 750-kopeck cash without negative cash or extra Ledger posting; Restore behavior is covered by the test.
 - Local environment rechecked: `dotnet`, `mono`, `csc`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` present. Local C# tests and Unity/Windows/Android builds NOT RUN. Real Android APK remains BLOCKED on Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK validation.
 - P0 remains approved typed NPC due-event handler / atomic EndDay integration and QA/00 review; no main push, merge or Issue closure.
+
+## Core 01 — Day02 insufficient-payable replay guard (19.11.2026)
+
+- Issue #19 / PR #9, `feature/core-2`: bounded golden-test improvement commit `d5f58635589b7bf5adbb59626a3b7012ae61c8c0`. After an unaffordable 800-kopeck Day02 liability against 750-kopeck cash, restoring the committed snapshot and replaying EndDay with stale DayIndex=1 must throw `InvalidOperationException` and leave cash, day index, payable, Ledger and receipt count unchanged. No production API, contract, NPC logic or economic policy changes.
+- Local toolchain: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET/Unity/Android tests NOT RUN; APK BLOCKED. Exact-new-SHA CI and QA/00 review required before claiming PASS. No main push, merge or Issue closure.
