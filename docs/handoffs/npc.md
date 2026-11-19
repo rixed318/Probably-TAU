@@ -1,5 +1,14 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — verification of expanded Day01 screen golden tests (2026-11-19)
+
+**One bounded task:** verified the GitHub Actions result for the preceding regression additions on branch `feature/npc-4`, commit `bc39db86b2aa2b5c31c0733269d2d9d88bf85818`. [NPC golden workflow run #44583909347](https://github.com/rixed318/Probably-TAU/actions/runs/44583909347) returned `completed/success` for that SHA. This is evidence of the actual GitHub .NET golden workflow, not a Unity or Android player test. No production logic changed.
+
+**Scope/dependencies:** Issue #4, Android parity #20, original planned art IDs #21. Existing Day01 document/art/inspection/choice routing tests remain read-only. C0-v2 PR #9, ADR PR #14 and Content PR #11 remain integration inputs. Full EventDirector still **BLOCKED** on a confirmed Core atomic event/receipt/earned-key port and Content E03/E07 origin agreement; do not create a second GameState or ledger. No image files created or uploaded.
+
+**Tests:** prior SHA GitHub Actions `completed/success`; local .NET, Unity Editor/PlayMode, Windows player and Android device/APK **NOT RUN**. This documentation-only commit has no separately verified CI at writing. No main push/merge.
+
+
 **Updated:** 2026-11-19. **Issues:** #4, #18. **Branch:** `feature/npc-4`. **PR:** #16 (Draft). **Status:** immutable Day01 visitor models, typed condition evaluator, read-only choice/document adapters and golden tests implemented; full EventDirector integration BLOCKED on Core atomic settlement/receipt/earned-key ports. Content typed predicates are implemented as a proposed adapter, not an approved runtime wire schema. Latest verified NPC .NET golden CI: `b96ba7ec15378d1d2e5c17800b427072835ac322` — [Actions #44545966216](https://github.com/rixed318/Probably-TAU/actions/runs/44545966216) `completed/success`; Unity/PlayMode and Android NOT RUN.
 
 ## Completed in this run
