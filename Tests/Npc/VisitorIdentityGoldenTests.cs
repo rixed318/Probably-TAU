@@ -13,7 +13,7 @@ namespace TAU.President.Tests.Npc
             {
                 new[] { "irina_korneeva_portrait_neutral", "irina_korneeva_standing", "doc01_procurement_blank" },
                 new[] { "dasha_polynskaya_portrait_neutral", "dasha_polynskaya_standing", "doc02_student_proposal_blank" },
-                new[] { "mark_sviridov_portrait_neutral", "mark_sviridov_standing", "doc03_partner_agreement_blank" }
+                new[] { "mark_sviridov_portrait_neutral", "mark_sviridov_standing", "doc03_partner_letter_blank" }
             };
             string[] artDocuments = { "DOC-01", "DOC-02", "DOC-03" };
             for (int i = 0; i < artByDocument.Length; i++)
