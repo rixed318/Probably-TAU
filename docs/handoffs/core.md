@@ -544,3 +544,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **One bounded task:** prior exact-head Core .NET 8 workflow [44383622311](https://github.com/rixed318/Probably-TAU/actions/runs/44383622311) failed inside the multi-predicate staggered payable assertion in `Day01FlowGolden`. Changed only `Tests/Core/GameStateSnapshotGoldenTests.cs` in commit `aea5a31c0a427b1e2c03d5853581696116f115a9`: replaced that compound assertion with individually named checks and added `AssertNamed` to print the first failed invariant. This is **diagnostics only**: no production code, economic policy, test expectation, public C0 contract, or other subsystem changed. Do not treat it as a fix to the underlying failing assertion.
 
 **Verification:** local `dotnet`, Unity Editor and Android SDK/NDK/adb not found (Java available). .NET tests and Unity/Android build **NOT RUN locally**. Exact new commit CI must run and identify the failing predicate before implementing a targeted fix. APK **BLOCKED**. No main push, merge, or Issue closure.
+
+
+## Core 01 — Day01 future payable report CI repair (19.11.2026)
+
+- Issue #19 / PR #9, branch `feature/core-2`. Exact-head .NET 8 workflow run #44417008746 failed at `staggered report unpaid count` in `Day01FlowGolden` (job 135199824350); compilation and other suites succeeded.
+- Root cause: test expected `Report.UnpaidPayables.Count == 0` while `DurableDayReport.Capture` deliberately projects **all** remaining outstanding payables from the closed snapshot, including future DayIndex=1 liabilities. A future `day02-future` payable remains after Day01 and therefore report count must be 1.
+- Changed only the test expectation to 1 and added an explicit `DueKey == "day02-future"` assertion. No production API, settlement policy, NPC/Content, or Unity project changes.
+- Test fix commit: `5ddc7a9dded496483d3fde791d0e0d0bbd1dec68`. Local .NET SDK, Unity Editor and Android SDK/NDK/adb unavailable (Java/Javac present); .NET tests and Unity/Android build **NOT RUN locally**. Exact-head CI result pending. Android APK BLOCKED. No main push/merge or Issue closure.
