@@ -768,3 +768,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Documentation commit:** `5619d794fb5efd52a78c451c4ab3d9bfe2e6ebd5` on `feature/ui-5`; this handoff is a subsequent commit. **Tests actually run:** none (documentation-only). No physical Android, TalkBack, Chromium, Node, Unity or APK test was performed; all device results remain **NOT TESTED**. `aria-live` source checks do not prove speech output. Real PNGs for #21 remain outstanding.
 
 **Next:** QA 05 / owner executes the physical-device checklist, records evidence in PR #12; then review original art samples. PR #12 remains Draft; no merge to main.
+
+
+---
+
+## 2026-11-19 · Issue #21 · one original office art candidate (NOT COMMITTED)
+
+- Generated one original office background candidate using ChatGPT ImageGen (generation ID `fbd3be12-4b93-4ddc-b8ec-0876a6d78624`), Style A / Academic Noir. Scene: fictional dark-fir office, walnut desk, cool left window, warm right lamp, no institutional logo or readable text.
+- Source image: 1672×941 RGB. Local nearest-neighbor 320×180 RGB preview created as `probably_tau_office_art_A_candidate_320x180.png`; SHA256 `90b9c982fbf507bce26efb16cd3927ba44bd437f11ebd3057024a7e8c6b822d3`.
+- **Candidate only**: 320×180 downscale is a review preview, NOT manually pixel-cleaned production art; scene composition, palette conformity, world-layer registration and quality at 1× remain unapproved. No manifest row marked approved/production.
+- **BLOCKED binary upload**: image generation succeeded, but the generated PNG is available only in the execution container; its GitHub CLI cannot reach github.com, and the GitHub connector cannot read container bytes. Therefore **no PNG was committed to `feature/ui-5`**. Do not claim Issue #21 binary acceptance is met.
+- Next: transfer the actual PNG bytes to GitHub via authenticated `create_blob(base64)` → `create_tree` → `create_commit` → `update_ref(expected_sha)`, then re-fetch binary to verify SHA and update the asset manifest. Do not merge PR #12 or modify Core.
