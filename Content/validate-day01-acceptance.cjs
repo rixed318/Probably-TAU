@@ -63,6 +63,9 @@ console.log("PASS: stable fictional Day01 portrait/document asset IDs and descri
 assert.equal(fixture.opening.budgetKopecks, contentSpec.opening.budgetKopecks,
   "Day01 opening budget drift");
 const draftDocs = new Map(contentSpec.documentTypes.map(d => [d.id, d]));
+assert.equal(draftDocs.size, contentSpec.documentTypes.length, "duplicate canonical document Definition ID");
+assert.deepEqual([...draftDocs.keys()].sort(), fixture.documents.map(d => d.id).sort(),
+  "Day01 draft/fixture document Definition ID roster drift");
 for (const document of fixture.documents) {
   const draft = draftDocs.get(document.id);
   assert.ok(draft, "missing canonical document: " + document.id);
