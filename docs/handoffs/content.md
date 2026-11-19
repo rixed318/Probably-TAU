@@ -655,3 +655,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Добавлена строгая сверка полного набора `Definition ID` вариантов каждого посетителя между `CONTENT_SPEC_DRAFT.json` и `DAY01_UI_FIXTURE.json`: лишние UI-варианты теперь запрещены наряду с пропущенными. Контракт только контентный; C0-v2/ADR #9/#14 и Core/EventDirector не изменены.
 - Коммит валидатора: `ff8f1435716fbb0f3a0a914cba15eec64f062a30` (`feature/content-7`).
 - Проверки: изменение и наличие assertion проверены в исходном тексте перед записью; полный Node CLI/CI/Unity/Android пока не выполнялись. QA 05: запустить валидатор и отрицательную мутацию с лишним choiceId. Статус: NOT READY_FOR_OWNER_TEST.
+
+## 2026-11-20 — Project Int64 kopeck field guard (Issue #7)
+
+- One bounded change to `Content/validate-day01-acceptance.cjs`: all top-level `*Kopecks` fields in draft P01/P02 projects must be canonical signed Int64 decimal strings (not JSON numbers, fractions, leading-zero values or overflow). Core remains the sole ledger writer; no EventDirector, runtime schema or gameplay values changed.
+- Validator commit: `7e4f88669efe639de9c1283235a1e2dce52e1e4e` on `feature/content-7`.
+- Actually checked in isolated connector JavaScript: four project monetary fields in current GitHub JSON pass; synthetic fraction `1.5`, numeric JSON value `2` and Int64 overflow `9223372036854775808` fail. **Not run:** checked-in Node CLI, CI, Unity, Android. QA 05 must run the complete validator and negative mutation tests on checkout.
+- PR #11 stays Draft / NOT READY_FOR_OWNER_TEST. PR #9 C0-v2 and PR #14 ADR remain separate; no main push or merge.
