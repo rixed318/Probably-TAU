@@ -73,3 +73,31 @@ node --test prototypes/ui-day-one/test-day01-android-touch.cjs
 ```
 
 Report findings to QA 05 and coordinator 00 in PR #12. Keep the original desktop `index.html` unchanged; never treat a passed ZIP integrity check as a completed Android playtest.
+
+### Device evidence record (copy once per physical Android test)
+
+Fill this in after testing the **extracted** `day01-android-touch.html` file, not the ZIP preview. A CI PASS or desktop emulator result must not be recorded as a physical-device PASS.
+
+```text
+GitHub Actions run URL:
+Run head SHA:
+Artifact name: day01-android-touch
+Device / Android version:
+Browser / version:
+Launch method (file:// or content://):
+Airplane mode: ON / OFF
+Landscape CSS viewport (width × height):
+Portrait CSS viewport (width × height):
+L1: PASS / FAIL / BLOCKED — screenshot or reason:
+L2: PASS / FAIL / BLOCKED — screenshot or reason:
+P1: PASS / FAIL / BLOCKED — screenshot or reason:
+P2: PASS / FAIL / BLOCKED — screenshot or reason:
+S1: PASS / FAIL / BLOCKED — screenshot or reason:
+T1: PASS / FAIL / BLOCKED — screenshot or reason:
+O1: PASS / FAIL / BLOCKED — screenshot or reason:
+JS console errors (if accessible):
+Reproduction steps for each failure:
+Tester / date:
+```
+
+If the browser refuses local-file access, mark O1 and dependent cases BLOCKED and preserve the exact error; do not substitute an online preview for the offline acceptance criterion.
