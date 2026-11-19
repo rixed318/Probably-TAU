@@ -565,3 +565,13 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Added one bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: a scheduled NPC event and a mandatory payable both due on DayIndex=1 survive three approved Day01 decisions and EndDay on DayIndex=0. Day01 cash stays at 750 kopecks; no payable posting is generated; the report still projects the future outstanding payable. Both survive Restore, the event is not marked completed, and original input is immutable.
 - No production API, financial policy, event handler, NPC/Content/UI changes, or fabricated Unity project. This does **not** implement due-event consumption.
 - Local toolchain check: `dotnet`, Unity Editor, Android SDK/NDK/adb unavailable; Java/Javac available. Local .NET golden tests, Unity build and Android APK **NOT RUN**. Exact-head CI verification and QA/00 review required; do not claim PASS before workflow success. No main push, merge, or Issue closure.
+
+
+## Core 01 — Day02 deferred payable settlement regression (19.11.2026)
+
+- Issue #19 / PR #9 / `feature/core-2`; test commit `4af4bd394c0a0b3fae0723aa506e4cddc9803491`.
+- One bounded C# golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: an affordable 200-kopeck payable due on DayIndex=1 is not charged during Day01 (after three choices, cash 750); on Day02 canonical `DurableDayAdvance.PrepareDay` settles it once (cash 550), records exactly one posting/receipt, removes liability, survives Restore, rejects stale replay and leaves source snapshots immutable.
+- No due NPC events in this fixture. This does **not** implement NPC due-event handling or change public C0/ADR contracts, production rules, UI, Content or other subsystems.
+- Verified preceding HEAD `4323078d6c15de8a1a32386ca108e3cc7ec65f02` via [Core .NET 8 golden run #44466951168](https://github.com/rixed318/Probably-TAU/actions/runs/44466951168): completed/success. **New test SHA CI not yet verified**; do not claim its PASS until exact-head run completes.
+- Local toolchain check: `dotnet`, `mono`, `csc`, Unity Editor, `adb`, `sdkmanager` unavailable; Java/Javac available. Local C# tests and Unity/Android build NOT RUN; real APK BLOCKED by missing Unity 6.3 LTS Editor and Android SDK/NDK/Build Support.
+- Next: exact-head CI + QA/00 review, approved typed NPC event handler contract for Day01/EndDay. No main push, merge, or Issue closure.
