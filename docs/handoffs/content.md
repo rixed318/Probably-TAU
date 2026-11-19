@@ -583,3 +583,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Сценарный commit: `59556ec8a3264bf2631140d2dabc1053da324184`.
 - Проверка: исходная реплика встретилась ровно один раз и была заменена; требуется отдельная повторная проверка чтением GitHub. Node CLI, CI, Unity и Android **не запускались**.
 - Статус: **NOT READY_FOR_OWNER_TEST**. QA 05 проверить реплику с 0/1/2/3 активными претендентами и соответствие `ROOM-AUTO`/`ROOM-1..4`.
+
+## AutoDev 04 — Day01 fictional asset identity guard (19.11.2026)
+
+**One bounded Issue #7 task:** extended `Content/validate-day01-acceptance.cjs` with static checks for the three fictional NPC portrait asset IDs, three document asset IDs, unique platform-independent snake_case identifiers, and nonempty original NPC visual descriptions. These are canonical Content references for Windows/Android UI; no image files, trademark approvals, runtime schema or asset loader added. No gameplay/ledger/EventDirector changes.
+
+- Validator commit: `2aa5ba3e9b9f84b4f6df3cc9e250905af161927c`.
+- **Actually checked:** connector-side JavaScript inspected the current JSON: six distinct nonempty asset IDs match the expected portable format; three original NPC descriptions exist (baseline PASS). GitHub accepted validator commit. **Not executed:** checked-in Node CLI, negative mutation tests, CI, Unity, Android.
+- **QA 05 next:** run `node Content/validate-day01-acceptance.cjs` from a checkout and inject duplicate/invalid asset IDs and missing visual description to verify failures. PR #11 remains Draft / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain unmerged; no main push/merge.
