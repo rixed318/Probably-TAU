@@ -551,3 +551,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Narrative commit: `765f170fe63c891013b89d0be34cca613fb16b12`.
 - **Actually checked:** GitHub file fetched, exact four-row previous table matched before replacement; updated text constructed with four distinct ROOM rows and explicit no-booking/no-Day01-effects statement. No Node CLI, CI, Unity, Windows or Android test executed; narrative-only edit.
 - **Unchanged:** `CONTENT_SPEC_DRAFT.json`, `DAY01_UI_FIXTURE.json`, canonical Definition IDs, DayIndex=0, Int64 kopecks, Core/EventDirector, main. PR #11 stays Draft, no merge. QA 05 should confirm room-choice narrative and fixture behavior, while 00/01/02 decide whether E02 reputation effects should exist.
+
+## AutoDev 04 — Day01 flow ROOM-AUTO semantics (19.11.2026)
+
+**One bounded Issue #7 task:** replaced misleading `AUTO_ASSIGN` in the `Content/DAY_01.md` flow diagram with the canonical `ROOM-AUTO` display-only result for zero/one active claimant. Explicit ROOM-1/2/3/4 paths are priority choices, never room bookings. This is documentation-only; no changes to Definition IDs, DayIndex=0, Int64 kopecks, JSON schemas, art, Core, EventDirector or runtime.
+
+- Narrative commit: `dc0381ea80ce347fa1c11bebc9bc970df2e04611`.
+- **Actually checked:** GitHub source contained exactly one old `AUTO_ASSIGN` flow branch; replacement includes exactly one `ROOM-AUTO (display only, no booking)` branch. GitHub accepted the commit. This is a static text check, **not** a Node validator run.
+- **Not run:** Node CLI, CI, Unity, Windows/Android. QA 05 should confirm narrative flow matches fixture and no booking is inferred. PR #11 remains unmerged and not READY_FOR_OWNER_TEST.
