@@ -564,3 +564,10 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Scope:** verified CI and recorded provenance; no NPC runtime/Content/Core, test assertions, asset files or mutable state changed. This documentation update has a later SHA not covered by the reported run. No local tests executed.
 - **Integration remains BLOCKED:** require Core-owned atomic due-event settlement, durable receipt and earned-key deduplication API; E03/E07 original agreement occurrence provenance from Core/Content. C0-v2 PR #9 and ADR PR #14/#17 remain unmerged. No main push/merge; PR #16 remains Draft.
 
+
+## AutoDev 02 — document-scoped art screen parity regression (2026-11-19)
+
+- **One bounded task (#4/#20):** added golden assertions comparing each of the nine valid Day01 document/portrait/standing/blank-art routes against the canonical document screen. Checks visit identity, inspection ID/token cost and ordered choice IDs. This catches cross-platform UI routing drift without adding another gameplay state, ledger, or Android-specific implementation.
+- **Test-source commit:** `7912067a0bae3be554dc1de8412009400c99ad0c` on `feature/npc-4`; only `Tests/Npc/VisitorIdentityGoldenTests.cs` changed. This handoff is a separate documentation commit. Draft PR #16; no main push or merge.
+- **Verification:** manually inspected existing `TryGetVisitScreenPreviewByDocumentId` and `TryGetVisitScreenPreviewForDocumentAsset` methods. Previous head `c9ee2c649fef320f750b2c4e0a9b5fb7a2d05d1c` has successful NPC GitHub Actions run #44565196266. **New test SHA: no associated workflow run returned at inspection time; NOT verified as passing.** Local .NET, Unity and Android tests NOT RUN. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` when runner is available.
+- **BLOCKED for EventDirector:** Core atomic AdvanceDay settlement/receipts/earned-key ports and Content/Core E03/E07 provenance remain unresolved. C0-v2 PR #9 and ADR PR #14 remain unmerged; planned Issue #21 portrait IDs are not evidence of actual PNGs.
