@@ -567,3 +567,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Scenario commit: `5c6d7d5f38124286bbb6fef255519656d420bcb3`.
 - Actually verified: exact anchor occurred once before replacement; updated scenario contains numbered checks 1–10. No gameplay values, Definition IDs, DayIndex or money fields changed.
 - NOT run: checked-in Node validators, CI, Unity, Android. QA 05 should validate ROOM routing against the UI fixture and negative cases. No Core/EventDirector changes; no main push/merge.
+
+## AutoDev 04 — Day01 historical requests vs active claims (2026-11-19)
+
+- Issue #7 / PR #11; one bounded narrative clarification in `Content/DAY_01.md`: three old room requests remain a fictional story clue but do **not** count as active claims for the ROOM menu. Only selected LAB=full/phased, STUDENT=full, PARTNER=onsite count; fewer than two uses ROOM-AUTO (display-only, no booking). This resolves ambiguity without changing JSON, balance, IDs, DayIndex=0, Int64 kopecks, Core, NPC or EventDirector.
+- Narrative commit: `8c3311328f1d0941d3cdb1cb0d973bf85396c8d3`.
+- Actual check: exact old contradictory sentence occurred once; replacement was verified in constructed text and GitHub accepted commit. Not run: Node CLI, CI, Unity, Android. QA 05 should verify narrative versus 27-route fixture and negative cases.
+- Status: NOT READY_FOR_OWNER_TEST; PR remains Draft, no main push/merge.
