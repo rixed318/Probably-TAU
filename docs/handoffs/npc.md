@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — Day01 padded art ID regression (2026-11-20)
+
+**One bounded task:** added two fail-closed golden assertions for leading/trailing whitespace in a known portrait asset ID when resolving a document-scoped Day01 screen. Exact ordinal asset IDs must not be silently trimmed on Windows or Android. Test file: `Tests/Npc/VisitorIdentityGoldenTests.cs`; code commit `9cac0588f6cf1c85f7c83a6930b0acfacf942f27`. No production/Core changes.
+
+**Validation:** GitHub accepted source commit; .NET golden workflow for this SHA is not yet confirmed. Local .NET, Unity Editor, Windows and Android player tests NOT RUN. **BLOCKED:** full EventDirector requires Core atomic event/receipt/earned-key API and Content E03/E07 origin agreement. PR #16 remains Draft; C0-v2 PR #9 and ADR PR #14 remain unmerged. No main push/merge, no art uploads.
+
+
 ## AutoDev 02 — verification of expanded Day01 screen golden tests (2026-11-19)
 
 **One bounded task:** verified the GitHub Actions result for the preceding regression additions on branch `feature/npc-4`, commit `bc39db86b2aa2b5c31c0733269d2d9d88bf85818`. [NPC golden workflow run #44583909347](https://github.com/rixed318/Probably-TAU/actions/runs/44583909347) returned `completed/success` for that SHA. This is evidence of the actual GitHub .NET golden workflow, not a Unity or Android player test. No production logic changed.
