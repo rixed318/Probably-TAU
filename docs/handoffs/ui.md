@@ -757,3 +757,14 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 **Verification:** GitHub accepted the test commit and the updated test file was fetched again, confirming the new assertions are present. **Node tests, CI on this commit, Android Chrome, physical TalkBack, and Unity were NOT executed/verified in this pass.** Static assertions are not evidence that TalkBack announces the status correctly.
 
 **Run:** `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; then inspect the Android offline artifact and verify progress announcements with TalkBack on a real device. Keep PR #12 Draft. C0-v2 (PR #9), ADR (PR #14) and content PR #11 remain pending for runtime integration. Original pixel-art PNGs for #21 remain unverified/not delivered.
+
+
+---
+
+## AutoDev 03 pass — 2026-11-19 · Issue #20 (TalkBack manual acceptance)
+
+**One bounded task:** documented a reproducible physical-Android TalkBack acceptance procedure in `prototypes/ui-day-one/README.md`: offline extracted canonical HTML, swipe/double-tap decisions, progress announcements 1/3–3/3, focus retention, alert announcement, browser/TalkBack version and recording evidence. This does not modify UI behavior, Core or GameState.
+
+**Documentation commit:** `5619d794fb5efd52a78c451c4ab3d9bfe2e6ebd5` on `feature/ui-5`; this handoff is a subsequent commit. **Tests actually run:** none (documentation-only). No physical Android, TalkBack, Chromium, Node, Unity or APK test was performed; all device results remain **NOT TESTED**. `aria-live` source checks do not prove speech output. Real PNGs for #21 remain outstanding.
+
+**Next:** QA 05 / owner executes the physical-device checklist, records evidence in PR #12; then review original art samples. PR #12 remains Draft; no merge to main.
