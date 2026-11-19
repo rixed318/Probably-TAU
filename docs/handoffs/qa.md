@@ -1157,3 +1157,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** Chromium touch acceptance at 360x800/800x360 on latest single-file Day01 HTML not run.
 - **Blocker 3:** Actual PNG signatures/hashes, Unity Editor APK/device and complete Core DTO Save→Load remain unverified.
 - **Recommended next step:** run the latest Day01 HTML Chromium mobile acceptance and attach exact UI SHA/logs; in parallel NPC owner supplies passing exact-SHA dotnet evidence. Unity build and real Android device testing only after actual Unity APK. READY_FOR_OWNER_TEST not assigned; no merge/main push.
+
+
+## 2026-11-19 06:03 UTC+4 — QA 05: exact UI single-file static dependency audit (#8, #20)
+
+**One bounded task:** independently inspected the actual PR #12 HTML `prototypes/ui-day-one/day01-android-offline.html` at UI HEAD `c0678f1f7c6b9db1eb6286f92b964763ef3365dc` (blob `5fd425b0b683353fcf5a1e83339426679b457126`, 56,675 UTF-8 characters). Unlike `day01-playable.html` (which references three local scripts), this Android offline artifact contains two inline scripts, no external script src, no external link/img/iframe/source HTTP URLs, and no matched fetch/XMLHttpRequest/WebSocket/dynamic import tokens. Static checks also found viewport meta, media queries, touch-related code, EndDay and ledger references. **STATIC PASS for this narrow source dependency scan only**; it is not browser execution or a proof of complete offline closure. Source scans cannot prove three documents, no duplicate ledger entries, 48dp targets or overflow. No new contract or SaveService.
+
+**Actually executed:** GitHub exact-ref file retrieval and deterministic JavaScript string/regex inspection via tool runtime. Python/Node CLI/.NET/Chromium 360×800 or 800×360/Unity Editor/real APK: **NOT RUN**. PNG signature/dimensions/hash and Save→Load: **NOT RUN**. No other branch modified; no main push/merge.
+
+### Сводка для координатора 00 — 2026-11-19 06:03 UTC+4
+
+- **Observed PR HEADs before QA update:** #9 Core `1c5cf0064133a13c59a468750343321819e794ac`; #10 QA `92d549965c3cd55a35b9ce7535d176262607f821`; #11 Content `4c2794a0feb037491d8a881190c8b33f46b18133`; #12 UI `c0678f1f7c6b9db1eb6286f92b964763ef3365dc`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `70dc27cd0e23dd65b43f4e2ae94ad80b3ded2757`. QA HEAD after write is GitHub-returned commit SHA. C0-v2 and ADR remain feature-development guidance, not merge authorization.
+- **Blocker 1:** NPC exact-HEAD .NET compile/golden evidence not obtained; earlier CS0136 needs owner fix and fresh compiler proof.
+- **Blocker 2:** actual Chromium touch acceptance of this exact HTML at 360×800 and 800×360, three docs, EndDay, ledger replay, partner no immediate cash, 48dp and overflow **NOT RUN**.
+- **Blocker 3:** actual PNG binary/signature/dimensions/manifest SHA, Unity APK/device and integrated Save→Load remain unverified; complete stable Core DTO required for SaveService.
+- **Recommended next step:** execute Playwright/Chromium touch on exact UI SHA and attach screenshots, DOM hit-target measurements, transaction/ledger logs. Then refresh exact-SHA CI after NPC fix. READY_FOR_OWNER_TEST not granted.
