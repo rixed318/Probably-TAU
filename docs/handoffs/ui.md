@@ -717,3 +717,12 @@ The workflow runs on pushes to `feature/ui-5`, PR changes to the listed UI/art p
 - Branch feature/ui-5; test commits e074692d9a4c1a33f5310408ab310fc898ed592e (initial guard) and 32e43b210f222719fb96abffd0da786fdb1b8623 (correct inline-script capture regex). File: prototypes/ui-day-one/test-day01-android-touch.cjs.
 - Verified via GitHub Contents API: updated test file accepted and re-read; existing HTML handler ordering inspected. Node tests, CI, Chromium and physical Android NOT executed for these commits; no runtime PASS claimed. This is static regression coverage, not proof of touch behavior.
 - Next: run node --test prototypes/ui-day-one/test-day01-android-touch.cjs and check fresh CI; then actual Android device playtest. Issue #21 still needs original PNG generation, binary upload and owner art review. C0-v2 PR #9 / ADR PR #14 not merged. No changes to GameState/Core or main.
+
+
+## 2026-11-19 — Issue #20: stale-error regression confirmed in CI
+
+- Scoped task: verify the corrected static regression test for Android inspect/end-day stale-error clearing against the current UI branch. No production code changes.
+- Branch HEAD before this handoff update: `9563ff623c4905cddd7926077f76b8a9cbcec53b`; corrected test commit: `32e43b210f222719fb96abffd0da786fdb1b8623`.
+- GitHub Actions [run #44450388944](https://github.com/rixed318/Probably-TAU/actions/runs/44450388944) on HEAD: `completed/success`. Job `Node UI and art manifest regression (not Unity)` and its `Node UI mock and canonical Day 01 tests` step passed; art manifest checks, synthetic PNG audit, staged Android HTML verification and artifact uploads also passed. Earlier runs #44450349312 and #44450342754 for initial test commit `e074692d` failed; they do not establish current status.
+- **Actually verified:** live GitHub branch SHA, workflow run conclusion, individual job/step conclusions and corrected test source. **Not executed here:** local Node/Chromium, real Android `file://`, physical touch, Unity Editor or APK. This is static source regression coverage, not proof of real-device interaction.
+- Next: QA/owner tests Android on device; Issue #21 requires actual original PNG generation, binary commit and art review. C0-v2 PR #9 and ADR PR #14 remain integration gates; no Core/GameState or main modifications.
