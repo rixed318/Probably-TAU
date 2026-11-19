@@ -835,3 +835,10 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 - Scope: regression-test source only; no HTML behavior, Core/GameState, art assets, or Unity changes.
 - Verification: GitHub contents API accepted the source commit. Full Node test suite, browser, real Android, CI for this SHA, and Unity were **not run** in this pass. The guards are static heuristics, not a security sandbox; legacy HTML is not covered by these two added assertions.
 - Follow-up: run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and verify Android viewport/device; PNG delivery for #21 remains pending.
+
+
+## 2026-11-20 · Role 03 · Issue #20 · legacy offline guard parity
+
+One bounded regression-test change: `prototypes/ui-day-one/test-day01-android-touch.cjs` now applies existing `sendBeacon` / `importScripts` / `new Worker` and CSS protocol-relative `url(//...)` source guards to **both** distributed Android offline HTML variants, not only `day01-android-touch.html`. Implementation commit `b7f87fcf427c9710ef0f83c0898b669227245ef1` in `feature/ui-5`. No production HTML, desktop demo, Core/GameState, Unity or art changed.
+
+Verification: live GitHub source read and authenticated test-file commit confirmed. **Node suite NOT executed** in this run; no browser, CI, real Android/TalkBack, or Unity execution. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and perform physical Android playtest before marking device-ready. Static patterns do not prove network isolation. Issue #21 office PNG still not verified as committed. PR #12 remains Draft; no main merge.
