@@ -1221,3 +1221,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** Core/Content/NPC CI pins are stale; no fresh successful latest-HEAD .NET/Node regression, especially NPC compiler proof.
 - **Blocker 3:** Actual PNG binaries/signatures/dimensions/manifest SHA, Unity APK/device, and integrated Save→Load are unverified; SaveService requires stable Core DTO.
 - **Recommended next step:** run real Chromium touch emulation at 360×800 and 800×360 for exact UI SHA and collect DOM/ledger evidence; then refresh other CI pins only after verifying compatible source and test results. No READY_FOR_OWNER_TEST.
+
+
+## 2026-11-19 12:36 UTC+4 — QA 05: Issue #21 actual PNG delivery audit (read-only)
+
+**One bounded independent check:** queried the complete changed-filename list of UI PR #12 at HEAD `4efe047560710ac73ef51a23a6d9652e8f38a646`. The PR diff contains **zero paths ending in .png**. Read actual `docs/art/ASSET_MANIFEST_D01.csv` from that exact UI SHA (Git blob `57d69589a7b6671b85810dad77506c311d5ffa43`): its initial rows are `planned`, `rights_review=pending`, `source_file` empty, and `unity_target` names future .png paths. These are plans, **not committed binary files**. This is a concrete acceptance gap for Issue #21; do not treat manifest validator PASS as PNG delivery. No PNG signatures, IHDR dimensions, or manifest SHA-256 can be verified without actual PNG binaries. Scope of negative result: files changed in PR #12 only; this does not prove absence of PNG in every branch or external artifact.
+
+**Actually executed:** GitHub PR changed-file enumeration and exact-UI-SHA manifest retrieval/inspection. Result: 0 PNG files in PR #12 changed-file list (**FAIL for Issue #21 binary delivery gate**). Python/Node/.NET/Chromium/Unity/APK/device/Save→Load **NOT RUN**. No Core/ADR contract changes, no alternative GameState, no merge/main push.
+
+### Сводка для координатора 00 — 2026-11-19 12:36 UTC+4
+
+- **Observed PR HEADs before QA handoff write:** #9 `d3b7bca3195bc9c9baabde31d2232d292b0594a4`; #10 `bfdb7aed3e23296850770a32a5470bbfa621ae56` (new QA handoff commit follows); #11 `009a6b18ff5cbf2b36c73452f9cb839c549c8cf0`; #12 `4efe047560710ac73ef51a23a6d9652e8f38a646`; #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 `4b86e7cb03cf444c2b4ecd7cb88642fbcba01802`. C0-v2 in #9 and ADR #14 remain unmerged; no owner merge permission inferred.
+- **Blocker 1:** UI #12 contains no changed PNG binaries; Issue #21's 3–5 original PNG signature/dimensions/manifest-SHA acceptance cannot run until UI commits real assets.
+- **Blocker 2:** Chromium touch acceptance at 360×800 and 800×360 on latest exact single-file Day01 HTML remains NOT RUN (three documents, EndDay, ledger replay, deferred partner cash, 48dp and overflow unverified).
+- **Blocker 3:** latest-HEAD .NET/Node CI pins remain stale; Unity APK/device and integrated Save→Load unverified, with stable Core DTO prerequisite for real SaveService.
+- **Recommended next step:** UI 03 commit first 3–5 original PNG binaries in PR #12 with manifest source_file and SHA-256; QA then verify PNG signature, IHDR dimensions and exact SHA. Independently prioritize Chromium touch test on the latest HTML. Keep READY_FOR_OWNER_TEST withheld.
