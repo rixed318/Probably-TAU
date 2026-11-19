@@ -20,6 +20,23 @@ for (const event of contentSpec.eventManifest) {
 }
 assert.equal(new Set([...eventIds, ...projectIds]).size, eventIds.length + projectIds.length,
   "duplicate event/project Definition ID");
+// Project launch choice references must resolve to authored Day01/event Definition IDs.
+const authoredChoiceIds = new Set([
+  ...contentSpec.day1.visits.flatMap(visit => visit.choices.map(choice => choice.id)),
+  ...eventChoiceIds
+]);
+for (const project of contentSpec.projects) {
+  if (project.launchChoices !== undefined) {
+    assert.ok(Array.isArray(project.launchChoices) && project.launchChoices.length > 0,
+      "project launchChoices must be a nonempty array: " + project.id);
+    assert.equal(new Set(project.launchChoices).size, project.launchChoices.length,
+      "duplicate project launch choice: " + project.id);
+    for (const choiceId of project.launchChoices) {
+      assert.ok(authoredChoiceIds.has(choiceId),
+        "unknown project launch choice Definition ID: " + project.id + " -> " + choiceId);
+    }
+  }
+}
 const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
 for (const event of contentSpec.eventManifest) {
   assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
