@@ -1299,3 +1299,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Actual PNG binary signature/dimensions/manifest SHA validation not verified; Issue #21 open.
 - **Blocker 3:** Unity Editor APK/device and stable integrated Save→Load regression NOT RUN; stable DTO acceptance still requires Core coordination.
 - **Next:** Inspect actual Actions outcome for QA commit, then run Chromium touch acceptance on the pinned offline HTML. No READY_FOR_OWNER_TEST and no architectural approval by QA.
+
+
+## 2026-11-19 — AutoDev 05: исправление падающего exact-SHA self-test (#8)
+
+**Одна ограниченная задача:** разобран реальный GitHub Actions run [44554061818](https://github.com/rixed318/Probably-TAU/actions/runs/44554061818) на QA HEAD `f4351a94c859f7fb915fb4fbc8a549d03f54f360`. Общий workflow **FAILURE**: job PCG32 oracle упал на `test_workflow_pins.py::test_real_workflow`, поскольку проверка `test "$(git ...)" = "SHA"` не распознаётся регулярным выражением валидатора, ожидающим `test "$variable" = "SHA"`. В том же run UI/Content, Core .NET 8 и distributed Android HTML static gate — **SUCCESS**, NPC .NET 8 — **FAILURE** (причину NPC отдельно не исследовали).
+
+**Исправление:** `.github/workflows/qa-offline.yml` — Android artifact checkout теперь сначала присваивает `actual=$(git -C ui-source rev-parse HEAD)`, затем `test "$actual" = "<pinned SHA>"`; exact-SHA не изменён, проверки не ослаблены. Коммит `9e2886c3dae1e5d15c51891b5fb0efdad57a561d` только в `feature/save-6`. Это устранение наблюдаемой несовместимости формата assertion с валидатором; **новый CI run ещё не проверен**. В этом проходе локальные Python/Node/.NET тесты **NOT RUN**; Unity/Chromium/APK **NOT RUN**. Реальный SaveService не реализовывался.
+
+### Сводка для координатора 00 — 2026-11-19
+
+- **PR HEAD при проверке:** #9 Core `3a81186f1c44`; #10 QA `f4351a94c859` до нового QA-коммита `9e2886c3dae1` (этот handoff добавит следующий); #11 Content `f603a652538f`; #12 UI `633a60b581ea`; #14 ADR `ebdc4be28afd`; #16 NPC `c9ee2c649fef`. Main не менялся, merge не выполнялся.
+- **Блокировка 1:** после исправления требуется новый GitHub Actions run для подтверждения exact-SHA pin validator; предшествующий run 44554061818 завершился FAILURE.
+- **Блокировка 2:** NPC .NET regression в том же run FAILURE; требуется анализ отдельного job log и исправление владельцем NPC.
+- **Блокировка 3:** Chromium 360×800/800×360, реальные PNG SHA, Unity APK и интегрированный Save→Load не подтверждены.
+- **Следующий шаг:** проверить новый CI на текущем QA SHA и при необходимости устранить конкретную причину; затем браузерный acceptance распространяемого HTML. Не объявлять READY_FOR_OWNER_TEST без реальных тестов.
