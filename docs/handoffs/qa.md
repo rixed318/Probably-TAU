@@ -1206,3 +1206,18 @@ Latest observed PR HEADs: #9 Core `3a389e834086935296eaa9184c47064ce94872e6`; #1
 - **Blocker 2:** Fresh exact-SHA NPC .NET compile/golden evidence still NOT VERIFIED; old pinned workflow SHA does not test latest NPC HEAD.
 - **Blocker 3:** Real PNG signature/dimensions/manifest SHA, Unity APK/device and integrated Save→Load remain NOT VERIFIED; stable Core DTO contract required before real SaveService.
 - **Recommended next step:** run Chromium touch emulation at both dimensions on UI `65e669ce`, capture DOM hit-target geometry and overflow screenshots plus three-doc/EndDay/ledger assertions; report any failing selectors to UI PR #12. Do not grant READY_FOR_OWNER_TEST or merge.
+
+
+## 2026-11-19 10:55 UTC+4 — QA 05: refresh exact UI CI pin (#8, #20)
+
+**One bounded change:** reviewed the current PR #12 UI HEAD `6fb678cd9e52675e03ab430ea59269ff9f5d1bcf` and fetched `prototypes/ui-day-one/day01-android-offline.html` directly at that exact SHA (blob `5fd425b0b683353fcf5a1e83339426679b457126`, 56,675 characters). The HTML blob matches the previously audited artifact; this does **not** imply browser acceptance. Updated the UI checkout pin **and its exact-SHA comparison** in `.github/workflows/qa-offline.yml` from `436f823d30d903341323a5e09fcaef9949e9ced3` to `6fb678cd9e52675e03ab430ea59269ff9f5d1bcf`. Workflow commit: `5ac9870caf0f7096be68b8d1b0dffa77c0025710`. Other Core, Content and NPC pins intentionally unchanged; they are stale relative to current PR heads and do not prove latest-HEAD regression.
+
+**Actually executed:** GitHub exact-SHA source fetch, CI YAML text replacement, and deterministic JavaScript assertions: old UI SHA occurred twice before replacement, occurs zero times after; new SHA occurs twice, and all other pins remain unchanged (**4/4 static assertions PASS**). This is not YAML execution or GitHub Actions success. Python/Node CLI/.NET/Chromium touch (360×800, 800×360)/Unity Editor/APK/device/PNG binary checks/Save→Load **NOT RUN**. No shared contracts changed; no main push/merge.
+
+### Сводка для координатора 00 — 2026-11-19 10:55 UTC+4
+
+- **Verified PR HEADs before QA updates:** #9 Core `4323078d6c15de8a1a32386ca108e3cc7ec65f02`; #10 QA `458d2a21c113f0e11b6f3f3ec8320479d685a3f8` (then workflow `5ac9870caf0f7096be68b8d1b0dffa77c0025710`; this handoff commit follows); #11 Content `d83d2c8f4bb747920a3d76cabe9a36755b1b77af`; #12 UI `6fb678cd9e52675e03ab430ea59269ff9f5d1bcf`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `7d20679063db701f5281e41f11f2f1dd293654dc`. C0-v2/ADR remain feature-development guidance, not merge authorization.
+- **Blocker 1:** Chromium mobile acceptance on exact UI SHA (3 docs, EndDay, ledger replay, deferred partner cash, 48dp and overflow) **NOT RUN**.
+- **Blocker 2:** Core/Content/NPC CI pins are stale; no fresh successful latest-HEAD .NET/Node regression, especially NPC compiler proof.
+- **Blocker 3:** Actual PNG binaries/signatures/dimensions/manifest SHA, Unity APK/device, and integrated Save→Load are unverified; SaveService requires stable Core DTO.
+- **Recommended next step:** run real Chromium touch emulation at 360×800 and 800×360 for exact UI SHA and collect DOM/ledger evidence; then refresh other CI pins only after verifying compatible source and test results. No READY_FOR_OWNER_TEST.
