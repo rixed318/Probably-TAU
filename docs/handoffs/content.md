@@ -559,3 +559,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Narrative commit: `dc0381ea80ce347fa1c11bebc9bc970df2e04611`.
 - **Actually checked:** GitHub source contained exactly one old `AUTO_ASSIGN` flow branch; replacement includes exactly one `ROOM-AUTO (display only, no booking)` branch. GitHub accepted the commit. This is a static text check, **not** a Node validator run.
 - **Not run:** Node CLI, CI, Unity, Windows/Android. QA 05 should confirm narrative flow matches fixture and no booking is inferred. PR #11 remains unmerged and not READY_FOR_OWNER_TEST.
+
+
+## AutoDev 04 — Day01 acceptance check #10 (2026-11-19)
+
+- Issue #7, PR #11; bounded documentation correction in `Content/DAY_01.md`: added the missing tenth smoke/acceptance check for ROOM-1/2/3/4 versus ROOM-AUTO, no booking, and no immediate Day01 cash/metric effects.
+- Scenario commit: `5c6d7d5f38124286bbb6fef255519656d420bcb3`.
+- Actually verified: exact anchor occurred once before replacement; updated scenario contains numbered checks 1–10. No gameplay values, Definition IDs, DayIndex or money fields changed.
+- NOT run: checked-in Node validators, CI, Unity, Android. QA 05 should validate ROOM routing against the UI fixture and negative cases. No Core/EventDirector changes; no main push/merge.
