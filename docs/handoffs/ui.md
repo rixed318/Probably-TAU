@@ -790,3 +790,16 @@ One bounded documentation task: added `docs/art/reviews/office_background_candid
 **Actual checks:** live GitHub AGENTS/workflow/PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest and pipeline inspected; local preview `file`/SHA256 checked (320×180 RGB PNG; `90b9c982fbf507bce26efb16cd3927ba44bd437f11ebd3057024a7e8c6b822d3`). Review record created through authenticated GitHub connector. **Not performed:** binary GitHub upload, art approval, Node/CI/Android/Unity tests. Do not mark the RGB preview as production RGBA8 or a GitHub asset.
 
 **BLOCKED for binary acceptance:** GitHub connector has no access to local image bytes; PNG remains only in the execution container. Need authenticated binary transfer and GitHub blob re-verification. PR #12 stays Draft; no Core/GameState/main edits or merge.
+
+
+---
+
+## 2026-11-19 · Issue #20/#21 — PR #12 status reconciliation
+
+**One scoped task:** reconcile the outdated PR #12 description with current Android WEB prototype and original-art delivery gates; no production UI, assets, Core, GameState, or contracts changed.
+
+- Android Day01 standalone touch HTML, static regression tests, CI artifact workflow and physical-device checklist are present in feature/ui-5. These are **WEB prototype** deliverables, not Unity/APK. Earlier CI success is not a physical Android/TalkBack pass.
+- Issue #21 office art candidate: ImageGen preview exists in the previous local run and is documented in `docs/art/reviews/office_background_candidate_2026-11-19.md`; **binary PNG is NOT in GitHub**. Review/cleanup and upload remain blocked until authenticated transfer of actual bytes. The 85 manifest entries are plans, not delivered sprites.
+- PR #9 C0-v2 and PR #14 ADR remain unmerged integration references. PR #11 content remains draft; do not promote mock data into canonical runtime behavior.
+- Verification in this pass: live GitHub source reads of main README/AGENTS/DECISIONS, workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, pipeline and this handoff. No Node, CI, Android, TalkBack or Unity tests run in this pass.
+- Next: owner/QA real-device Android playtest; authenticated binary transfer and review of first original office candidate; Unity UI Toolkit only after real Editor and stable API. PR #12 stays Draft, no merge.
