@@ -1385,3 +1385,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 actual PNG binary signatures, dimensions and manifest SHA at latest UI HEAD **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor-built Android APK/device and integrated Save→Load **NOT RUN**; Core DTO stabilization/integration remains a dependency.
 - **Recommended next step:** execute Chromium touch acceptance against the **latest exact** UI SHA `b4c6a08b40489d6f2fdd2d9091d825104032387c`, then validate original PNG binaries when committed. CI green on pinned sources is not READY_FOR_OWNER_TEST. No merge or main push.
+
+
+## 2026-11-20 — QA 05: independent real-art delivery audit (Issue #21)
+
+**One bounded QA task:** inspected the complete paginated changed-filename list of UI PR #12 at HEAD `fe50d41e5cd96003379d58d98cb84a7d04738e97` through GitHub. Result: **32 changed paths, 0 PNG files**; art docs/manifest and candidate-review Markdown are present, but no committed `.png` binary in the PR diff. This is evidence of **missing delivered binary art in this PR**, not proof that no images exist anywhere outside its diff. Therefore PNG signature, pixel dimensions and manifest SHA256 validation (3–5 actual assets) are **BLOCKED: no PNG files in the inspected PR diff**. Issue #21 acceptance is NOT MET on this evidence. No image generation or IP/logo approval was performed.
+
+**Other evidence:** GitHub Actions run [44653234893](https://github.com/rixed318/Probably-TAU/actions/runs/44653234893) on preceding QA SHA `e798ea7267242f2f910950cffa500f0076dc87ba` reports completed/success (run conclusion only; jobs not independently inspected this pass). QA workflow still pins Android HTML UI SHA `231ce3c671e5256033dfe93eadc56e762602342e`, **not** current UI HEAD. Local Python/Node/.NET, Chromium, Unity Editor, Android APK/device, and integrated Save→Load: **NOT RUN**. No code changes or new contracts.
+
+### Сводка для координатора 00 — 2026-11-20 (real-art audit)
+
+- **Fresh PR HEADs (GitHub):** #9 `f4a3fc1678e37824835326c8b6a8f233da5f211a`; #10 `e798ea7267242f2f910950cffa500f0076dc87ba` before this handoff commit; #11 `7e8fa5820227dc739045a7e36f11532a0fb7ba5a`; #12 `fe50d41e5cd96003379d58d98cb84a7d04738e97`; #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 `dae4d29683b12947fe52bb9ec74222eec6139486`.
+- **Blocker 1:** No actual PNG files in the 32 changed paths of UI PR #12; cannot verify 3–5 binary PNG signatures, dimensions or SHA256 against manifest.
+- **Blocker 2:** Chromium touch acceptance on exact latest offline HTML (360×800 and 800×360, three documents, EndDay, ledger replay, deferred partner income, 48dp and overflow) **NOT RUN**; pinned static CI uses older UI revision.
+- **Blocker 3:** Unity Editor-built Android APK/device and integrated Save→Load **NOT RUN / NOT VERIFIED**; stable DTO integration still needs coordination.
+- **Recommended next step:** UI 03 should commit first 3–5 **real original PNG binaries** and matching manifest SHA256 in `feature/ui-5`; QA then validates PNG signatures, IHDR dimensions and hashes against the exact new UI SHA. Separately run Chromium touch acceptance. No main push/merge; no READY_FOR_OWNER_TEST.
