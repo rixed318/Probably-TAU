@@ -648,3 +648,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Prior HEAD `2779ea1a0003bc8d30e6504b092b16f2593136ff`: GitHub Actions run #44627577277 `completed/success` (standalone .NET 8 golden tests). New code SHA CI not yet verified; do not mark new regression PASS before exact-SHA CI.
 - Environment checked this run: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local C# tests, Unity Editor build and Android APK NOT RUN / BLOCKED. No Unity project fabricated.
 - No public API, NPC, UI, Content, `main`, merge or Issue closure changes. Next P0 remains approved typed NPC due-event integration in atomic EndDay after contract review and QA/00 signoff.
+
+## Core 01 — 20.11.2026: exact-HEAD Day02 stale-revision CI verification
+
+- Issue #19 / PR #9 / `feature/core-2`. Verified exact code-and-handoff HEAD `44b200f3bf9a1bb7ab902bee78d90b326c4aa375` with [Core .NET 8 golden run #44641696137](https://github.com/rixed318/Probably-TAU/actions/runs/44641696137): `completed/success` (run 249). This covers the Day02 stale-expectedRevision regression introduced by `6c6ccad859a48f3b927fa3fa80c8ffb67d578e35` in standalone CI, **not** Unity compilation.
+- Single bounded task this pass: verify prior exact-head CI and record evidence. No new C# code or public API; no edits to NPC/UI/Content/QA.
+- Current runtime checked: `dotnet`, `csc`, `mcs`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local C# tests, Unity/Windows build, Android APK NOT RUN. Native APK remains BLOCKED pending real Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK.
+- Next P0: coordinate typed NPC due-event EndDay integration contract with 02/00, then implement atomically with Ledger/receipts and independent QA review. No main push/merge or Issue closure. CI for this new documentation-only HEAD must be checked separately.
