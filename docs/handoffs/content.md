@@ -690,3 +690,12 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `752305abaaf0fbf52c8d958104a9838b63b3ffce` on `feature/content-7`.
 - Actually tested isolated JavaScript against current GitHub `CONTENT_SPEC_DRAFT.json`: 3 distinct NPC IDs PASS; synthetic duplicate of first NPC ID rejected PASS. Full checked-in Node CLI, CI, Unity, Windows and Android NOT run. QA 05 should execute complete validator and a duplicate NPC ID mutation on checkout.
 - C0-v2 PR #9 and ADR PR #14 remain separate; Draft / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+
+## Автономный проход 04 — standing art identity (2026-11-20)
+
+**Issue #7 / PR #11; scope:** одна небольшая правка связности оригинальных персонажей Дня 01 с кроссплатформенными ресурсами. В `Content/CONTENT_SPEC_DRAFT.json` у трёх вымышленных NPC добавлен стабильный `standingAssetId` из `Content/DAY01_ART_LINKS.json`; валидатор теперь проверяет соответствие этих ID наряду с портретами. Это плановые ссылки на арт, **не доказательство существования PNG**, не Unity asset schema.
+
+**Проверено:** JavaScript JSON.parse и независимая сверка 3/3 NPC standing ID с art links перед записью — PASS. Полный Node CLI, CI, Unity, Windows и Android **не запускались**. C0-v2 PR #9 и ADR PR #14 остаются внешними контрактами; Core, EventDirector, деньги, Definition ID решений и DayIndex не менялись.
+
+**Коммиты:** spec `0bc46180e6d89c75000e6ddf187a246120056800`; validator `03a7f93d17d5b6a48a78a2fde86c56a83e6d7f2c`. QA 05: выполнить `node Content/validate-day01-acceptance.cjs` на актуальном HEAD и отрицательный тест с неверным `standingAssetId`. До этого NOT READY_FOR_OWNER_TEST. Main не затронут, merge не выполнялся.
