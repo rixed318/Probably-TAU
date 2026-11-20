@@ -12,6 +12,14 @@ assert.equal(contentSpec.opening.weeklySettlementFirstClosingDayIndex, 4,
   "opening first weekly closing DayIndex must be 4");
 const eventIds = contentSpec.eventManifest.map(event => event.id);
 const projectIds = contentSpec.projects.map(project => project.id);
+// Stable event/project Definition IDs are exact authored tokens, never paths or display labels.
+// These draft constraints do not define Core runtime types.
+for (const id of eventIds) {
+  assert.match(id, /^E(?:0[2-9]|1[0-4])$/, "invalid event Definition ID: " + id);
+}
+for (const id of projectIds) {
+  assert.match(id, /^P0[12]$/, "invalid project Definition ID: " + id);
+}
 // Draft choice Definition IDs must not collide across different events.
 const eventChoiceIds = contentSpec.eventManifest.flatMap(event => event.choices);
 assert.equal(new Set(eventChoiceIds).size, eventChoiceIds.length,
