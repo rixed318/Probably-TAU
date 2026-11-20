@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-20 — fix base-tag guard false negative (Issue #20)
+
+- Fixed `baseTag` regex in `prototypes/ui-day-one/test-day01-android-touch.cjs`: `/\<base\\b.../` in the JS source matched a literal backslash and `b`, not a word boundary, allowing `<base href=...>` to escape the offline guard. Corrected to a real `\b` word boundary. Commit `822e841025c809b993ac7643635324d738fed15f`.
+- **Actual test:** Node.js isolated regex reproduction: old pattern did not detect `<base href="x">`; corrected pattern detected it and did not match `<baseboard>`. Full repository Node suite, browser, Android and Unity **NOT RUN**. Next: `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`.
+- #20 still needs device evidence; #21 PNG binary not delivered. No GameState/Core/main/merge changes; C0-v2 PR #9 and ADR PR #14 remain integration references.
+
+
 **Date:** 2026-11-14  
 **Repository:** https://github.com/rixed318/Probably-TAU  
 **Work branch:** feature/ui-5  
