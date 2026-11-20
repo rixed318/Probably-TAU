@@ -893,3 +893,21 @@ Actual isolated check against the two live GitHub HTML files: PASS, 2/2 existing
 - Actual execution: four isolated Node.js regex fixtures passed (two forbidden and two allowed examples). **Full repository Node test suite, browser rendering, physical Android, TalkBack and Unity were NOT run.** New test has not been executed against both real HTML files locally.
 - Contracts: no changes to Core/GameState or mock command behavior. C0-v2 PR #9, ADR PR #14 and Day01 content PR #11 remain integration references, not approved runtime dependencies.
 - Next: run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and physical 800×360 / 360×800 Android tests. Issue #21 still needs verified PNG binaries and owner review; no art delivery claimed.
+
+
+## 2026-11-20 · Role 03 · Android #20 — reproducible physical-device acceptance protocol
+
+One bounded documentation task: define a concrete **manual acceptance protocol** for the existing single-file offline Android Day01 demo, so QA/owner can report observed results instead of treating static regex guards as a device playtest. No production HTML, Core, Unity, or art changes.
+
+**Artifact under test:** `prototypes/ui-day-one/day01-android-touch.html` from `feature/ui-5` (download raw file to phone; open as local HTML with Chrome or compatible Android browser). The alternative `day01-android-offline.html` remains available for regression. This is a WEB PROTOTYPE, **not an APK**.
+
+**Record device evidence:** Android version, browser/version, physical screen resolution, device pixel ratio if available, orientation, browser zoom/text scaling, file SHA-256, date, and screenshots of initial screen / inspected document / decision / report. Record PASS/FAIL/BLOCKED for every item below; do not mark an unobserved item PASS.
+
+1. **Offline launch:** enable airplane mode before opening the extracted local HTML; reload twice. Initial UI must appear without spinner, remote network, or external dependencies.
+2. **Landscape 800×360 equivalent:** with system bars/notch visible, verify no essential controls clipped, no horizontal page scroll, document text readable, all actions reachable by touch without hover, and safe-area padding on all four sides. Measure actual rendered interactive hitboxes; minimum **48 CSS px** is a source-level proxy, **48 dp** requires Android density/viewport verification.
+3. **Portrait 360×800 equivalent:** rotate without reloading. Verify document, decisions, queue, and report remain reachable by vertical scrolling; no hidden End Day button or horizontal scrolling trap.
+4. **Day01 path:** open DOC-01, inspect, make one decision; continue all three fictional visitors, inspect evidence/conditional partner income, then End Day. Confirm the report shows exactly one entry per committed decision and no duplicate ledger effect after repeated taps; compare against mock fixture, not canonical Core economy.
+5. **Error recovery:** trigger an invalid action where possible; confirm visible error, then perform a valid action and verify stale error disappears. Check focus/keyboard behavior and screen reader labels if TalkBack is available.
+6. **Reload and limitations:** refresh local HTML and document whether state resets as designed; no persistence is promised. Record browser-specific `file://` restrictions, whether the HTML must be opened via Files app or browser, and any inability to reproduce.
+
+**Pass gate:** all items observed on a physical Android device or clearly marked unverified. Desktop emulation alone cannot close #20. Attach device screenshots and a short results table to PR #12 / Issue #20; do not claim APK, Unity integration, or production art. #21 still requires verified original PNG binaries and rights review. C0-v2 PR #9 and ADR PR #14 govern future integration; PR #11 content remains draft. No merge into main without owner authorization.
