@@ -720,3 +720,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 **Commit валидатора:** `2b410eda5a86a29f397941dad2d9d1b99d599e6e`. **Фактически выполнено:** независимая JS-проверка исходного JSON (13 событий и 2 проекта) — PASS; отрицательные проверки испорченного event ID `E02/../../` и project ID с переводом строки — 2/2 PASS. **Не выполнялись:** запуск полного `node Content/validate-day01-acceptance.cjs` из checkout, CI, Unity/Windows/Android. QA 05 должен повторить полный CLI и mutation checks.
 
 **Зависимости:** C0-v2 PR #9, ADR PR #14, координатор 00; никакого merge в main. PR #11 остаётся DRAFT до интеграционного review.
+
+
+## AutoDev 04 — shared Day01 art ID namespace guard (2026-11-20)
+
+- Issue #7 / PR #11: one bounded validator change: `Content/validate-day01-acceptance.cjs` now checks uniqueness across **all nine** planned Day01 portrait, standing and document asset IDs, preventing standing/document collisions that separate guards missed. No PNGs or runtime/Unity schema created; Windows/Android share IDs.
+- Validator commit: `90c51fdaa99bf450355cb0a52676bcd33dd5f204` (`feature/content-7`).
+- Actually executed isolated JavaScript against fetched GitHub draft: 9/9 IDs unique (PASS); synthetic standing/document ID collision detected (PASS). Full checked-in Node CLI, CI, Unity, Windows and Android **not run**. QA 05: run `node Content/validate-day01-acceptance.cjs` on current HEAD and negative collision mutation.
+- C0-v2 PR #9 and ADR PR #14 remain separate; no Core, EventDirector, economy, DayIndex, narrative, main push or merge. PR #11 remains NOT READY_FOR_OWNER_TEST.
