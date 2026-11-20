@@ -1400,3 +1400,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Chromium touch acceptance on exact latest offline HTML (360×800 and 800×360, three documents, EndDay, ledger replay, deferred partner income, 48dp and overflow) **NOT RUN**; pinned static CI uses older UI revision.
 - **Blocker 3:** Unity Editor-built Android APK/device and integrated Save→Load **NOT RUN / NOT VERIFIED**; stable DTO integration still needs coordination.
 - **Recommended next step:** UI 03 should commit first 3–5 **real original PNG binaries** and matching manifest SHA256 in `feature/ui-5`; QA then validates PNG signatures, IHDR dimensions and hashes against the exact new UI SHA. Separately run Chromium touch acceptance. No main push/merge; no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — QA 05: independent exact-SHA CI evidence (#8)
+
+**One bounded task:** verify the actual GitHub Actions jobs for QA PR #10 commit `985f40168072e74c3aa559c0ea381ba67e72cb7d`. [Run #44664471595](https://github.com/rixed318/Probably-TAU/actions/runs/44664471595) is completed/success; all **five** returned jobs are completed/success, including their named test steps: Python PCG32 oracle/source audit, NPC standalone .NET 8 golden assertions, distributed Android HTML static gate, Core ledger/snapshot .NET 8 golden suites, and UI/Content Node/Python static regressions. This is remote CI evidence for that QA commit only, not a claim of tests rerun on current moving feature heads.
+
+**NOT RUN:** local Node/Python/.NET; Chromium touch 360x800 or 800x360; Unity Editor/PlayMode; real Android APK/device; integrated Save→Load. CI static HTML gate does not prove 48dp targets, overflow, three-document touch flow or EndDay. No PNG signatures/dimensions/manifest SHA verified this pass. No SaveService or new GameState model created. No architecture contracts changed. No main push/merge.
+
+### Сводка для координатора 00 — 2026-11-20
+
+- **PR HEADs read from GitHub:** #9 Core `9a185255e7c3`; #10 QA before this handoff `985f40168072` (this documentation commit follows); #11 Content `f07e0f875d4d`; #12 UI `1761dbcaa5a4`; #14 ADR `ebdc4be28afd`; #16 NPC `048735a6df01`; #17 ADR-C0-002 `bc9db999b419`. C0-v2 and ADR remain feature-only references, not authorization to merge.
+- **Blocker 1:** Chromium touch acceptance of latest exact single-file UI HTML at 360x800 and 800x360 remains NOT RUN; 48dp/overflow and three documents/EndDay/ledger/partner cash unverified.
+- **Blocker 2:** 3–5 actual original PNG files and their signatures, dimensions and manifest SHA256 are not independently verified; UI PR body explicitly says ART_BINARY_DELIVERED: NO.
+- **Blocker 3:** true Unity Editor APK/device and integrated Save→Load tests NOT RUN; stable complete DTO must precede SaveService.
+- **Recommended next step:** run Chromium touch acceptance on UI SHA `1761dbcaa5a4aa2bb7f95dc49526345042a471f3` with screenshots and measured targets; then audit real committed PNGs once delivered. Keep main protected; no READY_FOR_OWNER_TEST.
