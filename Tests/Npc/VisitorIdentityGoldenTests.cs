@@ -162,6 +162,27 @@ namespace TAU.President.Tests.Npc
                     throw new Exception("Invalid choice must not resolve an inspection preview.");
             }
 
+            // Inspection action ID routing must be exact, detached and non-authoritative.
+            string[] actionIds = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            string[] actionDocs = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int actionIndex = 0; actionIndex < actionIds.Length; actionIndex++)
+            {
+                Day01Visitors.InspectionPreview byAction;
+                if (!Day01Visitors.TryGetInspectionPreviewByInspectionId(actionIds[actionIndex], out byAction) ||
+                    byAction == null || byAction.InspectionId != actionIds[actionIndex] ||
+                    byAction.DocumentId != actionDocs[actionIndex] ||
+                    byAction.CostTokens != 1 || byAction.RepeatCostTokens != 0)
+                    throw new Exception("Inspection action routing mismatch: " + actionIds[actionIndex]);
+            }
+            foreach (string badAction in new[] { null, "", "CHECK_SEAT_MAP", "check_seat_map ",
+                " check_seat_map", "unknown_action" })
+            {
+                Day01Visitors.InspectionPreview missingAction;
+                if (Day01Visitors.TryGetInspectionPreviewByInspectionId(badAction, out missingAction) ||
+                    missingAction != null)
+                    throw new Exception("Invalid inspection action ID accepted.");
+            }
+
             // Canonical Content Day01 inspection IDs and token costs; presentation only.
             string[] inspectionDocumentIds = { "DOC-01", "DOC-02", "DOC-03" };
             string[] inspectionActionIds = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
