@@ -35,6 +35,16 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
   for(const script of scripts)new vm.Script(script);
 });
 
+// Prevent protocol-relative external media from bypassing the offline http(s) guard.
+// These assertions cover static HTML only, not computed DOM assignments.
+test('both Android bundles reject protocol-relative media sources',()=>{
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    assert.doesNotMatch(source,/<(?:iframe|object|embed|audio|video|img|source|track)\\b[^>]*\\b(?:src|data|poster)\\s*=\\s*['\"]?\\/\\//i,
+      filename+' must not load protocol-relative media');
+  }
+});
+
 // Regression for the loading-screen failure: scripts are in <head>, so DOM nodes
 // do not exist until DOMContentLoaded. Keep event wiring and first render deferred.
 test('Android Day01 defers DOM wiring and first render until DOMContentLoaded',()=>{
