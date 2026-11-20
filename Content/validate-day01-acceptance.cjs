@@ -25,6 +25,29 @@ function validateDraftMoney(node, location = "content") {
   }
 }
 validateDraftMoney(contentSpec);
+// Deferred partner revenue is never cash at signing; Core owns earned ledger postings.
+const partnerVisit = contentSpec.day1.visits.find(visit => visit.id === "D01_PARTNER");
+assert.ok(partnerVisit, "missing Day01 partner visit");
+for (const choice of partnerVisit.choices) {
+  if (choice.id === "PARTNER-3") {
+    assert.equal(choice.conditionalRevenueKopecks, undefined,
+      "declined partner offer cannot promise revenue");
+    continue;
+  }
+  assert.ok(["PARTNER-1", "PARTNER-2"].includes(choice.id),
+    "unexpected Day01 partner choice: " + choice.id);
+  assert.equal(choice.revenueEarliestDayIndex, 4,
+    "partner revenue cannot be recognized before DayIndex 4: " + choice.id);
+  assert.equal(choice.revenueEarliestDay, choice.revenueEarliestDayIndex + 1,
+    "partner revenue display day/DayIndex mismatch: " + choice.id);
+  assert.deepEqual([...choice.requirements].sort(), ["E03_mentor_paid", "E07_delivered"].sort(),
+    "partner revenue requires both Core-confirmed facts: " + choice.id);
+  assert.ok(BigInt(choice.conditionalRevenueKopecks) > 0n,
+    "partner conditional revenue must be positive: " + choice.id);
+  assert.ok(!choice.effects.some(effect => effect.metric === "budget" ||
+    Object.hasOwn(effect, "deltaKopecks")),
+    "partner signing cannot post cash: " + choice.id);
+}
 // Draft weekly closing days are zero-based: displayed Days 05 and 10 -> DayIndex 4 and 9.
 // Guard content labels only; Core owns EndDay settlement and ledger idempotency.
 assert.deepEqual(contentSpec.meta.weeklySettlementClosingDayIndexes, [4, 9],
