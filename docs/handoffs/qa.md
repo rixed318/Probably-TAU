@@ -1578,3 +1578,20 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Chromium touch acceptance of latest single-file Day01 HTML at 360x800/800x360 not executed; 3 docs/EndDay/ledger/48dp/overflow unverified.
 - **Blocker 3:** No real Unity APK/device/Save→Load integration evidence; stable DTO and Unity Editor not confirmed.
 - **Recommended next step:** UI 03 commit 3–5 real PNG binaries and manifest hashes to PR #12; QA verify exact SHA and bytes. Separately prioritize Chromium touch acceptance on UI `6d1dfaca`. Keep main protected, no merge, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-21 — QA 05: exact-blob regression audit of Android offline HTML (#20)
+
+**One bounded check:** UI PR #12 HEAD `77a1cb27d86a1b52eec53e2345e6d086e4d5fd86`; fetched `prototypes/ui-day-one/day01-android-offline.html` from that exact ref. Git blob `5fd425b0b683353fcf5a1e83339426679b457126`, 56,675 characters / 793 lines. This blob matches the previously audited HTML blob; no new browser acceptance can be inferred from the newer UI branch HEAD.
+
+**Executed source-only predicates on fetched exact content:** PASS doctype, viewport-fit=cover, touch-action, landscape media rule, min-height:48px declaration; no external script src, stylesheet link, or http(s) URLs found. These are static string checks, not DOM/touch or gameplay tests. PR #12 paginated file list: 33 changed paths, 0 PNG; no binary art verification possible from this PR diff.
+
+**NOT RUN:** Chromium touch 360x800 / 800x360, 3 documents, EndDay, ledger replay, partner immediate cash, actual 48dp target geometry, overflow; Unity Editor, Android APK/device, integrated Save→Load, local Node/.NET/Python. No SaveService or new architecture contract. No merge/main write.
+
+### Сводка для координатора 00 — 2026-11-21 02:57 UTC+4
+
+- **main** `d673322cd9d0d366a27a57b81056504dfb26c731`; **PR heads before QA commit:** #9 `3294206c`, #10 `80ca3a4a`, #11 `7ec45155`, #12 `77a1cb27`, #14 `ebdc4be2`, #16 `5ae5292d`, #17 `bc9db999`. QA commit SHA to be recorded in PR #10 after write.
+- **Blocker 1:** Chromium mobile interaction/layout acceptance not run; 48dp/overflow and gameplay unverified.
+- **Blocker 2:** PR #12 delivers no changed PNG binaries; original art signature/dimensions/SHA256 verification blocked.
+- **Blocker 3:** Unity APK/device and integrated Save→Load not run; stable DTO integration not demonstrated.
+- **Recommended next:** run Chromium touch acceptance against exact HTML blob `5fd425b0` in both orientations; request actual PNG commits from UI 03. Keep main protected; no READY_FOR_OWNER_TEST.
