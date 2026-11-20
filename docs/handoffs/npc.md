@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — visitor-scoped art routing (2026-11-20)
+
+**One production increment (#4/#20):** Added `Day01Visitors.TryGetVisitScreenPreviewForVisitorAsset(visitorId, assetId, out screen)` to the pure C# read-only Day01 NPC API. It matches the canonical Content visitor ID and planned art ID using ordinal equality and fails closed for cross-visitor/unknown/padded IDs; no Unity dependency, no Core command, no GameState/ledger or portrait PNG changes. Production commit `db46b6e44c2696b80d3d04cf36b6e833f9aac888`; golden tests commit `f98e635ed04935adb6a046e13b0c524c15dd181f`. Golden assertions cover all 9 planned art IDs × 3 visitor identities plus invalid visitor IDs. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
+
+**Verification:** GitHub commits accepted; .NET golden CI for new SHA **NOT VERIFIED** as of this handoff. Local dotnet, Unity Editor, Windows and Android **NOT RUN**. To verify: run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj` or inspect the exact SHA in `.github/workflows/npc-conditions.yml`. **BLOCKED (EventDirector only):** atomic Core event/receipt/earned-key port and Content E03/E07 source agreement alignment. PR #9 C0-v2, PR #14 ADR and PR #11 Content remain integration inputs. PR #16 Draft. No main push/merge or unauthorized IP/assets.
+
+
 ## AutoDev 02 — current HEAD CI evidence (2026-11-20)
 
 **Bounded verification task (#4/#20):** GitHub Actions [NPC condition golden tests #44682712294](https://github.com/rixed318/Probably-TAU/actions/runs/44682712294) reports `completed/success` (run 255) for exact branch HEAD `f26962e20ef9a3ce6f0a6d4e24d3763340ab7392`. This verifies the .NET golden workflow on that commit, **not** Unity Editor or an Android build/device. No production changes in this pass. PR #16 remains Draft; PR #9 C0-v2, PR #14 ADR and PR #11 Content remain unmerged integration inputs. **BLOCKED:** full EventDirector needs Core atomic event/receipt/earned-key port and Content E03/E07 source alignment. Local .NET, Unity, Windows and Android tests NOT RUN. No main push/merge.
