@@ -736,3 +736,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Validator commit:** `e94415ff4ec7f9d0d5cde87c8f90270490160c7d` on `feature/content-7`.
 - **Actually checked:** independent JavaScript check of fetched canonical JSON roster (13 events, 2 projects) PASS; synthetic missing E08 rejected PASS; synthetic duplicate P01 replacing P02 rejected PASS. **Not run:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on checked-out HEAD and mutation tests.
 - PR #9 C0-v2 and PR #14 ADR remain external; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push, merge, Core changes or art production.
+
+
+## AutoDev 04 — mandatory event fallback guard (2026-11-20)
+
+- **Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` now requires a nonempty, non-whitespace `fallback` string for each of the 13 E02–E14 event records. This checks authored reject-all/unavailable paths; it does not implement NPC/EventDirector or change event scheduling, effects, Core or ledger.
+- **Validator commit:** `383acd9ada383799af75cd969f382fe4ca47fad6` on `feature/content-7`.
+- **Actually executed:** isolated JavaScript against fetched GitHub JSON: all 13 fallbacks present (PASS); synthetic whitespace-only E02 fallback rejected (PASS); missing E03 fallback rejected (PASS). **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android. QA 05: run `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
+- C0-v2 PR #9 / ADR PR #14 remain external contracts; content stays platform-independent DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
