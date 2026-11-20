@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-21 — repair srcset guard escaping (Issue #20)
+
+- Corrected over-escaped regex in `prototypes/ui-day-one/test-day01-android-touch.cjs`: the previous `remoteSrcset` pattern had literal backslashes instead of regex word boundaries/whitespace and could not reliably detect remote responsive images. Test fix commit: `08584f4d6139caceda6d1a7d2986920d362a6f3b`.
+- **Actually executed:** 4 isolated JavaScript regex fixtures in connector runtime: HTTPS remote, protocol-relative remote, local-only, and HTTP remote; all 4 matched expected outcomes. **Not executed:** Node repository suite, parsing full test file with Node, browser/Android/TalkBack/Unity. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` in a checkout.
+- #20 remains Android-device unverified; #21 remains without verified original PNG binary. No changes to main/Core/GameState, no merge. C0-v2 PR #9 and ADR PR #14 remain reference contracts.
+
+
 ## Update 2026-11-20 — fix base-tag guard false negative (Issue #20)
 
 - Fixed `baseTag` regex in `prototypes/ui-day-one/test-day01-android-touch.cjs`: `/\<base\\b.../` in the JS source matched a literal backslash and `b`, not a word boundary, allowing `<base href=...>` to escape the offline guard. Corrected to a real `\b` word boundary. Commit `822e841025c809b993ac7643635324d738fed15f`.
