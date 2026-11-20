@@ -124,3 +124,18 @@ test('Android offline HTML variants have unique static element IDs',()=>{
     assert.deepEqual([...new Set(duplicates)],[],filename+' has duplicate static IDs');
   }
 });
+
+
+// Static accessibility relationships must not point to missing elements.
+// This covers HTML-authored references only, not IDs created by JavaScript.
+test('Android offline HTML variants resolve static ARIA ID references',()=>{
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    const ids=new Set([...source.matchAll(/<[^>]+\sid\s*=\s*["']([^"']+)["']/gi)].map(m=>m[1]));
+    for(const match of source.matchAll(/\baria-(?:labelledby|describedby|controls|owns)\s*=\s*["']([^"']+)["']/gi)){
+      for(const ref of match[1].trim().split(/\s+/)){
+        assert.ok(ids.has(ref),filename+' has unresolved ARIA reference: '+ref);
+      }
+    }
+  }
+});
