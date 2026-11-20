@@ -1432,3 +1432,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** execute actual Chromium touch acceptance on UI `a7decb20714c` and capture reproducible screenshots/results; keep CI SHA pin separate from current UI HEAD. Request stable Core DTO before SaveService implementation.
 
 **Scope:** remote CI audit and QA documentation only. Local Node/Python/.NET, Chromium, Unity and APK tests were **NOT RUN** in this pass.
+
+
+## 2026-11-20 — QA 05: exact-SHA GitHub Actions regression audit (#8)
+
+**One bounded task:** independently inspect GitHub Actions run [#44686765989](https://github.com/rixed318/Probably-TAU/actions/runs/44686765989) associated with QA PR #10 SHA `2750e37f43c0a4afa46fa33df9555a90c112515e`. GitHub reports completed/success. All five jobs report success, with no non-success test steps returned: Python PCG32 oracle; Core ledger/snapshot .NET 8; NPC standalone .NET 8; UI/Content static regression; distributed Android HTML static gate. This is remote exact-SHA CI evidence **only**, with other feature branches checked out at pinned SHAs. It does not certify their current HEADs.
+
+**NOT RUN:** local Node/Python/.NET; Chromium touch 360×800 / 800×360; Unity Editor/PlayMode; APK/device; integrated Save→Load. **NOT VERIFIED:** actual PNG signature/dimensions/manifest SHA256 on current UI head. No SaveService, alternative GameState, new contracts, merge or main push.
+
+### Сводка для координатора 00 — 2026-11-20 (QA CI audit)
+
+- **PR HEADs checked:** #9 Core `95a788fe5cb631bc6d99c7d1b7ce26b72bb89a02`; #10 QA `2750e37f43c0a4afa46fa33df9555a90c112515e` (before this documentation commit); #11 Content `20b926a0929d613fdbe78d5ac9d8b73bc7b457da`; #12 UI `a985751d322d3773ce1ebfe9a7ec8fddac291d2f`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `39720907e3e2b4e35cf08c81a8517645b21e0b9d`; #17 ADR-C0-002 `bc9db999b4190d77b2994588073ff59e456dccdb`. C0-v2 and ADR remain unmerged feature guidance.
+- **Blocker 1:** Current UI Day01 single-file HTML Chromium touch acceptance (360×800, 800×360, 3 docs, EndDay, ledger replay, deferred partner cash, 48dp, overflow) NOT RUN.
+- **Blocker 2:** 3–5 real original PNG signatures/dimensions/manifest SHA256 NOT VERIFIED on current UI head.
+- **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load NOT RUN; stable DTO integration must precede SaveService.
+- **Recommended next step:** run reproducible Chromium touch acceptance on exact UI `a985751d322d3773ce1ebfe9a7ec8fddac291d2f`; separately inspect real PNG binaries when present. Keep main protected, no READY_FOR_OWNER_TEST.
