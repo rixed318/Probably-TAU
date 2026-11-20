@@ -167,7 +167,7 @@ test('Android offline variants do not force autofocus on load',()=>{
 // A <base> element can silently redirect relative assets and links to a remote
 // origin even when src/href themselves look local. Keep both offline exports safe.
 test('Android offline variants reject base URL overrides',()=>{
-  const baseTag=/<base\\b[^>]*>/i;
+  const baseTag=/<base\b[^>]*>/i;
   for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
     assert.doesNotMatch(source,baseTag,filename+' must not override the file base URL');
