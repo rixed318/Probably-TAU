@@ -744,3 +744,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Validator commit:** `383acd9ada383799af75cd969f382fe4ca47fad6` on `feature/content-7`.
 - **Actually executed:** isolated JavaScript against fetched GitHub JSON: all 13 fallbacks present (PASS); synthetic whitespace-only E02 fallback rejected (PASS); missing E03 fallback rejected (PASS). **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android. QA 05: run `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
 - C0-v2 PR #9 / ADR PR #14 remain external contracts; content stays platform-independent DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+
+## AutoDev 04 — nested monetary draft guard (2026-11-20)
+
+- **Issue #7 / PR #11; one bounded task:** recursively validate every `*Kopecks` field in `CONTENT_SPEC_DRAFT.json`, including Day01 documents and visit effects, as canonical signed Int64 decimal strings. No cash calculation or ledger implementation; C0-v2 PR #9 / ADR PR #14 remain external contracts.
+- **Validator commit:** `f448bf051ac19094ef1146a3f0795afb79f11c8a` on `feature/content-7`.
+- **Actually executed:** independent JavaScript traversal of fetched draft, 37 monetary fields PASS; synthetic JSON number in DOC-01 rejected PASS; signed Int64 overflow in LAB-1 rejected PASS. **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutation tests on branch HEAD.
+- DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge, Core/EventDirector or actual PNG changes.
