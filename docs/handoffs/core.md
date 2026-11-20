@@ -742,3 +742,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - C# commit: `10ceab60d3aa96f1de7636cacde3fdaf82a2046d`.
 - Environment probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` present. **Local C# tests NOT RUN; Unity/Windows build and Android APK BLOCKED.** The new SHA requires GitHub Actions verification; do not claim a passing CI until observed.
 - P0: integrate typed due-event handler with atomic EndDay only after 02/00 contract approval; QA/00 independent review required. No merge/main changes or Issue closure.
+
+## Core 01 — 21.11.2026: Day02 event-only fail-closed regression
+
+- Issue #19 / PR #9, branch `feature/core-2`. One bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, code commit `9ca68506ff26ff55116e37ab323c7515c4c4a9e3`. Reuse restored Day02 pending NPC event but supply **zero payables**; `DurableDayAdvance.PrepareDay` must reject due unhandled event and preserve DayIndex=1, cash=750 kopecks, one pending event, zero completed events, ledger=3 and receipts=4. This independently covers event-only atomic fail-closed (previous test combined event and payable). No production API or other subsystem changed.
+- Previous exact HEAD `3294206c84a21db1a05d68c2804abf9201d50aa1` has [Core .NET 8 golden CI #44822800543](https://github.com/rixed318/Probably-TAU/actions/runs/44822800543) completed/success. New code SHA CI **not yet verified**; independent QA/00 review required.
+- Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found; `java` and `javac` present. No local C# tests, Unity/Windows build, or Android APK; Android BLOCKED until genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK.
+- P0 typed due-event handler still requires 02/00 approved contract; no main push/merge or Issue closure.
