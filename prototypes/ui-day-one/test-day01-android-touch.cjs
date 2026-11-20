@@ -75,7 +75,7 @@ test('Android decision progress is a polite atomic live status',()=>{
 const forbiddenNavigation = [
   /<form\b/i,
   /<meta\b[^>]*http-equiv\s*=\s*["']?refresh/i,
-  /\b(?:location\.(?:href|assign|replace)|window\.open)\s*(?:=|\()/i,
+  /\b(?:(?:window|document|top|self)\s*\.\s*)?location\s*(?:=|\.\s*(?:href\s*=|assign\s*\(|replace\s*\())|\bwindow\s*\.\s*open\s*\(/i,
   /<a\b[^>]*href\s*=\s*["']?(?:https?:|\/\/)/i,
 ];
 test('Android touch bundle has no remote forms, redirects or external navigation',()=>{
@@ -90,8 +90,15 @@ test('offline navigation guards reject representative forbidden snippets',()=>{
   const forbidden = [
     '<form action="https://example.invalid">',
     '<meta http-equiv="refresh" content="0;url=https://example.invalid">',
-    'location.href="https://example.invalid"',
+    'window.location="https://example.invalid"',
     '<a href="//example.invalid">external</a>',
   ];
   forbidden.forEach((snippet,i)=>assert.match(snippet,forbiddenNavigation[i]));
+  for(const snippet of [
+    'location.href="https://example.invalid"',
+    'document.location = "https://example.invalid"',
+    'top.location.replace("https://example.invalid")',
+    'self.location.assign("https://example.invalid")',
+    'window.open("https://example.invalid")',
+  ]) assert.match(snippet,forbiddenNavigation[2]);
 });
