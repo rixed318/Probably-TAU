@@ -116,6 +116,16 @@ assert.equal(new Set(fixture.visitors.map(v => v.visitorId)).size, 3);
 // Stable fictional asset identities are authored in Content, never inferred from display names.
 // UI/Android/Windows can resolve these IDs to original art without changing the Core schema.
 const portraitIds = contentSpec.fictionalNpcs.map(npc => npc.portraitAssetId);
+const standingIds = contentSpec.fictionalNpcs.map(npc => npc.standingAssetId);
+assert.equal(new Set(standingIds).size, standingIds.length,
+  "duplicate canonical Day01 standing sprite asset ID");
+for (const assetId of standingIds) {
+  assert.match(assetId, /^[a-z0-9]+(?:_[a-z0-9]+)*$/,
+    "invalid platform-independent standing sprite asset ID");
+}
+assert.equal(new Set([...standingIds, ...contentSpec.fictionalNpcs.map(npc => npc.portraitAssetId)]).size,
+  standingIds.length + contentSpec.fictionalNpcs.length,
+  "standing sprite and portrait asset IDs must not collide");
 const documentAssetIds = contentSpec.documentTypes.map(doc => doc.documentAssetId);
 const assetIds = [...portraitIds, ...documentAssetIds];
 assert.equal(portraitIds.length, fixture.visitors.length, "Day01 portrait roster mismatch");
