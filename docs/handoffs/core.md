@@ -655,3 +655,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Single bounded task this pass: verify prior exact-head CI and record evidence. No new C# code or public API; no edits to NPC/UI/Content/QA.
 - Current runtime checked: `dotnet`, `csc`, `mcs`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local C# tests, Unity/Windows build, Android APK NOT RUN. Native APK remains BLOCKED pending real Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK.
 - Next P0: coordinate typed NPC due-event EndDay integration contract with 02/00, then implement atomically with Ledger/receipts and independent QA review. No main push/merge or Issue closure. CI for this new documentation-only HEAD must be checked separately.
+
+## Core 01 — 20.11.2026: exact-HEAD CI verification (07:21 Samara)
+
+- Issue #19 / PR #9 / `feature/core-2`: confirmed GitHub Actions [Core .NET 8 golden run #44654812624](https://github.com/rixed318/Probably-TAU/actions/runs/44654812624) for prior exact HEAD `f4a3fc1678e37824835326c8b6a8f233da5f211a`: `completed/success`. Standalone .NET tests only, **not** Unity Editor/Android validation.
+- Bounded scope: exact-SHA CI verification and handoff only. No new C# implementation, public API, NPC/UI/Content or economy policy changes. Typed NPC due-event atomic EndDay integration remains pending approved interface and QA/00 review.
+- Runtime toolchain: `dotnet`, Unity Editor, Android `sdkmanager`/`ndk-build` unavailable; `java`/`javac` present. No local C# tests, Unity import/compile, Windows build or Android APK. APK BLOCKED until verified Unity 6.3 LTS Editor, Android Build Support, SDK/NDK/OpenJDK.
+- No `main` push, merge, PR merge or Issue closure. New documentation-only HEAD CI not yet verified.
