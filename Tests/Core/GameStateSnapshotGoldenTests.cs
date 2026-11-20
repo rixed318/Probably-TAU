@@ -976,6 +976,26 @@ namespace TAU.President.Tests.Core
                 day02Input.Finance.Receipts.Count == 4,
                 "Day02 negative expected-day rejected without settlement");
 
+            // A Day02 liability just one kopeck above available cash must remain
+            // outstanding; the equality case below must still settle to zero.
+            var oneKopeckShortInput = new DurableGameStateSnapshot(
+                day02Input.Finance, day02Input.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-one-kopeck-short", 1, 751L)
+                }));
+            var oneKopeckShortClosed = DurableDayAdvance.PrepareDay(
+                oneKopeckShortInput, oneKopeckShortInput.Header.Revision, 1);
+            AssertNamed(oneKopeckShortClosed.Header.DayIndex == 2 &&
+                oneKopeckShortClosed.Header.BalanceKopecks == 750L &&
+                oneKopeckShortClosed.Payables.Outstanding.Count == 1 &&
+                oneKopeckShortClosed.Payables.Outstanding[0].DueKey == "day02-one-kopeck-short" &&
+                oneKopeckShortClosed.Finance.Ledger.Entries.Count == 3 &&
+                oneKopeckShortClosed.Finance.Receipts.Count == 5 &&
+                oneKopeckShortInput.Header.DayIndex == 1 &&
+                oneKopeckShortInput.Header.BalanceKopecks == 750L &&
+                oneKopeckShortInput.Finance.Receipts.Count == 4,
+                "Day02 one-kopeck shortfall does not spend or mutate input");
+
             // An exactly affordable Day02 liability must settle completely, leaving zero
             // cash rather than treating equality as insufficient funds. Restore and replay
             // must preserve the single posting/receipt without mutating the source.
