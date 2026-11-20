@@ -752,3 +752,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Validator commit:** `f448bf051ac19094ef1146a3f0795afb79f11c8a` on `feature/content-7`.
 - **Actually executed:** independent JavaScript traversal of fetched draft, 37 monetary fields PASS; synthetic JSON number in DOC-01 rejected PASS; signed Int64 overflow in LAB-1 rejected PASS. **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutation tests on branch HEAD.
 - DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge, Core/EventDirector or actual PNG changes.
+
+
+## AutoDev 04 — canonical Day01 DayIndex consistency (2026-11-21)
+
+- **Issue #7 / PR #11; one bounded task:** added static checks in `Content/validate-day01-acceptance.cjs` requiring opening and Day01 scenario `dayIndex=0`, and each draft document `visible.dayIndex=visible.day-1`. No Core, EventDirector, ledger, narrative, art or platform-specific changes.
+- **Validator commit:** `352683dcbaa8aab8207bcd2e90c3497eddcc4660` on `feature/content-7`.
+- **Actually executed:** isolated JavaScript assertion over fetched canonical JSON: baseline PASS; synthetic opening DayIndex=1 rejected PASS; synthetic DOC-01 DayIndex=4 rejected PASS. **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
+- Draft only / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain external contracts. No main push or merge.
