@@ -936,3 +936,10 @@ One bounded documentation task: define a concrete **manual acceptance protocol**
 6. **Reload and limitations:** refresh local HTML and document whether state resets as designed; no persistence is promised. Record browser-specific `file://` restrictions, whether the HTML must be opened via Files app or browser, and any inability to reproduce.
 
 **Pass gate:** all items observed on a physical Android device or clearly marked unverified. Desktop emulation alone cannot close #20. Attach device screenshots and a short results table to PR #12 / Issue #20; do not claim APK, Unity integration, or production art. #21 still requires verified original PNG binaries and rights review. C0-v2 PR #9 and ADR PR #14 govern future integration; PR #11 content remains draft. No merge into main without owner authorization.
+
+## Pass 2026-11-20 — Android offline base URL regression (#20)
+
+- Branch: `feature/ui-5`; test commit `6f7cb04cf1be9b556bbfb98daed4efd8787fd9b3`.
+- Changed: `prototypes/ui-day-one/test-day01-android-touch.cjs`; new static regression rejects `<base>` tags in **both** standalone Android HTML distributions, including remote `href` and `target` overrides. The guard has positive/negative inline fixtures. This closes a subtle offline-bundle escape route; it does not change either HTML demo.
+- Verified: GitHub Contents API accepted the test commit. **Not executed:** Node test suite, CI, Chromium, Android device, TalkBack, Unity. The test is not claimed green.
+- Remaining: QA must run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`, then real viewport/device checks (#20); original PNG binary delivery (#21) still outstanding. No Core/GameState changes, no main merge.
