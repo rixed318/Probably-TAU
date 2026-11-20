@@ -704,3 +704,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Previous exact HEAD `9f958960b5315562dbfb685a648738977411d16b` has [Core .NET 8 golden run #44729933319](https://github.com/rixed318/Probably-TAU/actions/runs/44729933319) `completed/success`. **New regression commit CI not verified yet**; QA/00 must review exact SHA.
 - Runtime checked: no `dotnet`, Unity Editor, `adb`, `sdkmanager` or `ndk-build`; `java`/`javac` available. No local .NET test, Unity import/Windows build or Android APK. Native APK **BLOCKED** until verified Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK. No Unity project or APK fabricated.
 - Next P0: typed NPC due-event EndDay atomic integration after 02/00 contract approval and QA review. No main push/merge, PR merge or Issue closure.
+
+## Core 01 — Day02 negative EndDay token regression (20.11.2026, 19:00 Samara)
+
+- Issue #19 / PR #9: one bounded C# golden regression added to `Tests/Core/GameStateSnapshotGoldenTests.cs`, code commit `59a56ae534825a90f97b1c6ee9fb78eeae86d92f` on `feature/core-2`. A Day02 snapshot (`DayIndex=1`) with current revision must reject `expectedDayIndex=-1` without changing day, 750-kopeck cash, one outstanding payable, 3 ledger entries, or 4 receipts. No production API, NPC/UI/Content or economic policy changed.
+- Previous exact HEAD `60a5285e2c097877a18728d3bd25bd94d6775381` has GitHub Actions [Core .NET 8 run #44744111477](https://github.com/rixed318/Probably-TAU/actions/runs/44744111477) `completed/success`; **new regression SHA CI is not yet verified**. QA/00 must independently review the new test and exact-head CI.
+- Current environment probe: `dotnet`, Unity Editor, Android `adb`/`sdkmanager`/`ndk-build` absent; `javac` available. Local C# tests, Unity/Windows builds and Android APK NOT RUN. Android APK BLOCKED until verified Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
+- Next P0: typed NPC due-event atomic EndDay integration after coordinated 02/00 contract. No main push, merge or Issue closure.
