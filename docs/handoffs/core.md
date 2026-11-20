@@ -725,3 +725,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Prior exact HEAD `a7fff173f2ac4728cd81931dc7bc0bb19e389555` has [standalone Core .NET 8 CI #44776438368](https://github.com/rixed318/Probably-TAU/actions/runs/44776438368) `completed/success`; **new test commit CI NOT YET VERIFIED**. Independent QA/00 review required.
 - Toolchain probe in this runtime: `dotnet`, `csc`, `mcs`, Unity Editor, Android `adb`/`sdkmanager`/`ndk-build` unavailable; `java`/`javac` present. Local C# tests, Unity/Windows build, Android APK NOT RUN. Native Android build BLOCKED pending real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
 - Next P0: agreed typed NPC due-event EndDay atomic transaction with 02/00; retain one deterministic Core. No main push/merge or Issue closure.
+
+## Core 01 — 20.11.2026 23:58 Samara: Day02 one-kopeck shortfall boundary
+
+- Issue #19 / PR #9: added one bounded regression to `Tests/Core/GameStateSnapshotGoldenTests.cs`, code commit `3176d2c7648d36bdf1e5f9b5add4431113bfd290` on `feature/core-2`. Day02 cash=750 kopecks, payable=751: no debit, payable remains outstanding, ledger stays at 3, receipts advance once to 5, original input remains unchanged. Complements existing exact-funds 750/750 test; no production API or foreign subsystem changed.
+- Prior exact HEAD `f8c0b2fc889676a5e6e960a3c5c1e1e91fcd27a8` verified via [Core .NET 8 golden CI #44792288337](https://github.com/rixed318/Probably-TAU/actions/runs/44792288337): `completed/success`. New regression commit CI **NOT YET VERIFIED**; independent QA/00 review required.
+- Environment probe: no `dotnet`, Unity Editor, `adb`; `java`/`javac` present. No local C# tests, Unity/Windows build, or Android APK. APK BLOCKED pending real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
+- P0 remains typed NPC due-event atomic EndDay integration after approved 02/00 contract. No main push/merge or Issue closure.
