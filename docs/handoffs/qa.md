@@ -1462,3 +1462,22 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 committed original PNG binaries and matching manifest SHA/signature/dimension verification not established in this pass.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load not tested; stable complete Core DTO still prerequisite for SaveService.
 - **Next step:** run Chromium mobile viewport interaction tests on exact UI SHA `7fc7f6f2` and record screenshots/DOM assertions. Keep `main` protected; no merge or architectural approval.
+
+
+## 2026-11-20 — QA 05: independent exact-SHA CI job audit (Issue #8)
+
+**Bounded task:** independently verify the latest completed GitHub Actions run on QA head before this update, rather than infer results from workflow status alone.
+
+- **QA input commit:** `a64a397cb7b5e41ec57dcda2703e44e5450f045e`.
+- **Evidence:** [Actions run 44712045128](https://github.com/rixed318/Probably-TAU/actions/runs/44712045128), `completed/success`; fetched all five jobs and their step conclusions via GitHub API.
+- **PASS (remote CI, 5/5 jobs):** Python PCG32 oracle (including source-pattern audit), Core ledger/snapshot .NET 8 golden suites, NPC standalone .NET 8 golden assertions, UI+Content Node/static regression, distributed Android HTML inline-script static gate. Every listed test step returned `success`. These jobs check out their own recorded/pinned source revisions; this is **not** evidence that all current feature HEADs passed together.
+- **NOT RUN this pass:** local Python/Node/.NET; Chromium touch 360x800 and 800x360; actual Android APK/device; Unity Editor/EditMode/PlayMode; integrated Save→Load; real PNG signature/dimensions/manifest SHA verification.
+- **No SaveService implemented:** complete approved Core DTO/restore boundary and integration evidence still required. No architecture contracts approved, no merge/main write.
+
+### Сводка для координатора 00 — 2026-11-20 15:22 UTC+4
+
+- **PR heads observed via GitHub:** #9 Core `db3c27115db3`, #10 QA before this handoff `a64a397cb7b5`, #11 Content `445b34428b71`, #12 UI `b836beff5976`, #14 ADR `ebdc4be28afd`, #16 NPC `be837a974214`, #17 ADR-C0-002 `bc9db999b419`. All are open Draft PRs. This handoff commit becomes the next #10 head.
+- **Blocker 1:** Chromium touch acceptance of latest UI Day01 single-file HTML not run (3 docs, EndDay, ledger replay, no partner immediate cash, 48dp/overflow).
+- **Blocker 2:** 3–5 real original PNG binaries with verified signatures/dimensions/manifest SHA not yet independently validated.
+- **Blocker 3:** Unity APK/device and integrated Save→Load remain untested; stable Core persistence DTO/restore boundary must be reviewed before SaveService.
+- **Recommended next step:** run Chromium 360x800 and 800x360 against exact current UI SHA `b836beff5976`, log interactions and measured targets, then verify PNG binaries when committed. Keep main protected and PR #10 Draft.
