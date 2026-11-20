@@ -1415,3 +1415,20 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 actual original PNG files and their signatures, dimensions and manifest SHA256 are not independently verified; UI PR body explicitly says ART_BINARY_DELIVERED: NO.
 - **Blocker 3:** true Unity Editor APK/device and integrated Save→Load tests NOT RUN; stable complete DTO must precede SaveService.
 - **Recommended next step:** run Chromium touch acceptance on UI SHA `1761dbcaa5a4aa2bb7f95dc49526345042a471f3` with screenshots and measured targets; then audit real committed PNGs once delivered. Keep main protected; no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — AutoDev 05: independent verification of QA CI (#8)
+
+**One bounded task:** inspect the completed GitHub Actions run [#44676410490](https://github.com/rixed318/Probably-TAU/actions/runs/44676410490) for exact QA HEAD `708a6dd395cfb28f1e9151fa3da2fc61448ebb3a`. The run reports `completed/success`; all **five** job conclusions and their named test steps are `success`: Python PCG32 oracle, NPC standalone .NET 8, Core ledger/snapshot .NET 8, UI/Content static Node regression, distributed Android HTML static gate. These are **remote CI** results on the pinned source revisions, not local or Unity tests. No new executable code or architecture contract introduced.
+
+**Current source inspection:** main `AGENTS.md` and `docs/CHAT_WORKFLOW.md`; QA handoff; open PRs #9/#10/#11/#12/#14/#16/#17; Issues #6/#8/#20/#21. Gate C0-v2 PR #9 and ADR #14/#17 are feature-development guidance only, not authorization to merge. All mentioned PRs remain open. No push to main, no merge.
+
+### Сводка для координатора 00 — 20.11.2026
+
+- **PR HEADs at inspection:** #9 Core `e12de1416ab9`; #10 QA `708a6dd395cf` (before this handoff commit); #11 Content `d6d5b328e455`; #12 UI `a7decb20714c`; #14 ADR `ebdc4be28afd`; #16 NPC `f26962e20ef9`; #17 due-event ADR `bc9db999b419`. The CI run above tests **its pinned revisions**, not necessarily these latest feature heads.
+- **Blocker 1:** Actual Chromium touch acceptance at 360×800 and 800×360 on the latest single-file Day01 HTML (three documents, EndDay, ledger replay, no immediate partner cash, 48dp targets/overflow) remains **NOT RUN**.
+- **Blocker 2:** 3–5 real PNG binaries with signature/dimensions/manifest SHA256 verification remain **NOT VERIFIED** on latest UI head.
+- **Blocker 3:** Unity Editor, real Android APK/device, and integrated Save→Load remain **NOT RUN/NOT VERIFIED**; do not claim ready for owner test.
+- **Recommended next step:** execute actual Chromium touch acceptance on UI `a7decb20714c` and capture reproducible screenshots/results; keep CI SHA pin separate from current UI HEAD. Request stable Core DTO before SaveService implementation.
+
+**Scope:** remote CI audit and QA documentation only. Local Node/Python/.NET, Chromium, Unity and APK tests were **NOT RUN** in this pass.
