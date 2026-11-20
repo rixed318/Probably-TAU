@@ -7,6 +7,13 @@
 **State:** standalone interactive browser prototype + UI/UX proposal, waiting for coordinator 00 review.  
 **PR:** https://github.com/rixed318/Probably-TAU/pull/12 (draft; do not merge without owner approval).
 
+## Update 2026-11-20 — offline media URL guard
+
+- Added static regression for protocol-relative (`//host`) `src`, `data` and `poster` attributes on media/embedded tags in both Android HTML bundles. Commit `13f78ec83c5e38cb5923d954c6673c0d6d7fe12b`.
+- This closes one gap in the existing `http(s)`-only media guard; it does **not** prove runtime offline behavior.
+- **Execution evidence:** GitHub accepted the test commit; Node suite, browser, Android, TalkBack and Unity **not run** in this pass. Follow-up: `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`, then viewport/device checks.
+- #20 remains device-unverified; #21 remains without verified PNG delivery. C0-v2 PR #9 / ADR PR #14 remain feature-branch integration references; no Core changes.
+
 ## Current delivery snapshot — 2026-11-20 (Issue #20 / #21)
 
 | Gate | Verified state | Next evidence needed |
