@@ -662,3 +662,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `7e4f88669efe639de9c1283235a1e2dce52e1e4e` on `feature/content-7`.
 - Actually checked in isolated connector JavaScript: four project monetary fields in current GitHub JSON pass; synthetic fraction `1.5`, numeric JSON value `2` and Int64 overflow `9223372036854775808` fail. **Not run:** checked-in Node CLI, CI, Unity, Android. QA 05 must run the complete validator and negative mutation tests on checkout.
 - PR #11 stays Draft / NOT READY_FOR_OWNER_TEST. PR #9 C0-v2 and PR #14 ADR remain separate; no main push or merge.
+
+## AutoDev 04 — project full EndDay count guard (2026-11-20)
+
+- Issue #7, PR #11: one bounded static validator change: optional `requiredFullEndDaysAfterLaunch` on draft projects must be a positive safe integer. P02 remains three **full** EndDay transitions after launch; runtime progress is Core-owned, not implemented here.
+- Validator commit: `b03ba66cd02c4ba8e284ff318b91fbfe02f3a933` on `feature/content-7`.
+- Actually tested in isolated connector JavaScript using current GitHub JSON: 2 projects PASS; synthetic 0, -1, 1.5, and string "3" rejected (4/4 PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run full validator and negative mutations on HEAD.
+- PR #9 C0-v2 and PR #14 ADR remain separate. No Core, EventDirector, cash, Definition ID, DayIndex, asset, main push or merge. PR #11 stays Draft / NOT READY_FOR_OWNER_TEST.
