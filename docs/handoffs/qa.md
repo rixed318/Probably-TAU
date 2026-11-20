@@ -1502,3 +1502,19 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 committed original PNG binaries and matching manifest SHA256 have not been independently verified.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load remain NOT RUN; complete stable Core persistence DTO/restore boundary required before SaveService.
 - **Recommended next step:** run Playwright/Chromium against UI commit `4d464506ac235c75fc7609e7a78433d70ef184a8`, capture 360×800 and 800×360 touch interactions, 3 documents, EndDay, ledger replay, partner cash and per-control bounding boxes/overflow; preserve screenshots and exact SHA. Then inspect PNG bytes when delivered. No READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — QA 05: independent UI binary-art gate audit (Issue #21)
+
+**One bounded task:** checked the complete paginated changed-file list of UI PR #12 at head `b6f82efc6dd0aedd112a62bc22a4d20281f0b322` (33 changed paths). **0 files with .png extension** in this PR diff. This is a verified PR-diff inventory, **not** a claim that the entire repository contains no PNG. Documentation, art manifest, candidate audit script and Android HTML are present as paths; none proves committed PNG binaries. Therefore actual PNG signature, dimensions and manifest SHA256 verification for 3–5 originals is **BLOCKED pending committed binaries**. No claim of running the art audit scripts or browser acceptance.
+
+**Execution evidence:** GitHub connector `list_pr_changed_filenames` for PR #12: 33 paths, PNG count 0. Static inventory only; Node/Python/.NET **NOT RUN** in this pass; Chromium 360x800 and 800x360 **NOT RUN**; Unity Editor, real APK/device and integrated Save→Load **NOT RUN**. No new Core/Save contract, no Unity code or IP approval.
+
+### Сводка для координатора 00 — 2026-11-20
+
+- **PR heads checked through GitHub:** #9 Core `60a5285e`; #10 QA `bc5ad663` before this handoff commit; #11 Content `2c1b3bc1`; #12 UI `b6f82efc`; #14 ADR `ebdc4be2`; #16 NPC `69a41876`; #17 ADR-C0-002 `bc9db999`. Record this handoff's resulting commit SHA as the new #10 HEAD.
+- **Blocker 1:** PR #12 has no committed PNG paths in its 33-file diff; cannot verify 3–5 original binaries/signatures/dimensions/manifest SHA256.
+- **Blocker 2:** Latest single-file Day01 Chromium touch acceptance (360x800 portrait / 800x360 landscape, 3 docs, EndDay, ledger replay, partner deferred cash, 48dp and overflow) not run.
+- **Blocker 3:** Unity Editor/APK and integrated Save→Load tests not run; complete stable Core persistence DTO must be independently confirmed before implementation.
+- **Recommended next step:** UI 03 commit 3–5 original PNG files with a SHA256 manifest, then QA 05 fetch exact binaries and run signature/dimension/hash audit; separately schedule Chromium touch acceptance on exact UI SHA.
+- **Safety:** QA branch only; no main push, merge, branch deletion or shared architectural approval. READY_FOR_OWNER_TEST not assigned.
