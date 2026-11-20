@@ -215,7 +215,10 @@ assert.deepEqual(Object.keys(fixture.opening.scores).sort(), ["E", "M", "Q", "R"
 for (const [score, value] of Object.entries(fixture.opening.scores)) {
   assert.ok(Number.isSafeInteger(value) && value >= 0 && value <= 100, "invalid opening score: " + score);
 }
-const documentIds = new Set(fixture.documents.map(d => d.id));
+const documentIdList = fixture.documents.map(d => d.id);
+const documentIds = new Set(documentIdList);
+assert.equal(documentIds.size, documentIdList.length,
+  "duplicate Day01 document Definition ID");
 // One-to-one visit/document mapping: no shared or orphaned Day01 documents.
 const assignedDocumentIds = fixture.visitors.map(visitor => visitor.documentId);
 assert.equal(new Set(assignedDocumentIds).size, assignedDocumentIds.length,
