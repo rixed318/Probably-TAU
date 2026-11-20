@@ -7,6 +7,12 @@
 **State:** standalone interactive browser prototype + UI/UX proposal, waiting for coordinator 00 review.  
 **PR:** https://github.com/rixed318/Probably-TAU/pull/12 (draft; do not merge without owner approval).
 
+## Update 2026-11-20 — repair offline media guard syntax (Issue #20)
+
+- Fixed malformed JavaScript regex literal in `prototypes/ui-day-one/test-day01-android-touch.cjs`: over-escaped `\\/\\/` prematurely terminated the literal, preventing the Node test file from parsing. Added positive fixtures for `src`, `poster`, `data` and a local-media negative fixture. Test commit: `6399a387180cf347bff46a14b9413f5c5c3046a3`.
+- **Actual execution:** Node v22.16.0 was used to reproduce the old malformed regex SyntaxError in an isolated snippet. Full repository Node test suite **NOT RUN** (HTML files not available in local checkout); fixed test needs execution by QA. No Android/Chromium/Unity run. #20 remains device-unverified; #21 remains without verified PNG binary.
+- Scope: UI test only; no Core, GameState, main, merge, or art changes. C0-v2 PR #9 and ADR PR #14 remain reference contracts.
+
 ## Update 2026-11-20 — offline media URL guard
 
 - Added static regression for protocol-relative (`//host`) `src`, `data` and `poster` attributes on media/embedded tags in both Android HTML bundles. Commit `13f78ec83c5e38cb5923d954c6673c0d6d7fe12b`.
