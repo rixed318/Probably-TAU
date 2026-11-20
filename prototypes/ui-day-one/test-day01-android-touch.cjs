@@ -16,6 +16,14 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
   assert.match(legacy,/viewport-fit=cover/);
   assert.match(legacy,/env\(safe-area-inset-top(?:\s*,\s*[^)]*)?\)/);
   assert.match(legacy,/min-height:48px/);
+  // Mobile regression: the legacy desktop CSS has 35px small buttons; coarse-pointer
+  // override must provide both dimensions and preserve all four Android cutout insets.
+  assert.match(legacy,/@media\s*\(pointer\s*:\s*coarse\)/);
+  assert.match(legacy,/min-width\s*:\s*48px/);
+  for(const side of ['top','right','bottom','left']) {
+    assert.match(legacy,new RegExp('env\\\\(safe-area-inset-'+side+'(?:\\\\s*,|\\\\))'));
+  }
+
   assert.doesNotMatch(legacy,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
   assert.doesNotMatch(legacy,/@import\b|url\s*\(\s*['"]?https?:/i);
   assert.doesNotMatch(legacy,/<(?:iframe|object|embed|audio|video|img)\b[^>]*(?:src|data)\s*=\s*['"]?https?:/i);
