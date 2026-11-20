@@ -697,3 +697,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Previous branch HEAD `db3c27115db3d2ea9685e12d081fa6ebc5c7dc92` has [standalone Core .NET 8 workflow #44715697289](https://github.com/rixed318/Probably-TAU/actions/runs/44715697289) `completed/success`; **this does not verify the new test**. Exact-new-SHA CI and QA/00 review required before PASS.
 - Runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `javac` available. Local C# tests, Unity/Windows build, Android APK NOT RUN; APK BLOCKED pending verified Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK. No Unity project fabricated.
 - P0 remains coordinated typed NPC due-event atomic EndDay integration. No main push/merge or Issue closure.
+
+## Core 01 — Day02 past-day EndDay guard (20.11.2026, 17:24 Samara)
+
+- Issue #19 / PR #9: one bounded C# golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, commit `2ca4f090a9b5719363d51ddf570861ae25124ecc`. A Day02 snapshot (DayIndex 1) rejects `PrepareDay` with **current revision but past expectedDayIndex 0**. Assertions require no cash (750 kopecks), payable (1), Ledger (3 entries) or receipts (4) mutation. Complements stale-revision and future-day rejection tests. No production contract or foreign subsystem changes.
+- Previous exact HEAD `9f958960b5315562dbfb685a648738977411d16b` has [Core .NET 8 golden run #44729933319](https://github.com/rixed318/Probably-TAU/actions/runs/44729933319) `completed/success`. **New regression commit CI not verified yet**; QA/00 must review exact SHA.
+- Runtime checked: no `dotnet`, Unity Editor, `adb`, `sdkmanager` or `ndk-build`; `java`/`javac` available. No local .NET test, Unity import/Windows build or Android APK. Native APK **BLOCKED** until verified Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK. No Unity project or APK fabricated.
+- Next P0: typed NPC due-event EndDay atomic integration after 02/00 contract approval and QA review. No main push/merge, PR merge or Issue closure.
