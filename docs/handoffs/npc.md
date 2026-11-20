@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — choice-scoped Day01 art routing (2026-11-20)
+
+**One bounded production increment (#4/#20):** Added pure C# `Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(choiceId, assetId, out screen)`. It returns a read-only Day01 screen only if a canonical Content choice ID and planned art ID belong to the same canonical visit. Fail-closed for unknown, padded, case-mismatched or cross-visitor IDs. No GameState, ledger, command, event receipt, Unity or image upload changes. Production commit `2c4500327d0ce7344dc510bfa8beb1828c66a9a2`; golden test commit `8920b1a6da5054286fe47b9e7e65b9946dd04b88`. Test matrix: 9 choices × 9 art IDs, plus invalid choice/art cases. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
+
+**Verification:** GitHub accepted both commits. Exact-SHA CI pending verification; local .NET, Unity, Windows and Android tests **NOT RUN** (dotnet not installed in this runtime). To verify: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and check the workflow for exact HEAD. **BLOCKED (full EventDirector):** atomic Core event/receipt/earned-key port and Content E03/E07 original agreement source alignment. PR #9 C0-v2, PR #14 ADR and PR #11 Content remain integration inputs; PR #16 Draft. Planned art IDs are not PNG proof; no third-party IP approval. No main push/merge.
+
+
 ## AutoDev 02 — canonical NPC identity input hardening (2026-11-20)
 
 **One bounded production increment (#4/#20):** `VisitorArchetype.Require` now rejects control characters and UTF-16 surrogate code units in canonical archetype/visit/document IDs, preventing invisible or malformed IDs from entering immutable read-only NPC DTOs on Windows/Android. Production SHA `7f04fb758ca711ff9ecd781d9caebeb908abed7c`; golden assertion SHA `10615e400fd7e77d7bfa9a4a7064845f8f056435`. Changed `Runtime/Npc/VisitorModels.cs` and `Tests/Npc/VisitorIdentityGoldenTests.cs`. No Core state, ledger, Unity code or art files changed. This is input hardening, not a new Content schema or gameplay command.
