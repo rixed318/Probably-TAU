@@ -854,6 +854,21 @@ namespace TAU.President.Tests.Core
                 futureWorkBefore.Finance.Ledger.Entries.Count == 0,
                 "Day01 future work restore and input immutability");
 
+            // A due NPC event on Day02 must fail closed before the payable can settle.
+            // The same snapshot contains both due work items; Core must not silently
+            // skip the event, charge money, or append an EndDay receipt.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                futureWorkRestored, futureWorkRestored.Header.Revision, 1));
+            AssertNamed(futureWorkRestored.Header.DayIndex == 1 &&
+                futureWorkRestored.Header.BalanceKopecks == 750L &&
+                futureWorkRestored.Payables.Outstanding.Count == 1 &&
+                futureWorkRestored.Payables.Outstanding[0].DueKey == "day02-shared-future" &&
+                futureWorkRestored.Events.Pending.Count == 1 &&
+                futureWorkRestored.Events.CompletedIds.Count == 0 &&
+                futureWorkRestored.Finance.Ledger.Entries.Count == 3 &&
+                futureWorkRestored.Finance.Receipts.Count == 4,
+                "Day02 due NPC event blocks payable EndDay atomically");
+
             // A future payable must settle exactly once on Day02 after a clean Day01.
             // This is the Core-only path: no NPC due-event is present in this fixture.
             var tomorrowPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
