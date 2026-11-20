@@ -55,6 +55,43 @@ namespace TAU.President.Tests.Npc
                     throw new Exception("Invalid visitor/art route accepted.");
             }
 
+            // A choice/art tap must never open another visitor's screen (3 x 3 x 9).
+            string[][] choiceGroups =
+            {
+                new[] { "LAB-1", "LAB-2", "LAB-3" },
+                new[] { "STUDENT-1", "STUDENT-2", "STUDENT-3" },
+                new[] { "PARTNER-1", "PARTNER-2", "PARTNER-3" }
+            };
+            for (int choiceOwner = 0; choiceOwner < choiceGroups.Length; choiceOwner++)
+                foreach (string choiceId in choiceGroups[choiceOwner])
+                    for (int artOwner = 0; artOwner < artByDocument.Length; artOwner++)
+                        foreach (string assetId in artByDocument[artOwner])
+                        {
+                            Day01Visitors.VisitScreenPreview choiceArtScreen;
+                            bool found = Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(
+                                choiceId, assetId, out choiceArtScreen);
+                            if (found != (choiceOwner == artOwner) ||
+                                (found && (choiceArtScreen == null ||
+                                    choiceArtScreen.Card.DocumentId != artDocuments[choiceOwner])) ||
+                                (!found && choiceArtScreen != null))
+                                throw new Exception("Choice/art routing mismatch: " + choiceId + "/" + assetId);
+                        }
+            foreach (string invalidChoiceArt in new[] { null, "", "lab-1", "LAB-1 ", " LAB-1", "LAB-4" })
+            {
+                Day01Visitors.VisitScreenPreview missingChoiceArt;
+                if (Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(
+                    invalidChoiceArt, artByDocument[0][0], out missingChoiceArt) || missingChoiceArt != null)
+                    throw new Exception("Invalid choice/art route accepted.");
+            }
+            foreach (string invalidArt in new[] { null, "", "unknown_asset",
+                " irina_korneeva_portrait_neutral", "irina_korneeva_portrait_neutral " })
+            {
+                Day01Visitors.VisitScreenPreview missingChoiceArt;
+                if (Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(
+                    "LAB-1", invalidArt, out missingChoiceArt) || missingChoiceArt != null)
+                    throw new Exception("Invalid asset for choice route accepted.");
+            }
+
             // A document-scoped art tap must preserve the complete canonical screen,
             // including inspection hint and ordered choices, not just the visitor card.
             for (int scopedIndex = 0; scopedIndex < artDocuments.Length; scopedIndex++)
