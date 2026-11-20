@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — inspection action ID read-only lookup (2026-11-20)
+
+**One bounded increment (#4/#20):** Added pure C# `Day01Visitors.TryGetInspectionPreviewByInspectionId` to resolve the three canonical Day01 Content inspection action IDs to read-only document/action/token metadata, using exact ordinal matching and returning null on invalid IDs. This is presentation metadata only: no inspection receipt, token spending, GameState, ledger, Unity, assets or Android-specific behavior. Production commit `7b86cb035f63d33633fa7c84e3f3117124eaf7da`; golden assertions commit `01f02d7e2f7a90356344a2fc6f9bcfaa45e9157b`. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
+
+**Verification:** GitHub Actions [NPC golden #44748986266](https://github.com/rixed318/Probably-TAU/actions/runs/44748986266) reported `completed/success` for **previous** SHA `69a418769401c3b4d05aff9d749ee86528ecdb0e`; it does not validate these new commits. New SHA CI **NOT VERIFIED**; local .NET, Unity Editor, Windows and Android tests **NOT RUN**. Command: `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release`. **BLOCKED (full EventDirector):** Core atomic event/receipt/earned-key port and Content E03/E07 original agreement source alignment. PR #9 C0-v2, PR #14 ADR, PR #11 Content are integration inputs; PR #16 Draft. No main push/merge or image/IP approval.
+
+
 ## AutoDev 02 — zero-width canonical ID rejection (2026-11-20)
 
 **One bounded production increment (#4/#20):** `VisitorArchetype.Require` now rejects Unicode category Format (Cf) characters as well as control and surrogate code units. This closes invisible U+200B/U+2060/U+200D ID ambiguity in platform-neutral Day01 DTO construction without touching Core/GameState/ledger or assets. Production commit `301d9bb15ea0a0e6465c7347bd9854327938e8ae`; golden assertions commit `83a0906fa059796feadc501780984237666d63e2`. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
