@@ -110,6 +110,16 @@ for (const project of contentSpec.projects) {
       "project requires a positive integer count of full EndDays: " + project.id);
   }
 }
+// Draft project unlocks must resolve to an authored event that actually feeds the project.
+// This guards narrative references only; NPC/EventDirector owns runtime completion facts.
+for (const project of contentSpec.projects) {
+  if (project.unlockBy === undefined) continue;
+  const match = /^(E(?:0[2-9]|1[0-4])) completed$/.exec(project.unlockBy);
+  assert.ok(match, "invalid draft project unlockBy: " + project.id);
+  const sourceEvent = contentSpec.eventManifest.find(event => event.id === match[1]);
+  assert.ok(sourceEvent && sourceEvent.feeds.includes(project.id),
+    "project unlockBy must match an authored event feed: " + project.id);
+}
 const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
 for (const event of contentSpec.eventManifest) {
   assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
