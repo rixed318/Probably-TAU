@@ -1,5 +1,10 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — verified Day01 golden CI (2026-11-20)
+
+**One bounded task (#4/#20):** Verified GitHub Actions NPC condition golden tests run [#44671182253](https://github.com/rixed318/Probably-TAU/actions/runs/44671182253) for branch commit `048735a6df016e3cb5061c29b4f345d33d3e73fa`: `completed/success` (run 254). This confirms the existing .NET NPC golden workflow, including recent exact-ID regressions, on that SHA; it is **not** an Android/Unity player validation. No new production logic, portrait assets, GameState or ledger changes. PR #16 remains Draft; PR #9 C0-v2, PR #14 ADR and PR #11 Content remain dependencies. **BLOCKED:** full EventDirector awaits atomic Core event/receipt/earned-key ports and E03/E07 source alignment with Content. Local .NET, Unity, Windows and Android tests **NOT RUN**. No main push/merge.
+
+
 ## AutoDev 02 — trailing whitespace inspection route regression (2026-11-20)
 
 **One bounded task (#4/#20):** Extended existing Day01 read-only inspection lookup golden assertions to reject trailing whitespace in canonical document ID `DOC-01 ` and visit ID `D01_LAB `. Existing leading-space and case-sensitive rejection remains. This guards exact ordinal Content IDs on Windows/Android without changing production logic. Test commit: `85eefc36ba2489272acf94ce284d821e4543694c`; changed `Tests/Npc/VisitorIdentityGoldenTests.cs` only.
