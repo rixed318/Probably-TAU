@@ -867,6 +867,19 @@ namespace TAU.President.Tests.Npc
                 throw new Exception("Unknown, room, or case-mismatched choice must not resolve.");
             if (ReferenceEquals(first[0], replay[0]))
                 throw new Exception("Factory should return fresh immutable objects.");
+            // Canonical Content IDs must not admit invisible controls or malformed UTF-16.
+            foreach (string badId in new[] { "D01\nLAB", "D01\0LAB", "D01\uD800LAB" })
+            {
+                try { new VisitorInstance(badId, first[0].Archetype, "DOC-01", 0); }
+                catch (ArgumentException) { continue; }
+                throw new Exception("Invalid canonical visit ID accepted.");
+            }
+            foreach (string badId in new[] { "npc\tvisitor", "npc\uDC00visitor" })
+            {
+                try { new VisitorArchetype(badId, "visitor"); }
+                catch (ArgumentException) { continue; }
+                throw new Exception("Invalid canonical archetype ID accepted.");
+            }
             try { new VisitorInstance("x", null, "DOC-01", 0); throw new Exception("Null archetype accepted."); }
             catch (ArgumentNullException) { }
             try { new VisitorInstance("x", first[0].Archetype, "DOC-01", -1); throw new Exception("Negative day accepted."); }
