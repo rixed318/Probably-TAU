@@ -49,6 +49,15 @@ for (const project of contentSpec.projects) {
       "project kopecks exceed Int64: " + project.id + "/" + key);
   }
 }
+// Draft project progress must count positive full EndDay transitions after launch.
+// Core remains responsible for runtime progress and scheduling.
+for (const project of contentSpec.projects) {
+  if (project.requiredFullEndDaysAfterLaunch !== undefined) {
+    assert.ok(Number.isSafeInteger(project.requiredFullEndDaysAfterLaunch) &&
+      project.requiredFullEndDaysAfterLaunch >= 1,
+      "project requires a positive integer count of full EndDays: " + project.id);
+  }
+}
 const validTargets = new Set([...eventIds, ...projectIds, "CHAPTER2_HOOK"]);
 for (const event of contentSpec.eventManifest) {
   assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
