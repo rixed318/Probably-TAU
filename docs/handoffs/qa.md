@@ -1372,3 +1372,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Actual original 3–5 PNG signatures/dimensions/manifest SHA remain **NOT VERIFIED** for latest UI HEAD.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load remain **NOT RUN**; no stable final Core DTO integration confirmed.
 - **Recommended next step:** check QA Actions at new QA SHA, then run actual Chromium touch acceptance on the exact distributed HTML at UI SHA `231ce3c6`; do not claim READY_FOR_OWNER_TEST from static checks.
+
+
+## 2026-11-20 — QA 05: verify CI after Android artifact SHA refresh (#8, #20)
+
+**One bounded independent verification:** GitHub Actions [run 44639910857](https://github.com/rixed318/Probably-TAU/actions/runs/44639910857) on exact QA HEAD `d80038771fcf38310750f810f646716c9d9a8118` reports completed/success. Independently fetched the run's five jobs; **all 5 completed/success**: Python PCG32 oracle, UI+Content static regression, distributed Android HTML static gate, Core ledger/snapshot .NET 8 and NPC standalone .NET 8. This verifies the previously unconfirmed CI result after pinning the Android artifact to UI SHA `231ce3c671e5256033dfe93eadc56e762602342e`. It **does not** test the latest moving UI HEAD, browser behavior or Unity. No local Node/Python/.NET, Chromium, Unity, APK, device or integrated Save→Load test was executed this pass. No contracts, SaveService, merges or main writes.
+
+### Сводка для координатора 00 — 2026-11-20 (verified CI)
+
+- **GitHub PR HEADs checked:** #9 Core `44b200f3bf9a1bb7ab902bee78d90b326c4aa375`; #10 QA `d80038771fcf38310750f810f646716c9d9a8118` (this handoff commit follows); #11 Content `0113024c849c33b0d9e6a9c056d70b4cb30a2448`; #12 UI `b4c6a08b40489d6f2fdd2d9091d825104032387c`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `59284b30245d1761592078c789d121f755838ef0`. The passing workflow uses older **explicit pins**, not all these latest heads. Main documents AGENTS.md and CHAT_WORKFLOW.md were read; main remains protected from QA writes.
+- **Blocker 1:** Latest distributed Day01 HTML Chromium touch acceptance (360×800 / 800×360, 3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) **NOT RUN**.
+- **Blocker 2:** 3–5 actual PNG binary signatures, dimensions and manifest SHA at latest UI HEAD **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor-built Android APK/device and integrated Save→Load **NOT RUN**; Core DTO stabilization/integration remains a dependency.
+- **Recommended next step:** execute Chromium touch acceptance against the **latest exact** UI SHA `b4c6a08b40489d6f2fdd2d9091d825104032387c`, then validate original PNG binaries when committed. CI green on pinned sources is not READY_FOR_OWNER_TEST. No merge or main push.
