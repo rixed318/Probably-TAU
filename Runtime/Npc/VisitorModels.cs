@@ -531,6 +531,18 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(visitor.InstanceId, out screen);
         }
 
+        /// <summary>Open the read-only Day01 visit screen from a canonical inspection action ID.
+        /// This is navigation metadata only: no inspection execution, token spending or Core receipt.</summary>
+        public static bool TryGetVisitScreenPreviewByInspectionId(
+            string inspectionId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            InspectionPreview inspection;
+            if (!TryGetInspectionPreviewByInspectionId(inspectionId, out inspection))
+                return false;
+            return TryGetVisitScreenPreviewByDocumentId(inspection.DocumentId, out screen);
+        }
+
         /// <summary>Resolve a Day01 screen only when visit, document and choice agree.
         /// Read-only presentation routing; not Core eligibility or a decision command.</summary>
         public static bool TryGetVisitScreenPreviewForVisitDocumentChoice(
