@@ -136,6 +136,24 @@ namespace TAU.President.Npc
             }
         }
 
+        /// <summary>Resolve an exact canonical Day01 inspection action ID to its
+        /// read-only Content metadata. This does not execute an inspection or spend tokens.</summary>
+        public static bool TryGetInspectionPreviewByInspectionId(string inspectionId, out InspectionPreview preview)
+        {
+            preview = null;
+            switch (inspectionId)
+            {
+                case "check_seat_map":
+                    return TryGetInspectionPreviewByDocumentId("DOC-01", out preview);
+                case "check_room_calendar":
+                    return TryGetInspectionPreviewByDocumentId("DOC-02", out preview);
+                case "check_contract_appendix":
+                    return TryGetInspectionPreviewByDocumentId("DOC-03", out preview);
+                default:
+                    return false;
+            }
+        }
+
         /// <summary>Read-only inspection metadata for a canonical Day01 visit.
         /// Resolves through the Content document ID; never spends tokens or confirms a receipt.</summary>
         public static bool TryGetInspectionPreviewByVisitId(string visitId, out InspectionPreview preview)
