@@ -950,3 +950,10 @@ One bounded documentation task: define a concrete **manual acceptance protocol**
 - Changed: `prototypes/ui-day-one/test-day01-android-touch.cjs`; new static regression rejects `<base>` tags in **both** standalone Android HTML distributions, including remote `href` and `target` overrides. The guard has positive/negative inline fixtures. This closes a subtle offline-bundle escape route; it does not change either HTML demo.
 - Verified: GitHub Contents API accepted the test commit. **Not executed:** Node test suite, CI, Chromium, Android device, TalkBack, Unity. The test is not claimed green.
 - Remaining: QA must run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`, then real viewport/device checks (#20); original PNG binary delivery (#21) still outstanding. No Core/GameState changes, no main merge.
+
+
+## 2026-11-21 · Role 03 · Issue #20 — responsive image srcset offline guard
+
+One bounded source-regression task: added a static check in `prototypes/ui-day-one/test-day01-android-touch.cjs` to reject remote `https://`, `http://` and protocol-relative `//` candidates in `srcset` for both Android Day01 offline HTML distributions. Code commit: `4758e94722346206d743290d95cefed63f00f295` on `feature/ui-5`. Existing desktop demo, production HTML, Unity and GameState/Core were not changed.
+
+Actual verification: three JavaScript regex fixtures executed in the connector runtime (remote HTTPS: matched; protocol-relative: matched; local-only: not matched), 3/3 expected outcomes. GitHub accepted the code commit. **Not run:** full Node test suite, browser, CI, physical Android, TalkBack or Unity. Local git clone blocked by DNS resolution failure for github.com. This is a static source heuristic, not a runtime network audit; #20 device playtest and #21 real PNG delivery remain open. C0-v2 PR #9 and ADR PR #14 remain integration references; no main merge.
