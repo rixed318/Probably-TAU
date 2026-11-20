@@ -732,3 +732,13 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Prior exact HEAD `f8c0b2fc889676a5e6e960a3c5c1e1e91fcd27a8` verified via [Core .NET 8 golden CI #44792288337](https://github.com/rixed318/Probably-TAU/actions/runs/44792288337): `completed/success`. New regression commit CI **NOT YET VERIFIED**; independent QA/00 review required.
 - Environment probe: no `dotnet`, Unity Editor, `adb`; `java`/`javac` present. No local C# tests, Unity/Windows build, or Android APK. APK BLOCKED pending real Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
 - P0 remains typed NPC due-event atomic EndDay integration after approved 02/00 contract. No main push/merge or Issue closure.
+
+
+## AutoDev 01 — Day02 due-event fail-closed regression (21.11.2026)
+
+**Issue:** #19; branch `feature/core-2`; PR #9. One bounded Core golden-test increment, no public contract or production-code changes.
+
+- `Tests/Core/GameStateSnapshotGoldenTests.cs`: after a successful Day01 with a Day02 payable and a Day02 NPC event, calling `DurableDayAdvance.PrepareDay` on Day02 must throw `InvalidOperationException` (event handler not yet integrated). Assert the source snapshot retains DayIndex=1, 750 kopecks cash, one outstanding payable, one pending event, zero completed events, three ledger entries and four receipts. This prevents partial payable settlement while a due NPC event remains unhandled.
+- C# commit: `10ceab60d3aa96f1de7636cacde3fdaf82a2046d`.
+- Environment probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` present. **Local C# tests NOT RUN; Unity/Windows build and Android APK BLOCKED.** The new SHA requires GitHub Actions verification; do not claim a passing CI until observed.
+- P0: integrate typed due-event handler with atomic EndDay only after 02/00 contract approval; QA/00 independent review required. No merge/main changes or Issue closure.
