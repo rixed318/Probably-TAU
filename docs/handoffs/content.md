@@ -683,3 +683,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `6dda921c1c5308da66a99edb34bb355b98a198f3` on `feature/content-7`.
 - Actually executed isolated JavaScript on current GitHub UI fixture: original `DOC-01`, `DOC-02`, `DOC-03` unique — PASS; synthetic duplicate `DOC-01` — rejected (PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run full validator and negative fixture mutation on checkout.
 - PR #9 C0-v2 and PR #14 ADR remain separate. Draft / NOT READY_FOR_OWNER_TEST; no Core, EventDirector, cash, DayIndex, main push or merge.
+
+## AutoDev 04 — canonical Day01 NPC ID uniqueness (2026-11-20)
+
+- Issue #7 / PR #11: one content-only guard in `Content/validate-day01-acceptance.cjs` rejects duplicate `fictionalNpcs[].id` before comparing the canonical NPC roster to the UI fixture. No NPC identities, narrative, art files, cash, DayIndex, Core or EventDirector changed.
+- Validator commit: `752305abaaf0fbf52c8d958104a9838b63b3ffce` on `feature/content-7`.
+- Actually tested isolated JavaScript against current GitHub `CONTENT_SPEC_DRAFT.json`: 3 distinct NPC IDs PASS; synthetic duplicate of first NPC ID rejected PASS. Full checked-in Node CLI, CI, Unity, Windows and Android NOT run. QA 05 should execute complete validator and a duplicate NPC ID mutation on checkout.
+- C0-v2 PR #9 and ADR PR #14 remain separate; Draft / NOT READY_FOR_OWNER_TEST. No main push or merge.
