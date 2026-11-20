@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — zero-width canonical ID rejection (2026-11-20)
+
+**One bounded production increment (#4/#20):** `VisitorArchetype.Require` now rejects Unicode category Format (Cf) characters as well as control and surrogate code units. This closes invisible U+200B/U+2060/U+200D ID ambiguity in platform-neutral Day01 DTO construction without touching Core/GameState/ledger or assets. Production commit `301d9bb15ea0a0e6465c7347bd9854327938e8ae`; golden assertions commit `83a0906fa059796feadc501780984237666d63e2`. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
+
+**Verification:** GitHub accepted both commits; actual .NET, Unity, Windows and Android tests **NOT RUN** in this pass. CI for these SHAs **NOT VERIFIED**. Run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and verify exact-SHA GitHub Actions. **BLOCKED (full EventDirector):** Core atomic event/receipt/earned-key port and Content E03/E07 source agreement alignment. PR #9 C0-v2, PR #14 ADR and PR #11 Content are still open integration inputs; PR #16 Draft. No main push/merge; no portrait image generation or IP approval.
+
+
 ## AutoDev 02 — choice-scoped Day01 art routing (2026-11-20)
 
 **One bounded production increment (#4/#20):** Added pure C# `Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(choiceId, assetId, out screen)`. It returns a read-only Day01 screen only if a canonical Content choice ID and planned art ID belong to the same canonical visit. Fail-closed for unknown, padded, case-mismatched or cross-visitor IDs. No GameState, ledger, command, event receipt, Unity or image upload changes. Production commit `2c4500327d0ce7344dc510bfa8beb1828c66a9a2`; golden test commit `8920b1a6da5054286fe47b9e7e65b9946dd04b88`. Test matrix: 9 choices × 9 art IDs, plus invalid choice/art cases. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
