@@ -69,6 +69,11 @@ for (const event of contentSpec.eventManifest) {
   assert.ok(Number.isSafeInteger(event.dayIndex) && event.dayIndex >= 0,
     "invalid event DayIndex: " + event.id);
   assert.equal(event.dayIndex, event.day - 1, "event day label mismatch: " + event.id);
+  // E09 is a report-only settlement view, not a second cash posting stage.
+  // Keep all other authored events in scheduled-content; Core owns the ledger.
+  const expectedPhase = event.id === "E09" ? "EndDay-settlement" : "scheduled-content";
+  assert.equal(event.triggerPhase, expectedPhase,
+    "event triggerPhase drift (E09 report-only): " + event.id);
   assert.ok(Array.isArray(event.feeds), "event feeds missing: " + event.id);
   assert.equal(new Set(event.feeds).size, event.feeds.length, "duplicate event feed: " + event.id);
   for (const target of event.feeds) {
