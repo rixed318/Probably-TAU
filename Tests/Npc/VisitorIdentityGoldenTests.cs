@@ -90,7 +90,7 @@ namespace TAU.President.Tests.Npc
                         byChoice.CostTokens != 1 || byChoice.RepeatCostTokens != 0)
                         throw new Exception("Choice inspection mapping mismatch: " + choiceId);
                 }
-            foreach (string invalidChoice in new[] { null, "", "lab-1", "LAB-4", "ROOM-1", " LAB-1" })
+            foreach (string invalidChoice in new[] { null, "", "lab-1", "LAB-4", "ROOM-1", " LAB-1", "LAB-1 " })
             {
                 Day01Visitors.InspectionPreview invalidChoiceInspection;
                 if (Day01Visitors.TryGetInspectionPreviewByChoiceId(invalidChoice, out invalidChoiceInspection) ||
