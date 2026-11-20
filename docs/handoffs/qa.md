@@ -1548,3 +1548,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** latest single-file Day01 Chromium touch acceptance (360x800, 800x360, three documents, EndDay, ledger replay, partner delayed cash, 48dp and overflow) NOT RUN.
 - **Blocker 3:** true Unity Editor APK/device and integrated Save→Load NOT RUN; stable complete DTO still required for SaveService.
 - **Recommended next step:** UI 03 commit 3–5 original PNG binaries plus matching SHA256 manifest; QA inspect exact commit binaries, then prioritize Chromium touch acceptance on latest UI SHA. Keep main protected and PR #10 draft.
+
+
+## 2026-11-20 — QA 05: exact-SHA Android HTML static audit (#20)
+
+**One bounded read-only audit:** UI PR #12 head `a21f420dd3b4af0a59307a47a81c145894d7e646`; inspected actual `prototypes/ui-day-one/day01-android-offline.html` blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 characters). Source checks on retrieved file: DOCTYPE present; viewport width=device-width, initial-scale=1, viewport-fit=cover; zero external script-src references and zero external stylesheet links; coarse-pointer and coarse-pointer/landscape/max-height:500px media rules present; two literal `min-height/min-width:48px` declarations. **STATIC PASS for these exact source predicates only.** No DOM layout measurement, no assertion that every interactive target is >=48 CSS px, no proof of full offline runtime behavior. PR #12 changed-file listing: 33 files, zero .png paths; this does not establish absence of PNG elsewhere in the repository.
+
+**NOT RUN:** Chromium touch emulation at 360x800 and 800x360; three-document/EndDay/ledger replay/partner cash interaction; PNG binary signature/dimensions/SHA256; Unity Editor, Android APK/device, integrated Save→Load. No new architecture contract and no SaveService implementation.
+
+### Сводка для координатора 00 — 2026-11-20 23:36 UTC+4
+
+- **PR heads observed before this QA commit:** #9 `f8c0b2fc`; #10 `62fc5aee`; #11 `840f78d5`; #12 `a21f420d`; #14 `ebdc4be2`; #16 `3c40a270`; #17 `bc9db999`. New QA commit SHA is reported in PR #10 after GitHub write.
+- **Blocker 1:** actual Chromium touch interaction/layout acceptance still NOT RUN; static CSS cannot prove 48dp targets or no overflow.
+- **Blocker 2:** no actual PNG binaries in PR #12 diff; signature/dimension/manifest SHA verification BLOCKED pending UI art commit.
+- **Blocker 3:** Unity Editor/APK and integrated Save→Load NOT RUN; do not infer readiness from HTML static checks.
+- **Next:** run browser-driven 360x800 and 800x360 interaction acceptance on exact UI HTML SHA; independently verify 3-5 committed PNG files when available. No merge or main write; READY_FOR_OWNER_TEST not granted.
