@@ -706,3 +706,8 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Issue #7 / PR #11: one bounded assertion in `Content/validate-day01-acceptance.cjs` fixes the draft event manifest phase contract: E09 uses `EndDay-settlement` as a **report-only view**; E02–E08/E10–E14 use `scheduled-content`. This does **not** implement settlement, revenue, a ledger posting or an EventDirector. Core C0-v2 (PR #9), ADR (PR #14) and due-event ADR (PR #17) retain ownership of runtime ordering/idempotency.
 - Validator commit: `c6b5912108f25726189433f7134fee9f876771a9` (`feature/content-7`).
 - Actually executed isolated JavaScript on GitHub draft JSON: 13/13 event phases baseline PASS; synthetic E09 changed to `scheduled-content` rejected PASS; synthetic E08 changed to `EndDay-settlement` rejected PASS. **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on current HEAD and negative mutations. Draft / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+### Проверка standing sprite ID — 20.11.2026
+- В `Content/validate-day01-acceptance.cjs` добавлена защита от повторных `standingAssetId`, неверного формата и пересечения с `portraitAssetId` трёх вымышленных NPC. Это только content validation, не runtime schema и не готовые PNG.
+- Фактически выполнена независимая проверка исходных шести ID: PASS; искусственный дубликат обнаружен: PASS. Полный Node CLI, Unity, Android и CI не запускались; QA 05 должен прогнать валидатор на HEAD.
+- Коммит валидатора: `4daac8c3f73f6ecf37b3fa1ec3179d9c03c1c83a`. PR #11 остаётся DRAFT/без merge; Core/ledger не изменялись.
