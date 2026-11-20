@@ -1533,3 +1533,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 original PNG binaries and matching manifest hashes not independently validated.
 - **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load not tested; stable Core DTO boundary still prerequisite.
 - **Recommended next step:** execute exact-SHA Chromium touch acceptance and retain screenshots, console logs, bounding boxes and interaction traces; once a real Unity builder exists, follow the new checklist and attach non-secret APK provenance. No merge/main push, no architecture approval, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — QA 05: independent PR #12 PNG delivery audit (Issue #21)
+
+**Bounded task:** inspect all changed filenames in UI PR #12 at exact head `aedb033fc43cac463d0dc99e47f2d27bd7245bb6`. GitHub paginated changed-file listing returned **33 paths, 0 with .png extension**. This is evidence only for PR #12's changed-file set, **not** proof of absence of PNG in the entire repository or an audit of binary contents. Therefore PNG signatures, dimensions and manifest SHA256: **BLOCKED — no changed PNG binaries to inspect**. No IP or branding approval is implied.
+
+**Actual verification:** GitHub PR metadata and complete changed-filename listing; PASS for retrieval, 0 PNG observed. Local Node/Python/.NET, Chromium 360x800 and 800x360, Unity Editor, Android APK/device, integrated Save→Load: **NOT RUN**. No SaveService or new Core contract authored.
+
+### Сводка для координатора 00 — 2026-11-20
+
+- **PR heads observed:** #9 `a7fff173f2ac4728cd81931dc7bc0bb19e389555`; #10 before this handoff commit `576ed2d16d26bb81910510d36c824db39e1afa97`; #11 `8af3ce391701d27f0fba57186ca465e75a76c23d`; #12 `aedb033fc43cac463d0dc99e47f2d27bd7245bb6`; #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 `f98cb0ef951577e89fa5a45686cd28118782e3f5`; #17 `bc9db999b4190d77b2994588073ff59e456dccdb`. PRs remain open; no merge.
+- **Blocker 1:** UI PR #12 changes include no real PNG; cannot verify signature/dimensions/manifest hashes for Issue #21.
+- **Blocker 2:** latest single-file Day01 Chromium touch acceptance (360x800, 800x360, three documents, EndDay, ledger replay, partner delayed cash, 48dp and overflow) NOT RUN.
+- **Blocker 3:** true Unity Editor APK/device and integrated Save→Load NOT RUN; stable complete DTO still required for SaveService.
+- **Recommended next step:** UI 03 commit 3–5 original PNG binaries plus matching SHA256 manifest; QA inspect exact commit binaries, then prioritize Chromium touch acceptance on latest UI SHA. Keep main protected and PR #10 draft.
