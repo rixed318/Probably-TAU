@@ -31,6 +31,16 @@ assert.deepEqual(contentSpec.meta.weeklySettlementClosingDayIndexes, [4, 9],
   "weekly closing DayIndexes must be 4 and 9 (display Days 05/10)");
 assert.equal(contentSpec.opening.weeklySettlementFirstClosingDayIndex, 4,
   "opening first weekly closing DayIndex must be 4");
+// Day01 uses zero-based canonical DayIndex; document day labels are display-only.
+// Keep the draft consistent before UI/Core adapters consume these values.
+assert.equal(contentSpec.opening.dayIndex, 0, "opening Day01 must have DayIndex 0");
+assert.equal(contentSpec.day1.dayIndex, contentSpec.opening.dayIndex,
+  "Day01 scenario DayIndex must match opening");
+for (const document of contentSpec.documentTypes) {
+  assert.ok(Number.isSafeInteger(document.visible.dayIndex) &&
+    document.visible.dayIndex === document.visible.day - 1,
+    "draft document display day/DayIndex mismatch: " + document.id);
+}
 const eventIds = contentSpec.eventManifest.map(event => event.id);
 const projectIds = contentSpec.projects.map(project => project.id);
 // Guard complete authored rosters, not only valid ID syntax: a missing event/project
