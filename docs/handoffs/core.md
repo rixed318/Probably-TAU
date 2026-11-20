@@ -683,3 +683,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Bounded task: exact-SHA CI verification and handoff; no C# or public contract changes. Typed NPC due-event atomic EndDay remains blocked on coordinated interface approval by 02/00 and QA review.
 - Toolchain checked in current runtime: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `javac` available. No local C# tests, Windows/Unity build, or Android APK. Android remains BLOCKED until actual Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK verified.
 - No main push, merge, or Issue closure. CI for this handoff-only commit remains unverified.
+
+## Core 01 — 20.11.2026: exact-HEAD CI verification (14:01 Samara)
+
+- Issue #19 / PR #9: verified prior `feature/core-2` HEAD `7fe76ab6e226904cc16c4e131e3a4c8ea7c4a0f9` via [Core .NET 8 golden workflow #44701246412](https://github.com/rixed318/Probably-TAU/actions/runs/44701246412), `completed/success`. This is standalone .NET CI, not Unity Editor or Android evidence.
+- Single bounded task: exact-SHA CI verification and handoff. No new C# code or public contracts; typed NPC due-event EndDay integration remains pending 02/00 contract coordination and independent QA review.
+- Current runtime checked: `dotnet`, Unity Editor, Android `adb`/`sdkmanager`/`ndk-build` absent; `javac` available. Local C# tests, Unity/Windows build and Android APK NOT RUN; APK BLOCKED until real Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK verified.
+- No main push, PR merge or Issue closure. CI for this new documentation-only commit not yet verified.
