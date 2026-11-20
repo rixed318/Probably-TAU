@@ -82,7 +82,7 @@ test('Android decision progress is a polite atomic live status',()=>{
 const forbiddenNavigation = [
   /<form\b/i,
   /<meta\b[^>]*http-equiv\s*=\s*["']?refresh/i,
-  /\b(?:(?:window|document|top|self)\s*\.\s*)?location\s*(?:=|\.\s*(?:href\s*=|assign\s*\(|replace\s*\())|\bwindow\s*\.\s*open\s*\(/i,
+  /\b(?:(?:window|document|top|self|parent|globalThis)\s*\.\s*)?location\s*(?:=|\.\s*(?:href\s*=|assign\s*\(|replace\s*\())|\bwindow\s*\.\s*open\s*\(/i,
   /<a\b[^>]*href\s*=\s*["']?(?:https?:|\/\/)/i,
 ];
 test('Android touch bundle has no remote forms, redirects or external navigation',()=>{
@@ -107,5 +107,8 @@ test('offline navigation guards reject representative forbidden snippets',()=>{
     'top.location.replace("https://example.invalid")',
     'self.location.assign("https://example.invalid")',
     'window.open("https://example.invalid")',
+    'parent.location.assign("https://example.invalid")',
+    'globalThis.location.href="https://example.invalid"',
+    'parent.location="https://example.invalid"',
   ]) assert.match(snippet,forbiddenNavigation[2]);
 });
