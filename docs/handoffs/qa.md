@@ -1447,3 +1447,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 real original PNG signatures/dimensions/manifest SHA256 NOT VERIFIED on current UI head.
 - **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load NOT RUN; stable DTO integration must precede SaveService.
 - **Recommended next step:** run reproducible Chromium touch acceptance on exact UI `a985751d322d3773ce1ebfe9a7ec8fddac291d2f`; separately inspect real PNG binaries when present. Keep main protected, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-20 — QA 05: independent exact-SHA CI status check (#8)
+
+**One bounded task:** checked GitHub Actions run [#44699214187](https://github.com/rixed318/Probably-TAU/actions/runs/44699214187) associated with QA PR #10 HEAD `95827b017b33ab3e487bd32e39926a98cc426f14`. GitHub reports **completed / success** at the workflow-run level. Individual job logs and steps were **NOT inspected** in this pass; no assertion of 5/5 jobs or individual tests is made from this query. No runtime code, contract, or CI workflow changed.
+
+**Actual execution:** GitHub read-only metadata verification PASS (run status and conclusion); local Python/Node/.NET NOT RUN; Chromium 360×800 and 800×360 NOT RUN; Unity Editor, Android APK/device, integrated Save→Load NOT RUN. Earlier pinned CI success is not proof of latest Core/UI/Content HEADs. No SaveService implemented without stable complete DTO.
+
+### Сводка для координатора 00 — 2026-11-20 13:35 UTC+4
+
+- **PR HEADs verified:** #9 Core `7fe76ab6`; #10 QA pre-handoff `95827b01`; #11 Content `2bff4147`; #12 UI `7fc7f6f2`; #14 ADR `ebdc4be2`; #16 NPC `e1a34dcb`; #17 ADR-C0-002 `bc9db999`. QA handoff commit follows this snapshot. All remain draft/open at query time.
+- **Blocker 1:** no actual Chromium touch acceptance of latest single-file Day01 HTML (3 documents, EndDay, ledger replay, deferred partner cash, 48dp/overflow).
+- **Blocker 2:** 3–5 committed original PNG binaries and matching manifest SHA/signature/dimension verification not established in this pass.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load not tested; stable complete Core DTO still prerequisite for SaveService.
+- **Next step:** run Chromium mobile viewport interaction tests on exact UI SHA `7fc7f6f2` and record screenshots/DOM assertions. Keep `main` protected; no merge or architectural approval.
