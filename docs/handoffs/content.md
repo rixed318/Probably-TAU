@@ -728,3 +728,11 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `90c51fdaa99bf450355cb0a52676bcd33dd5f204` (`feature/content-7`).
 - Actually executed isolated JavaScript against fetched GitHub draft: 9/9 IDs unique (PASS); synthetic standing/document ID collision detected (PASS). Full checked-in Node CLI, CI, Unity, Windows and Android **not run**. QA 05: run `node Content/validate-day01-acceptance.cjs` on current HEAD and negative collision mutation.
 - C0-v2 PR #9 and ADR PR #14 remain separate; no Core, EventDirector, economy, DayIndex, narrative, main push or merge. PR #11 remains NOT READY_FOR_OWNER_TEST.
+
+
+## AutoDev 04 — complete event/project roster guard (2026-11-20)
+
+- **Issue #7 / PR #11; one bounded task:** added exact roster assertions to `Content/validate-day01-acceptance.cjs`: events must be exactly E02–E14 (13 unique Definition IDs) and projects exactly P01/P02 (2 unique IDs). Existing syntax, DayIndex, feed, money and art checks remain unchanged. This is a draft content integrity guard, not a Core/EventDirector contract.
+- **Validator commit:** `e94415ff4ec7f9d0d5cde87c8f90270490160c7d` on `feature/content-7`.
+- **Actually checked:** independent JavaScript check of fetched canonical JSON roster (13 events, 2 projects) PASS; synthetic missing E08 rejected PASS; synthetic duplicate P01 replacing P02 rejected PASS. **Not run:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on checked-out HEAD and mutation tests.
+- PR #9 C0-v2 and PR #14 ADR remain external; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push, merge, Core changes or art production.
