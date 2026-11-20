@@ -211,7 +211,9 @@ namespace TAU.President.Tests.Npc
             if (Day01Visitors.TryGetCardByPlannedAssetId(null, out invalidAsset) || invalidAsset != null ||
                 Day01Visitors.TryGetCardByPlannedAssetId("", out invalidAsset) || invalidAsset != null ||
                 Day01Visitors.TryGetCardByPlannedAssetId("Irina_korneeva_standing", out invalidAsset) || invalidAsset != null ||
-                Day01Visitors.TryGetCardByPlannedAssetId("missing_asset", out invalidAsset) || invalidAsset != null)
+                Day01Visitors.TryGetCardByPlannedAssetId("missing_asset", out invalidAsset) || invalidAsset != null ||
+                Day01Visitors.TryGetCardByPlannedAssetId("irina_korneeva_standing ", out invalidAsset) || invalidAsset != null ||
+                Day01Visitors.TryGetCardByPlannedAssetId(" irina_korneeva_standing", out invalidAsset) || invalidAsset != null)
                 throw new Exception("Unknown planned art ID must fail closed.");
 
             // Planned art navigation must resolve the same read-only screen as canonical visit routing.
