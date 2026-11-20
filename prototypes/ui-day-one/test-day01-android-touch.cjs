@@ -38,11 +38,14 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
 // Prevent protocol-relative external media from bypassing the offline http(s) guard.
 // These assertions cover static HTML only, not computed DOM assignments.
 test('both Android bundles reject protocol-relative media sources',()=>{
+  const mediaSource = /<(?:iframe|object|embed|audio|video|img|source|track)\b[^>]*\b(?:src|data|poster)\s*=\s*['"]?\/\//i;
   for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
-    assert.doesNotMatch(source,/<(?:iframe|object|embed|audio|video|img|source|track)\\b[^>]*\\b(?:src|data|poster)\\s*=\\s*['\"]?\\/\\//i,
-      filename+' must not load protocol-relative media');
+    assert.doesNotMatch(source,mediaSource,filename+' must not load protocol-relative media');
   }
+  for(const snippet of ['<img src="//cdn.invalid/a.png">','<video poster="//cdn.invalid/a.png">','<object data="//cdn.invalid/a.svg">'])
+    assert.match(snippet,mediaSource,'must detect protocol-relative media');
+  assert.doesNotMatch('<img src="./local.png">',mediaSource);
 });
 
 // Regression for the loading-screen failure: scripts are in <head>, so DOM nodes
