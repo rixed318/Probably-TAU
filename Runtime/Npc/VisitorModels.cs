@@ -574,6 +574,21 @@ namespace TAU.President.Npc
             return TryGetVisitScreenPreview(card.VisitId, out screen);
         }
 
+        /// <summary>Route a Day01 choice and planned art ID only when both belong to one visit.
+        /// Read-only navigation for Windows/Android; not Core choice authorization or PNG proof.</summary>
+        public static bool TryGetVisitScreenPreviewForChoiceAsset(
+            string choiceId, string assetId, out VisitScreenPreview screen)
+        {
+            screen = null;
+            VisitorInstance choiceVisitor;
+            Day01VisitorCard assetCard;
+            if (!TryGetByChoiceId(choiceId, out choiceVisitor) ||
+                !TryGetCardByPlannedAssetId(assetId, out assetCard) ||
+                !string.Equals(choiceVisitor.InstanceId, assetCard.VisitId, StringComparison.Ordinal))
+                return false;
+            return TryGetVisitScreenPreview(choiceVisitor.InstanceId, out screen);
+        }
+
         /// <summary>Fresh immutable identity snapshots, with stable Content IDs on every platform.</summary>
         public static IReadOnlyList<Day01VisitorCard> CreateReadOnlyCards()
         {
