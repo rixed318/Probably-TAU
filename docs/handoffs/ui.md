@@ -7,6 +7,18 @@
 **State:** standalone interactive browser prototype + UI/UX proposal, waiting for coordinator 00 review.  
 **PR:** https://github.com/rixed318/Probably-TAU/pull/12 (draft; do not merge without owner approval).
 
+## Current delivery snapshot — 2026-11-20 (Issue #20 / #21)
+
+| Gate | Verified state | Next evidence needed |
+| --- | --- | --- |
+| WEB_READY | Offline Android Day01 single-file HTML exists in feature/ui-5; static regression tests are committed | Run full Node suite and browser viewport/touch tests; retain desktop prototype |
+| ANDROID_DEVICE_TESTED | **NO** | Physical Android 800×360 / 360×800, offline file launch, touch hitboxes, three visitors, report, screenshots |
+| ART_BINARY_DELIVERED | **NO verified PNG commit** | Generate/review original Style A 320×180 PNG, binary upload, verify GitHub blob and provenance |
+| APK_BUILT | **NO** | Real Unity Editor/Android toolchain, approved read-model/command API, build and device smoke test |
+| Integration | C0-v2 PR #9 and ADR PR #14 are references; PR #11 content draft | Coordinator 00 review, no merge without owner permission |
+
+**Reproduce source tests:** `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`. This command is a reproduction instruction, **not a claim of execution**. No physical Android, TalkBack, Chromium, Unity or APK verification in this pass. Source-level tests cannot prove actual 48dp targets or safe-area layout.
+
 ## Goal
 
 Propose an original 2D visual language and ship a click-through first day before Core, without duplicating GameState, financial rules, or NPC/event generation.
