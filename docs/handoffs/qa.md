@@ -1481,3 +1481,24 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 real original PNG binaries with verified signatures/dimensions/manifest SHA not yet independently validated.
 - **Blocker 3:** Unity APK/device and integrated Save→Load remain untested; stable Core persistence DTO/restore boundary must be reviewed before SaveService.
 - **Recommended next step:** run Chromium 360x800 and 800x360 against exact current UI SHA `b836beff5976`, log interactions and measured targets, then verify PNG binaries when committed. Keep main protected and PR #10 Draft.
+
+
+## 2026-11-20 — QA 05: exact-UI-SHA offline HTML static acceptance preflight (#20)
+
+**One bounded task:** read the actual single-file Android Day01 artifact from UI PR #12 commit `4d464506ac235c75fc7609e7a78433d70ef184a8`, path `prototypes/ui-day-one/day01-android-offline.html`, GitHub blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 UTF-8 characters). This is a **source-level preflight**, not a browser test.
+
+**Actual checks performed (GitHub file fetch + static JS regex/string inspection):**
+- PASS: one inline viewport declaration `width=device-width, initial-scale=1, viewport-fit=cover`.
+- PASS: no external `<script src>`, stylesheet `<link rel=stylesheet>`, or literal `http(s)://` URLs found in this file.
+- PASS: static CSS includes `touch-action: manipulation`, a `min-height:48px` rule, coarse-pointer and landscape/coarse-pointer media queries.
+- NOT VERIFIED: actual computed 48 CSS-pixel hit areas for **every** actionable control, scrolling/clipping, touch gesture behavior, 3-document decisions, EndDay, ledger replay, and deferred partner cash. Presence of CSS rules alone does not establish those behaviors. Literal `EndDay` token not found; UI may use another label/identifier, so **not a defect claim**.
+- NOT RUN: Chromium touch emulation 360×800 / 800×360, Node/Python/.NET, Unity Editor, APK/device, integrated Save→Load.
+- NOT VERIFIED: PNG signatures/dimensions/manifest SHA256 for 3–5 real assets. No new contracts, SaveService, merges, or writes to main.
+
+### Сводка для координатора 00 — 2026-11-20 16:56 UTC+4
+
+- **PR HEADs observed:** #9 Core `9f958960b531`, #10 QA before this update `6b78b5333de6`, #11 Content `eb95b9f19af9`, #12 UI `4d464506ac23`, #14 ADR `ebdc4be28afd`, #16 NPC `dedbe912827a`, #17 ADR-C0-002 `bc9db999b419`; all open/draft. C0-v2 and ADRs guide feature work, not authorization to merge.
+- **Blocker 1:** actual Chromium touch acceptance at both viewport sizes remains NOT RUN; static source preflight cannot certify UI behavior.
+- **Blocker 2:** 3–5 committed original PNG binaries and matching manifest SHA256 have not been independently verified.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load remain NOT RUN; complete stable Core persistence DTO/restore boundary required before SaveService.
+- **Recommended next step:** run Playwright/Chromium against UI commit `4d464506ac235c75fc7609e7a78433d70ef184a8`, capture 360×800 and 800×360 touch interactions, 3 documents, EndDay, ledger replay, partner cash and per-control bounding boxes/overflow; preserve screenshots and exact SHA. Then inspect PNG bytes when delivered. No READY_FOR_OWNER_TEST.
