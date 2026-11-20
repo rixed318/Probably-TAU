@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — canonical NPC identity input hardening (2026-11-20)
+
+**One bounded production increment (#4/#20):** `VisitorArchetype.Require` now rejects control characters and UTF-16 surrogate code units in canonical archetype/visit/document IDs, preventing invisible or malformed IDs from entering immutable read-only NPC DTOs on Windows/Android. Production SHA `7f04fb758ca711ff9ecd781d9caebeb908abed7c`; golden assertion SHA `10615e400fd7e77d7bfa9a4a7064845f8f056435`. Changed `Runtime/Npc/VisitorModels.cs` and `Tests/Npc/VisitorIdentityGoldenTests.cs`. No Core state, ledger, Unity code or art files changed. This is input hardening, not a new Content schema or gameplay command.
+
+**Verification:** Previous production HEAD `e1a34dcb2885368186054bee946eb6e7ff399a06` had GitHub Actions run [#44706630874](https://github.com/rixed318/Probably-TAU/actions/runs/44706630874) `completed/success`; this does **not** validate the new commits. New SHA CI **NOT VERIFIED**. Local .NET, Unity Editor, Windows and Android tests **NOT RUN**. Re-run `dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release` and verify exact HEAD workflow. **BLOCKED (EventDirector):** Core atomic event/receipt/earned-key API and Content E03/E07 source agreement. PR #9 C0-v2, PR #14 ADR and PR #11 Content remain integration inputs; PR #16 Draft. No main push/merge or third-party assets.
+
+
 ## AutoDev 02 — visitor-scoped art routing (2026-11-20)
 
 **One production increment (#4/#20):** Added `Day01Visitors.TryGetVisitScreenPreviewForVisitorAsset(visitorId, assetId, out screen)` to the pure C# read-only Day01 NPC API. It matches the canonical Content visitor ID and planned art ID using ordinal equality and fails closed for cross-visitor/unknown/padded IDs; no Unity dependency, no Core command, no GameState/ledger or portrait PNG changes. Production commit `db46b6e44c2696b80d3d04cf36b6e833f9aac888`; golden tests commit `f98e635ed04935adb6a046e13b0c524c15dd181f`. Golden assertions cover all 9 planned art IDs × 3 visitor identities plus invalid visitor IDs. Files: `Runtime/Npc/VisitorModels.cs`, `Tests/Npc/VisitorIdentityGoldenTests.cs`.
