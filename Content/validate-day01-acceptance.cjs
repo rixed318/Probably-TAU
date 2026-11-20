@@ -89,6 +89,10 @@ for (const event of contentSpec.eventManifest) {
   const expectedPhase = event.id === "E09" ? "EndDay-settlement" : "scheduled-content";
   assert.equal(event.triggerPhase, expectedPhase,
     "event triggerPhase drift (E09 report-only): " + event.id);
+  // Every authored event needs an explicit nonempty fallback for rejected/unavailable branches.
+  // This is a narrative-data invariant, not an EventDirector implementation.
+  assert.ok(typeof event.fallback === "string" && event.fallback.trim().length > 0,
+    "missing event fallback: " + event.id);
   assert.ok(Array.isArray(event.feeds), "event feeds missing: " + event.id);
   assert.equal(new Set(event.feeds).size, event.feeds.length, "duplicate event feed: " + event.id);
   for (const target of event.feeds) {
