@@ -884,3 +884,12 @@ Actual checks: isolated Node.js regex controls passed **3/3** for distinct IDs, 
 One bounded test-only change: `prototypes/ui-day-one/test-day01-android-touch.cjs` now checks that static `aria-labelledby`, `aria-describedby`, `aria-controls` and `aria-owns` IDREF tokens resolve to HTML element IDs in both offline Android Day01 variants. Commit `a06f78d4a459c17d763af790a464668ac38e7aaf` on `feature/ui-5`. This is a source-level accessibility guard, not a screen-reader or runtime DOM test.
 
 Actual isolated check against the two live GitHub HTML files: PASS, 2/2 existing ARIA ID references resolved (`document-title`, `report-title`); main touch file currently has no such references. Full Node suite, CI, browser, physical Android/TalkBack and Unity NOT run. No GameState/Core, HTML behavior, art, desktop prototype or main changes. C0-v2 PR #9 and ADR PR #14 remain pending integration references; PR #11 content is draft. Issue #21 PNG binary and physical Android playtest still outstanding; PR #12 stays Draft and must not be merged without owner approval.
+
+
+### 2026-11-20 · Role 03 bounded pass · Issue #20
+
+- Added a static Android regression guard against `autofocus` on interactive HTML controls in both downloadable offline variants. Forced initial focus can open the soft keyboard and cover the landscape HUD.
+- Test file: `prototypes/ui-day-one/test-day01-android-touch.cjs`; code commit `d4ee841293d198e23e3797547aba7362eda2d197`.
+- Actual execution: four isolated Node.js regex fixtures passed (two forbidden and two allowed examples). **Full repository Node test suite, browser rendering, physical Android, TalkBack and Unity were NOT run.** New test has not been executed against both real HTML files locally.
+- Contracts: no changes to Core/GameState or mock command behavior. C0-v2 PR #9, ADR PR #14 and Day01 content PR #11 remain integration references, not approved runtime dependencies.
+- Next: run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` and physical 800×360 / 360×800 Android tests. Issue #21 still needs verified PNG binaries and owner review; no art delivery claimed.
