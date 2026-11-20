@@ -976,6 +976,39 @@ namespace TAU.President.Tests.Core
                 day02Input.Finance.Receipts.Count == 4,
                 "Day02 negative expected-day rejected without settlement");
 
+            // An exactly affordable Day02 liability must settle completely, leaving zero
+            // cash rather than treating equality as insufficient funds. Restore and replay
+            // must preserve the single posting/receipt without mutating the source.
+            var exactFundsInput = new DurableGameStateSnapshot(
+                day02Input.Finance, day02Input.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day02-exact-funds", 1, 750L)
+                }));
+            var exactFundsClosed = DurableDayAdvance.PrepareDay(exactFundsInput,
+                exactFundsInput.Header.Revision, 1);
+            AssertNamed(exactFundsClosed.Header.DayIndex == 2 &&
+                exactFundsClosed.Header.BalanceKopecks == 0L &&
+                exactFundsClosed.Payables.Outstanding.Count == 0 &&
+                exactFundsClosed.Finance.Ledger.Entries.Count == 4 &&
+                exactFundsClosed.Finance.Ledger.Entries[3].PostingId == "payable:day02-exact-funds" &&
+                exactFundsClosed.Finance.Receipts.Count == 5 &&
+                exactFundsClosed.Finance.Receipts[4].PostingKeys.Count == 1 &&
+                exactFundsClosed.Finance.Receipts[4].PostingKeys[0] == "payable:day02-exact-funds",
+                "Day02 exact-funds payable settles to zero");
+            var exactFundsRestored = exactFundsClosed.Restore();
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                exactFundsRestored, exactFundsRestored.Header.Revision, 1));
+            AssertNamed(exactFundsRestored.Header.BalanceKopecks == 0L &&
+                exactFundsRestored.Payables.Outstanding.Count == 0 &&
+                exactFundsRestored.Finance.Ledger.Entries.Count == 4 &&
+                exactFundsRestored.Finance.Receipts.Count == 5 &&
+                exactFundsInput.Header.DayIndex == 1 &&
+                exactFundsInput.Header.BalanceKopecks == 750L &&
+                exactFundsInput.Payables.Outstanding.Count == 1 &&
+                exactFundsInput.Finance.Ledger.Entries.Count == 3 &&
+                exactFundsInput.Finance.Receipts.Count == 4,
+                "Day02 exact-funds restore, replay guard and source immutability");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
