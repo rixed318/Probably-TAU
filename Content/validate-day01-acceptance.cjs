@@ -4,6 +4,27 @@ const fs = require("node:fs");
 const path = require("node:path");
 // Draft event manifest consistency (content only; no EventDirector/runtime behavior).
 const contentSpec = JSON.parse(fs.readFileSync(path.join(__dirname, "CONTENT_SPEC_DRAFT.json"), "utf8"));
+// Validate all nested draft monetary fields; Core owns actual ledger postings.
+function validateDraftMoney(node, location = "content") {
+  if (Array.isArray(node)) {
+    node.forEach((item, i) => validateDraftMoney(item, location + "[" + i + "]"));
+    return;
+  }
+  if (node === null || typeof node !== "object") return;
+  for (const [key, value] of Object.entries(node)) {
+    const field = location + "." + key;
+    if (key.endsWith("Kopecks")) {
+      assert.equal(typeof value, "string", "money must be a decimal string: " + field);
+      assert.match(value, /^(0|-?[1-9][0-9]*)$/, "invalid kopecks: " + field);
+      const amount = BigInt(value);
+      assert.ok(amount >= -(1n << 63n) && amount <= (1n << 63n) - 1n,
+        "kopecks exceed signed Int64: " + field);
+    } else {
+      validateDraftMoney(value, field);
+    }
+  }
+}
+validateDraftMoney(contentSpec);
 // Draft weekly closing days are zero-based: displayed Days 05 and 10 -> DayIndex 4 and 9.
 // Guard content labels only; Core owns EndDay settlement and ledger idempotency.
 assert.deepEqual(contentSpec.meta.weeklySettlementClosingDayIndexes, [4, 9],
