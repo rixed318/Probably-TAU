@@ -19,6 +19,9 @@ namespace TAU.President.Npc
         {
             if (string.IsNullOrWhiteSpace(value) || value != value.Trim())
                 throw new ArgumentException("Canonical nonempty value required.", name);
+            foreach (char ch in value)
+                if (char.IsControl(ch) || char.IsSurrogate(ch))
+                    throw new ArgumentException("Canonical value cannot contain control or surrogate characters.", name);
             return value;
         }
     }
