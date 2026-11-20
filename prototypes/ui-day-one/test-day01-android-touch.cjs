@@ -139,3 +139,14 @@ test('Android offline HTML variants resolve static ARIA ID references',()=>{
     }
   }
 });
+
+
+// Mobile offline regression: initial focus must remain under the player's control.
+// Autofocus can summon the Android keyboard and obscure the landscape Day01 HUD.
+test('Android offline variants do not force autofocus on load',()=>{
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    assert.doesNotMatch(source,/<(?:input|button|textarea|select|a)\b[^>]*\sautofocus(?:\s|=|\/?>)/i,
+      filename+' must not force initial focus');
+  }
+});
