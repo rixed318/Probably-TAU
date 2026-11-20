@@ -176,3 +176,16 @@ test('Android offline variants reject base URL overrides',()=>{
   assert.match('<base target="_blank">',baseTag);
   assert.doesNotMatch('<baseboard>not a base tag</baseboard>',baseTag);
 });
+
+// Responsive images can fetch remote resources via srcset even when src is local.
+// Check both offline distributions and preserve local/data-only candidates.
+test('Android offline variants reject remote responsive image srcset',()=>{
+  const remoteSrcset=/<(?:img|source)\\b[^>]*\\bsrcset\\s*=\\s*(["'])(?:(?!\\1)[\\s\\S])*?(?:https?:\\/\\/|\\/\\/)[^"']*\\1/i;
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    assert.doesNotMatch(source,remoteSrcset,filename+' must not fetch remote srcset images');
+  }
+  assert.match('<img srcset="local.png 1x, https://cdn.invalid/2.png 2x">',remoteSrcset);
+  assert.match('<source srcset="//cdn.invalid/image.webp 2x">',remoteSrcset);
+  assert.doesNotMatch('<img srcset="local.png 1x, local@2x.png 2x">',remoteSrcset);
+});
