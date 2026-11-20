@@ -760,3 +760,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - **Validator commit:** `352683dcbaa8aab8207bcd2e90c3497eddcc4660` on `feature/content-7`.
 - **Actually executed:** isolated JavaScript assertion over fetched canonical JSON: baseline PASS; synthetic opening DayIndex=1 rejected PASS; synthetic DOC-01 DayIndex=4 rejected PASS. **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should execute `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
 - Draft only / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 and ADR PR #14 remain external contracts. No main push or merge.
+
+## AutoDev 04 — project unlock/feed reference guard (21.11.2026)
+
+One bounded Issue #7 change: `Content/validate-day01-acceptance.cjs` now validates that each declared project `unlockBy` uses an authored E02–E14 completion reference and that the referenced event actually lists the project in `feeds` (current P02 / E10). No changes to Core, EventDirector, money, DayIndex, game decisions, or art assets. Draft only; not an approved runtime contract.
+
+Validator commit: `05b95144efa5d74885cf55a2653b2755da3366ea`. Actual isolated JS checks against fetched canonical JSON: baseline PASS; unknown event PASS: invalid project unlockBy: P02; missing feed PASS: project unlockBy event must feed project: P02. Checked-in Node CLI, CI, Unity, Windows, Android NOT RUN. QA 05: run `node Content/validate-day01-acceptance.cjs` on current branch HEAD and mutation tests. C0-v2 PR #9 / ADR PR #14 remain separate; no main push/merge. Status: NOT READY_FOR_OWNER_TEST.
