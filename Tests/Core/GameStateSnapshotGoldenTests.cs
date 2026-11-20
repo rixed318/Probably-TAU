@@ -869,6 +869,23 @@ namespace TAU.President.Tests.Core
                 futureWorkRestored.Finance.Receipts.Count == 4,
                 "Day02 due NPC event blocks payable EndDay atomically");
 
+            // A due NPC event must also block EndDay when there is NO payable.
+            // This isolates event handling from the financial settlement guard.
+            var eventOnlyDay02 = new DurableGameStateSnapshot(
+                futureWorkRestored.Finance, futureWorkRestored.Events,
+                new DurablePayablesSnapshot(new DurablePayable[0]));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                eventOnlyDay02, eventOnlyDay02.Header.Revision, 1));
+            AssertNamed(eventOnlyDay02.Header.DayIndex == 1 &&
+                eventOnlyDay02.Header.BalanceKopecks == 750L &&
+                eventOnlyDay02.Payables.Outstanding.Count == 0 &&
+                eventOnlyDay02.Events.Pending.Count == 1 &&
+                eventOnlyDay02.Events.Pending[0].InstanceId == "event-tomorrow" &&
+                eventOnlyDay02.Events.CompletedIds.Count == 0 &&
+                eventOnlyDay02.Finance.Ledger.Entries.Count == 3 &&
+                eventOnlyDay02.Finance.Receipts.Count == 4,
+                "Day02 due NPC event without payable blocks EndDay atomically");
+
             // A future payable must settle exactly once on Day02 after a clean Day01.
             // This is the Core-only path: no NPC due-event is present in this fixture.
             var tomorrowPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
