@@ -766,3 +766,9 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 One bounded Issue #7 change: `Content/validate-day01-acceptance.cjs` now validates that each declared project `unlockBy` uses an authored E02–E14 completion reference and that the referenced event actually lists the project in `feeds` (current P02 / E10). No changes to Core, EventDirector, money, DayIndex, game decisions, or art assets. Draft only; not an approved runtime contract.
 
 Validator commit: `05b95144efa5d74885cf55a2653b2755da3366ea`. Actual isolated JS checks against fetched canonical JSON: baseline PASS; unknown event PASS: invalid project unlockBy: P02; missing feed PASS: project unlockBy event must feed project: P02. Checked-in Node CLI, CI, Unity, Windows, Android NOT RUN. QA 05: run `node Content/validate-day01-acceptance.cjs` on current branch HEAD and mutation tests. C0-v2 PR #9 / ADR PR #14 remain separate; no main push/merge. Status: NOT READY_FOR_OWNER_TEST.
+
+## AutoDev 04 — deferred partner income signing guard (21.11.2026)
+
+One bounded Issue #7 change: validator now requires PARTNER-1/PARTNER-2 to defer revenue until DayIndex 4 (display Day 5), require both E03_mentor_paid and E07_delivered, and contain no immediate cash effects; PARTNER-3 cannot promise revenue. This checks draft narrative contracts only; Core alone owns earned ledger postings and receipts. No separate cash engine or EventDirector.
+
+Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed **isolated JavaScript** on fetched canonical JSON: baseline PASS; early income, cash-at-signing, and missing delivery prerequisite mutations rejected (3/3 PASS). Checked-in Node CLI, CI, Unity, Windows, Android **NOT RUN**. QA 05: run `node Content/validate-day01-acceptance.cjs` on current HEAD and negative mutations. PR #9 C0-v2 / PR #14 ADR remain separate; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
