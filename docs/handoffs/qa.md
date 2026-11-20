@@ -1563,3 +1563,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** no actual PNG binaries in PR #12 diff; signature/dimension/manifest SHA verification BLOCKED pending UI art commit.
 - **Blocker 3:** Unity Editor/APK and integrated Save→Load NOT RUN; do not infer readiness from HTML static checks.
 - **Next:** run browser-driven 360x800 and 800x360 interaction acceptance on exact UI HTML SHA; independently verify 3-5 committed PNG files when available. No merge or main write; READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-21 — AutoDev 05: independent PR #12 PNG delivery audit (#21)
+
+**One bounded check:** GitHub paginated changed-file list for UI PR #12 at exact HEAD `6d1dfacad741c8e427c1b70f4197304b6faa4555` returned **33 changed files, 0 paths ending .png**. This proves only that PR #12 does not deliver new/changed PNG binaries; it does **not** establish the contents of all repository branches or whether any previously committed PNG exists. **PNG signature, dimensions and manifest SHA256: BLOCKED** until actual binaries are committed and fetched. No fake manifest rows or asset approvals.
+
+**Evidence:** GitHub PR metadata and paginated file list (read-only). No local Node/Python/.NET tests in this pass; Chromium 360x800/800x360 **NOT RUN**; Unity Editor, Android APK/device and integrated Save→Load **NOT RUN**. SaveService remains deferred pending stable Core snapshot DTO; C0-v2 in PR #9 and ADR PR #14 are not merged to main. No architecture contract approval.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **main:** `d673322cd9d0d366a27a57b81056504dfb26c731` (unchanged when read); **PR heads at inspection:** #9 `83f45c2f`, #10 `5dda99e1` (before this handoff commit), #11 `979ceddc`, #12 `6d1dfaca`, #14 `ebdc4be2`, #16 `af328e92`, #17 `bc9db999`. Query again before integration.
+- **Blocker 1:** No newly delivered PNG binaries in PR #12, so signature/dimensions/SHA256 verification blocked.
+- **Blocker 2:** Chromium touch acceptance of latest single-file Day01 HTML at 360x800/800x360 not executed; 3 docs/EndDay/ledger/48dp/overflow unverified.
+- **Blocker 3:** No real Unity APK/device/Save→Load integration evidence; stable DTO and Unity Editor not confirmed.
+- **Recommended next step:** UI 03 commit 3–5 real PNG binaries and manifest hashes to PR #12; QA verify exact SHA and bytes. Separately prioritize Chromium touch acceptance on UI `6d1dfaca`. Keep main protected, no merge, no READY_FOR_OWNER_TEST.
