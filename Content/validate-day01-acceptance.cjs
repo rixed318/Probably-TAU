@@ -12,6 +12,13 @@ assert.equal(contentSpec.opening.weeklySettlementFirstClosingDayIndex, 4,
   "opening first weekly closing DayIndex must be 4");
 const eventIds = contentSpec.eventManifest.map(event => event.id);
 const projectIds = contentSpec.projects.map(project => project.id);
+// Guard complete authored rosters, not only valid ID syntax: a missing event/project
+// must not silently pass content validation or remove a planned Day01 follow-up.
+const expectedEventIds = Array.from({length: 13}, (_, index) => "E" + String(index + 2).padStart(2, "0"));
+assert.deepEqual([...eventIds].sort(), expectedEventIds,
+  "event manifest must contain exactly E02..E14 once each");
+assert.deepEqual([...projectIds].sort(), ["P01", "P02"],
+  "project manifest must contain exactly P01 and P02 once each");
 // Stable event/project Definition IDs are exact authored tokens, never paths or display labels.
 // These draft constraints do not define Core runtime types.
 for (const id of eventIds) {
