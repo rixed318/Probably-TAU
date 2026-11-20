@@ -1518,3 +1518,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 3:** Unity Editor/APK and integrated Save→Load tests not run; complete stable Core persistence DTO must be independently confirmed before implementation.
 - **Recommended next step:** UI 03 commit 3–5 original PNG files with a SHA256 manifest, then QA 05 fetch exact binaries and run signature/dimension/hash audit; separately schedule Chromium touch acceptance on exact UI SHA.
 - **Safety:** QA branch only; no main push, merge, branch deletion or shared architectural approval. READY_FOR_OWNER_TEST not assigned.
+
+
+## 2026-11-20 — QA 05: Android Unity build/signing evidence checklist (Issue #20)
+
+**One bounded deliverable:** added [Android Unity build/signing checklist](../qa/ANDROID_UNITY_BUILD_SIGNING_CHECKLIST.md) in QA feature branch, commit `0eb51c81190c9bba9fb132d141d10655d635ee2e`. It separates WEB_DEMO_TESTABLE / APK_BUILT / ANDROID_DEVICE_TESTED, exact source SHA manifest, Unity 6.3 LTS toolchain proof, APK signature and SHA-256, protected keystores, device smoke and replay evidence. This is a preparation document, **not a build or test result**. GitHub write to QA branch succeeded; content exists on commit. No runtime files or contracts changed.
+
+**Actual verification:** GitHub read of `main/AGENTS.md`, `main/docs/CHAT_WORKFLOW.md`, this QA handoff and Issues #6/#8/#20/#21; PR metadata for #9/#10/#11/#12/#14 checked for open state. QA checklist file created via GitHub contents API. Node/Python/.NET **NOT RUN**; Chromium touch 360×800 and 800×360 **NOT RUN**; Unity Editor/PlayMode, APK, physical Android and integrated Save→Load **NOT RUN**; real PNG signature/dimensions/SHA256 **NOT VERIFIED**.
+
+### Сводка для координатора 00 — 2026-11-20 (Android build evidence preparation)
+
+- **QA commits:** checklist `0eb51c81190c9bba9fb132d141d10655d635ee2e`; this handoff update follows. **Previous recorded PR heads (historical, not revalidated this pass):** #9 `60a5285e`, #10 `3349f218`, #11 `2c1b3bc1`, #12 `b6f82efc`, #14 `ebdc4be2`, #16 `69a41876`, #17 `bc9db999`. Current head SHA for those PRs **NOT VERIFIED** in this pass; open state of #9/#10/#11/#12/#14 was checked.
+- **Blocker 1:** no actual Chromium touch acceptance of exact latest Day01 HTML for three documents, EndDay, ledger replay, deferred partner cash, 48dp/overflow.
+- **Blocker 2:** 3–5 original PNG binaries and matching manifest hashes not independently validated.
+- **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load not tested; stable Core DTO boundary still prerequisite.
+- **Recommended next step:** execute exact-SHA Chromium touch acceptance and retain screenshots, console logs, bounding boxes and interaction traces; once a real Unity builder exists, follow the new checklist and attach non-secret APK provenance. No merge/main push, no architecture approval, no READY_FOR_OWNER_TEST.
