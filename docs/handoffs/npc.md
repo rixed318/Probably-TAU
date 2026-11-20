@@ -1,5 +1,12 @@
 # Chat 02 — NPC/EventDirector handoff
 
+## AutoDev 02 — trailing whitespace choice inspection ID regression (2026-11-20)
+
+**One bounded task (#4/#20):** Extended the existing fail-closed choice-to-inspection golden test to reject `"LAB-1 "` (trailing space), complementing its leading-space and case-sensitive cases. Exact Content choice IDs are ordinal across Windows/Android. Test commit: `7f98b6a1bc251f87656127f85eab13a1dfb7897b`; changed `Tests/Npc/VisitorIdentityGoldenTests.cs` only. No production/Core/ledger/main changes.
+
+**Verification:** [GitHub Actions #44633879055](https://github.com/rixed318/Probably-TAU/actions/runs/44633879055) returned `completed/success` for the *previous* SHA `23af70e0cf7b8ef84835d3c491b49ac51cd62fe3`. New test commit CI NOT VERIFIED; local .NET, Unity, Windows and Android NOT RUN. **BLOCKED:** full EventDirector requires Core atomic event/receipt/earned-key port and Content E03/E07 origin agreement. PR #16 remains Draft; PR #9/#14 remain integration inputs. No merge or main push.
+
+
 ## AutoDev 02 — padded document ID regression (2026-11-20)
 
 **Bounded task (#4/#20):** Added fail-closed golden assertions for leading and trailing whitespace in canonical `DOC-01` when resolving a document-scoped Day01 art screen. Exact IDs remain ordinal and are not normalized by NPC routing. Test commit: `dc6dc04d3541b68b37da7020188bb90d5dba27df`; file: `Tests/Npc/VisitorIdentityGoldenTests.cs`. No production, Core, ledger, art, or main changes.
