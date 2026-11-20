@@ -8,6 +8,26 @@ namespace TAU.President.Tests.Npc
     {
         public static void RunAll()
         {
+            // Inspection button navigation must resolve the same Day01 document on Windows/Android.
+            string[] inspectionIds = { "check_seat_map", "check_room_calendar", "check_contract_appendix" };
+            string[] inspectionDocs = { "DOC-01", "DOC-02", "DOC-03" };
+            for (int i = 0; i < inspectionIds.Length; i++)
+            {
+                Day01Visitors.VisitScreenPreview screen;
+                if (!Day01Visitors.TryGetVisitScreenPreviewByInspectionId(inspectionIds[i], out screen) ||
+                    screen == null || screen.Card.DocumentId != inspectionDocs[i] ||
+                    screen.Inspection.InspectionId != inspectionIds[i] || screen.Choices.Count != 3)
+                    throw new Exception("Inspection navigation mismatch: " + inspectionIds[i]);
+            }
+            foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
+                "check_seat_map ", " check_seat_map", "unknown_inspection" })
+            {
+                Day01Visitors.VisitScreenPreview screen;
+                if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(invalidInspection, out screen) ||
+                    screen != null)
+                    throw new Exception("Invalid inspection navigation accepted.");
+            }
+
             // Document-scoped art routing must reject cross-document images on both platforms.
             string[][] artByDocument =
             {
