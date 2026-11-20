@@ -711,3 +711,12 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - В `Content/validate-day01-acceptance.cjs` добавлена защита от повторных `standingAssetId`, неверного формата и пересечения с `portraitAssetId` трёх вымышленных NPC. Это только content validation, не runtime schema и не готовые PNG.
 - Фактически выполнена независимая проверка исходных шести ID: PASS; искусственный дубликат обнаружен: PASS. Полный Node CLI, Unity, Android и CI не запускались; QA 05 должен прогнать валидатор на HEAD.
 - Коммит валидатора: `4daac8c3f73f6ecf37b3fa1ec3179d9c03c1c83a`. PR #11 остаётся DRAFT/без merge; Core/ledger не изменялись.
+
+
+## AutoDev 04 — event/project Definition ID format guard (20.11.2026)
+
+**Одна задача / Issue #7:** в `Content/validate-day01-acceptance.cjs` добавлена проверка канонических ID событий `E02`–`E14` и проектов `P01`–`P02` на точный формат. Не менялись сценарии, суммы, DayIndex, Core, NPC, EventDirector, UI и Unity. Это проверка текущего чернового словаря, **не утверждённая runtime schema**.
+
+**Commit валидатора:** `2b410eda5a86a29f397941dad2d9d1b99d599e6e`. **Фактически выполнено:** независимая JS-проверка исходного JSON (13 событий и 2 проекта) — PASS; отрицательные проверки испорченного event ID `E02/../../` и project ID с переводом строки — 2/2 PASS. **Не выполнялись:** запуск полного `node Content/validate-day01-acceptance.cjs` из checkout, CI, Unity/Windows/Android. QA 05 должен повторить полный CLI и mutation checks.
+
+**Зависимости:** C0-v2 PR #9, ADR PR #14, координатор 00; никакого merge в main. PR #11 остаётся DRAFT до интеграционного review.
