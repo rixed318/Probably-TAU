@@ -849,3 +849,10 @@ Verification: live GitHub source read and authenticated test-file commit confirm
 One scoped test-only change: apply the existing `forbiddenNavigation` source checks to the second distributed `prototypes/ui-day-one/day01-android-offline.html` file, so both Android HTML variants reject form elements, meta-refresh, direct location/window navigation, and external anchors. The checks are static heuristics, not runtime isolation. Test source commit: `450bd1fc3aba03cbc2727b13564a244f26c53037` in `feature/ui-5`.
 
 Verification: GitHub accepted the test-file commit. Node test suite, CI, browser, physical Android/TalkBack and Unity were **not executed** in this run. Reproduce with `node --test prototypes/ui-day-one/test-day01-android-touch.cjs`; validate on device separately. Issue #21 original PNG remains a candidate, not verified in GitHub. C0-v2 PR #9 and ADR PR #14 remain integration references. No GameState/Core edits, no main push or merge; PR #12 remains Draft.
+
+
+## 2026-11-20 · Role 03 · Issue #20 · location-navigation guard coverage
+
+One bounded test-only change: expanded `forbiddenNavigation` in `prototypes/ui-day-one/test-day01-android-touch.cjs` to reject direct `location = ...`, `window.location = ...`, `document.location = ...`, `top.location.replace(...)`, and `self.location.assign(...)`, in addition to existing `location.href` and `window.open` patterns. Both Android offline HTML variants use this shared guard. Added representative positive-control snippets. Implementation commit: `6ffdc44b7b2acd2551407fbbbc62bfdbca272d0a` on `feature/ui-5`.
+
+Verification: live GitHub source read, connector accepted commit. Full Node suite, CI, Chromium, real Android/TalkBack and Unity **not run**; these regex checks are heuristics and not a browser security guarantee. GitHub git transport from local container failed DNS resolution, so no local checkout-based test was possible. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` in CI/QA. No Core/GameState, production HTML, art, desktop demo or main changes. Issue #21 PNG binary delivery and physical Android playtest remain outstanding; PR #12 Draft, no merge.
