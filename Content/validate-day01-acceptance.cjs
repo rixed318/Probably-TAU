@@ -99,6 +99,9 @@ assert.equal(fixture.visitors.length, 3);
 const canonicalVisits = contentSpec.day1.visits.map(v => [v.id, v.npcId, v.documentId]);
 const fixtureVisits = fixture.visitors.map(v => [v.visitId, v.visitorId, v.documentId]);
 assert.deepEqual(fixtureVisits, canonicalVisits, "Day01 visit/NPC/document identity drift");
+// Reject duplicate canonical NPC Definition IDs before roster comparison; one fictional NPC per Day01 visit.
+assert.equal(new Set(contentSpec.fictionalNpcs.map(npc => npc.id)).size, contentSpec.fictionalNpcs.length,
+  "duplicate canonical Day01 NPC Definition ID");
 const canonicalNpcVisits = contentSpec.fictionalNpcs.map(npc => [npc.visitId, npc.id]).sort((a,b) => a[0].localeCompare(b[0]));
 assert.deepEqual(fixture.visitors.map(v => [v.visitId, v.visitorId]).sort((a,b) => a[0].localeCompare(b[0])),
   canonicalNpcVisits, "Day01 NPC roster drift");
