@@ -690,3 +690,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Single bounded task: exact-SHA CI verification and handoff. No new C# code or public contracts; typed NPC due-event EndDay integration remains pending 02/00 contract coordination and independent QA review.
 - Current runtime checked: `dotnet`, Unity Editor, Android `adb`/`sdkmanager`/`ndk-build` absent; `javac` available. Local C# tests, Unity/Windows build and Android APK NOT RUN; APK BLOCKED until real Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK verified.
 - No main push, PR merge or Issue closure. CI for this new documentation-only commit not yet verified.
+
+## Core 01 — Day02 future-day precondition regression (20.11.2026, 15:43 Samara)
+
+- Issue #19 / PR #9 / `feature/core-2`: one bounded C# golden-test increment in `Tests/Core/GameStateSnapshotGoldenTests.cs`, commit `587c08d62ca313d479931e011974b6c48db752f1`. The Day02 snapshot (DayIndex=1, 750 kopecks, one due 200-kopeck payable) must reject an EndDay command whose expected day is **future DayIndex=2** despite a correct revision, before settlement. Assert original day, cash, payable, Ledger (3 entries), receipts (4) unchanged. No public API, economy policy, NPC/UI/Content changes.
+- Previous branch HEAD `db3c27115db3d2ea9685e12d081fa6ebc5c7dc92` has [standalone Core .NET 8 workflow #44715697289](https://github.com/rixed318/Probably-TAU/actions/runs/44715697289) `completed/success`; **this does not verify the new test**. Exact-new-SHA CI and QA/00 review required before PASS.
+- Runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `javac` available. Local C# tests, Unity/Windows build, Android APK NOT RUN; APK BLOCKED pending verified Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK. No Unity project fabricated.
+- P0 remains coordinated typed NPC due-event atomic EndDay integration. No main push/merge or Issue closure.
