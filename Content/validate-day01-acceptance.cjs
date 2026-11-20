@@ -135,7 +135,9 @@ assert.equal(new Set([...standingIds, ...contentSpec.fictionalNpcs.map(npc => np
   standingIds.length + contentSpec.fictionalNpcs.length,
   "standing sprite and portrait asset IDs must not collide");
 const documentAssetIds = contentSpec.documentTypes.map(doc => doc.documentAssetId);
-const assetIds = [...portraitIds, ...documentAssetIds];
+// All nine planned Day01 asset identities share one cross-platform namespace.
+// A standing sprite must not reuse a document or portrait ID.
+const assetIds = [...portraitIds, ...standingIds, ...documentAssetIds];
 assert.equal(portraitIds.length, fixture.visitors.length, "Day01 portrait roster mismatch");
 assert.equal(documentAssetIds.length, fixture.documents.length, "Day01 document art roster mismatch");
 assert.equal(new Set(assetIds).size, assetIds.length, "duplicate Day01 asset ID");
