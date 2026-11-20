@@ -676,3 +676,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `f81924ac40640625e3cebba27c96f87a2a38d547` on `feature/content-7`.
 - Actual isolated JS checks against GitHub draft JSON: baseline PASS; synthetic off-by-one closing indexes `[5,10]` and first closing index `5` rejected (2/2 PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05: execute full validator and negative mutation tests on HEAD.
 - C0-v2 PR #9 and ADR PR #14 remain independent; NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+## AutoDev 04 — unique Day01 document Definition IDs (2026-11-20)
+
+- Issue #7 / PR #11: one bounded validator assertion rejects duplicate `documents[].id` before comparing visit-to-document coverage; this prevents a duplicate document from being silently collapsed by `Set`. Canonical Day01 document IDs and all story, balance and asset data unchanged.
+- Validator commit: `6dda921c1c5308da66a99edb34bb355b98a198f3` on `feature/content-7`.
+- Actually executed isolated JavaScript on current GitHub UI fixture: original `DOC-01`, `DOC-02`, `DOC-03` unique — PASS; synthetic duplicate `DOC-01` — rejected (PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run full validator and negative fixture mutation on checkout.
+- PR #9 C0-v2 and PR #14 ADR remain separate. Draft / NOT READY_FOR_OWNER_TEST; no Core, EventDirector, cash, DayIndex, main push or merge.
