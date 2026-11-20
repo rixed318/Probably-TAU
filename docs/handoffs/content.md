@@ -669,3 +669,10 @@ One bounded Content validation change: `Content/validate-day01-acceptance.cjs` n
 - Validator commit: `b03ba66cd02c4ba8e284ff318b91fbfe02f3a933` on `feature/content-7`.
 - Actually tested in isolated connector JavaScript using current GitHub JSON: 2 projects PASS; synthetic 0, -1, 1.5, and string "3" rejected (4/4 PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run full validator and negative mutations on HEAD.
 - PR #9 C0-v2 and PR #14 ADR remain separate. No Core, EventDirector, cash, Definition ID, DayIndex, asset, main push or merge. PR #11 stays Draft / NOT READY_FOR_OWNER_TEST.
+
+## AutoDev 04 — weekly settlement DayIndex alignment (2026-11-20)
+
+- Issue #7 / PR #11: bounded content-only assertion in `Content/validate-day01-acceptance.cjs`: draft weekly settlement closes on zero-based DayIndexes `[4, 9]` (display Days 05/10), and the opening's first closing DayIndex is `4`. No Core settlement, duplicate ledger, EventDirector, or scenario values changed.
+- Validator commit: `f81924ac40640625e3cebba27c96f87a2a38d547` on `feature/content-7`.
+- Actual isolated JS checks against GitHub draft JSON: baseline PASS; synthetic off-by-one closing indexes `[5,10]` and first closing index `5` rejected (2/2 PASS). **Not run:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05: execute full validator and negative mutation tests on HEAD.
+- C0-v2 PR #9 and ADR PR #14 remain independent; NOT READY_FOR_OWNER_TEST. No main push or merge.
