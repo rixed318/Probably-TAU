@@ -110,7 +110,7 @@ namespace TAU.President.Tests.Npc
                     inspection.CostTokens != 1 || inspection.RepeatCostTokens != 0)
                     throw new Exception("Day01 inspection fixture mismatch: " + inspectionDocumentIds[i]);
             }
-            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04", " DOC-01" })
+            foreach (string invalid in new[] { null, "", "doc-01", "DOC-04", " DOC-01", "DOC-01 " })
             {
                 Day01Visitors.InspectionPreview missingInspection;
                 if (Day01Visitors.TryGetInspectionPreviewByDocumentId(invalid, out missingInspection) ||
@@ -128,7 +128,7 @@ namespace TAU.President.Tests.Npc
                     byVisit.CostTokens != 1 || byVisit.RepeatCostTokens != 0)
                     throw new Exception("Visit inspection preview mismatch: " + inspectionVisitIds[i]);
             }
-            foreach (string invalid in new[] { null, "", "d01_lab", "D01_UNKNOWN", " D01_LAB" })
+            foreach (string invalid in new[] { null, "", "d01_lab", "D01_UNKNOWN", " D01_LAB", "D01_LAB " })
             {
                 Day01Visitors.InspectionPreview missingByVisit;
                 if (Day01Visitors.TryGetInspectionPreviewByVisitId(invalid, out missingByVisit) ||
