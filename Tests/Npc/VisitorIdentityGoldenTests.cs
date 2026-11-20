@@ -28,6 +28,33 @@ namespace TAU.President.Tests.Npc
                             (!found && screen != null))
                             throw new Exception("Document/art routing mismatch: " + artDocuments[j] + "/" + artId);
                     }
+            // Visitor-scoped art routes must never cross canonical Content NPC identities.
+            string[] artVisitorIds =
+                { "npc_irina_korneeva", "npc_dasha_polynskaya", "npc_mark_sviridov" };
+            for (int owner = 0; owner < artVisitorIds.Length; owner++)
+                foreach (string assetId in artByDocument[owner])
+                    for (int target = 0; target < artVisitorIds.Length; target++)
+                    {
+                        Day01Visitors.VisitScreenPreview byVisitorAsset;
+                        bool found = Day01Visitors.TryGetVisitScreenPreviewForVisitorAsset(
+                            artVisitorIds[target], assetId, out byVisitorAsset);
+                        if (found != (owner == target) ||
+                            (found && (byVisitorAsset == null ||
+                                byVisitorAsset.Card.VisitorId != artVisitorIds[owner] ||
+                                byVisitorAsset.Card.DocumentId != artDocuments[owner])) ||
+                            (!found && byVisitorAsset != null))
+                            throw new Exception("Visitor/art routing mismatch: " + assetId);
+                    }
+            foreach (string invalidVisitor in new[] { null, "", "NPC_IRINA_KORNEEVA",
+                " npc_irina_korneeva", "npc_irina_korneeva " })
+            {
+                Day01Visitors.VisitScreenPreview missingVisitorArt;
+                if (Day01Visitors.TryGetVisitScreenPreviewForVisitorAsset(
+                    invalidVisitor, artByDocument[0][0], out missingVisitorArt) ||
+                    missingVisitorArt != null)
+                    throw new Exception("Invalid visitor/art route accepted.");
+            }
+
             // A document-scoped art tap must preserve the complete canonical screen,
             // including inspection hint and ordered choices, not just the visitor card.
             for (int scopedIndex = 0; scopedIndex < artDocuments.Length; scopedIndex++)
