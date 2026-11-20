@@ -112,3 +112,15 @@ test('offline navigation guards reject representative forbidden snippets',()=>{
     'parent.location="https://example.invalid"',
   ]) assert.match(snippet,forbiddenNavigation[2]);
 });
+
+// Duplicate static IDs silently redirect getElementById bindings and can break touch
+// controls or accessibility relationships. Check both distributable Android variants.
+test('Android offline HTML variants have unique static element IDs',()=>{
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    const ids=[...source.matchAll(/<[^>]+\\sid\\s*=\\s*["']([^"']+)["']/gi)].map(m=>m[1]);
+    assert.ok(ids.length>0,filename+' must contain ID-bound controls');
+    const duplicates=ids.filter((id,i)=>ids.indexOf(id)!==i);
+    assert.deepEqual([...new Set(duplicates)],[],filename+' has duplicate static IDs');
+  }
+});
