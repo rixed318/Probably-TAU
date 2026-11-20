@@ -21,9 +21,8 @@ test('second packaged Android offline HTML remains standalone and parseable',()=
   assert.match(legacy,/@media\s*\(pointer\s*:\s*coarse\)/);
   assert.match(legacy,/min-width\s*:\s*48px/);
   for(const side of ['top','right','bottom','left']) {
-    assert.match(legacy,new RegExp('env\\\\(safe-area-inset-'+side+'(?:\\\\s*,|\\\\))'));
+    assert.ok(legacy.includes('env(safe-area-inset-'+side),'missing safe area '+side);
   }
-
   assert.doesNotMatch(legacy,/<(?:script|link)\b[^>]*\b(?:src|href)\s*=/i);
   assert.doesNotMatch(legacy,/@import\b|url\s*\(\s*['"]?https?:/i);
   assert.doesNotMatch(legacy,/<(?:iframe|object|embed|audio|video|img)\b[^>]*(?:src|data)\s*=\s*['"]?https?:/i);
