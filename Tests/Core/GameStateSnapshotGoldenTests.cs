@@ -942,6 +942,18 @@ namespace TAU.President.Tests.Core
                 day02Input.Finance.Receipts.Count == 4,
                 "Day02 stale revision rejected without financial mutation");
 
+            // A future-day EndDay request must not settle a Day02 payable early.
+            // This is distinct from a stale revision: the revision is current,
+            // but the expected day is ahead of the snapshot's DayIndex.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                day02Input, day02Input.Header.Revision, 2));
+            AssertNamed(day02Input.Header.DayIndex == 1 &&
+                day02Input.Header.BalanceKopecks == 750L &&
+                day02Input.Payables.Outstanding.Count == 1 &&
+                day02Input.Finance.Ledger.Entries.Count == 3 &&
+                day02Input.Finance.Receipts.Count == 4,
+                "Day02 future-day precondition rejected without settlement");
+
             // A replay against a newer snapshot must reject the stale Day01 precondition.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next,
                 result.Next.Header.Revision, 0, choices));
