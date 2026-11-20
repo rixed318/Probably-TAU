@@ -380,6 +380,7 @@ for (const link of art.visits) {
   assert.ok(npc && doc, "art link missing draft NPC/document: " + link.visitId);
   assert.equal(npc.id, link.visitorId, "draft NPC identity mismatch: " + link.visitId);
   assert.equal(npc.portraitAssetId, link.portraitAssetId, "draft portrait ID mismatch: " + link.visitId);
+  assert.equal(npc.standingAssetId, link.standingAssetId, "draft standing ID mismatch: " + link.visitId);
   assert.equal(npc.visualDescription, link.visualBrief, "draft visual brief mismatch: " + link.visitId);
   assert.equal(doc.documentAssetId, link.documentAssetId, "draft document asset ID mismatch: " + link.visitId);
 }
