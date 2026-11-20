@@ -4,6 +4,12 @@ const fs = require("node:fs");
 const path = require("node:path");
 // Draft event manifest consistency (content only; no EventDirector/runtime behavior).
 const contentSpec = JSON.parse(fs.readFileSync(path.join(__dirname, "CONTENT_SPEC_DRAFT.json"), "utf8"));
+// Draft weekly closing days are zero-based: displayed Days 05 and 10 -> DayIndex 4 and 9.
+// Guard content labels only; Core owns EndDay settlement and ledger idempotency.
+assert.deepEqual(contentSpec.meta.weeklySettlementClosingDayIndexes, [4, 9],
+  "weekly closing DayIndexes must be 4 and 9 (display Days 05/10)");
+assert.equal(contentSpec.opening.weeklySettlementFirstClosingDayIndex, 4,
+  "opening first weekly closing DayIndex must be 4");
 const eventIds = contentSpec.eventManifest.map(event => event.id);
 const projectIds = contentSpec.projects.map(project => project.id);
 // Draft choice Definition IDs must not collide across different events.
