@@ -1625,3 +1625,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** UI PR #12 changed files contain no PNG; actual original PNG signatures/dimensions/SHA256 remain BLOCKED.
 - **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load remain NOT RUN; no stable integration proof. CI combined status empty is UNKNOWN, not a pass.
 - **Recommended next step:** run exact-blob Chromium touch acceptance with screenshots and DOM geometry; UI 03 to commit actual original PNG and hash manifest. Keep PR #10 draft; no merge, no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-21 07:57 UTC+4 — QA 05: Android Day01 DOM identifier / control audit (#20)
+
+**One bounded independent static regression:** fetched the actual single-file `prototypes/ui-day-one/day01-android-offline.html` from UI PR #12 HEAD `fea2b0bedc8ff93dde7b13a90ef9986a14abdd14`, immutable Git blob `5fd425b0b683353fcf5a1e83339426679b457126`. Executed JavaScript source assertions over the fetched 56,675-character HTML: 52 `id=` attributes, **zero duplicate IDs**; 15 HTML `<button>` elements, **all 15 explicitly `type="button"`**; zero inline `onclick`/`ontouchstart`/`onpointerdown` handlers. Verified source contains coarse-pointer CSS min-width/min-height 48px and an orientation:landscape media rule. **PASS (source-only assertions)**; this does not prove DOM layout, accessibility, actual hitboxes or functional event handling. The `pointer:coarse` rule is conditional and must be checked in a real emulated browser.
+
+**NOT RUN:** Chromium 360x800 portrait / 800x360 landscape touch emulation, three-document gameplay/EndDay/ledger replay/partner cash, computed 48dp targets and overflow; Node/.NET/Python external test suites; Unity Editor/APK/device and integrated Save→Load. **BLOCKED:** 3–5 original PNG binary signature/dimensions/manifest SHA verification pending actual committed PNGs in UI PR. No SaveService or architecture contract changes.
+
+### Сводка для координатора 00 — 2026-11-21 07:57 UTC+4
+
+- **PR heads at inspection:** #9 Core `6bad6c41`; #10 QA before this update `19a4d821`; #11 Content `512e2ec4`; #12 UI `fea2b0be`; #14 ADR `ebdc4be2`; #16 NPC `b33ebbb0`; #17 ADR-C0-002 `bc9db999`. QA handoff commit SHA is returned by the GitHub write and recorded in PR #10 comment. Main is not modified.
+- **Blocker 1:** Actual Chromium mobile touch acceptance for both viewports, 3 documents, EndDay, ledger replay, deferred partner cash, computed hitboxes and overflow remains NOT RUN.
+- **Blocker 2:** Original PNG binaries and verified manifest SHA256 are not yet available in UI PR #12 changed-file listing; binary validation BLOCKED.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; stable Core DTO and transaction snapshot still require integration proof.
+- **Recommended next step:** run Playwright/Chromium touch acceptance against exact HTML blob `5fd425b0`, record screenshots, measured button rectangles and scenario assertions; keep READY_FOR_OWNER_TEST blocked until actual evidence. No main push/merge.
