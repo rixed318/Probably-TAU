@@ -274,6 +274,10 @@ for (const npc of contentSpec.fictionalNpcs) {
   assert.ok(typeof npc.visualDescription === "string" && npc.visualDescription.trim().length > 0,
     "missing original character visual description: " + npc.id);
 }
+// Original art prompts must remain visually distinguishable across the three fictional visitors.
+const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.trim());
+assert.equal(new Set(visualBriefs).size, visualBriefs.length,
+  "duplicate fictional Day01 NPC visual descriptions");
 console.log("PASS: stable fictional Day01 portrait/document asset IDs and descriptions");
 
 // Guard canonical Day01 money against drift between authored content and UI mock.
