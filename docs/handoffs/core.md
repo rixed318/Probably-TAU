@@ -749,3 +749,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Previous exact HEAD `3294206c84a21db1a05d68c2804abf9201d50aa1` has [Core .NET 8 golden CI #44822800543](https://github.com/rixed318/Probably-TAU/actions/runs/44822800543) completed/success. New code SHA CI **not yet verified**; independent QA/00 review required.
 - Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found; `java` and `javac` present. No local C# tests, Unity/Windows build, or Android APK; Android BLOCKED until genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK.
 - P0 typed due-event handler still requires 02/00 approved contract; no main push/merge or Issue closure.
+
+
+## Core 01 — 21.11.2026: event-only Day02 Restore guard (#19)
+
+- One bounded C# golden regression committed to `Tests/Core/GameStateSnapshotGoldenTests.cs` on `feature/core-2`: `5bc3a830ee474a37b475ab5f9f01ec5e4f977194`. After restoring a Day02 snapshot with one due NPC event and zero payables, `DurableDayAdvance.PrepareDay` must still reject EndDay. Assert no mutation of day index (1), cash (750 kopecks), pending/completed events (1/0), ledger (3), receipts (4), or payables (0). No production/public contract or foreign subsystem changes.
+- Environment checked: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET/Unity tests NOT RUN; Windows/Android builds BLOCKED. Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK required for real APK. CI for this new SHA not yet confirmed; independent QA/00 review required.
+- P0: typed NPC due-event atomic EndDay remains pending approved 02/00 handler contract. No main push, merge, or Issue closure.
