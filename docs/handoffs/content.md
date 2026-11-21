@@ -817,3 +817,9 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **One bounded Issue #7 documentation task:** corrected stale opening handoff status (`0.2` → current `content-draft-0.3`) and outdated claim that Gate C0 was not approved. PR #9 C0-v2 / PR #14 ADR authorize **feature implementation only**, not merge or a finalized typed Content/NPC schema. The content remains DRAFT / NOT READY_FOR_OWNER_TEST. No Day01 decisions, money, IDs, events, Core, EventDirector or art changed.
 
 **Actually checked:** fetched `AGENTS.md`, `docs/CHAT_WORKFLOW.md` from `main`; PR #9/#11/#14, Issues #1/#7, current `CONTENT_SPEC_DRAFT.json` (`meta.specVersion=content-draft-0.3`), handoff and recent PR #11 comments. Static exact-text replacement assertions passed before write. **NOT RUN:** Node CLI, CI, Unity, Windows, Android. QA 05 should execute checked-in validators on current branch HEAD before owner testing. No main push or merge.
+
+## AutoDev 04 — distinct fictional NPC art briefs (21.11.2026)
+
+**One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` rejects identical `visualDescription` strings across the three fictional Day01 NPCs. The original portrait/standing asset IDs and descriptions remain platform-independent for Windows and Android. This is a draft-content guard only, not an art generator or Unity runtime contract.
+
+**Validator commit:** `07af13b030b4a7c5b2df286b37af1027eee7eb20`. **Actually checked:** isolated JS Set uniqueness assertion for three distinct sample briefs PASS; duplicate synthetic brief rejected PASS; exact insertion anchor occurred once. **NOT RUN:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05: run `node Content/validate-day01-acceptance.cjs` on feature HEAD and test a duplicate `visualDescription` mutation. **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. No Core, EventDirector, ledger, main or merge changes.
