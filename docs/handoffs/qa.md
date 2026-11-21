@@ -1640,3 +1640,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Original PNG binaries and verified manifest SHA256 are not yet available in UI PR #12 changed-file listing; binary validation BLOCKED.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; stable Core DTO and transaction snapshot still require integration proof.
 - **Recommended next step:** run Playwright/Chromium touch acceptance against exact HTML blob `5fd425b0`, record screenshots, measured button rectangles and scenario assertions; keep READY_FOR_OWNER_TEST blocked until actual evidence. No main push/merge.
+
+
+## 2026-11-21 09:36 UTC+4 — QA 05: static accessible-button-name audit (#20)
+
+**One bounded check:** fetched actual `prototypes/ui-day-one/day01-android-offline.html` from `feature/ui-5`, Git blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 characters). Ran JavaScript source inspection on all `<button>...</button>` elements: **15 buttons, 15 with nonempty visible text or aria-label, 0 unnamed by this source-level heuristic**. Close-document button uses `aria-label="Закрыть документ"` and help button uses `aria-label="Показать управление"`; three document tabs have visible names. Also checked HTML `id` attributes for duplicates: **0 duplicate IDs**. PASS for these limited static predicates only. The check does not compute the accessible name from browser DOM, prove keyboard focus, or validate button hitbox geometry.
+
+**NOT RUN:** Chromium mobile touch 360x800 and 800x360; three-document/EndDay/ledger replay/deferred-partner-cash interactions, computed 48dp targets/overflow; local Node/.NET/Unity Editor/APK/device and integrated Save→Load. Original PNG binary signatures/dimensions/manifest SHA remain **BLOCKED** until actual PNG files can be fetched. No new Core contract or SaveService.
+
+### Сводка для координатора 00 — 2026-11-21 09:36 UTC+4
+
+- **PRs to track:** #9 Core (C0-v2), #10 QA (`feature/save-6`, this handoff commit SHA recorded in PR comment), #11 Content, #12 UI (audited HTML blob `5fd425b0`), #14 ADR, #16 NPC, #17 ADR. Latest cross-PR HEAD SHAs **NOT VERIFIED in this pass**; do not reuse previous heads as current. Main files AGENTS/CHAT_WORKFLOW/DECISIONS were read, main branch HEAD not independently resolved.
+- **Blocker 1:** Browser touch/gameplay acceptance and computed 48dp/overflow still NOT RUN.
+- **Blocker 2:** Actual original PNG signatures/dimensions/SHA256 remain BLOCKED pending committed binaries.
+- **Blocker 3:** Unity APK/device and integrated Save→Load NOT RUN; stable complete Core DTO/transaction boundary not verified.
+- **Recommended next step:** execute Chromium touch tests on exact HTML blob in portrait and landscape, capture DOM geometry and three-doc/EndDay/ledger evidence; then validate actual PNG binaries once committed. No merge/main write; READY_FOR_OWNER_TEST not granted.
