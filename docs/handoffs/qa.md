@@ -1745,3 +1745,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 original committed PNG signatures, dimensions and manifest SHA256 not verifiable from PR #12 changed paths.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; complete stable Core DTO/transaction snapshot must be confirmed first.
 - **Recommended next step:** run exact-SHA Chromium acceptance against Android Touch blob `2ba6b9ad`; once Unity Editor and source DTOs are available, execute the above build/signing checklist and record actual APK SHA256. Keep main protected; READY_FOR_OWNER_TEST withheld.
+
+
+## 2026-11-21 — QA 05: independent Actions verification (#8, #20)
+
+**One bounded task:** verified GitHub Actions workflow run [44911593140](https://github.com/rixed318/Probably-TAU/actions/runs/44911593140) for exact QA head `34ec908e771edf1f1a27a1c77fb58e6f765aeb80`. The workflow is completed with conclusion **success**. Retrieved job records: **5/5 completed/success**, including UI+Content static, distributed Android HTML static gate, Python PCG32 oracle/source audit, Core Ledger/Snapshot .NET 8, NPC standalone .NET 8. These are **remote CI results**, not locally executed tests. Commit combined-status API returned 0 legacy statuses; this does not negate Actions results. Job logs and exact dependency checkout SHAs were **NOT VERIFIED**; latest PR heads below may differ from CI pinned revisions. No Chromium/device/Unity tests were run. No SaveService or shared contracts changed.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **PR heads observed (GitHub metadata):** #9 Core `d57e726f`, #10 QA `34ec908e` (before this handoff commit), #11 Content `c9cc96a6`, #12 UI `93490d94`, #14 ADR `ebdc4be2`, #16 NPC `2329f7f0`, #17 ADR `bc9db999`. All seven are open/draft; base main `d673322c`. No merge or main changes by QA.
+- **Blocker 1:** Chromium 360×800 / 800×360 touch acceptance for exact distributed Android Touch HTML, including 3 documents, EndDay, ledger replay, deferred partner cash, 48dp and overflow: **NOT RUN**.
+- **Blocker 2:** actual original PNG binaries, dimensions and manifest SHA256: **NOT VERIFIED** (art delivery remains separate from static manifest validation).
+- **Blocker 3:** real Unity APK/device and integrated Save→Load: **NOT RUN**; stable complete Core snapshot DTO still required for SaveService.
+- **Recommended next step:** run browser automation against the exact current distributed Android Touch HTML artifact, record blob SHA, screenshots, target geometry and gameplay assertions; keep CI and browser evidence separate.
