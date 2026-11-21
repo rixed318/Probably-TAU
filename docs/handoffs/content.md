@@ -786,3 +786,12 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - **Validator commit:** `bf2ae829f527e8d59967e6d374fd4da450056e7c` on `feature/content-7`.
 - **Actually executed:** isolated JavaScript assertions against fetched canonical JSON: baseline PASS; 3/3 synthetic negative mutations rejected (DOC-01 slot mismatch, implicit booking flag, room DayIndex drift). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
 - **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 / ADR PR #14 remain governing contracts. No main push/merge.
+
+
+## AutoDev 04 — Day01 art handoff acceptance contract (21.11.2026)
+
+**Issue #7 / PR #11 — one bounded documentation task.** For UI 03 / Art #21, the nine planned Day01 asset identifiers in `Content/DAY01_ART_LINKS.json` are the *lookup keys*, not file paths: three fictional NPC portraits, three standing sprites, three blank document backgrounds. Preserve these IDs exactly across Windows and Android. Each NPC's `visualBrief` is the original-character visual target; do not substitute real TAU staff, marks, logos, or externally owned art. All document titles, amounts, dates, decisions and other readable text must remain UI-rendered, not baked into PNGs. No image existence or production is asserted by this handoff.
+
+**Acceptance for UI 03 / QA 05:** verify 3/3 `visitId` → `visitorId` → `documentId` links against `CONTENT_SPEC_DRAFT.json` and `DAY01_UI_FIXTURE.json`; verify nine unique IDs resolve to actual delivered assets only after UI branch publishes them; check readable dynamic text at logical 320×180 on Windows and Android, with identical canonical IDs. Missing art should fail gracefully with a placeholder, never change gameplay choices, `DayIndex=0`, or fictional `*Kopecks` values. This is a review checklist, **not** a new Core/runtime schema or claim of tested devices.
+
+**Actually checked this run:** GitHub reads of main AGENTS.md / CHAT_WORKFLOW.md, PR #9/#11/#14, Issues #1/#7 and current content handoff and art links. No executable tests, PNG inspection, Unity Editor, Windows or Android build run. QA 05 should run `node Content/validate-day01-acceptance.cjs` at current feature HEAD and independently verify UI asset mapping. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
