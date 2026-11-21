@@ -793,3 +793,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - **Invariant:** on DayIndex=4, an affordable due payable must not be charged while the weekly settlement handler is missing. `PrepareDay` rejects; source day/revision, cash, payable, ledger, receipts and processed-day keys remain unchanged. No public API/contract change, no NPC/UI/Save edits.
 - **Verification:** prior branch SHA `d4918bddba341ad58ef7951ea0d3519f025fa051` GitHub Actions Core .NET 8 golden runner completed/success (run #44881650967); this is **not** evidence for the new test. New SHA CI must be checked separately. Local `dotnet` and Unity Editor unavailable; `adb`, `sdkmanager`, `ndk-build` missing; Java/javac present. Android APK and Windows/Unity builds **BLOCKED** (Unity 6.3 LTS Editor + Android Build Support/SDK/NDK required).
 - **QA/00:** review test against C0-v2 / ADR-C0-001; keep weekly settlement blocked until an approved handler is integrated. Do not merge PR or close Issues without acceptance criteria.
+
+
+## Core 01 — 21.11.2026: weekly quiet EndDay fail-closed regression (#19)
+
+- Branch `feature/core-2`, PR #9; bounded C# golden regression `WeeklyQuietFailClosedGolden` in `Tests/Core/GameStateSnapshotGoldenTests.cs`, code commit `10c3cb1e73ca625a2a589adccddf4f4797452f4c`.
+- On DayIndex=4 with **no payables and no due events**, `DurableDayAdvance.PrepareDay` must reject closing the week while weekly settlement handler is not integrated. Assert unchanged day/revision, cash 1000 kopecks, zero payables, zero ledger postings, zero receipts, zero processed-day keys. Complements the existing affordable-payable weekly rejection test; no production code, public contract or foreign subsystem changed.
+- Previous HEAD `a0b2aea7e0be232661c2cc97b604f89c6719bf11`: GitHub Actions Core .NET 8 golden runner [#44889269473](https://github.com/rixed318/Probably-TAU/actions/runs/44889269473) completed/success. **New code commit CI not yet verified**; QA/00 must independently review the new exact SHA.
+- Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java`/`javac` present. Local C# tests NOT RUN. Unity/Windows build and real Android APK BLOCKED until Unity 6.3 LTS Editor and Android Build Support/SDK/NDK are available.
+- P0 still requires an approved 02/00 typed NPC due-event integration contract and actual Unity toolchain. No main push/merge, no Issue closure.
