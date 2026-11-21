@@ -181,11 +181,18 @@ test('Android offline variants reject base URL overrides',()=>{
 // Check both offline distributions and preserve local/data-only candidates.
 test('Android offline variants reject remote responsive image srcset',()=>{
   const remoteSrcset=/<(?:img|source)\b[^>]*\bsrcset\s*=\s*(["'])(?:(?!\1)[\s\S])*?(?:https?:\/\/|\/\/)[^"']*\1/i;
+  // HTML permits unquoted srcset values; reject remote URLs in that form too.
+  const unquotedRemoteSrcset=/<(?:img|source)\b[^>]*\bsrcset\s*=\s*(?!["'])[^\s>]*(?:https?:\/\/|\/\/)/i;
   for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
     assert.doesNotMatch(source,remoteSrcset,filename+' must not fetch remote srcset images');
+    assert.doesNotMatch(source,unquotedRemoteSrcset,filename+' must not fetch unquoted remote srcset images');
   }
   assert.match('<img srcset="local.png 1x, https://cdn.invalid/2.png 2x">',remoteSrcset);
   assert.match('<source srcset="//cdn.invalid/image.webp 2x">',remoteSrcset);
   assert.doesNotMatch('<img srcset="local.png 1x, local@2x.png 2x">',remoteSrcset);
+  assert.match('<img srcset=https://cdn.invalid/2.png>',unquotedRemoteSrcset);
+  assert.match('<source srcset=//cdn.invalid/image.webp>',unquotedRemoteSrcset);
+  assert.match('<img srcset=local.png,https://cdn.invalid/2.png>',unquotedRemoteSrcset);
+  assert.doesNotMatch('<img srcset=local.png>',unquotedRemoteSrcset);
 });
