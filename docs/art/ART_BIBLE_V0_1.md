@@ -1,6 +1,6 @@
 # Probably-TAU · Art Bible v0.1
 
-**Status:** PROPOSAL — art direction, colors, sprites and grid need owner approval.  
+**Status:** DIRECTION A (ART-A0.1) OWNER-SELECTED 2026-11-16; individual sprites, palette refinements, MASTER-001 and production usage remain subject to review. A previously generated office PNG is an unapproved candidate outside the repository, not a committed production asset. No Android/Unity art import has been verified.  
 **Maintainer:** Chat 03 · **Issue:** #13 · **Inputs:** PR #11 (draft content), PR #12 (draft UI) · **Date:** 2026-11-14.  
 **Scope:** one Windows-first 2D first day; no changes to Core, economy or NPC logic.
 
