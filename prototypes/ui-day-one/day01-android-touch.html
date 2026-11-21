@@ -150,7 +150,7 @@ const g=api.createGateway(), el=id=>d.getElementById(id);
 function node(parent,tag,value){const n=d.createElement(tag);n.textContent=String(value);parent.appendChild(n);return n;}
 function money(v){const n=BigInt(v),sign=n<0n?"−":"";return sign+model.formatRub((n<0n?-n:n).toString());}
 function clear(id){el(id).replaceChildren();}
-function button(parent,label,fn,disabled=false,pressed=null){const b=node(parent,"button",label);b.type="button";b.disabled=disabled;if(pressed!==null)b.setAttribute("aria-pressed",String(pressed));b.addEventListener("click",()=>{try{fn();el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});return b;}
+function button(parent,label,fn,disabled=false,pressed=null){const b=node(parent,"button",label);b.type="button";b.disabled=disabled;if(pressed!==null)b.setAttribute("aria-pressed",String(pressed));b.addEventListener("click",()=>{try{const action=fn();el("error").textContent="";render();if(action==="decision")el("doc-title").focus();}catch(e){el("error").textContent=e.message;}});return b;}
 function render(){
  const focusedQueueIndex=Array.from(el("queue").querySelectorAll("button")).indexOf(d.activeElement);
  const s=g.view(), item=s.documents.find(x=>x.id===s.selected), done=new Set(s.decisions.map(x=>x.id));
@@ -166,7 +166,7 @@ function render(){
  el("inspect").disabled=done.has(item.id)||s.inspected.includes(item.id);
  el("inspection").textContent=s.inspected.includes(item.id)?"Проверка: "+Object.entries(item.revealed).map(([k,v])=>k+": "+(k.toLowerCase().includes("kopecks")?money(v):v)).join(" · "):"Проверка ещё не выполнена";
  clear("choices");if(done.has(item.id))node(el("choices"),"p","Решение зафиксировано: "+s.decisions.find(x=>x.id===item.id).label);
- else for(const option of g.options(item.id))button(el("choices"),option.label,()=>g.decide(item.id,option.id),!option.enabled);
+ else for(const option of g.options(item.id))button(el("choices"),option.label,()=>{g.decide(item.id,option.id);return "decision";},!option.enabled);
  el("end").disabled=done.size!==3;
  if(s.closed){el("game").hidden=true;el("report").hidden=false;clear("report-body");
  node(el("report-body"),"p","Старт: "+money(s.report.openingKopecks)+" · Остаток: "+money(s.report.closingKopecks));
@@ -186,6 +186,6 @@ render();
 })(typeof window!=="undefined"?window:globalThis);
 </script></head>
 <body><header><p class="muted">ANDROID TOUCH · автономный единый HTML · откройте файл в браузере после сохранения на телефон; поворот экрана в альбомный режим рекомендован. Это не APK.</p><h1>Кабинет решений · День 01</h1><p class="muted">Вымышленная академия · OFFLINE WEB PROTOTYPE · НЕ Unity-игра · данные и эффекты только mock</p><p id="hud">Загрузка…</p><p class="warning">Л-204, день 04, 14:00–17:00: три конкурирующие заявки. Подписание не бронирует аудиторию. Партнёрские 120 000 ₽ не начисляются сейчас.</p></header>
-<div id="game" class="layout"><aside><h2>Очередь посетителей</h2><nav id="queue" aria-label="Выбор документа"></nav><p id="progress" role="status" aria-live="polite" aria-atomic="true"></p></aside><main><section><h2 id="doc-title">Документ</h2><div id="doc-body"></div><p><button id="inspect" type="button">Проверить сведения</button></p><div id="inspection" aria-live="polite"></div><h2>Решение</h2><div id="choices"></div><p id="error" role="alert"></p></section><section><button id="end" type="button" disabled>Завершить день и открыть отчёт</button></section></main></div>
+<div id="game" class="layout"><aside><h2>Очередь посетителей</h2><nav id="queue" aria-label="Выбор документа"></nav><p id="progress" role="status" aria-live="polite" aria-atomic="true"></p></aside><main><section><h2 id="doc-title" tabindex="-1">Документ</h2><div id="doc-body"></div><p><button id="inspect" type="button">Проверить сведения</button></p><div id="inspection" aria-live="polite"></div><h2>Решение</h2><div id="choices"></div><p id="error" role="alert"></p></section><section><button id="end" type="button" disabled>Завершить день и открыть отчёт</button></section></main></div>
 <section id="report" hidden tabindex="-1"><h2>Отчёт по итогам Дня 01</h2><div id="report-body"></div><p>День завершён. Для новой демонстрации обновите страницу. Сохранение игры не реализовано.</p></section>
 <noscript>Для автономной демонстрации требуется включённый JavaScript.</noscript></body></html>
