@@ -1,0 +1,32 @@
+name: NPC condition golden tests
+
+on:
+  push:
+    branches: [feature/npc-4]
+    paths:
+      - 'Runtime/Npc/**'
+      - 'Tests/Npc/**'
+      - '.github/workflows/npc-conditions.yml'
+  pull_request:
+    paths:
+      - 'Runtime/Npc/**'
+      - 'Tests/Npc/**'
+      - '.github/workflows/npc-conditions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  npc-conditions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build and execute actual NPC C# golden assertions
+        run: dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release
