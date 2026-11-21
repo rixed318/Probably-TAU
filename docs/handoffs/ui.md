@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-21 — art bible approval-status correction (#21)
+
+- Reconciled `docs/art/ART_BIBLE_V0_1.md` header with the 2026-11-16 owner directive: ART-A0.1 direction A is selected, but palette refinements, MASTER-001, candidate review and production assets are **not** approved by implication. Art-bible commit: `8a654159f1ed32043d8c1de954029c6a05e46065`.
+- No image bytes uploaded or claimed. Existing office PNG remains an unapproved candidate outside GitHub. No Core/API changes. **Actually checked:** current art bible, manifest, pipeline, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, main rules and UI handoff via GitHub. **Not run:** Node, browser, Android, Unity, binary validation.
+- Next: upload a real PNG blob and verify its bytes/tree/manifest, then request owner review. Do not merge.
+
+
 ## Update 2026-11-21 — art pipeline gate correction (#21)
 
 - Updated `docs/art/PIPELINE.md` to distinguish owner-selected direction A from **unapproved** candidate art and unverified GitHub PNG delivery. Code/docs commit: `e299cf5c061bcac9641d05807c28e6ae653bfa28`.
