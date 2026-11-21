@@ -42,6 +42,7 @@ namespace TAU.President.Tests.Core
             QuietDayAdvanceGolden();
             WeeklyPayableFailClosedGolden();
             WeeklyQuietFailClosedGolden();
+            SecondWeekQuietFailClosedGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
@@ -251,6 +252,34 @@ namespace TAU.President.Tests.Core
                 current.Finance.Receipts.Count == 0 &&
                 current.Header.ProcessedDayKeys.Count == 0,
                 "weekly quiet EndDay fails closed without a weekly settlement handler");
+        }
+
+        // The second weekly boundary must remain fail-closed as well (DayIndex=9).
+        private static void SecondWeekQuietFailClosedGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "second-week-campaign", 42UL,
+                "normal", "dayone", 9, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                new DurableCommandReceipt[0]);
+            var current = new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0],
+                    new string[0]),
+                new DurablePayablesSnapshot(new DurablePayable[0]));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                current, 0, 9));
+            AssertNamed(current.Header.DayIndex == 9 &&
+                current.Header.Revision == 0 &&
+                current.Header.BalanceKopecks == 1000L &&
+                current.Payables.Outstanding.Count == 0 &&
+                current.Events.Pending.Count == 0 &&
+                current.Finance.Ledger.Entries.Count == 0 &&
+                current.Finance.Receipts.Count == 0 &&
+                current.Header.ProcessedDayKeys.Count == 0,
+                "second weekly boundary rejects quiet EndDay without settlement");
         }
 
         private static void QuietDayAdvanceGolden()
