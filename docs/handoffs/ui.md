@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-21 — repository HTML static audit (Issue #20)
+
+- Read both actual distributable HTML files at feature/ui-5: `day01-android-touch.html` blob `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2` (15,674 UTF-8 characters) and `day01-android-offline.html` blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 UTF-8 characters).
+- **Actually executed:** 9 independent JavaScript static assertions against each fetched HTML source (18/18 PASS): viewport-fit=cover; four safe-area CSS insets; 48px minimum touch height declaration; no external script/link URLs; no remote CSS imports/URLs; no literal network APIs; no `<base>`; no autofocus; no literal remote `srcset` (quoted/unquoted). This checks literal source patterns only, **not** computed URLs, actual CSS layout, element hitboxes or runtime gameplay.
+- **Not executed:** `node --test` on repository files, DOM/Chromium, Android viewport/device, TalkBack, Unity Editor/APK. Full regression and actual phone screenshots remain required for #20. #21 still requires verified original PNG binaries. No GameState/Core changes or merge. C0-v2 PR #9 / ADR PR #14 remain unmerged references.
+
+
 ## Update 2026-11-21 — unquoted remote srcset regression (#20)
 
 - Extended `test-day01-android-touch.cjs` offline guard to reject unquoted `srcset=https://...`, `srcset=//host/...` and comma-joined unquoted remote candidates in **both** Android HTML distributions. Existing quoted-value checks remain unchanged. Test commit: `24304dbbea37ec2f6e1e23072a940081e2815dc2`.
