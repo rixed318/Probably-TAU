@@ -1792,3 +1792,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** pin latest exact UI HTML revision, run Chromium touch acceptance in both viewports, then verify PNG and Unity APK separately; do not merge without owner approval.
 
 **Safety:** Only QA handoff changed in feature/save-6; main untouched; no merge, no new architecture contract.
+
+
+## 2026-11-22 — QA 05: независимая проверка последнего CI (#8)
+
+**Одна ограниченная задача:** через GitHub Actions проверен запуск [44938941289](https://github.com/rixed318/Probably-TAU/actions/runs/44938941289) для QA HEAD `889946ed3fe7f4b0f2511670ee18fed5944b702f`. Workflow: `completed/success`; в первой странице jobs последней попытки **5/5 completed/success**. Подтверждены по метаданным jobs успешные шаги Core .NET 8 Ledger/Snapshot, Android HTML static gate, Python PCG32, NPC .NET 8 и UI/Content Node/manifest validators. **Это не локальные тесты и не Chromium/Unity.** Индивидуальные логи, числа assertions и фактические checkout SHA зависимостей **NOT VERIFIED**. Изменений runtime, CI workflow и контрактов нет; обновлён только QA handoff. PR #9 C0-v2, ADR #14 и #17 остаются предложениями для feature-разработки, не разрешением на merge.
+
+### Сводка для координатора 00 — 2026-11-22
+
+- **PR/HEAD (проверены через GitHub):** #9 `be2acbe7`, #10 `889946ed` (до этого коммита), #11 `d9c66b25`, #12 `48bc7c6e`, #14 `ebdc4be2`, #16 `c0d9dc0c`, #17 `bc9db999`. Новая ревизия QA — этот handoff commit (см. PR #10). Все указанные PR открыты. Main не изменялся QA, merge не выполнялся.
+- **Блокировка 1:** Chromium touch acceptance 360×800/800×360 (3 документа, EndDay, ledger replay, deferred partner cash, 48dp и overflow) — **NOT RUN**.
+- **Блокировка 2:** 3–5 реальных PNG, сигнатуры/размеры и manifest SHA256 — **NOT VERIFIED**.
+- **Блокировка 3:** Unity Editor/APK/device и интегрированный Save→Load — **NOT RUN**; финальный SaveService зависит от стабильного полного Core DTO.
+- **Следующий шаг:** запустить Chromium/Playwright acceptance на точном актуальном Android Touch HTML blob, записать SHA, результаты игрового цикла, размеры hit targets и overflow; отдельно проверить PNG бинарники. Не присваивать READY_FOR_OWNER_TEST без доказательств.
