@@ -1773,3 +1773,22 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** no independently verified 3–5 original PNG binaries/signatures/dimensions/manifest SHA.
 - **Blocker 3:** Unity APK/device and complete Save→Load integration NOT RUN; stable complete DTO remains a prerequisite.
 - **Next step:** inspect Actions run/jobs for new QA head and exact pinned checkout SHAs, then run Chromium acceptance against the current distributed Android Touch HTML blob; do not promote READY_FOR_OWNER_TEST without evidence.
+
+
+## 2026-11-21 — QA 05: independent verification of CI run #44929623065 (#8)
+
+**One bounded task:** independently query GitHub Actions for QA PR #10 head `eaf25fdf8aee5080e4a20e50b4acc69fbfb46e73`. Workflow run [#44929623065](https://github.com/rixed318/Probably-TAU/actions/runs/44929623065), run number 278, is `completed/success`. Its first-page latest-attempt jobs: **5/5 success**, including all reported steps: Android HTML static gate; Python PCG32 oracle and source audit; Core .NET 8 Ledger/Snapshot; NPC standalone .NET 8; UI/Content Node and validators. Evidence: GitHub Actions run and job metadata, **not** locally executed tests. Logs, assertion counts, and actual checked-out dependency SHAs have not been independently inspected; success does not establish current PR-head validation because dependency branches have advanced.
+
+**Observed current PR heads from GitHub:** #9 `b61a374452bc`, #10 `eaf25fdf8aee` (before this handoff commit), #11 `056c5c05a6a2`, #12 `75aa90e0f34b`, #14 `ebdc4be28afd`, #16 `4a86e8010757`, #17 `bc9db999b419`. C0-v2 and ADR are approved for feature development only, not merged. No new contract approved.
+
+**NOT RUN:** Chromium 360x800/800x360 touch, three documents/EndDay/ledger replay/partner cash in browser, actual 48dp geometry/overflow, Unity Editor/APK/device and integrated Save→Load. **NOT VERIFIED:** 3–5 real PNG signatures, dimensions and manifest SHA256. No claim of READY_FOR_OWNER_TEST.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **PR/commits:** #9 Core `b61a3744`; #10 QA `eaf25fdf` before this documentation commit; #11 Content `056c5c05`; #12 UI `75aa90e0`; #14 ADR `ebdc4be2`; #16 NPC `4a86e801`; #17 ADR `bc9db999`. GitHub Actions run #44929623065 on QA `eaf25fdf`: five jobs successful; current heads of other PRs are newer than the pinned dependency revisions unless verified otherwise.
+- **Blocker 1:** Chromium interactive mobile acceptance and measured 48dp/overflow remain NOT RUN.
+- **Blocker 2:** 3–5 committed original PNG signatures/dimensions/manifest SHA256 NOT VERIFIED.
+- **Blocker 3:** Real Unity APK/device and integrated Save→Load NOT RUN; stable DTO integration not established by this CI run.
+- **Recommended next step:** pin latest exact UI HTML revision, run Chromium touch acceptance in both viewports, then verify PNG and Unity APK separately; do not merge without owner approval.
+
+**Safety:** Only QA handoff changed in feature/save-6; main untouched; no merge, no new architecture contract.
