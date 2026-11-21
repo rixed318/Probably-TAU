@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "day01-art-links-1",
+  "status": "planned-art-references-not-PNGs-or-runtime",
+  "sourceFixture": "Content/DAY01_UI_FIXTURE.json",
+  "sourceManifest": "feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv",
+  "dayIndex": 0,
+  "platforms": [
+    "Windows",
+    "Android"
+  ],
+  "worldLogicalResolution": "320x180",
+  "artDirection": "A",
+  "rules": [
+    "Original fictional characters only; no real academy branding",
+    "All document text and money are rendered dynamically by UI",
+    "No change to Core, Day01 choices, money, events or ledger"
+  ],
+  "visits": [
+    {
+      "visitId": "D01_LAB",
+      "visitorId": "npc_irina_korneeva",
+      "documentId": "DOC-01",
+      "portraitAssetId": "irina_korneeva_portrait_neutral",
+      "documentAssetId": "doc01_procurement_blank",
+      "visualBrief": "Вымышленная преподавательница: короткие каштановые волосы с серебристой прядью, прямоугольные очки, тёмно-бирюзовый жакет и янтарная брошь; строгий силуэт воротника и спокойная мимика.",
+      "standingAssetId": "irina_korneeva_standing"
+    },
+    {
+      "visitId": "D01_STUDENT",
+      "visitorId": "npc_dasha_polynskaya",
+      "documentId": "DOC-02",
+      "portraitAssetId": "dasha_polynskaya_portrait_neutral",
+      "documentAssetId": "doc02_student_proposal_blank",
+      "visualBrief": "Вымышленная студентка: асимметричное рыжее каре, круглая заколка цвета индиго, светло-песочная толстовка и диагональный ремень сумки; энергичная открытая мимика.",
+      "standingAssetId": "dasha_polynskaya_standing"
+    },
+    {
+      "visitId": "D01_PARTNER",
+      "visitorId": "npc_mark_sviridov",
+      "documentId": "DOC-03",
+      "portraitAssetId": "mark_sviridov_portrait_neutral",
+      "documentAssetId": "doc03_partner_letter_blank",
+      "visualBrief": "Вымышленный представитель партнёра: выбритая голова, короткая борода, сливовый пиджак и светлая водолазка; узкий футляр для бумаг и сдержанная мимика.",
+      "standingAssetId": "mark_sviridov_standing"
+    }
+  ]
+}
