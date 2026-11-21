@@ -1,3 +1,9 @@
+## Update 2026-11-22 — expanded inline event guard (#20)
+
+- Expanded Android offline HTML source regression from a selected event list to all `on[a-z]+` event attributes (keyboard, focus, submit included). Test commit: `7f1bb8341c74075f4b22f7c10360f534f96b83b1`.
+- **Executed:** JavaScript regex against both live GitHub HTML files (2/2 no matches); 4 fixture checks (3 blocked, 1 allowed). **Not run:** Node --test, Chromium/DOM, Android, TalkBack, Unity. This is source-only evidence.
+- Reviewed main rules/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art manifest and handoff. C0/ADR remain integration constraints. #20 device acceptance and #21 PNG delivery remain pending. No main/Core changes or merge.
+
 ## Update 2026-11-22 — inline event handler offline guard (#20)
 
 - Added one Node source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` rejecting inline `onclick`, `onchange`, `oninput`, `onload`, `onerror`, touch and pointer event attributes in both downloadable Android HTML exports. Test source commit: `01ef9895e21a978db8351165125e8bfae3ef1e28`.
