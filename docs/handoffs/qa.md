@@ -1720,3 +1720,28 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 committed original PNG binaries with signatures/dimensions/SHA256 manifest are not verified.
 - **Blocker 3:** Unity Editor APK and integrated Save→Load remain NOT RUN; complete stable Core snapshot DTO is still a prerequisite for final SaveService.
 - **Recommended next step:** run Playwright/Chromium on the exact distributed Android Touch HTML artifact, both orientations, capture interactive and 48dp/overflow evidence; then verify art binaries when UI publishes them. No merge/main writes.
+
+
+## 2026-11-21 — QA 05: Android Unity APK / signing acceptance checklist (#20, #8)
+
+**One bounded deliverable:** documented a non-secret, reproducible native Android build/signing and exact-SHA verification checklist. This is a preparation artifact, **not** an APK build, a Unity test, or an approval of Core/Save contracts. Source reviewed: main `AGENTS.md`, `docs/CHAT_WORKFLOW.md`, QA handoff, Issues #6/#8/#20/#21, PR descriptions #9/#10/#11/#12/#14, current QA workflow and UI Android Touch HTML (Git blob `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2`). UI PR #12 changed-file inventory: 33 paths, no PNG.
+
+### Reproducible Unity Android build / signing acceptance (future; NOT RUN)
+
+1. **Source identity:** capture full repository/branch commit SHA, Unity `ProjectVersion.txt`, manifest/package-lock and Android target settings; fail if checked-out `git rev-parse HEAD` differs from requested SHA. Keep one shared Core; no Android-only gameplay fork.
+2. **Toolchain:** on the actual build host record Unity **6.3 LTS** Editor exact patch, Android Build Support, SDK/NDK/OpenJDK paths and versions. Do not infer installation from docs. Verify Unity license/CI availability without committing credentials.
+3. **Build configuration:** confirm package/application ID, versionCode/versionName, ARM64 target, IL2CPP, target/min Android SDK and portrait/landscape policy with owner; log whether output is debug APK or signed release APK. Do not silently choose release signing.
+4. **Secrets:** no `.keystore`, `.jks`, passwords, tokens or signing certificates' private keys in repository, logs or downloadable artifacts. Use protected CI secrets or owner-managed local keystore; avoid printing signing environment variables. Debug-only APK may use standard local debug signing if explicitly labelled.
+5. **Build evidence:** execute Unity batchmode build at pinned SHA, retain full logs, capture exit code, exact APK path, file size and SHA256. Check archive validity and package metadata with `aapt`/`apkanalyzer`; verify signature with `apksigner verify --verbose --print-certs` without exposing private key material. A generated file alone is not evidence of installability.
+6. **Device acceptance:** install via `adb install -r` on a real Android device, record OS/API, architecture, install/start result, orientation, touch and safe-area behavior, crash/logcat, Day01 three documents, inspect-gated decisions, EndDay, unique ledger entries and zero immediate partner cash. Verify save/restart/replay only after stable Core DTO and real SaveService exist.
+7. **CI artifact:** attach APK, build logs, exact SHA and SHA256 as scoped Actions artifacts, with sensible retention and no secrets. Distinguish web single-file HTML prototype from Unity APK in filenames and report.
+
+**Actual checks this pass:** GitHub source reads, PR issue metadata and PR #12 changed filenames; checklist content review only. **NOT RUN:** local Node/Python/.NET, Chromium 360×800 and 800×360, real 48dp/overflow and interactive acceptance, Unity Editor compile, Android APK build/install, integrated Save→Load. **BLOCKED:** binary PNG signature/dimensions/manifest SHA validation until UI commits real PNGs. No new architecture contracts, no main changes or merge.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **PRs:** #9 Core (C0-v2), #10 QA (`feature/save-6`; new handoff commit to be recorded in PR comment), #11 Content, #12 UI, #14 ADR; #16 NPC and #17 ADR tracked from prior handoff. **Latest PR HEAD SHAs NOT independently verified in this pass**; do not reuse historical values as current. `main` README/AGENTS/CHAT_WORKFLOW read; previous confirmed main SHA `d673322cd9d0d366a27a57b81056504dfb26c731`, not freshly resolved via branch HEAD API.
+- **Blocker 1:** actual Chromium touch 360×800/800×360 gameplay, computed 48dp and overflow acceptance NOT RUN.
+- **Blocker 2:** 3–5 original committed PNG signatures, dimensions and manifest SHA256 not verifiable from PR #12 changed paths.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; complete stable Core DTO/transaction snapshot must be confirmed first.
+- **Recommended next step:** run exact-SHA Chromium acceptance against Android Touch blob `2ba6b9ad`; once Unity Editor and source DTOs are available, execute the above build/signing checklist and record actual APK SHA256. Keep main protected; READY_FOR_OWNER_TEST withheld.
