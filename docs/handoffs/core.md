@@ -763,3 +763,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Scope this pass: CI verification and handoff only. No production C# or public contract modifications; typed NPC due-event EndDay implementation still requires approved 02/00 contract and independent QA review.
 - Local toolchain probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` available. Local C# tests NOT RUN; Unity/Windows build and Android APK BLOCKED pending genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK.
 - No push to main, no merge, no Issue closure. CI for this documentation-only commit must be checked separately.
+
+## Core 01 — 21.11.2026: Day03 payable deferral at Day02 EndDay (#19)
+
+- One bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, commit `ab3ad2fb8eeea93b8a9badb97b302261b633b714`, branch `feature/core-2`, PR #9. A Day03 payable (DueDayIndex=2, 200 kopecks) must remain outstanding after Day02 EndDay (expectedDayIndex=1); no ledger posting, cash remains 750, exactly one EndDay receipt is appended, input snapshot unchanged. No production/public API or foreign subsystem changes.
+- Prior HEAD `6bad6c4119a8dca32896fe2c56d5073fbe92a1a8` GitHub Actions Core .NET 8 golden run #44857076887 completed/success. **New test SHA CI not verified**; requires exact-SHA check and QA/00 review.
+- Runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. No local .NET tests or Unity/Windows/Android builds. Android APK BLOCKED pending genuine Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
+- P0 typed NPC due-event atomic EndDay still awaits approved 02/00 handler contract. No main push, merge, or Issue closure.
