@@ -275,7 +275,7 @@ for (const npc of contentSpec.fictionalNpcs) {
     "missing original character visual description: " + npc.id);
 }
 // Original art prompts must remain visually distinguishable across the three fictional visitors.
-const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.trim());
+const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru-RU"));
 assert.equal(new Set(visualBriefs).size, visualBriefs.length,
   "duplicate fictional Day01 NPC visual descriptions");
 console.log("PASS: stable fictional Day01 portrait/document asset IDs and descriptions");
