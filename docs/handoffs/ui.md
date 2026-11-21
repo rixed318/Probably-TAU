@@ -1,3 +1,9 @@
+## Update 2026-11-21 — guarded binary transfer recipe (#21)
+
+- One bounded documentation change: `docs/art/PIPELINE.md` now contains a lossless GitHub Git Data API upload/re-read procedure for the existing 320×180 PNG candidate, with branch HEAD lease, no force, exact SHA-256 and file-size verification, and explicit candidate-vs-production status. Pipeline commit: `7494d3ada94dcd0b770ee275167c81a53560045b`.
+- **BLOCKED binary delivery:** local `git ls-remote` still fails with `Could not resolve host: github.com`; the connector cannot read the local PNG bytes. No image blob or binary commit is claimed. This documentation update is not an Android/Unity/art QA pass.
+- **Actually verified:** live GitHub main rules, workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest, pipeline, handoff; local PNG exists and Git transport DNS fails. **Not run:** Node suite, Chromium, Android, TalkBack, Unity. Next: transfer original bytes with authenticated binary API, fetch committed blob, then owner review. No main/Core/merge.
+
 ## Update 2026-11-21 — office candidate binary provenance audit (#21)
 
 - **Local candidate, NOT GitHub-delivered:** `office_day01_candidate_320x180.png` exists in this run's working container. Pillow successfully decoded the PNG; format RGB, dimensions **320×180**, file size **79,749 bytes**. SHA-256: `75b0bd61c1ceacae390edb88fdc6d3d2704a5e91acd6a30279be36f67de8f11f` (verified with local `sha256sum`). Generated using ChatGPT ImageGen as an original fictional office concept; not an approved production asset, not MASTER-001, and not a replacement for separate scene layers.
