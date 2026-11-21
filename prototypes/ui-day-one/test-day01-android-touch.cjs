@@ -226,12 +226,15 @@ test('Android decision focus moves to persistent heading only after success',()=
 // #20: Inline event-handler attributes bypass the documented DOMContentLoaded
 // wiring and can break offline touch behavior or complicate accessibility review.
 test('Android HTML exports use script listeners rather than inline event attributes',()=>{
-  const inlineHandler=/<[a-z][^>]*\s(?:onclick|onchange|oninput|onload|onerror|ontouchstart|ontouchend|onpointerdown|onpointerup)\s*=/i;
+  const inlineHandler=/<[a-z][^>]*\s(?:on[a-z]+)\s*=/i;
   for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
     assert.doesNotMatch(source,inlineHandler,filename+' must not bind inline event handlers');
   }
   assert.match('<button onclick="decide()">',inlineHandler);
   assert.match('<img src="x" onerror="fetchSomething()">',inlineHandler);
+  assert.match('<button onkeydown="decide()">',inlineHandler);
+  assert.match('<form onsubmit="send()">',inlineHandler);
+  assert.match('<input onfocus="track()">',inlineHandler);
   assert.doesNotMatch('<button data-onclick="none">',inlineHandler);
 });
