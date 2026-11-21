@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-21 — art pipeline gate correction (#21)
+
+- Updated `docs/art/PIPELINE.md` to distinguish owner-selected direction A from **unapproved** candidate art and unverified GitHub PNG delivery. Code/docs commit: `e299cf5c061bcac9641d05807c28e6ae653bfa28`.
+- Prior office PNG candidate exists outside GitHub; it is not a committed production asset, not approved MASTER-001, and not proof of a Unity import. The manifest remains unchanged; no false binary path/asset approval is recorded.
+- **Actual verification:** fetched pipeline and handoff from `feature/ui-5`, performed a text-only edit through authenticated GitHub connector. **Not executed:** Node, browser, Android, Unity, image binary GitHub verification. Next: upload and verify actual PNG bytes through binary-capable GitHub workflow, then request visual review. PR #9/#14 remain unmerged references. No Core/main/merge.
+
+
 ## 2026-11-21 — SVG external-symbol offline guard (#20)
 
 - Added a source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` for remote SVG `<use href>` and `xlink:href` in both Android HTML exports. Local fragment references remain permitted. Code commits: `8f750771e56cbd15b1f1b1b83d803aba323de96c`, `c7b1b416da9c476d4b05501e96a4ecba5d9d9ec5` (final code blob verified unchanged by second update).
