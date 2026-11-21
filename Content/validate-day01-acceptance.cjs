@@ -141,6 +141,12 @@ for (const project of contentSpec.projects) {
       "project requires a positive integer count of full EndDays: " + project.id);
   }
 }
+// P02's three *full* EndDay transitions are a fixed authored balance rule.
+// The launch-day close is excluded; this does not advance a runtime clock.
+const workshop = contentSpec.projects.find(project => project.id === "P02");
+assert.ok(workshop, "missing P02 workshop");
+assert.equal(workshop.requiredFullEndDaysAfterLaunch, 3,
+  "P02 must require exactly three full EndDays after launch");
 // Draft project unlocks must resolve to an authored event that actually feeds the project.
 // This guards narrative references only; NPC/EventDirector owns runtime completion facts.
 for (const project of contentSpec.projects) {
