@@ -844,3 +844,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - **Actual result:** GitHub Actions `Core .NET 8 golden tests`, run [#44931010824](https://github.com/rixed318/Probably-TAU/actions/runs/44931010824), status `completed`, conclusion `success`, returned for that exact SHA. Standalone CI only; not Unity compile, Android APK or Windows build.
 - **Local toolchain probe:** no `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build`; `/usr/bin/java` and `/usr/bin/javac` present. Local .NET tests, Unity/Windows and Android APK **NOT RUN / BLOCKED**.
 - **Integration still BLOCKED:** typed NPC due-event and weekly EndDay handlers need approved 02/00 integration contract and independent QA review; do not bypass fail-closed C0/ADR requirements. No `main` push, merge or Issue closure.
+
+
+## Core 01 — 22.11.2026: Day01 stale precondition regression (#19)
+
+- **Scope:** one bounded C# regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, code commit `6ee7485a07069ace57547276e0dc03d84484cdc1`, branch `feature/core-2`, PR #9. In existing `Day01FlowGolden`, reject stale expected revision and wrong expected day before any of the three document effects are staged; assert original snapshot revision/day/cash/ledger/receipts unchanged. No production API or foreign subsystem changes.
+- **Verified previous HEAD:** `be2acbe7e3696e15dc0eba1fe8a0c8c5d1e95eec`, Core .NET 8 golden runner GitHub Actions run [#44940399711](https://github.com/rixed318/Probably-TAU/actions/runs/44940399711) completed/success. This **does not validate new code**; CI for new SHA must be checked separately. Local `dotnet` absent; C# tests NOT RUN locally.
+- **Toolchain:** Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Unity/Windows and Android APK **BLOCKED** pending genuine Unity 6.3 LTS Editor and Android Build Support/SDK/NDK. No fabricated builds.
+- **Dependencies:** typed NPC due-event and weekly settlement EndDay still require approved 02/00 contracts and QA review. No `main` push, merge or Issue closure.
