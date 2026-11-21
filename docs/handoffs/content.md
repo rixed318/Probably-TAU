@@ -772,3 +772,10 @@ Validator commit: `05b95144efa5d74885cf55a2653b2755da3366ea`. Actual isolated JS
 One bounded Issue #7 change: validator now requires PARTNER-1/PARTNER-2 to defer revenue until DayIndex 4 (display Day 5), require both E03_mentor_paid and E07_delivered, and contain no immediate cash effects; PARTNER-3 cannot promise revenue. This checks draft narrative contracts only; Core alone owns earned ledger postings and receipts. No separate cash engine or EventDirector.
 
 Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed **isolated JavaScript** on fetched canonical JSON: baseline PASS; early income, cash-at-signing, and missing delivery prerequisite mutations rejected (3/3 PASS). Checked-in Node CLI, CI, Unity, Windows, Android **NOT RUN**. QA 05: run `node Content/validate-day01-acceptance.cjs` on current HEAD and negative mutations. PR #9 C0-v2 / PR #14 ADR remain separate; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+## AutoDev 04 — partner deferred revenue draft/fixture parity (21.11.2026)
+
+- **Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` now cross-checks PARTNER-1/PARTNER-2 deferred income amount, earliest zero-based DayIndex, receipt requirements, delivered-service flag and zero signing cash against `CONTENT_SPEC_DRAFT.json` and `DAY01_UI_FIXTURE.json`. PARTNER-3 must not have deferred revenue. This is content parity, not a Core cash engine or EventDirector.
+- **Validator commit:** `7a90200fd2d3bfad074333c9de7ec5c72dc88c3e` on `feature/content-7`.
+- **Actually executed:** isolated JavaScript check of fetched draft and fixture: baseline PASS; three synthetic negative mutations (amount mismatch, early DayIndex, revenue on decline) rejected 3/3 PASS. **NOT RUN:** checked-in Node CLI, GitHub Actions, Unity Editor, Windows player, Android device/APK. QA 05 should run `node Content/validate-day01-acceptance.cjs` on current branch HEAD and targeted negative mutations.
+- **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9, ADR PR #14 and due-event ADR PR #17 retain authority; no main push/merge, no changes to Core, NPC, UI or PNG assets.
