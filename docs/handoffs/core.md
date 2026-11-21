@@ -818,3 +818,13 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - On DayIndex=9 with a due affordable 200-kopeck payable and cash 1000, both `PreparePayablesDay` (direct public entry) and `PrepareDay` must fail closed until the weekly settlement handler is implemented. Assert original cash, payable, day, revision, ledger, receipts, command/day keys unchanged. No production API, other subsystem or main changes.
 - Prior exact HEAD `74deb6b07ff20cbd0279b6249402e4ed2736b6e8` standalone Core .NET 8 CI [#44905322562](https://github.com/rixed318/Probably-TAU/actions/runs/44905322562) completed/success. This does **not** verify the new test; check CI for new HEAD separately. QA/00 independent review required.
 - Runtime probe: no `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build`; `java`/`javac` available. Local C# tests NOT RUN; Unity/Windows build and real Android APK BLOCKED pending genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK. Typed NPC event handler still requires approved 02/00 contract. No merge or Issue closure.
+
+
+## AutoDev 01 — Day10 quiet direct-entry weekly guard (21.11.2026)
+
+**Scope:** Issue #19, one regression only; `feature/core-2`, PR #9. Code commit `377027b5b71694c59d760d84f79327594a5a989f`.
+**File:** `Tests/Core/GameStateSnapshotGoldenTests.cs`, new `SecondWeekQuietDirectEntryFailClosedGolden()` registered in `RunAll()`.
+**Invariant:** on DayIndex=9 (Day10), with zero pending events, zero payables and cash=1000, both `PreparePayablesDay` and canonical `PrepareDay` must fail closed until the weekly settlement stage is integrated. No mutation to day/revision, cash, ledger, receipts, processed command/day keys.
+**Contracts:** unchanged. No production code, UI/NPC/QA files or `main` modified.
+**Verification:** previous HEAD `d57e726f866c1d8dcedc7ae3b625654b12ebbf21` has completed/success PR workflow runs 44913341532 and 44913341152; **these do not validate the new test**. New code SHA workflow result not confirmed at handoff time. Local `dotnet`, Unity Editor, adb, sdkmanager, ndk-build absent; javac present. Local .NET, Unity Editor/Windows and Android APK tests/builds **NOT RUN / BLOCKED**.
+**Next:** QA/00 review exact SHA CI; implement typed due-event/weekly handlers only under agreed 02/00 contracts, then independently verify Unity 6.3 Editor and Android toolchain before APK claim.
