@@ -783,3 +783,13 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Previous HEAD `aee8fe26e5ef6ca640f92e758b3b16b37d921ae6` standalone .NET 8 CI run [#44873632934](https://github.com/rixed318/Probably-TAU/actions/runs/44873632934) completed/success. New test SHA CI unverified at writing; QA/00 to review exact new HEAD.
 - Local probe: no `dotnet`, Unity Editor, `adb`, `sdkmanager` or `ndk-build`; `java`/`javac` available. Local .NET tests NOT RUN; Windows/Unity builds and Android APK BLOCKED pending real Unity 6.3 LTS and Android toolchain.
 - Typed NPC event EndDay integration still depends on approved 02/00 contract. No main push/merge or Issue closure.
+
+
+## Core 01 — 21.11.2026: weekly EndDay payable fail-closed regression
+
+- **Issue:** #19 (Core EndDay integration); related #2/#3. **Branch:** `feature/core-2`; **PR:** #9.
+- **Code commit:** `72c9b45ee4bb016fc3247b7adcd603782180c8e1`.
+- **Scope:** one golden regression `WeeklyPayableFailClosedGolden` in `Tests/Core/GameStateSnapshotGoldenTests.cs`, invoked by `RunAll`.
+- **Invariant:** on DayIndex=4, an affordable due payable must not be charged while the weekly settlement handler is missing. `PrepareDay` rejects; source day/revision, cash, payable, ledger, receipts and processed-day keys remain unchanged. No public API/contract change, no NPC/UI/Save edits.
+- **Verification:** prior branch SHA `d4918bddba341ad58ef7951ea0d3519f025fa051` GitHub Actions Core .NET 8 golden runner completed/success (run #44881650967); this is **not** evidence for the new test. New SHA CI must be checked separately. Local `dotnet` and Unity Editor unavailable; `adb`, `sdkmanager`, `ndk-build` missing; Java/javac present. Android APK and Windows/Unity builds **BLOCKED** (Unity 6.3 LTS Editor + Android Build Support/SDK/NDK required).
+- **QA/00:** review test against C0-v2 / ADR-C0-001; keep weekly settlement blocked until an approved handler is integrated. Do not merge PR or close Issues without acceptance criteria.
