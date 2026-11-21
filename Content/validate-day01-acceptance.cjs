@@ -534,6 +534,10 @@ assert.equal(art.dayIndex, fixture.dayIndex);
 assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
 assert.equal(art.worldLogicalResolution, "320x180");
 assert.equal(art.artDirection, "A");
+// Documents must remain blank templates: UI renders localized text and kopeck amounts.
+// This is an authored metadata guard, not a check of actual PNG pixel contents.
+assert.ok(Array.isArray(art.rules) && art.rules.includes("All document text and money are rendered dynamically by UI"),
+  "Day01 art contract must keep document text and money out of baked-in assets");
 assert.equal(art.visits.length, fixture.visitors.length);
 const artByVisit = new Map(art.visits.map(v => [v.visitId, v]));
 assert.equal(artByVisit.size, art.visits.length);
