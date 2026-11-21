@@ -852,3 +852,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - **Verified previous HEAD:** `be2acbe7e3696e15dc0eba1fe8a0c8c5d1e95eec`, Core .NET 8 golden runner GitHub Actions run [#44940399711](https://github.com/rixed318/Probably-TAU/actions/runs/44940399711) completed/success. This **does not validate new code**; CI for new SHA must be checked separately. Local `dotnet` absent; C# tests NOT RUN locally.
 - **Toolchain:** Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Unity/Windows and Android APK **BLOCKED** pending genuine Unity 6.3 LTS Editor and Android Build Support/SDK/NDK. No fabricated builds.
 - **Dependencies:** typed NPC due-event and weekly settlement EndDay still require approved 02/00 contracts and QA review. No `main` push, merge or Issue closure.
+
+
+## Core 01 — 2026-11-22: Day01 negative precondition regression
+
+- Issue #19; branch `feature/core-2`; code commit `3b0f905957878e8ab513340eb66e237331be23cb`; PR #9.
+- One bounded C# test-only change in `Tests/Core/GameStateSnapshotGoldenTests.cs`: `Day01FlowGolden` now rejects negative expected revision (`-1`) and negative expected day (`-1`) before any of three document decisions; existing source-immutability assertion covers cash, day/revision, Ledger and receipts. No public API, production behavior, or foreign subsystem changes.
+- Prior exact HEAD `31a6f6f6b82e199cf91409ee217200f28b8df4c3`: Core .NET 8 PR workflow run `44948940279` completed/success. This does NOT verify the new code commit. New SHA CI not yet confirmed.
+- Local environment: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local .NET tests, Unity/Windows build and Android APK NOT RUN/BLOCKED. No fake Unity project/APK.
+- QA/00: review new exact SHA and its CI. NPC due-event / weekly settlement EndDay integration remains dependent on approved 02/00 contract. No main push/merge or Issue closure.
