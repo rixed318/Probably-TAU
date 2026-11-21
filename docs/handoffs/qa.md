@@ -1820,3 +1820,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Actual 3–5 original PNG signatures/dimensions and manifest SHA256 — **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor/APK/device and integrated Save→Load — **NOT RUN**; complete stable Core DTO integration not established.
 - **Recommended next step:** execute Playwright/Chromium touch acceptance against the exact latest distributed Android Touch HTML revision and capture geometry/gameplay evidence; inspect PNG binary signatures and hashes separately. No READY_FOR_OWNER_TEST, main push or merge.
+
+
+## 2026-11-22 — QA 05: Actions run verification for a503dc8d (#8)
+
+**One bounded task:** independently checked GitHub Actions run [44956346347](https://github.com/rixed318/Probably-TAU/actions/runs/44956346347) associated with exact QA PR #10 HEAD `a503dc8d7e41decdce7ab55583c715df10d820a2`. Run metadata: **completed/success**. Latest-attempt first-page job metadata: **5/5 completed/success** — Python PCG32 oracle, NPC standalone .NET 8, Core ledger/snapshot .NET 8, UI/Content static regression, distributed Android HTML static gate. These are **remote CI job statuses only**; job logs, individual assertions, actual dependency checkout SHAs and local execution were **NOT VERIFIED**. The passing static gate is **not** Chromium touch acceptance, original PNG verification, or Unity APK testing. No runtime, architecture or CI workflow changes. C0-v2 PR #9 and ADR PR #14 remain unmerged feature-development guidance only.
+
+### Сводка для координатора 00 — 2026-11-22 (run #44956346347)
+
+- **PR HEADs verified before this QA handoff commit:** #9 Core `d62a22bd`, #10 QA `a503dc8d`, #11 Content `e6079da1`, #12 UI `149343a6`, #14 ADR `ebdc4be2`, #16 NPC `950d9228`, #17 ADR `bc9db999`. All open; base main `d673322c`. New QA commit SHA to be recorded in PR #10 comment. No main push/merge.
+- **Blocker 1:** actual Chromium touch emulation 360×800 and 800×360, 3 docs/EndDay/ledger replay/deferred partner cash and measured 48dp/overflow — **NOT RUN**.
+- **Blocker 2:** 3–5 committed original PNG binary signatures/dimensions/manifest SHA256 — **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load — **NOT RUN**; complete stable Core DTO contract still must be confirmed before SaveService.
+- **Recommended next step:** run exact-blob Chromium mobile acceptance on current PR #12 Android Touch HTML, record screenshots, gameplay assertions and measured geometry; separately validate real PNGs when committed. No READY_FOR_OWNER_TEST.
