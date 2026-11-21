@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## Update 2026-11-21 — unquoted remote srcset regression (#20)
+
+- Extended `test-day01-android-touch.cjs` offline guard to reject unquoted `srcset=https://...`, `srcset=//host/...` and comma-joined unquoted remote candidates in **both** Android HTML distributions. Existing quoted-value checks remain unchanged. Test commit: `24304dbbea37ec2f6e1e23072a940081e2815dc2`.
+- **Actually executed:** 5 isolated JavaScript regex fixtures in connector runtime (3 remote rejected, 2 local/quoted controls allowed), 5/5 expected results. **Not executed:** complete Node suite against repository HTML, browser viewport/device tests, TalkBack, Unity/Android APK. Run `node --test prototypes/ui-day-one/test-day01-android-touch.cjs` in a checkout.
+- No Core/GameState changes; #20 Android device evidence and #21 verified PNG binary still pending. C0-v2 PR #9 / ADR PR #14 remain references; no merge.
+
+
 ## Update 2026-11-21 — repair srcset guard escaping (Issue #20)
 
 - Corrected over-escaped regex in `prototypes/ui-day-one/test-day01-android-touch.cjs`: the previous `remoteSrcset` pattern had literal backslashes instead of regex word boundaries/whitespace and could not reliably detect remote responsive images. Test fix commit: `08584f4d6139caceda6d1a7d2986920d362a6f3b`.
