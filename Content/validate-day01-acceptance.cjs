@@ -86,8 +86,10 @@ const eventChoiceIds = contentSpec.eventManifest.flatMap(event => event.choices)
 assert.equal(new Set(eventChoiceIds).size, eventChoiceIds.length,
   "duplicate event choice Definition ID across event manifest");
 for (const event of contentSpec.eventManifest) {
-  assert.ok(Array.isArray(event.choices) && event.choices.length > 0,
-    "missing event choices: " + event.id);
+  assert.equal(event.required, true,
+    "every E02-E14 event must remain mandatory in the authored manifest: " + event.id);
+  assert.ok(Array.isArray(event.choices) && event.choices.length >= 2,
+    "every E02-E14 event must offer at least two authored outcomes: " + event.id);
   for (const choiceId of event.choices) {
     assert.match(choiceId, new RegExp("^" + event.id + "-[A-Z]+$"),
       "event choice Definition ID must belong to its event: " + choiceId);
