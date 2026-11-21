@@ -92,6 +92,20 @@ Use semantic snake_case paths, explicit revision only in metadata or final immut
 
 **Manifest fields:** asset_id, group, purpose, content_ref, priority, native_px, anchor_px, layer, frames, style_rev, authoring_tool_model, prompt_ref, reference_id, status, rights_review, source_file, unity_target, notes. Possible statuses: planned → candidate → selected_for_cleanup → qa_ready → approved → production, or rejected. **At present all assets are planned and rights pending.**
 
+## Binary handoff recovery for #21 (candidate, not production)
+
+The office candidate `office_day01_candidate_320x180.png` is **outside GitHub**. Its SHA-256 is `75b0bd61c1ceacae390edb88fdc6d3d2704a5e91acd6a30279be36f67de8f11f` (79,749 bytes, 320×180 RGB). Preserve these original bytes when transferring; a palette-quantized or recompressed PNG is a **different revision** and must get a new hash and review. Never reconstruct a PNG by pasting its filename or a data URL into a UTF-8 contents-file update.
+
+When an authenticated binary-capable environment is available, perform one non-force fast-forward on `feature/ui-5` only:
+
+1. Read the branch HEAD SHA and tree SHA immediately before writing; check that the proposed path `Assets/Art/Source/office_day01_candidate_320x180.png` does not already exist.
+2. Read actual local PNG bytes and base64-encode the **bytes**, not their textual representation. GitHub Git Data API: `POST /git/blobs` with `encoding: base64`; verify the returned blob exists and represents the PNG bytes.
+3. Create a tree based on the branch HEAD tree, with one entry `mode: 100644, type: blob, path: Assets/Art/Source/office_day01_candidate_320x180.png, sha: <blob_sha>`. Create a commit with the current branch HEAD as its sole parent.
+4. Update `refs/heads/feature/ui-5` with the **expected old HEAD SHA** and `force: false`. If the lease fails, fetch the new HEAD and re-evaluate; never overwrite concurrent work.
+5. Fetch the committed PNG back from the new branch, decode it, verify PNG signature, 320×180 dimensions, 79,749 bytes and the SHA-256 above. Only after this may the handoff say **binary committed**. Keep status `candidate` and rights/owner review `pending` until explicit approval; do not mark the manifest row `production`.
+
+If the connector cannot access local binary bytes or DNS prevents Git transport, report **BLOCKED**, keep the candidate out of the production manifest, and do not substitute a text-only commit for binary delivery.
+
 ## Step 7 — acceptance before release
 
 A release candidate batch must contain at least **3–5 actually approved and technically reviewed master assets** (one office scene layer, one furniture/prop, one character/portrait, one document shell, one icon), all coherent at native resolution, with source provenance recorded. QA 05 reviews Unity import/runtime/UI focus; Chat 00 and owner sign off. No use of copyrighted third-party game art and no reference photo with unresolved rights.
