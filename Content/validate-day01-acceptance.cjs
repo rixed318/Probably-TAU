@@ -206,6 +206,30 @@ assert.equal(fixture.roomConflict.displayDay, fixture.roomConflict.dayIndex + 1,
   "room conflict display day mismatch");
 assert.equal(fixture.endDayReport.dayIndex, fixture.dayIndex,
   "end-day report must refer to the current DayIndex");
+// Day01 room collision is a shared fictional request slot, never an automatic booking.
+// Keep the canonical draft and platform-independent UI fixture aligned.
+function validateRoomSlot(draft, ui) {
+  const room = ui.roomConflict;
+  assert.equal(room.displayRoom, draft.opening.fictionalRoom, "room conflict display room drift");
+  assert.equal(draft.opening.collisionSlot,
+    "day" + String(room.displayDay).padStart(2, "0") + "/" + room.slot,
+    "opening collision slot drift");
+  assert.equal(room.dayIndex, room.displayDay - 1, "room collision DayIndex drift");
+  assert.equal(room.status, "requests-only", "room conflict must remain requests-only");
+  assert.equal(room.noAutomaticReservation, true, "room requests cannot book automatically");
+  for (const doc of draft.documentTypes) {
+    assert.equal(doc.visible.room, room.displayRoom, "draft document room drift: " + doc.id);
+    assert.equal(doc.visible.dayIndex, room.dayIndex, "draft document collision DayIndex drift: " + doc.id);
+    assert.equal(doc.visible.slot, room.slot, "draft document collision slot drift: " + doc.id);
+    const uiDoc = ui.documents.find(item => item.id === doc.id);
+    assert.ok(uiDoc, "missing room conflict document: " + doc.id);
+    assert.equal(uiDoc.visible.room, doc.visible.room, "UI document room drift: " + doc.id);
+    assert.equal(uiDoc.visible.dayIndex, doc.visible.dayIndex, "UI document collision DayIndex drift: " + doc.id);
+    assert.equal(uiDoc.visible.slot, doc.visible.slot, "UI document collision slot drift: " + doc.id);
+  }
+}
+validateRoomSlot(contentSpec, fixture);
+console.log("PASS: Day01 three-document shared room/slot/DayIndex draft-fixture parity; requests are not bookings");
 assert.equal(fixture.documents.length, 3);
 assert.equal(fixture.visitors.length, 3);
 // Cross-file canonical identity guard: no drift between draft content and UI fixture.
