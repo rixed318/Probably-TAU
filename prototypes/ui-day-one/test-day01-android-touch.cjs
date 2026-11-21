@@ -209,3 +209,16 @@ test('Android offline variants reject remote SVG use href references',()=>{
   assert.match('<use xlink:href="//cdn.invalid/icons.svg#x">',remoteUse);
   assert.doesNotMatch('<use href="#local-symbol">',remoteUse);
 });
+
+
+// Regression #20: a successful decision rebuilds the choice buttons. Keep
+// keyboard focus on a persistent document heading, never a removed button.
+// This is a source contract; browser/TalkBack behavior still needs device QA.
+test('Android decision focus moves to persistent heading only after success',()=>{
+  assert.match(html,/<h2\s+id="doc-title"\s+tabindex="-1">/i);
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
+  const ui=scripts[2];
+  assert.match(ui,/if\(action==="decision"\)el\("doc-title"\)\.focus\(\)/);
+  assert.match(ui,/g\.decide\(item\.id,option\.id\);return "decision";/);
+  assert.match(ui,/catch\(e\)\{el\("error"\)\.textContent=e\.message;\}/);
+});
