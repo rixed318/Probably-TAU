@@ -696,3 +696,9 @@ After coordinator review of N0 and typed content schema, implement a pure-C# imm
 - **Scope:** documentation/handoff only; no changes to NPC production code, Content JSON, Core GameState/ledger, Android implementation, or portrait assets. Draft PR #16 remains unmerged.
 - **Verification limitation:** this handoff commit itself is not covered by that earlier exact-SHA run. Local .NET, Unity Editor, Windows and Android builds/tests NOT RUN. Cross-platform parity remains unproven.
 - **BLOCKED (full EventDirector):** requires concrete atomic Core AdvanceDay due-event/receipt/earned-key ports and confirmed Content/Core original agreement occurrence provenance for E03/E07. PR #9 C0-v2, PR #14 ADR, PR #11 Content and Issue #21 original art coordination remain integration inputs. Never infer shipped portraits from planned IDs.
+
+
+## 2026-11-21 — verify NPC exact-head golden CI (#4 / #20)
+- **Bounded task:** checked GitHub Actions association for feature HEAD `b33ebbb04e469757047aced4bb0460a2239960b2`. NPC .NET workflow [run #44860196780](https://github.com/rixed318/Probably-TAU/actions/runs/44860196780) returned `completed/success`. This verifies the remote workflow result for that prior HEAD; the documentation commit adding this note is not covered by it.
+- **Scope:** handoff and PR verification status only. No production C#, test assertions, Content JSON, Core GameState/ledger, portraits or Android binaries changed. Local .NET, Unity, Windows and Android tests NOT RUN; device parity not established.
+- **BLOCKED (full EventDirector):** Core atomic due-event settlement, durable receipts, earned-key deduplication and Content/Core E03/E07 original agreement occurrence provenance remain required. PR #9 C0-v2, PR #14 ADR and PR #11 Content are unmerged inputs. Issue #21 planned art IDs do not prove available PNG assets. PR #16 remains Draft; no main push or merge.
