@@ -1,3 +1,9 @@
+## Update 2026-11-22 — inspection focus continuity (#20)
+
+- Fixed one Android Day01 accessibility issue in `prototypes/ui-day-one/day01-android-touch.html`: a successful Inspect action re-renders the view and removes the active inspect button from the focus flow. The persistent inspection result is now programmatically focusable (`tabindex="-1"`) and receives focus **after** successful inspection/render only; error handling and the existing decision heading focus are unchanged. UI commit: `c330ed9e65fadd6553c1aa5aed7b4ebc1b3e6572`.
+- **Executed:** GitHub readback of the committed HTML; 3 source-level checks passed (focusable result, success-only focus call, retained error handler). **Not executed:** Node suite, browser DOM, Android, TalkBack, Unity. Device focus behavior remains unverified; Issue #20 open. Issue #21 binary PNG delivery still pending.
+- Reviewed main AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible and manifest. No Core/main/merge.
+
 ## Update 2026-11-22 — expanded inline event guard (#20)
 
 - Expanded Android offline HTML source regression from a selected event list to all `on[a-z]+` event attributes (keyboard, focus, submit included). Test commit: `7f1bb8341c74075f4b22f7c10360f534f96b83b1`.
