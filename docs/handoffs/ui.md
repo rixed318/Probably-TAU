@@ -985,3 +985,12 @@ One bounded documentation task: define a concrete **manual acceptance protocol**
 One bounded source-regression task: added a static check in `prototypes/ui-day-one/test-day01-android-touch.cjs` to reject remote `https://`, `http://` and protocol-relative `//` candidates in `srcset` for both Android Day01 offline HTML distributions. Code commit: `4758e94722346206d743290d95cefed63f00f295` on `feature/ui-5`. Existing desktop demo, production HTML, Unity and GameState/Core were not changed.
 
 Actual verification: three JavaScript regex fixtures executed in the connector runtime (remote HTTPS: matched; protocol-relative: matched; local-only: not matched), 3/3 expected outcomes. GitHub accepted the code commit. **Not run:** full Node test suite, browser, CI, physical Android, TalkBack or Unity. Local git clone blocked by DNS resolution failure for github.com. This is a static source heuristic, not a runtime network audit; #20 device playtest and #21 real PNG delivery remain open. C0-v2 PR #9 and ADR PR #14 remain integration references; no main merge.
+
+
+## 2026-11-21 — Android offline inline JavaScript syntax verification (#20)
+
+- Single bounded verification task: fetched both distributed HTML files directly from `feature/ui-5` and compiled **all five inline scripts** using JavaScript `new Function(source)` in the connector V8 runtime, without executing the scripts or loading a browser DOM.
+- `prototypes/ui-day-one/day01-android-touch.html` blob `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2`: **3/3 syntax PASS**.
+- `prototypes/ui-day-one/day01-android-offline.html` blob `5fd425b0b683353fcf5a1e83339426679b457126`: **2/2 syntax PASS**.
+- This validates parseability only. **Not run:** Node test suite, HTML DOM, Chromium, Android phone, TalkBack, Unity Editor or APK. Local `git ls-remote` failed DNS resolution of github.com; GitHub connector reads/writes remain available.
+- Next: physical Android landscape/portrait playtest with screenshots and actual hitbox measurements for #20, then verified original PNG binary production for #21. C0-v2 PR #9 and ADR PR #14 remain unmerged; no GameState/Core changes or merge.
