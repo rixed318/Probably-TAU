@@ -770,3 +770,9 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Prior HEAD `6bad6c4119a8dca32896fe2c56d5073fbe92a1a8` GitHub Actions Core .NET 8 golden run #44857076887 completed/success. **New test SHA CI not verified**; requires exact-SHA check and QA/00 review.
 - Runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. No local .NET tests or Unity/Windows/Android builds. Android APK BLOCKED pending genuine Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
 - P0 typed NPC due-event atomic EndDay still awaits approved 02/00 handler contract. No main push, merge, or Issue closure.
+
+## Core 01 — 21.11.2026: Day03 deferred payable settlement and replay regression (#19)
+
+- Bounded C# golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, code SHA `09a7afa766bb6eac199e4d201a4546937349ad0b` on `feature/core-2`, PR #9. Extends existing Day02 future-payable deferral fixture: when Day03 closes (expectedDayIndex=2), 200 kopecks are settled exactly once (750→550), payable removed, one ledger posting `payable:day03-future`, one EndDay receipt, source snapshot unchanged. Restore + stale Day03 replay rejected without mutation. No public contract or foreign subsystem changed.
+- New exact-SHA CI not yet verified; independent QA/00 review required. Local environment: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` present. No local .NET tests, Unity/Windows builds or APK; Android APK BLOCKED pending real Unity 6.3 LTS Editor and Android toolchain.
+- P0 typed NPC due-event atomic EndDay still pending approved 02/00 handler contract. No main push/merge or Issue closure.
