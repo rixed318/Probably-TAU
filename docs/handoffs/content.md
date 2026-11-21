@@ -804,3 +804,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **QA 05 / UI 03 acceptance:** for each of the three visits, match draft `id/npcId/documentId` exactly to art `visitId/visitorId/documentId`; require exactly one matching fictional NPC and document; require stable nonempty portrait, standing and blank-document asset lookup keys. Reject accidental reuse of an art lookup key as a runtime instance identifier. Missing actual PNG is a presentation placeholder issue, not a reason to alter DayIndex (0), decision Definition IDs or `*Kopecks` strings. Applies identically to Windows and Android.
 
 **Actually verified:** read current GitHub source JSON and confirmed the three authored mappings and three art-link records by inspection; no executable validator, checkout, PNG inspection, Unity, Windows or Android test was run. This handoff does not claim the real art exists. **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. No changes to Core, EventDirector, ledger, art, main or merge.
+
+
+## AutoDev 04 — mandatory event and branching guard (21.11.2026)
+
+**One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` now requires all 13 authored E02–E14 manifest records to retain `required: true` and at least two authored choice IDs each. This prevents silent removal of mandatory follow-ups or reduction to a single outcome. It is static draft-content validation only; does not implement EventDirector, NPC, Core, ledger, Android art or a runtime schema.
+
+**Validator commit:** `4af4795b393057d6ddf47d58cc4d7b391d6592a4` on `feature/content-7`. **Actually executed:** isolated JavaScript assertion on GitHub-fetched manifest: baseline 13 events PASS; synthetic `required:false` rejected PASS; synthetic single-choice E03 rejected PASS (2/2 negative checks). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05: run `node Content/validate-day01-acceptance.cjs` on current feature HEAD and repeat negative mutations. PR #9 C0-v2 / PR #14 ADR remain authoritative until integration. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
