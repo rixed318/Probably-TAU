@@ -37,8 +37,17 @@ namespace TAU.President.Tests.Npc
                     if (byInspection.Choices[choiceIndex].ChoiceId != byDocument.Choices[choiceIndex].ChoiceId)
                         throw new Exception("Inspection choice order mismatch: " + inspectionIds[inspectionIndex]);
             }
+            // All canonical inspection routes reject control-character variants without normalization.
+            foreach (string canonicalInspection in inspectionIds)
+                foreach (string suffix in new[] { "\n", "\r", "\t", "\0" })
+                {
+                    Day01Visitors.VisitScreenPreview malformedScreen;
+                    if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(canonicalInspection + suffix, out malformedScreen) ||
+                        malformedScreen != null)
+                        throw new Exception("Control-character inspection ID accepted: " + canonicalInspection);
+                }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
-                "check_seat_map ", " check_seat_map", "check_seat_map\n", "check_seat_map\t", "unknown_inspection" })
+                "check_seat_map ", " check_seat_map", "unknown_inspection" })
             {
                 Day01Visitors.VisitScreenPreview screen;
                 if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(invalidInspection, out screen) ||
