@@ -43,6 +43,7 @@ namespace TAU.President.Tests.Core
             WeeklyPayableFailClosedGolden();
             WeeklyQuietFailClosedGolden();
             SecondWeekQuietFailClosedGolden();
+            SecondWeekPayableDirectEntryFailClosedGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
@@ -280,6 +281,39 @@ namespace TAU.President.Tests.Core
                 current.Finance.Receipts.Count == 0 &&
                 current.Header.ProcessedDayKeys.Count == 0,
                 "second weekly boundary rejects quiet EndDay without settlement");
+        }
+
+        private static void SecondWeekPayableDirectEntryFailClosedGolden()
+        {
+            // Direct entry must not bypass the weekly settlement gate on Day10.
+            var header = new GameStateSnapshotDto(0, "second-week-payable", 42UL,
+                "normal", "dayone", 9, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                new DurableCommandReceipt[0]);
+            var current = new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0],
+                    new string[0]),
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("second-week-due", 9, 200L)
+                }));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(
+                current, 0, 9));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                current, 0, 9));
+            AssertNamed(current.Header.DayIndex == 9 &&
+                current.Header.Revision == 0 &&
+                current.Header.BalanceKopecks == 1000L &&
+                current.Payables.Outstanding.Count == 1 &&
+                current.Payables.Outstanding[0].DueKey == "second-week-due" &&
+                current.Finance.Ledger.Entries.Count == 0 &&
+                current.Finance.Receipts.Count == 0 &&
+                current.Header.ProcessedDayKeys.Count == 0 &&
+                current.Header.ProcessedCommandIds.Count == 0,
+                "second weekly direct payable entry cannot bypass settlement gate");
         }
 
         private static void QuietDayAdvanceGolden()
