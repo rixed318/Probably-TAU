@@ -1,3 +1,9 @@
+## Update 2026-11-21 — office candidate binary provenance audit (#21)
+
+- **Local candidate, NOT GitHub-delivered:** `office_day01_candidate_320x180.png` exists in this run's working container. Pillow successfully decoded the PNG; format RGB, dimensions **320×180**, file size **79,749 bytes**. SHA-256: `75b0bd61c1ceacae390edb88fdc6d3d2704a5e91acd6a30279be36f67de8f11f` (verified with local `sha256sum`). Generated using ChatGPT ImageGen as an original fictional office concept; not an approved production asset, not MASTER-001, and not a replacement for separate scene layers.
+- **BLOCKED binary upload:** local `git ls-remote https://github.com/rixed318/Probably-TAU.git HEAD` failed with `Could not resolve host: github.com`. GitHub connector can edit UTF-8 files but cannot directly read the container PNG. No GitHub blob/tree/commit containing the image has been created or verified. The manifest's production asset rows are intentionally untouched.
+- **Actual checks:** local file presence, PNG decode and SHA-256; live GitHub rules, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, Art Bible, manifest and handoff. **Not run:** Node suite, browser, Android, TalkBack, Unity. Next: authenticated binary upload with expected branch SHA, fetch/verify the committed PNG blob and then request visual approval. No Core/main/merge.
+
 ## Update 2026-11-21 — Android device acceptance checklist (#20)
 
 **Scope:** manual test protocol for packaged touch HTML; no UI, gameplay, art or Core changes. Static checks do not close #20.
