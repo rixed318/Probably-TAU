@@ -810,3 +810,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - **Verified prior HEAD:** `033a0adfb6baa8d9aad019ec7cff1c85b9fd11dd` standalone Core .NET 8 golden CI [#44896709168](https://github.com/rixed318/Probably-TAU/actions/runs/44896709168) `completed/success`. This is **not** proof of new test success; verify exact new SHA separately.
 - **Environment:** `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local C# tests NOT RUN. Unity/Windows build and Android APK BLOCKED pending genuine Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
 - **Next:** verify CI of new HEAD and request independent QA/00 review. Typed NPC due-event EndDay integration still needs approved 02/00 contract. No main push/merge or Issue closure.
+
+
+## Core 01 — 21.11.2026: Day10 direct-payable weekly gate regression (#19)
+
+- One bounded C# regression `SecondWeekPayableDirectEntryFailClosedGolden` added to `Tests/Core/GameStateSnapshotGoldenTests.cs` and `RunAll`, code SHA `dde5c44b1a25ecc8791191a9ee71ea3416866d07`, branch `feature/core-2`, PR #9.
+- On DayIndex=9 with a due affordable 200-kopeck payable and cash 1000, both `PreparePayablesDay` (direct public entry) and `PrepareDay` must fail closed until the weekly settlement handler is implemented. Assert original cash, payable, day, revision, ledger, receipts, command/day keys unchanged. No production API, other subsystem or main changes.
+- Prior exact HEAD `74deb6b07ff20cbd0279b6249402e4ed2736b6e8` standalone Core .NET 8 CI [#44905322562](https://github.com/rixed318/Probably-TAU/actions/runs/44905322562) completed/success. This does **not** verify the new test; check CI for new HEAD separately. QA/00 independent review required.
+- Runtime probe: no `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build`; `java`/`javac` available. Local C# tests NOT RUN; Unity/Windows build and real Android APK BLOCKED pending genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK. Typed NPC event handler still requires approved 02/00 contract. No merge or Issue closure.
