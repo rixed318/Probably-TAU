@@ -1610,3 +1610,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** UI PR #12 diff has 0 PNG; binary PNG/manifest checks remain BLOCKED pending committed assets.
 - **Blocker 3:** Real Unity Editor APK/device and integrated Save→Load remain NOT RUN; final SaveService depends on stable Core DTO and transaction boundary.
 - **Recommended next step:** execute browser-driven touch acceptance on exact blob `5fd425b0`; keep APK and save integration gates separate. No merge or main push.
+
+
+## 2026-11-21 06:23 UTC+4 — QA 05: exact-blob regression and CI status boundary (#20)
+
+**One bounded independent check:** UI PR #12 HEAD `2cb109035b846fdbb92a00f4058bc07ec4afb350` has Android single-file HTML `prototypes/ui-day-one/day01-android-offline.html` at Git blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 characters), unchanged versus the previously inspected blob. This is a GitHub blob-identity regression check, **not** a fresh browser execution or evidence of mobile usability. The full PR #12 changed-filename listing has 33 paths and 0 .png paths; PNG bytes/signatures/dimensions/manifest SHA remain **BLOCKED**. GitHub combined commit-status endpoint for QA prior HEAD `9d9e89d3baea48142e75ff13dacd9c5f7f525307` returned an empty statuses array; **CI result UNKNOWN** from this endpoint (not PASS, not FAIL; GitHub Actions check-runs are a separate source).
+
+**Actually executed:** GitHub PR metadata for #9/#10/#11/#12/#14/#16/#17; main/base SHA comparison; GitHub exact-ref HTML fetch and blob SHA comparison; full PR #12 changed filename retrieval; combined commit-status query. **NOT RUN:** Node/Python/.NET local tests, Chromium 360x800 and 800x360 touch interaction (three docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow), Unity Editor/APK/device and integrated Save→Load. No SaveService or new architecture contract. No merge/main push.
+
+### Сводка для координатора 00 — 2026-11-21 06:23 UTC+4
+
+- **main/base:** `d673322cd9d0d366a27a57b81056504dfb26c731` as reported by PR bases (main branch HEAD not independently fetched this pass). **PR heads before QA handoff update:** #9 `edce8253`; #10 `9d9e89d3`; #11 `b80de727`; #12 `2cb10903`; #14 `ebdc4be2`; #16 `9feda06d`; #17 `bc9db999`. New QA commit SHA is recorded in PR #10 comment after the write.
+- **Blocker 1:** Chromium exact-HTML touch acceptance at both resolutions, 3 docs/EndDay/ledger replay/deferred partner cash and computed 48dp/overflow still NOT RUN.
+- **Blocker 2:** UI PR #12 changed files contain no PNG; actual original PNG signatures/dimensions/SHA256 remain BLOCKED.
+- **Blocker 3:** Unity Editor-built APK/device and integrated Save→Load remain NOT RUN; no stable integration proof. CI combined status empty is UNKNOWN, not a pass.
+- **Recommended next step:** run exact-blob Chromium touch acceptance with screenshots and DOM geometry; UI 03 to commit actual original PNG and hash manifest. Keep PR #10 draft; no merge, no READY_FOR_OWNER_TEST.
