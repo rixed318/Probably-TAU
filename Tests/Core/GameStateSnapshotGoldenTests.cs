@@ -567,6 +567,9 @@ namespace TAU.President.Tests.Core
             // Reject stale revision and wrong day before staging any document effects.
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 1, 0, choices));
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 0, 1, choices));
+            // Invalid negative preconditions must fail before any of the three decisions.
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, -1, 0, choices));
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 0, -1, choices));
             AssertNamed(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
                 before.Header.BalanceKopecks == 1000L &&
                 before.Finance.Ledger.Entries.Count == 0 &&
