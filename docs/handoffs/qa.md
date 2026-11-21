@@ -1595,3 +1595,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** PR #12 delivers no changed PNG binaries; original art signature/dimensions/SHA256 verification blocked.
 - **Blocker 3:** Unity APK/device and integrated Save→Load not run; stable DTO integration not demonstrated.
 - **Recommended next:** run Chromium touch acceptance against exact HTML blob `5fd425b0` in both orientations; request actual PNG commits from UI 03. Keep main protected; no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-21 — QA 05: exact-blob mobile static regression (#20)
+
+**One bounded read-only acceptance precursor:** fetched `prototypes/ui-day-one/day01-android-offline.html` from `feature/ui-5` at PR #12 HEAD `63b0edeaed5037cc7f26e760ce15d3293f7072ee`; Git blob SHA `5fd425b0b683353fcf5a1e83339426679b457126`, 56,675 characters. The HTML blob is unchanged from the previously audited version despite UI branch movement. Static source assertions actually evaluated on fetched content: DOCTYPE, `viewport-fit=cover`, landscape media rule, `touch-action`, `min-height:48px`, and no external script/link dependencies: **6/6 PASS**. These are *textual checks*, not browser execution or a claim that every target is >=48dp. GitHub PR #12 changed-file listing: 33 paths, 0 .png (PR diff only). 
+
+**NOT RUN:** Chromium touch emulation at 360x800 and 800x360; actual 3-doc/EndDay/ledger replay/no-immediate-partner-cash interaction; overflow and computed target dimensions; local Node/Python/.NET; Unity Editor/Android APK/physical device; integrated Save→Load. PNG binary signature/dimensions/manifest SHA **BLOCKED** until real binaries are available. No new architecture or GameState DTO asserted.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **Latest inspected PR heads:** #9 Core `5168d0a3`; #10 QA prior to this handoff `5cc01268`; #11 Content `734dbbef`; #12 UI `63b0edea`; #14 ADR `ebdc4be2`; #16 NPC `461a58ba`; #17 ADR-C0-002 `bc9db999`. `main` `d673322c`. This handoff update's new QA commit SHA is reported by the GitHub update result / PR #10 comment, not self-embedded here.
+- **Blocker 1:** Chromium touch 360x800 / 800x360 acceptance of exact HTML blob, including actual 3 documents, EndDay, ledger replay, deferred partner cash, 48dp computed targets and overflow, remains NOT RUN.
+- **Blocker 2:** UI PR #12 diff has 0 PNG; binary PNG/manifest checks remain BLOCKED pending committed assets.
+- **Blocker 3:** Real Unity Editor APK/device and integrated Save→Load remain NOT RUN; final SaveService depends on stable Core DTO and transaction boundary.
+- **Recommended next step:** execute browser-driven touch acceptance on exact blob `5fd425b0`; keep APK and save integration gates separate. No merge or main push.
