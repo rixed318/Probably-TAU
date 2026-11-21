@@ -5,7 +5,7 @@
 **Ветка:** feature/content-7  
 **Issue:** [#7 — Content](https://github.com/rixed318/Probably-TAU/issues/7); связанный [#1 — первый день](https://github.com/rixed318/Probably-TAU/issues/1)  
 **PR:** [#11 — Первый день, 13 событий и баланс (DRAFT)](https://github.com/rixed318/Probably-TAU/pull/11); координатор 00 утверждает содержание и отвечает за merge.  
-**Status:** content proposal 0.2, не готовые Runtime/Unity assets.
+**Status:** content-draft-0.3 (см. `Content/CONTENT_SPEC_DRAFT.json`); DRAFT / NOT READY_FOR_OWNER_TEST, не Runtime/Unity assets.
 
 ## Что сделано
 
@@ -52,7 +52,7 @@
 
 ## Риски и зависимости
 
-- **Gate C0:** Core GameState, time, money, commands, ledger, event queue и inspections ещё не утверждены. Нельзя импортировать JSON непосредственно в Unity.
+- **Gate C0:** C0-v2 разрешён для feature-разработки по PR #9 и ADR PR #14, но не слит в `main`; typed content/NPC schema и интеграционный adapter ещё не согласованы. Нельзя считать черновой JSON готовым runtime asset. Нельзя импортировать JSON непосредственно в Unity.
 - **NPC 02:** требуется согласовать event conditions, fallback branches, negotiations, stable IDs и переносы аудиторий.
 - **UI 03:** должны быть видны в одном месте сумма, срок, помещение, статус брони, условность дохода, цена проверки и причины эффекта.
 - **QA 05:** нужны проверки экономического моделирования и полноты графа по всем ветвям.
@@ -811,3 +811,9 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` now requires all 13 authored E02–E14 manifest records to retain `required: true` and at least two authored choice IDs each. This prevents silent removal of mandatory follow-ups or reduction to a single outcome. It is static draft-content validation only; does not implement EventDirector, NPC, Core, ledger, Android art or a runtime schema.
 
 **Validator commit:** `4af4795b393057d6ddf47d58cc4d7b391d6592a4` on `feature/content-7`. **Actually executed:** isolated JavaScript assertion on GitHub-fetched manifest: baseline 13 events PASS; synthetic `required:false` rejected PASS; synthetic single-choice E03 rejected PASS (2/2 negative checks). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05: run `node Content/validate-day01-acceptance.cjs` on current feature HEAD and repeat negative mutations. PR #9 C0-v2 / PR #14 ADR remain authoritative until integration. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+## AutoDev 04 — handoff status reconciliation (21.11.2026)
+
+**One bounded Issue #7 documentation task:** corrected stale opening handoff status (`0.2` → current `content-draft-0.3`) and outdated claim that Gate C0 was not approved. PR #9 C0-v2 / PR #14 ADR authorize **feature implementation only**, not merge or a finalized typed Content/NPC schema. The content remains DRAFT / NOT READY_FOR_OWNER_TEST. No Day01 decisions, money, IDs, events, Core, EventDirector or art changed.
+
+**Actually checked:** fetched `AGENTS.md`, `docs/CHAT_WORKFLOW.md` from `main`; PR #9/#11/#14, Issues #1/#7, current `CONTENT_SPEC_DRAFT.json` (`meta.specVersion=content-draft-0.3`), handoff and recent PR #11 comments. Static exact-text replacement assertions passed before write. **NOT RUN:** Node CLI, CI, Unity, Windows, Android. QA 05 should execute checked-in validators on current branch HEAD before owner testing. No main push or merge.
