@@ -756,3 +756,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - One bounded C# golden regression committed to `Tests/Core/GameStateSnapshotGoldenTests.cs` on `feature/core-2`: `5bc3a830ee474a37b475ab5f9f01ec5e4f977194`. After restoring a Day02 snapshot with one due NPC event and zero payables, `DurableDayAdvance.PrepareDay` must still reject EndDay. Assert no mutation of day index (1), cash (750 kopecks), pending/completed events (1/0), ledger (3), receipts (4), or payables (0). No production/public contract or foreign subsystem changes.
 - Environment checked: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. Local .NET/Unity tests NOT RUN; Windows/Android builds BLOCKED. Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK required for real APK. CI for this new SHA not yet confirmed; independent QA/00 review required.
 - P0: typed NPC due-event atomic EndDay remains pending approved 02/00 handler contract. No main push, merge, or Issue closure.
+
+## Core 01 — 21.11.2026: exact-head CI verification
+
+- Verified `feature/core-2` commit `edce8253d9b08c15fa38720240cf716ac303b320` via GitHub Actions **Core .NET 8 golden tests** run [#44847648970](https://github.com/rixed318/Probably-TAU/actions/runs/44847648970), `completed/success` (run number 295). This verifies the previously added restored event-only Day02 fail-closed regression at that SHA, **not** Unity compilation.
+- Scope this pass: CI verification and handoff only. No production C# or public contract modifications; typed NPC due-event EndDay implementation still requires approved 02/00 contract and independent QA review.
+- Local toolchain probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` available. Local C# tests NOT RUN; Unity/Windows build and Android APK BLOCKED pending genuine Unity 6.3 LTS + Android Build Support/SDK/NDK/OpenJDK.
+- No push to main, no merge, no Issue closure. CI for this documentation-only commit must be checked separately.
