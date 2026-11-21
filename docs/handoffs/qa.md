@@ -1671,3 +1671,22 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 3:** No Unity Editor APK / integrated stable Save→Load evidence; real Android device/APK tests NOT RUN.
 - **Recommended next step:** QA run Playwright/Chromium against the exact `day01-android-touch.html` at pinned UI SHA, collect screenshot/target/overflow + gameplay receipts; UI 03 clarify distribution filename. Stable Core DTO prerequisite still applies to SaveService.
 - **Safety:** no main push, merge, other branch mutation, IP approval, or new shared architecture contract.
+
+
+## 2026-11-21 — QA 05: independent Android touch test-coverage audit (Issue #20)
+
+**One bounded task:** inspect the actual distributable `prototypes/ui-day-one/day01-android-touch.html` (Git blob `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2`) and its existing Node test `test-day01-android-touch.cjs` (blob `be35de65843c437c8d90d1e48dc1ca073e1a5018`) in UI PR #12, HEAD `167bab7c1430c2dccc44630cca26addd015d869b`.
+
+**Observed source facts:** the test suite checks inline script syntax, offline resource patterns, static ARIA references, unique IDs, DOMContentLoaded wiring, stale errors and accessibility markers. It does **not** launch Chromium, set 360x800 / 800x360 viewports, simulate touch, measure computed hit targets, or assert scrollWidth/overflow. The HTML's isolated mock gateway has three documents, blocks endDay before three decisions, records mock ledger debits with `day0:<documentId>` keys, and never credits conditional partner revenue; no SaveService or persisted replay is implemented. These are source observations, **not runtime PASS results**. Existing Node test was **NOT RUN in this pass**. Chromium, Unity Editor/APK, real Android and integrated Save→Load: **NOT RUN**. No new shared architecture contract or approval.
+
+**Precise gap for UI 03 / Issue #20:** add a browser-backed Playwright/Chromium test for the exact shipped HTML blob, both touch viewports, three document choices, inspect-gated decisions, EndDay once, ledger reconciliation/no duplicate entries, zero immediate partner revenue, all visible actionable targets >=48 CSS px and no unintended horizontal overflow. Re-run on updated SHA. The mock's ledger is not proof of persistence replay.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **PR HEADs verified before this QA update:** #9 Core `d4918bdd`; #10 QA `bf56ee78` (this handoff commit follows); #11 Content `ce60e6ba`; #12 UI `167bab7c`; #14 ADR `ebdc4be2`; #16 NPC `f709691e`; #17 ADR `bc9db999`. C0-v2 / ADR approval remains feature-only, no merge permission.
+- **Blocker 1:** no Chromium 360x800/800x360 real touch acceptance or measured 48px/overflow; static Node tests cannot substitute.
+- **Blocker 2:** no verified committed 3–5 real PNG binary signatures/dimensions/manifest hashes for Issue #21; PR #12 changed-file listing contains no PNG.
+- **Blocker 3:** no verified Unity Editor Android APK or stable complete Core snapshot DTO for integrated Save→Load; both NOT RUN.
+- **Recommended next step:** run exact-SHA browser acceptance of `day01-android-touch.html`, then add real PNG binaries and verify signatures; keep SaveService deferred until Core DTO stabilizes.
+
+**Safety:** QA branch only; no merge, main push, foreign IP approval, or READY_FOR_OWNER_TEST claim.
