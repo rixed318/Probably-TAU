@@ -38,7 +38,7 @@ namespace TAU.President.Tests.Npc
                         throw new Exception("Inspection choice order mismatch: " + inspectionIds[inspectionIndex]);
             }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
-                "check_seat_map ", " check_seat_map", "unknown_inspection" })
+                "check_seat_map ", " check_seat_map", "check_seat_map\n", "check_seat_map\t", "unknown_inspection" })
             {
                 Day01Visitors.VisitScreenPreview screen;
                 if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(invalidInspection, out screen) ||
