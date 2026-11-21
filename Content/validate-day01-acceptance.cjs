@@ -290,6 +290,22 @@ for (const npc of contentSpec.fictionalNpcs) {
 const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru-RU"));
 assert.equal(new Set(visualBriefs).size, visualBriefs.length,
   "duplicate fictional Day01 NPC visual descriptions");
+// Planned art links must match canonical fictional NPC/document definitions exactly.
+// These are lookup keys for UI on Windows/Android, not generated PNGs or Core instance IDs.
+const artLinks = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
+assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
+const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
+  const npc = contentSpec.fictionalNpcs.find(item => item.id === visit.npcId);
+  const doc = contentSpec.documentTypes.find(item => item.id === visit.documentId);
+  assert.ok(npc && doc, "unresolved canonical Day01 art identity: " + visit.id);
+  return [visit.id, npc.id, doc.id, npc.portraitAssetId, npc.standingAssetId,
+    doc.documentAssetId, npc.visualDescription];
+});
+assert.deepEqual(artLinks.visits.map(visit => [visit.visitId, visit.visitorId,
+  visit.documentId, visit.portraitAssetId, visit.standingAssetId,
+  visit.documentAssetId, visit.visualBrief]), canonicalArtLinks,
+  "Day01 art-link NPC/document/asset/visual-brief drift");
+console.log("PASS: Day01 planned art links match canonical fictional content");
 console.log("PASS: stable fictional Day01 portrait/document asset IDs and descriptions");
 
 // Guard canonical Day01 money against drift between authored content and UI mock.
