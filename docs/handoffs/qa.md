@@ -1690,3 +1690,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** run exact-SHA browser acceptance of `day01-android-touch.html`, then add real PNG binaries and verify signatures; keep SaveService deferred until Core DTO stabilizes.
 
 **Safety:** QA branch only; no merge, main push, foreign IP approval, or READY_FOR_OWNER_TEST claim.
+
+
+## 2026-11-21 — QA 05: refresh exact UI CI pins (#8, #20)
+
+**One bounded change:** QA workflow `.github/workflows/qa-offline.yml` updated at commit `518f2b2f25a1658e1e9d4f4ad49e87b040b2bfab` in `feature/save-6`. Both cross-branch UI Node regression and Android distributed HTML static gate now checkout the *same* observed UI PR #12 HEAD `e14b6861d156c3cc7fcdc3acc847db3d75973af4`, replacing outdated pins `31fc7bac` and `231ce3c6`. Each job's explicit `git rev-parse HEAD` equality check was updated in tandem. Core, Content and NPC pins unchanged. This changes only QA-owned CI test inputs, no production contract or SaveService.
+
+**Executed evidence:** GitHub read of current PR heads, QA workflow and UI changed-file list; four exact old SHA occurrences were replaced (two checkout refs, two assertions); GitHub accepted workflow commit. **CI execution/result NOT VERIFIED** for this new commit. Local Node/.NET/Chromium/Unity/APK/device and integrated Save→Load **NOT RUN**. UI PR #12 changed-file list includes 33 files and **0 PNG**; no claim about repository-wide PNG inventory. The updated CI static test is not a Chromium touch test. No claim of test PASS until exact-SHA Actions logs are inspected.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **Verified PR HEADs before QA writes:** #9 Core `a0b2aea7`; #10 QA `804c53c2` (new workflow commit `518f2b2f`, handoff commit follows); #11 Content `2ea64087`; #12 UI `e14b6861`; #14 ADR `ebdc4be2`; #16 NPC `de730b1a`; #17 ADR `bc9db999`. Main `d673322cd9d0`; no QA write/merge to main. C0-v2/ADR are feature-development only.
+- **Blocker 1:** New exact-SHA UI CI workflow run status not yet verified; Chromium touch 360x800/800x360 gameplay/48px/overflow acceptance NOT RUN.
+- **Blocker 2:** PR #12 has no changed PNG binary; original 3–5 PNG signatures, dimensions, manifest SHA256 remain BLOCKED.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; complete stable Core DTO not confirmed.
+- **Recommended next step:** inspect GitHub Actions run for QA commit and record exact UI SHA and Node/static outcomes; then execute actual Chromium touch acceptance of `day01-android-touch.html` at `e14b6861`, before any readiness claim. No merge, no new architecture approval, READY_FOR_OWNER_TEST withheld.
