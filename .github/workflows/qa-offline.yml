@@ -50,7 +50,7 @@ jobs:
       - name: Checkout UI branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 31fc7bac62e969cc4bd1c8ab58e7038409abf42f
+          ref: e14b6861d156c3cc7fcdc3acc847db3d75973af4
           path: ui
           persist-credentials: false
       - name: Checkout Content branch read-only
@@ -64,7 +64,7 @@ jobs:
         run: |
           ui_sha=$(git -C ui rev-parse HEAD)
           echo "UI_SHA=$ui_sha"
-          test "$ui_sha" = "31fc7bac62e969cc4bd1c8ab58e7038409abf42f"
+          test "$ui_sha" = "e14b6861d156c3cc7fcdc3acc847db3d75973af4"
           content_sha=$(git -C content rev-parse HEAD)
           echo "CONTENT_SHA=$content_sha"
           test "$content_sha" = "488c33e7bdf562f9c99e521eb7e7dc6a6dd72df3"
@@ -128,7 +128,7 @@ jobs:
       - name: Checkout exact UI artifact revision read-only
         uses: actions/checkout@v4
         with:
-          ref: 231ce3c671e5256033dfe93eadc56e762602342e
+          ref: e14b6861d156c3cc7fcdc3acc847db3d75973af4
           path: ui-source
           persist-credentials: false
       - name: Assert UI revision and parse distributed inline scripts
@@ -136,7 +136,7 @@ jobs:
         run: |
           actual=$(git -C ui-source rev-parse HEAD)
           echo "UI_ARTIFACT_SHA=$actual"
-          test "$actual" = "231ce3c671e5256033dfe93eadc56e762602342e"
+          test "$actual" = "e14b6861d156c3cc7fcdc3acc847db3d75973af4"
           node --test Tests/QA/test_android_offline_artifact.cjs
 
   core-ledger-regression:
