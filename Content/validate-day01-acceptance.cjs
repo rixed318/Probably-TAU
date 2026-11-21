@@ -172,6 +172,31 @@ for (const event of contentSpec.eventManifest) {
 console.log("PASS: draft event manifest Definition IDs, 0-based DayIndex and feed targets");
 
 const fixture = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_UI_FIXTURE.json"), "utf8"));
+// Static partner deferred-revenue parity; Core alone recognizes earned ledger income.
+const partnerFixtureVisit = fixture.visitors.find(visit => visit.visitId === "D01_PARTNER");
+assert.ok(partnerFixtureVisit, "missing partner fixture visit");
+for (const choice of partnerVisit.choices) {
+  const fixtureChoice = partnerFixtureVisit.choices.find(item => item.choiceId === choice.id);
+  assert.ok(fixtureChoice, "missing partner fixture choice: " + choice.id);
+  if (choice.id === "PARTNER-3") {
+    assert.equal(fixtureChoice.deferredPartnerRevenue, undefined,
+      "declined partner fixture must not promise revenue");
+    continue;
+  }
+  const deferred = fixtureChoice.deferredPartnerRevenue;
+  assert.ok(deferred, "missing fixture deferred partner revenue: " + choice.id);
+  assert.equal(deferred.amountKopecks, choice.conditionalRevenueKopecks,
+    "partner deferred amount drift: " + choice.id);
+  assert.equal(deferred.earliestDayIndex, choice.revenueEarliestDayIndex,
+    "partner deferred DayIndex drift: " + choice.id);
+  assert.deepEqual([...deferred.requiredFacts].sort(), [...choice.requirements].sort(),
+    "partner deferred receipt prerequisites drift: " + choice.id);
+  assert.equal(deferred.earnedOnlyAfterDelivery, true,
+    "partner fixture must require delivered service: " + choice.id);
+  assert.equal(deferred.signingCashDeltaKopecks, "0",
+    "partner fixture must not credit signing cash: " + choice.id);
+}
+console.log("PASS: Day01 partner deferred revenue draft/fixture parity; no signing cash");
 assert.equal(fixture.sourceSpecVersion, contentSpec.meta.specVersion,
   "Day01 UI fixture sourceSpecVersion drift from canonical content draft");
 assert.equal(fixture.dayIndex, 0);
