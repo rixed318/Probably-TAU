@@ -802,3 +802,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Previous HEAD `a0b2aea7e0be232661c2cc97b604f89c6719bf11`: GitHub Actions Core .NET 8 golden runner [#44889269473](https://github.com/rixed318/Probably-TAU/actions/runs/44889269473) completed/success. **New code commit CI not yet verified**; QA/00 must independently review the new exact SHA.
 - Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java`/`javac` present. Local C# tests NOT RUN. Unity/Windows build and real Android APK BLOCKED until Unity 6.3 LTS Editor and Android Build Support/SDK/NDK are available.
 - P0 still requires an approved 02/00 typed NPC due-event integration contract and actual Unity toolchain. No main push/merge, no Issue closure.
+
+
+## Core 01 — 21.11.2026: second weekly boundary fail-closed regression (#19)
+
+- **Scope:** one bounded standalone C# regression `SecondWeekQuietFailClosedGolden` in `Tests/Core/GameStateSnapshotGoldenTests.cs`, wired into `RunAll`; code commit `c9bb26a189c6b65047488bd648a7aa04bcc07f47` on `feature/core-2`, PR #9. On DayIndex=9 (second weekly settlement boundary), even without due events or payables, `DurableDayAdvance.PrepareDay` must reject while weekly settlement is unimplemented. The source retains day/revision, cash=1000 kopecks, no events/payables, no ledger/receipts/processed-day keys. No production API or foreign subsystem changed.
+- **Verified prior HEAD:** `033a0adfb6baa8d9aad019ec7cff1c85b9fd11dd` standalone Core .NET 8 golden CI [#44896709168](https://github.com/rixed318/Probably-TAU/actions/runs/44896709168) `completed/success`. This is **not** proof of new test success; verify exact new SHA separately.
+- **Environment:** `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local C# tests NOT RUN. Unity/Windows build and Android APK BLOCKED pending genuine Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK.
+- **Next:** verify CI of new HEAD and request independent QA/00 review. Typed NPC due-event EndDay integration still needs approved 02/00 contract. No main push/merge or Issue closure.
