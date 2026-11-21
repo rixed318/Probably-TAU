@@ -1,6 +1,6 @@
 # Probably-TAU · AI Pixel Art production pipeline · v0.1
 
-**Status: PROPOSED / NO BULK GENERATION** · Chat 03 · Issue #13 · PR #12.  
+**Status: DIRECTION A OWNER-SELECTED / CANDIDATE REVIEW PENDING / NO BULK GENERATION** · Chat 03 · Issues #13/#21 · PR #12.  
 Prerequisites: art direction approved by owner + scene/content design lock from Chat 04. Unity import is deferred until Chat 01's actual Unity project/Presentation folders exist.
 
 ## Step 0 — lock the brief (before images)
@@ -96,4 +96,4 @@ Use semantic snake_case paths, explicit revision only in metadata or final immut
 
 A release candidate batch must contain at least **3–5 actually approved and technically reviewed master assets** (one office scene layer, one furniture/prop, one character/portrait, one document shell, one icon), all coherent at native resolution, with source provenance recorded. QA 05 reviews Unity import/runtime/UI focus; Chat 00 and owner sign off. No use of copyrighted third-party game art and no reference photo with unresolved rights.
 
-**Open blockers:** owner has not chosen A/B/C, MASTER-001 not produced, Content 04 has not approved character wardrobe/physical cues, Gate C0 not approved, real Unity importer settings not tested. These are stated blockers, not silently assumed done.
+**Current gates (2026-11-21):** Owner directive selects direction A (ART-A0.1); this does **not** approve any generated candidate for production. A single original office concept was generated outside GitHub and reduced to a 320×180 PNG candidate, but its binary is **not verified in feature/ui-5**. The candidate is not MASTER-001 or a production asset. Remaining blockers: owner visual review/cleanup and rights review of candidate, Content 04 approval of character physical cues, verified binary GitHub upload, and real Unity Editor/import tests. PR #9 C0-v2 and PR #14 ADR authorize feature work but are unmerged; do not treat them as merged main contracts.
