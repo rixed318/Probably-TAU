@@ -779,3 +779,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - **Validator commit:** `7a90200fd2d3bfad074333c9de7ec5c72dc88c3e` on `feature/content-7`.
 - **Actually executed:** isolated JavaScript check of fetched draft and fixture: baseline PASS; three synthetic negative mutations (amount mismatch, early DayIndex, revenue on decline) rejected 3/3 PASS. **NOT RUN:** checked-in Node CLI, GitHub Actions, Unity Editor, Windows player, Android device/APK. QA 05 should run `node Content/validate-day01-acceptance.cjs` on current branch HEAD and targeted negative mutations.
 - **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9, ADR PR #14 and due-event ADR PR #17 retain authority; no main push/merge, no changes to Core, NPC, UI or PNG assets.
+
+## AutoDev 04 — Day01 shared room slot parity (21.11.2026)
+
+- **Issue #7 / PR #11; one bounded task:** content-only validator now compares the fictional shared room, DayIndex and time slot across opening draft, all three draft documents, and the Windows/Android-neutral UI fixture. It also requires requests-only status and no automatic room booking. No Core booking logic, EventDirector, money or art changed.
+- **Validator commit:** `bf2ae829f527e8d59967e6d374fd4da450056e7c` on `feature/content-7`.
+- **Actually executed:** isolated JavaScript assertions against fetched canonical JSON: baseline PASS; 3/3 synthetic negative mutations rejected (DOC-01 slot mismatch, implicit booking flag, room DayIndex drift). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` and negative mutations on current HEAD.
+- **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. C0-v2 PR #9 / ADR PR #14 remain governing contracts. No main push/merge.
