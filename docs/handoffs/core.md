@@ -776,3 +776,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Bounded C# golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, code SHA `09a7afa766bb6eac199e4d201a4546937349ad0b` on `feature/core-2`, PR #9. Extends existing Day02 future-payable deferral fixture: when Day03 closes (expectedDayIndex=2), 200 kopecks are settled exactly once (750→550), payable removed, one ledger posting `payable:day03-future`, one EndDay receipt, source snapshot unchanged. Restore + stale Day03 replay rejected without mutation. No public contract or foreign subsystem changed.
 - New exact-SHA CI not yet verified; independent QA/00 review required. Local environment: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java` and `javac` present. No local .NET tests, Unity/Windows builds or APK; Android APK BLOCKED pending real Unity 6.3 LTS Editor and Android toolchain.
 - P0 typed NPC due-event atomic EndDay still pending approved 02/00 handler contract. No main push/merge or Issue closure.
+
+## Core 01 — 21.11.2026: Day03 stale-revision guard (#19)
+
+- One bounded golden regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`, commit `94e20ba405085020eff30ab5fcb08ff276a966e7`, PR #9. With a deferred Day03 payable of 200 kopecks and cash 750, `DurableDayAdvance.PrepareDay` must reject a stale revision despite the correct Day03 day token. Assert source DayIndex=2, cash=750, one outstanding payable, ledger=3 and receipts=5; no partial settlement. No production API or other subsystem changes.
+- Previous HEAD `aee8fe26e5ef6ca640f92e758b3b16b37d921ae6` standalone .NET 8 CI run [#44873632934](https://github.com/rixed318/Probably-TAU/actions/runs/44873632934) completed/success. New test SHA CI unverified at writing; QA/00 to review exact new HEAD.
+- Local probe: no `dotnet`, Unity Editor, `adb`, `sdkmanager` or `ndk-build`; `java`/`javac` available. Local .NET tests NOT RUN; Windows/Unity builds and Android APK BLOCKED pending real Unity 6.3 LTS and Android toolchain.
+- Typed NPC event EndDay integration still depends on approved 02/00 contract. No main push/merge or Issue closure.
