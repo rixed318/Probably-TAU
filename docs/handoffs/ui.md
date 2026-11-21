@@ -1,3 +1,9 @@
+## Update 2026-11-21 — regression for decision focus continuity (#20)
+
+- Added one source-level Node test in `prototypes/ui-day-one/test-day01-android-touch.cjs` covering the persistent focusable document heading, successful-decision focus transfer, and retained error branch. Test-code commit: `61e5de8801044c234a4a0dca9fafc9d044bf7c63`.
+- **Actually verified:** GitHub readback of the committed test source and its expected assertions. **Not run:** Node test runner, browser DOM, Android/TalkBack, Unity. This is not evidence that focus works on a device.
+- PR #9 C0-v2 and PR #14 ADR remain unmerged integration references. #20 needs viewport/device evidence; #21 still needs verified PNG binary delivery. No GameState/Core/main changes or merge.
+
 ## Update 2026-11-21 — decision keyboard focus continuity (#20)
 
 - Fixed a focused UX regression in `prototypes/ui-day-one/day01-android-touch.html`: decision buttons are rebuilt after selecting an option, which discarded keyboard focus. After a successful decision only, focus now moves to the current document heading (`tabindex="-1"`); queue navigation and error branches keep their existing behavior. UI commit: `75efad55ee9ac9e092bb9bb90efb2c04d14f89cf`.
