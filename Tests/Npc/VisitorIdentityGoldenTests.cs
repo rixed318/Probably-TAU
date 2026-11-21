@@ -46,6 +46,17 @@ namespace TAU.President.Tests.Npc
                         malformedScreen != null)
                         throw new Exception("Control-character inspection ID accepted: " + canonicalInspection);
                 }
+            // Invisible Unicode format characters and malformed UTF-16 must never be normalized
+            // into a valid inspection route by platform-specific UI text handling.
+            foreach (string canonicalInspectionId in inspectionIds)
+                foreach (string malformedSuffix in new[] { "\u200B", "\u200D", "\u2060", "\uD800" })
+                {
+                    Day01Visitors.VisitScreenPreview malformedUnicodeScreen;
+                    if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
+                            canonicalInspectionId + malformedSuffix, out malformedUnicodeScreen) ||
+                        malformedUnicodeScreen != null)
+                        throw new Exception("Invisible/malformed inspection route accepted.");
+                }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
                 "check_seat_map ", " check_seat_map", "unknown_inspection" })
             {
