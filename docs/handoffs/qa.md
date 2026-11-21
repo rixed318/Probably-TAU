@@ -1655,3 +1655,19 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Actual original PNG signatures/dimensions/SHA256 remain BLOCKED pending committed binaries.
 - **Blocker 3:** Unity APK/device and integrated Save→Load NOT RUN; stable complete Core DTO/transaction boundary not verified.
 - **Recommended next step:** execute Chromium touch tests on exact HTML blob in portrait and landscape, capture DOM geometry and three-doc/EndDay/ledger evidence; then validate actual PNG binaries once committed. No merge/main write; READY_FOR_OWNER_TEST not granted.
+
+
+## 2026-11-21 — QA 05: correct Android touch acceptance target (#20)
+
+**One bounded independent check:** inspected the current UI PR #12 at exact head `0a387d8cdd0997b423136e8f54d8609d4b3400ab` and read both actual packaged HTML files via GitHub. The Android-specific touch artifact `prototypes/ui-day-one/day01-android-touch.html` is **not** the same as legacy `day01-android-offline.html`. Exact Git blob SHAs: touch `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2` (15,674 UTF-8 characters returned); legacy `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 characters). The touch file has 3 inline script tags, viewport-fit, all four safe-area insets, touch-action manipulation, min-width/min-height 48px, portrait and landscape media rules, and no external script/link src/href in the source. These are **static source observations, NOT runtime assertions**. The UI PR includes `test-day01-android-touch.cjs` (blob `be35de65843c437c8d90d1e48dc1ca073e1a5018`) with source-level regressions; its tests were **NOT RUN** here.
+
+**Important QA correction:** earlier QA reports repeatedly proposed running touch acceptance against the legacy offline blob `5fd425b0`. For the current Android touch deliverable, prioritize the actual `day01-android-touch.html` blob `2ba6b9ad`; verify with UI 03 which of the two files is intended for owner distribution before declaring acceptance. The exact artifact, not a mock or different HTML variant, must undergo Chromium 360×800 and 800×360 touch emulation, 3 documents, EndDay, ledger replay, partner no-immediate-cash, 48dp target and overflow inspection. Chromium, Node, Unity Editor, APK, real device and Save→Load tests **NOT RUN** in this pass. Local direct download of GitHub raw failed DNS resolution; no local browser execution is claimed. Full changed-file list of PR #12: 33 files, zero PNG files; this limits the claim to PR changes, not the whole repository.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **Verified current PR HEADs:** #9 Core `aee8fe26e5ef`; #10 QA pre-update `b351d8366e82` (this handoff commit follows); #11 Content `28c401c855b0`; #12 UI `0a387d8cdd09`; #14 ADR-C0-001 `ebdc4be28afd`; #16 NPC `e80ab760c291`; #17 ADR-C0-002 `bc9db999b419`. All observed as draft/open; do not merge.
+- **Blocker 1:** Chromium touch acceptance of the *actual* Android touch HTML `2ba6b9ad` NOT RUN; exact distribution artifact needs UI confirmation.
+- **Blocker 2:** No real PNG added among PR #12's 33 changed paths; 3–5 image signatures, dimensions and manifest hashes remain unverified.
+- **Blocker 3:** No Unity Editor APK / integrated stable Save→Load evidence; real Android device/APK tests NOT RUN.
+- **Recommended next step:** QA run Playwright/Chromium against the exact `day01-android-touch.html` at pinned UI SHA, collect screenshot/target/overflow + gameplay receipts; UI 03 clarify distribution filename. Stable Core DTO prerequisite still applies to SaveService.
+- **Safety:** no main push, merge, other branch mutation, IP approval, or new shared architecture contract.
