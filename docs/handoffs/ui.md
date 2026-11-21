@@ -994,3 +994,11 @@ Actual verification: three JavaScript regex fixtures executed in the connector r
 - `prototypes/ui-day-one/day01-android-offline.html` blob `5fd425b0b683353fcf5a1e83339426679b457126`: **2/2 syntax PASS**.
 - This validates parseability only. **Not run:** Node test suite, HTML DOM, Chromium, Android phone, TalkBack, Unity Editor or APK. Local `git ls-remote` failed DNS resolution of github.com; GitHub connector reads/writes remain available.
 - Next: physical Android landscape/portrait playtest with screenshots and actual hitbox measurements for #20, then verified original PNG binary production for #21. C0-v2 PR #9 and ADR PR #14 remain unmerged; no GameState/Core changes or merge.
+
+
+## Update 2026-11-21 — original office pixel-art candidate generated (Issue #21)
+
+- Generated **one actual original** Art-A office/study image using ChatGPT ImageGen, no borrowed marks or real campus logo. Source is an uncommitted local PNG (1672×941); exported a 320×180 RGB nearest-neighbor PNG at `/mnt/data/office_day01_candidate_320x180.png` (79,749 bytes; SHA-256 `75b0bd61c1ceacae390edb88fdc6d3d2704a5e91acd6a30279be36f67de8f11f`). Candidate visual: forest-green paneled room, brass lamp, walnut desk, fictional exterior. This is a **review candidate**, not approved production art. ImageGen generation ID `5d7d8fcc-9e7c-4c1e-a97a-0a87115f4442`.
+- **BLOCKED — GitHub binary delivery:** local container cannot resolve github.com (DNS), while GitHub connector's create_blob requires inline base64 and cannot directly read the generated local PNG. No binary was uploaded; no manifest row promoted to delivered. User can inspect/download the local artifact from this run, but it is not a repository asset. Do not report ART_BINARY_DELIVERED.
+- **Actually executed:** Pillow source-size inspection, crop and nearest-neighbor export; SHA-256 and file byte count computed locally. **Not executed:** GitHub PNG blob verification, Unity import, pixel-perfect art review, Android/device tests.
+- Next: transfer exact PNG bytes through an authenticated binary-capable path, verify GitHub blob and dimensions, update asset manifest/provenance, then seek art-direction approval before more assets. C0-v2 PR #9 / ADR PR #14 remain unmerged references. No Core/GameState/main edits or merge.
