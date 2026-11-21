@@ -1,3 +1,9 @@
+## Update 2026-11-21 — decision keyboard focus continuity (#20)
+
+- Fixed a focused UX regression in `prototypes/ui-day-one/day01-android-touch.html`: decision buttons are rebuilt after selecting an option, which discarded keyboard focus. After a successful decision only, focus now moves to the current document heading (`tabindex="-1"`); queue navigation and error branches keep their existing behavior. UI commit: `75efad55ee9ac9e092bb9bb90efb2c04d14f89cf`.
+- **Actually checked:** live GitHub rules/workflow, #5/#13/#20/#21, PR #9/#11/#12/#14, art bible, manifest and handoff; source-level assertions confirmed the focus target, decision-only marker and unchanged queue handler. **Not run:** Node suite, browser/DOM, Android/TalkBack, Unity. Physical focus behavior is unverified.
+- No GameState/Core, main, merge or binary-art claims. #20 still needs device evidence; #21 still needs verified PNG delivery.
+
 ## Update 2026-11-21 — guarded binary transfer recipe (#21)
 
 - One bounded documentation change: `docs/art/PIPELINE.md` now contains a lossless GitHub Git Data API upload/re-read procedure for the existing 320×180 PNG candidate, with branch HEAD lease, no force, exact SHA-256 and file-size verification, and explicit candidate-vs-production status. Pipeline commit: `7494d3ada94dcd0b770ee275167c81a53560045b`.
