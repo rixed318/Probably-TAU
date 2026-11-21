@@ -931,6 +931,17 @@ namespace TAU.President.Tests.Core
                 futureDay03Input.Finance.Receipts.Count == 4,
                 "Day03 future payable remains deferred at Day02 EndDay");
 
+            // A stale revision must not settle the Day03 payable even when the
+            // expected day token is correct. This guards concurrent EndDay clicks.
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                futureDay03Deferred, futureDay03Deferred.Header.Revision - 1, 2));
+            AssertNamed(futureDay03Deferred.Header.DayIndex == 2 &&
+                futureDay03Deferred.Header.BalanceKopecks == 750L &&
+                futureDay03Deferred.Payables.Outstanding.Count == 1 &&
+                futureDay03Deferred.Finance.Ledger.Entries.Count == 3 &&
+                futureDay03Deferred.Finance.Receipts.Count == 5,
+                "Day03 stale revision rejects deferred payable without mutation");
+
             // Once Day03 actually closes, the previously deferred obligation is due.
             // Settlement must happen exactly once and must not mutate the Day02 snapshot.
             var futureDay03Closed = DurableDayAdvance.PrepareDay(
