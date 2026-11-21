@@ -85,6 +85,12 @@ for (const id of projectIds) {
 const eventChoiceIds = contentSpec.eventManifest.flatMap(event => event.choices);
 assert.equal(new Set(eventChoiceIds).size, eventChoiceIds.length,
   "duplicate event choice Definition ID across event manifest");
+// Day01 and follow-up event choices share one authored Definition ID namespace.
+// Core CommandId and runtime instanceId remain separately owned.
+const day01ChoiceIds = contentSpec.day1.visits.flatMap(visit => visit.choices.map(choice => choice.id));
+assert.equal(new Set([...day01ChoiceIds, ...eventChoiceIds]).size,
+  day01ChoiceIds.length + eventChoiceIds.length,
+  "duplicate choice Definition ID between Day01 visits and follow-up events");
 for (const event of contentSpec.eventManifest) {
   assert.equal(event.required, true,
     "every E02-E14 event must remain mandatory in the authored manifest: " + event.id);
