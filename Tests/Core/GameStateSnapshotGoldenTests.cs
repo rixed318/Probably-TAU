@@ -40,6 +40,7 @@ namespace TAU.President.Tests.Core
             DurablePayablesRoundTrip();
             RejectSettledOutstandingPayableGolden();
             QuietDayAdvanceGolden();
+            WeeklyPayableFailClosedGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
@@ -192,6 +193,36 @@ namespace TAU.President.Tests.Core
                 new DurablePayablesSnapshot(new[] { new DurablePayable("utilities", 0, 300L) }));
             Assert(valid.Restore().Payables.Outstanding.Count == 1);
             Assert(valid.Finance.Ledger.CurrentBalanceKopecks == 800L);
+        }
+
+        // Weekly settlement is not integrated: a due payable must never be partially
+        // committed on DayIndex 4, even when sufficient cash is available.
+        private static void WeeklyPayableFailClosedGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "weekly-campaign", 42UL,
+                "normal", "dayone", 4, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                new DurableCommandReceipt[0]);
+            var current = new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0],
+                    new string[0]),
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("weekly-rent", 4, 200L)
+                }));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                current, 0, 4));
+            AssertNamed(current.Header.DayIndex == 4 &&
+                current.Header.Revision == 0 &&
+                current.Header.BalanceKopecks == 1000L &&
+                current.Payables.Outstanding.Count == 1 &&
+                current.Finance.Ledger.Entries.Count == 0 &&
+                current.Finance.Receipts.Count == 0 &&
+                current.Header.ProcessedDayKeys.Count == 0,
+                "weekly EndDay with due payable fails closed without partial settlement");
         }
 
         private static void QuietDayAdvanceGolden()
