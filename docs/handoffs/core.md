@@ -836,3 +836,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - **Result:** GitHub Actions `Core .NET 8 golden tests` workflow run [#44922245824](https://github.com/rixed318/Probably-TAU/actions/runs/44922245824), run number 329, `completed/success`, associated with exact SHA `c3f12b5f86fb8ccc0b36dac122c2dab81be61ec9`. This verifies the standalone .NET golden runner, **not** Unity compilation or Android APK.
 - **Local toolchain checked again:** `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build` unavailable; `/usr/bin/java` and `/usr/bin/javac` available. No local .NET test or Unity/Windows/Android build performed. **Android build BLOCKED** until actual Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK are available.
 - **Integration:** typed NPC due-event and weekly settlement EndDay handlers remain blocked on approved 02/00 contract; no unsafe bypass of C0/ADR fail-closed rules. QA/00 review still required. This pass only records exact-head verification; no public contracts or other subsystems changed. No main push, merge or Issue closure.
+
+
+## Core 01 — 21.11.2026: verify current documentation HEAD CI (#19)
+
+- **Bounded task:** verify exact `feature/core-2` HEAD `b61a374452bcca7dde967fa10e39365347ae393a` after prior handoff update; no new C# or public API changes.
+- **Actual result:** GitHub Actions `Core .NET 8 golden tests`, run [#44931010824](https://github.com/rixed318/Probably-TAU/actions/runs/44931010824), status `completed`, conclusion `success`, returned for that exact SHA. Standalone CI only; not Unity compile, Android APK or Windows build.
+- **Local toolchain probe:** no `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build`; `/usr/bin/java` and `/usr/bin/javac` present. Local .NET tests, Unity/Windows and Android APK **NOT RUN / BLOCKED**.
+- **Integration still BLOCKED:** typed NPC due-event and weekly EndDay handlers need approved 02/00 integration contract and independent QA review; do not bypass fail-closed C0/ADR requirements. No `main` push, merge or Issue closure.
