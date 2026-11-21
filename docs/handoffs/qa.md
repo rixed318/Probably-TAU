@@ -1805,3 +1805,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Блокировка 2:** 3–5 реальных PNG, сигнатуры/размеры и manifest SHA256 — **NOT VERIFIED**.
 - **Блокировка 3:** Unity Editor/APK/device и интегрированный Save→Load — **NOT RUN**; финальный SaveService зависит от стабильного полного Core DTO.
 - **Следующий шаг:** запустить Chromium/Playwright acceptance на точном актуальном Android Touch HTML blob, записать SHA, результаты игрового цикла, размеры hit targets и overflow; отдельно проверить PNG бинарники. Не присваивать READY_FOR_OWNER_TEST без доказательств.
+
+
+## 2026-11-22 — QA 05: independent CI verification (#8)
+
+**One bounded task:** GitHub Actions run [#44947462205](https://github.com/rixed318/Probably-TAU/actions/runs/44947462205) for exact QA commit `4cc8a23ab65cd73cd83f6fdcb44d8781e1067a5e` returned `completed/success`. The latest-attempt first-page job metadata shows **5/5 completed/success**: Android HTML static gate, Core Ledger/Snapshot .NET 8, UI/Content Node static regression, NPC standalone .NET 8, Python PCG32 oracle. Job-step metadata confirms successful steps including UI Android touch Node regression, UI art manifest validator, and exact-SHA checkout-pin QA self-test. **These are remote CI statuses, not local executions.** Actual checkout SHA values from logs, assertion counts, Chromium viewport behavior and real PNG binaries were not independently inspected. The art validator passing is not proof that 3–5 original PNG files exist.
+
+**Current PR HEADs checked via GitHub before this update:** #9 Core `31a6f6f6b82e`; #10 QA `4cc8a23ab65c`; #11 Content `32aa41cca94b`; #12 UI `36c0697fd70b`; #14 ADR `ebdc4be28afd`; #16 NPC `82a0b1b55c22`; #17 ADR `bc9db999b419`. C0-v2 PR #9 and ADR PR #14/#17 are feature-development constraints, not merge authorization. No runtime or shared contract changed.
+
+### Сводка для координатора 00 — 2026-11-22 (CI #44947462205)
+
+- **PR/commits:** #9 `31a6f6f6`, #10 `4cc8a23a` before this handoff update, #11 `32aa41cc`, #12 `36c0697f`, #14 `ebdc4be2`, #16 `82a0b1b5`, #17 `bc9db999`. Run #44947462205: 5/5 CI jobs success at QA SHA `4cc8a23a`; new QA SHA is the handoff commit reported in PR #10.
+- **Blocker 1:** Chromium touch acceptance 360×800 and 800×360 with 3 documents, EndDay, ledger replay, deferred partner cash, 48dp/overflow — **NOT RUN**.
+- **Blocker 2:** Actual 3–5 original PNG signatures/dimensions and manifest SHA256 — **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load — **NOT RUN**; complete stable Core DTO integration not established.
+- **Recommended next step:** execute Playwright/Chromium touch acceptance against the exact latest distributed Android Touch HTML revision and capture geometry/gameplay evidence; inspect PNG binary signatures and hashes separately. No READY_FOR_OWNER_TEST, main push or merge.
