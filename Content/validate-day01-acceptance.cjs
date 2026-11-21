@@ -531,6 +531,9 @@ console.log("PASS: 3 Day01 acceptance oracles, 3 visits/docs, budget, scores, po
 // Cross-platform Day01 art-link contract: planned references, not proof of PNG delivery.
 const art = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
 assert.equal(art.dayIndex, fixture.dayIndex);
+// Keep art provenance pointers stable; these are planned references, not verified PNGs.
+assert.equal(art.sourceFixture, "Content/DAY01_UI_FIXTURE.json", "Day01 art links must cite canonical UI fixture");
+assert.equal(art.sourceManifest, "feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv", "Day01 art links must cite UI-owned asset manifest");
 assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
 assert.equal(art.worldLogicalResolution, "320x180");
 assert.equal(art.artDirection, "A");
