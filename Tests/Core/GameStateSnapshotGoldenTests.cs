@@ -41,6 +41,7 @@ namespace TAU.President.Tests.Core
             RejectSettledOutstandingPayableGolden();
             QuietDayAdvanceGolden();
             WeeklyPayableFailClosedGolden();
+            WeeklyQuietFailClosedGolden();
             AffordablePayablesGolden();
             PayablesDayAdvanceGolden();
             EndDayReportGolden();
@@ -223,6 +224,33 @@ namespace TAU.President.Tests.Core
                 current.Finance.Receipts.Count == 0 &&
                 current.Header.ProcessedDayKeys.Count == 0,
                 "weekly EndDay with due payable fails closed without partial settlement");
+        }
+
+        // Even with no payables, the weekly close must not silently use the quiet path.
+        private static void WeeklyQuietFailClosedGolden()
+        {
+            var header = new GameStateSnapshotDto(0, "weekly-quiet-campaign", 42UL,
+                "normal", "dayone", 4, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new string[0], new string[0],
+                new string[0], new string[0]);
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                new DurableCommandReceipt[0]);
+            var current = new DurableGameStateSnapshot(finance,
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0],
+                    new string[0]),
+                new DurablePayablesSnapshot(new DurablePayable[0]));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                current, 0, 4));
+            AssertNamed(current.Header.DayIndex == 4 &&
+                current.Header.Revision == 0 &&
+                current.Header.BalanceKopecks == 1000L &&
+                current.Payables.Outstanding.Count == 0 &&
+                current.Finance.Ledger.Entries.Count == 0 &&
+                current.Finance.Receipts.Count == 0 &&
+                current.Header.ProcessedDayKeys.Count == 0,
+                "weekly quiet EndDay fails closed without a weekly settlement handler");
         }
 
         private static void QuietDayAdvanceGolden()
