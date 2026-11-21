@@ -1,5 +1,12 @@
 # Handoff · Chat 03 — UI/UX · Issue #5
 
+## 2026-11-21 — SVG external-symbol offline guard (#20)
+
+- Added a source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` for remote SVG `<use href>` and `xlink:href` in both Android HTML exports. Local fragment references remain permitted. Code commits: `8f750771e56cbd15b1f1b1b83d803aba323de96c`, `c7b1b416da9c476d4b05501e96a4ecba5d9d9ec5` (final code blob verified unchanged by second update).
+- **Actually executed:** 4/4 isolated JavaScript regex fixtures in connector runtime. **Not executed:** complete Node test file, CI, Chromium, physical Android/TalkBack, Unity. Source regex does not detect dynamically constructed URLs.
+- #20 remains device-unverified; #21 PNG binary delivery remains pending. C0-v2 PR #9 and ADR PR #14 remain unmerged references. No GameState/Core/main changes or merge.
+
+
 ## Update 2026-11-21 — repository HTML static audit (Issue #20)
 
 - Read both actual distributable HTML files at feature/ui-5: `day01-android-touch.html` blob `2ba6b9ade82515a3ae0ee90d1c4e2aeba1c577d2` (15,674 UTF-8 characters) and `day01-android-offline.html` blob `5fd425b0b683353fcf5a1e83339426679b457126` (56,675 UTF-8 characters).
