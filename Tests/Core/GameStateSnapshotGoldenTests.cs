@@ -886,6 +886,20 @@ namespace TAU.President.Tests.Core
                 eventOnlyDay02.Finance.Receipts.Count == 4,
                 "Day02 due NPC event without payable blocks EndDay atomically");
 
+            // Restoring an event-only Day02 snapshot must not bypass the due-event
+            // guard or produce a phantom receipt. This is a save/load boundary check.
+            var restoredEventOnlyDay02 = eventOnlyDay02.Restore();
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                restoredEventOnlyDay02, restoredEventOnlyDay02.Header.Revision, 1));
+            AssertNamed(restoredEventOnlyDay02.Header.DayIndex == 1 &&
+                restoredEventOnlyDay02.Header.BalanceKopecks == 750L &&
+                restoredEventOnlyDay02.Events.Pending.Count == 1 &&
+                restoredEventOnlyDay02.Events.CompletedIds.Count == 0 &&
+                restoredEventOnlyDay02.Payables.Outstanding.Count == 0 &&
+                restoredEventOnlyDay02.Finance.Ledger.Entries.Count == 3 &&
+                restoredEventOnlyDay02.Finance.Receipts.Count == 4,
+                "Day02 event-only Restore preserves fail-closed EndDay");
+
             // A future payable must settle exactly once on Day02 after a clean Day01.
             // This is the Core-only path: no NPC due-event is present in this fixture.
             var tomorrowPayable = new DurableGameStateSnapshot(before.Finance, before.Events,
