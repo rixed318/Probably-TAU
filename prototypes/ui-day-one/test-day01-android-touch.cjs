@@ -196,3 +196,16 @@ test('Android offline variants reject remote responsive image srcset',()=>{
   assert.match('<img srcset=local.png,https://cdn.invalid/2.png>',unquotedRemoteSrcset);
   assert.doesNotMatch('<img srcset=local.png>',unquotedRemoteSrcset);
 });
+
+// External SVG <use> references can silently request network resources from an
+// otherwise standalone HTML bundle. This is a source-only offline regression.
+test('Android offline variants reject remote SVG use href references',()=>{
+  const remoteUse=/<use\b[^>]*\b(?:href|xlink:href)\s*=\s*['"]?(?:https?:\/\/|\/\/)/i;
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    assert.doesNotMatch(source,remoteUse,filename+' must not load remote SVG symbols');
+  }
+  assert.match('<use href="https://cdn.invalid/icons.svg#x">',remoteUse);
+  assert.match('<use xlink:href="//cdn.invalid/icons.svg#x">',remoteUse);
+  assert.doesNotMatch('<use href="#local-symbol">',remoteUse);
+});
