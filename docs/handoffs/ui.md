@@ -1,3 +1,16 @@
+## Update 2026-11-21 — Android device acceptance checklist (#20)
+
+**Scope:** manual test protocol for packaged touch HTML; no UI, gameplay, art or Core changes. Static checks do not close #20.
+
+1. Open `prototypes/ui-day-one/day01-android-touch.html` locally in Android Chrome with network disabled, in landscape; confirm first screen renders without spinner or external resources. Record device, Android/Chrome versions and viewport.
+2. Test 16:9 and narrower/taller landscape: no clipping of HUD, document, decisions, report; safe-area/notch/gesture bar must not overlap controls. Save screenshots.
+3. With touch only, process three Day01 visitors, inspect documents, decide, end day, read ledger/report. Note balance and validation messages; ensure no hover-only controls.
+4. Measure real tap target bounding boxes using device inspection: >=48 CSS px width and height on coarse pointer; CSS declarations alone are not proof.
+5. Enable large text and TalkBack: readable labels, logical focus, announced progress/errors, no unexpected keyboard or focus jump.
+6. Reopen HTML offline after closing browser; capture PASS/FAIL, device/orientation, screenshot and reproduction steps for each failure.
+
+**This pass:** checked live GitHub main rules, #5/#13/#20/#21, PR #9/#11/#12/#14, art bible, asset manifest, handoff and test source. **Not run:** Node suite, browser DOM, physical Android, TalkBack, Unity. #21 still lacks verified committed PNG; candidate not production-approved. No Core/main/merge.
+
 # Handoff · Chat 03 — UI/UX · Issue #5
 
 ## Update 2026-11-21 — art bible approval-status correction (#21)
