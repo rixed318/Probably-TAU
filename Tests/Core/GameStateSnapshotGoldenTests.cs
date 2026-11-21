@@ -564,6 +564,14 @@ namespace TAU.President.Tests.Core
                 new Day01DocumentChoice("doc-2", new DocumentDecisionEffects("b", -200L, 0, 2, 0, 0, 0)),
                 new Day01DocumentChoice("doc-3", new DocumentDecisionEffects("c", 50L, 0, 0, 3, 0, 0))
             };
+            // Reject stale revision and wrong day before staging any document effects.
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 1, 0, choices));
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(before, 0, 1, choices));
+            AssertNamed(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
+                before.Header.BalanceKopecks == 1000L &&
+                before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0,
+                "Day01 stale revision/day preconditions reject without partial effects");
             var result = DurableDay01Flow.Prepare(before, 0, 0, choices);
             Assert(before.Header.Revision == 0 && before.Finance.Ledger.Entries.Count == 0);
             Assert(result.Next.Header.DayIndex == 1 && result.Next.Header.Revision == 4 &&
