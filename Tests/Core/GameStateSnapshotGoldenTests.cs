@@ -931,6 +931,34 @@ namespace TAU.President.Tests.Core
                 futureDay03Input.Finance.Receipts.Count == 4,
                 "Day03 future payable remains deferred at Day02 EndDay");
 
+            // Once Day03 actually closes, the previously deferred obligation is due.
+            // Settlement must happen exactly once and must not mutate the Day02 snapshot.
+            var futureDay03Closed = DurableDayAdvance.PrepareDay(
+                futureDay03Deferred, futureDay03Deferred.Header.Revision, 2);
+            AssertNamed(futureDay03Closed.Header.DayIndex == 3 &&
+                futureDay03Closed.Header.BalanceKopecks == 550L &&
+                futureDay03Closed.Payables.Outstanding.Count == 0 &&
+                futureDay03Closed.Finance.Ledger.Entries.Count == 4 &&
+                futureDay03Closed.Finance.Ledger.Entries[3].PostingId == "payable:day03-future" &&
+                futureDay03Closed.Finance.Receipts.Count == 6 &&
+                futureDay03Closed.Finance.Receipts[5].PostingKeys.Count == 1 &&
+                futureDay03Closed.Finance.Receipts[5].PostingKeys[0] == "payable:day03-future" &&
+                futureDay03Deferred.Header.DayIndex == 2 &&
+                futureDay03Deferred.Header.BalanceKopecks == 750L &&
+                futureDay03Deferred.Payables.Outstanding.Count == 1 &&
+                futureDay03Deferred.Finance.Ledger.Entries.Count == 3 &&
+                futureDay03Deferred.Finance.Receipts.Count == 5,
+                "Day03 deferred payable settles only on its due day");
+            var futureDay03Restored = futureDay03Closed.Restore();
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(
+                futureDay03Restored, futureDay03Restored.Header.Revision, 2));
+            AssertNamed(futureDay03Restored.Header.BalanceKopecks == 550L &&
+                futureDay03Restored.Payables.Outstanding.Count == 0 &&
+                futureDay03Restored.Finance.Ledger.Entries.Count == 4 &&
+                futureDay03Restored.Finance.Receipts.Count == 6,
+                "Day03 payable restore and stale replay guard");
+
+
             var day02Closed = DurableDayAdvance.PrepareDay(day02Input,
                 day02Input.Header.Revision, 1);
             AssertNamed(day02Closed.Header.DayIndex == 2 &&
