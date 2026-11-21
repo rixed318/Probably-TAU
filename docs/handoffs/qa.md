@@ -1758,3 +1758,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** actual original PNG binaries, dimensions and manifest SHA256: **NOT VERIFIED** (art delivery remains separate from static manifest validation).
 - **Blocker 3:** real Unity APK/device and integrated Save→Load: **NOT RUN**; stable complete Core snapshot DTO still required for SaveService.
 - **Recommended next step:** run browser automation against the exact current distributed Android Touch HTML artifact, record blob SHA, screenshots, target geometry and gameplay assertions; keep CI and browser evidence separate.
+
+
+## 2026-11-21 — QA 05: exact-SHA cross-branch CI refresh (#8, #20)
+
+**One bounded change:** refreshed only the existing read-only GitHub Actions checkout pins and their matching SHA assertions in `.github/workflows/qa-offline.yml` to the freshly observed PR heads: Core #9 `c3f12b5f86fb8ccc0b36dac122c2dab81be61ec9`, UI #12 `31f9ee2f6e2bce5b44d9227ef33535027d39643a`, Content #11 `ad004d89a14a73ebab941132e14d66d453beb49c`, NPC #16 `6693abb4ec357202bef9d9f5cfeb20f0fa115463`. Workflow commit `afe3e834b3d1059ef34556690c1d036c9ac409ad`. Twelve exact SHA occurrences replaced (Core 4, UI 4, Content 2, NPC 2); no new tests, permissions, dependencies, public contracts or game code. C0-v2 PR #9 and ADR PR #14 remain unmerged and are for feature work only.
+
+**Actually executed:** GitHub read of main README/AGENTS/CHAT_WORKFLOW, PR #9/#10/#11/#12/#14/#16/#17 metadata, Issues #6/#8/#20/#21 and QA handoff; source-level string-count/assertion check on the workflow (4/4 pin groups present with expected counts); GitHub accepted workflow commit. **NOT VERIFIED:** CI execution on this new commit, Chromium touch emulation, real PNG SHA/dimensions, Unity Editor/APK/device, integrated Save→Load. No assertion of green CI on this new revision. SaveService remains deferred until stable complete Core snapshot DTO and transaction contract are independently confirmed.
+
+### Сводка для координатора 00 — 2026-11-21 21:21 UTC+4
+
+- **PR heads verified before QA changes:** #9 `c3f12b5f`, #10 `42216bb0`, #11 `ad004d89`, #12 `31f9ee2f`, #14 `ebdc4be2`, #16 `6693abb4`, #17 `bc9db999`. QA workflow commit `afe3e834`; this handoff update follows. PRs open, no merge. Main base reported as `d673322c` in PR metadata; no main writes.
+- **Blocker 1:** no Chromium 360x800/800x360 interactive touch evidence (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow).
+- **Blocker 2:** no independently verified 3–5 original PNG binaries/signatures/dimensions/manifest SHA.
+- **Blocker 3:** Unity APK/device and complete Save→Load integration NOT RUN; stable complete DTO remains a prerequisite.
+- **Next step:** inspect Actions run/jobs for new QA head and exact pinned checkout SHAs, then run Chromium acceptance against the current distributed Android Touch HTML blob; do not promote READY_FOR_OWNER_TEST without evidence.
