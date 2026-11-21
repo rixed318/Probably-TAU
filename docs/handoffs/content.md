@@ -823,3 +823,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **One bounded Issue #7 task:** `Content/validate-day01-acceptance.cjs` rejects identical `visualDescription` strings across the three fictional Day01 NPCs. The original portrait/standing asset IDs and descriptions remain platform-independent for Windows and Android. This is a draft-content guard only, not an art generator or Unity runtime contract.
 
 **Validator commit:** `07af13b030b4a7c5b2df286b37af1027eee7eb20`. **Actually checked:** isolated JS Set uniqueness assertion for three distinct sample briefs PASS; duplicate synthetic brief rejected PASS; exact insertion anchor occurred once. **NOT RUN:** checked-in Node CLI, CI, Unity, Windows or Android. QA 05: run `node Content/validate-day01-acceptance.cjs` on feature HEAD and test a duplicate `visualDescription` mutation. **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. No Core, EventDirector, ledger, main or merge changes.
+
+
+## AutoDev 04 — normalized fictional NPC visual-brief uniqueness (21.11.2026)
+
+**Issue #7 / PR #11; one bounded task:** normalized the three Day01 fictional NPC `visualDescription` values with trimmed/collapsed whitespace and Russian-aware lowercase before checking uniqueness in `Content/validate-day01-acceptance.cjs`. This catches trivial case/spacing duplicates that previously passed, while preserving original descriptions and stable portrait/standing IDs for Windows and Android. No Core, EventDirector, economy, content JSON or art changed.
+
+**Validator commit:** `259375d688d54d042191cbdd0de539f318ad4401` on `feature/content-7`. **Actually executed:** isolated JavaScript baseline with three distinct synthetic briefs PASS; negative case/whitespace duplicate rejected PASS; exact source replacement anchor verified. **NOT RUN:** checked-in Node CLI, CI, Unity Editor, Windows, Android. QA 05 should run `node Content/validate-day01-acceptance.cjs` on current feature HEAD and mutate a brief by case/whitespace only. PR #9 C0-v2 / PR #14 ADR remain governing contracts; content is DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
