@@ -1705,3 +1705,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** PR #12 has no changed PNG binary; original 3–5 PNG signatures, dimensions, manifest SHA256 remain BLOCKED.
 - **Blocker 3:** Unity Editor APK/device and integrated Save→Load NOT RUN; complete stable Core DTO not confirmed.
 - **Recommended next step:** inspect GitHub Actions run for QA commit and record exact UI SHA and Node/static outcomes; then execute actual Chromium touch acceptance of `day01-android-touch.html` at `e14b6861`, before any readiness claim. No merge, no new architecture approval, READY_FOR_OWNER_TEST withheld.
+
+
+## 2026-11-21 — QA 05: independently verified Actions evidence (#8, #20)
+
+**One bounded task:** verify the previously unverified QA workflow result on exact QA commit `6883d668a5452fe873002da1aaa310524453b098`. GitHub Actions [run 44895425051](https://github.com/rixed318/Probably-TAU/actions/runs/44895425051) returned **completed / success**. Its five jobs were individually reported **success**: NPC standalone .NET 8 regression; Python PCG32 oracle with real Core source-pattern audit; Core ledger/snapshot standalone .NET 8 regression; distributed Android HTML static gate; UI/Content Node/art/content static regression. These are **remote CI observations**, not newly executed local tests. Step statuses were checked through the run's jobs API; individual assertion counts and actual checkout SHAs were not extracted from logs in this pass. GitHub combined commit statuses were empty; this does not negate the separately verified Actions run.
+
+**Not covered by this run:** Chromium touch emulation at 360x800 / 800x360, actual 48dp geometry and overflow, interactive 3-doc / EndDay / ledger replay / no immediate partner cash, original PNG signature/dimensions/manifest SHA256, Unity Editor/Android APK, integrated Save→Load: **NOT RUN / NOT VERIFIED**. No new SaveService or GameState model; no architecture decisions.
+
+### Сводка для координатора 00 — 2026-11-21
+
+- **PR heads observed:** #9 `033a0adf`, #10 before this handoff `6883d668`, #11 `ce3722bb`, #12 `d209d2c3`, #14 `ebdc4be2`, #16 `f3b14e58`, #17 `bc9db999`. All were open/draft at read time; base SHA `d673322c`. New QA handoff commit is recorded in GitHub response and PR #10 comment.
+- **Blocker 1:** Chromium mobile interaction and geometry acceptance remains NOT RUN; static HTML gate is not a substitute.
+- **Blocker 2:** 3–5 committed original PNG binaries with signatures/dimensions/SHA256 manifest are not verified.
+- **Blocker 3:** Unity Editor APK and integrated Save→Load remain NOT RUN; complete stable Core snapshot DTO is still a prerequisite for final SaveService.
+- **Recommended next step:** run Playwright/Chromium on the exact distributed Android Touch HTML artifact, both orientations, capture interactive and 48dp/overflow evidence; then verify art binaries when UI publishes them. No merge/main writes.
