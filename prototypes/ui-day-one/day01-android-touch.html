@@ -179,13 +179,13 @@ function render(){
  }
 }
 d.addEventListener("DOMContentLoaded",()=>{
-el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});
+el("inspect").addEventListener("click",()=>{try{g.inspect(g.view().selected);el("error").textContent="";render();el("inspection").focus();}catch(e){el("error").textContent=e.message;}});
 el("end").addEventListener("click",()=>{try{g.endDay();el("error").textContent="";render();}catch(e){el("error").textContent=e.message;}});
 render();
 });
 })(typeof window!=="undefined"?window:globalThis);
 </script></head>
 <body><header><p class="muted">ANDROID TOUCH · автономный единый HTML · откройте файл в браузере после сохранения на телефон; поворот экрана в альбомный режим рекомендован. Это не APK.</p><h1>Кабинет решений · День 01</h1><p class="muted">Вымышленная академия · OFFLINE WEB PROTOTYPE · НЕ Unity-игра · данные и эффекты только mock</p><p id="hud">Загрузка…</p><p class="warning">Л-204, день 04, 14:00–17:00: три конкурирующие заявки. Подписание не бронирует аудиторию. Партнёрские 120 000 ₽ не начисляются сейчас.</p></header>
-<div id="game" class="layout"><aside><h2>Очередь посетителей</h2><nav id="queue" aria-label="Выбор документа"></nav><p id="progress" role="status" aria-live="polite" aria-atomic="true"></p></aside><main><section><h2 id="doc-title" tabindex="-1">Документ</h2><div id="doc-body"></div><p><button id="inspect" type="button">Проверить сведения</button></p><div id="inspection" aria-live="polite"></div><h2>Решение</h2><div id="choices"></div><p id="error" role="alert"></p></section><section><button id="end" type="button" disabled>Завершить день и открыть отчёт</button></section></main></div>
+<div id="game" class="layout"><aside><h2>Очередь посетителей</h2><nav id="queue" aria-label="Выбор документа"></nav><p id="progress" role="status" aria-live="polite" aria-atomic="true"></p></aside><main><section><h2 id="doc-title" tabindex="-1">Документ</h2><div id="doc-body"></div><p><button id="inspect" type="button">Проверить сведения</button></p><div id="inspection" tabindex="-1" aria-live="polite"></div><h2>Решение</h2><div id="choices"></div><p id="error" role="alert"></p></section><section><button id="end" type="button" disabled>Завершить день и открыть отчёт</button></section></main></div>
 <section id="report" hidden tabindex="-1"><h2>Отчёт по итогам Дня 01</h2><div id="report-body"></div><p>День завершён. Для новой демонстрации обновите страницу. Сохранение игры не реализовано.</p></section>
 <noscript>Для автономной демонстрации требуется включённый JavaScript.</noscript></body></html>
