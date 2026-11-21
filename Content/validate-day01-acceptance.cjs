@@ -534,6 +534,9 @@ assert.equal(art.dayIndex, fixture.dayIndex);
 assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
 assert.equal(art.worldLogicalResolution, "320x180");
 assert.equal(art.artDirection, "A");
+// Fictional original art only: metadata guard, not an IP clearance or PNG inspection.
+assert.ok(Array.isArray(art.rules) && art.rules.includes("Original fictional characters only; no real academy branding"),
+  "Day01 art contract must require original fictional characters and exclude real academy branding");
 // Documents must remain blank templates: UI renders localized text and kopeck amounts.
 // This is an authored metadata guard, not a check of actual PNG pixel contents.
 assert.ok(Array.isArray(art.rules) && art.rules.includes("All document text and money are rendered dynamically by UI"),
