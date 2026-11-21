@@ -828,3 +828,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 **Contracts:** unchanged. No production code, UI/NPC/QA files or `main` modified.
 **Verification:** previous HEAD `d57e726f866c1d8dcedc7ae3b625654b12ebbf21` has completed/success PR workflow runs 44913341532 and 44913341152; **these do not validate the new test**. New code SHA workflow result not confirmed at handoff time. Local `dotnet`, Unity Editor, adb, sdkmanager, ndk-build absent; javac present. Local .NET, Unity Editor/Windows and Android APK tests/builds **NOT RUN / BLOCKED**.
 **Next:** QA/00 review exact SHA CI; implement typed due-event/weekly handlers only under agreed 02/00 contracts, then independently verify Unity 6.3 Editor and Android toolchain before APK claim.
+
+
+## Core 01 — 21.11.2026: exact-head CI validation of Day10 weekly direct-entry guard
+
+- **Scope:** verify the existing `SecondWeekQuietDirectEntryFailClosedGolden` at exact branch HEAD `c3f12b5f86fb8ccc0b36dac122c2dab81be61ec9` (Issue #19, PR #9); no additional regression or production code introduced.
+- **Result:** GitHub Actions `Core .NET 8 golden tests` workflow run [#44922245824](https://github.com/rixed318/Probably-TAU/actions/runs/44922245824), run number 329, `completed/success`, associated with exact SHA `c3f12b5f86fb8ccc0b36dac122c2dab81be61ec9`. This verifies the standalone .NET golden runner, **not** Unity compilation or Android APK.
+- **Local toolchain checked again:** `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build` unavailable; `/usr/bin/java` and `/usr/bin/javac` available. No local .NET test or Unity/Windows/Android build performed. **Android build BLOCKED** until actual Unity 6.3 LTS Editor + Android Build Support/SDK/NDK/OpenJDK are available.
+- **Integration:** typed NPC due-event and weekly settlement EndDay handlers remain blocked on approved 02/00 contract; no unsafe bypass of C0/ADR fail-closed rules. QA/00 review still required. This pass only records exact-head verification; no public contracts or other subsystems changed. No main push, merge or Issue closure.
