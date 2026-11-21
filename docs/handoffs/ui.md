@@ -1,3 +1,9 @@
+## Update 2026-11-22 — inline event handler offline guard (#20)
+
+- Added one Node source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` rejecting inline `onclick`, `onchange`, `oninput`, `onload`, `onerror`, touch and pointer event attributes in both downloadable Android HTML exports. Test source commit: `01ef9895e21a978db8351165125e8bfae3ef1e28`.
+- **Actually executed:** connector JavaScript regex checked both live HTML files (2/2 clean) and three positive/negative fixtures (3/3 expected). **Not executed:** Node full suite, DOM/Chromium, Android device, TalkBack, Unity. This is a static regression, not Android acceptance.
+- Read main AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, D01 asset manifest and UI handoff. #20 device verification and #21 PNG binary delivery remain open. No GameState/Core/main edits, no merge.
+
 ## Update 2026-11-21 — regression for decision focus continuity (#20)
 
 - Added one source-level Node test in `prototypes/ui-day-one/test-day01-android-touch.cjs` covering the persistent focusable document heading, successful-decision focus transfer, and retained error branch. Test-code commit: `61e5de8801044c234a4a0dca9fafc9d044bf7c63`.
