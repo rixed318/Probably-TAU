@@ -1,0 +1,8 @@
+Probably-TAU — DAY 01 / OFFLINE WEB PROTOTYPE (NOT UNITY)
+1. Download the day01-web-demo ZIP from GitHub Actions and extract all files to one folder.
+2. On Windows, double-click day01-playable.html in Edge, Chrome or Firefox.
+3. Select DOC-01, DOC-02, DOC-03, optionally click "Проверить сведения", then make one choice per document.
+4. After all three decisions, click "Завершить день и открыть отчёт".
+5. View fictional budget, Q/S/M/E/R and mock ledger. Refresh page to restart.
+No internet, backend, installation, real-money transactions or save system.
+All fictional outcomes are isolated browser demo values, NOT Core economic rules.

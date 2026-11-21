@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <title>ТАУ: Президент Академии — UI prototype</title>
+  <style>
+/* Probably-TAU · standalone UI prototype. No borrowed artwork, no dependencies. */
+:root {
+  --forest-950:#0b1917; --forest-900:#10251f; --forest-800:#193a31; --forest-700:#245243;
+  --forest-600:#37705a; --paper:#ede2c9; --paper-light:#f7efdf; --paper-ink:#263e36;
+  --gold:#c6a36c; --gold-bright:#ebcf90; --red:#b76d60; --teal:#85ba9b;
+  --line:rgba(237,226,201,.17); --text:#eee9dc; --muted:#b2c0b6;
+  --radius:12px; --shadow:0 22px 55px rgba(0,0,0,.33);
+}
+* { box-sizing:border-box; }
+html { font-size:16px; }
+body { margin:0; color:var(--text); background:#07120f; font-family:"Segoe UI",Inter,Arial,sans-serif; line-height:1.42; }
+button { font:inherit; cursor:pointer; }
+button:disabled { cursor:not-allowed; opacity:.45; }
+button:focus-visible, [tabindex]:focus-visible { outline:3px solid var(--gold-bright); outline-offset:3px; }
+[hidden] { display:none!important; }
+p { margin:0; }
+small { font-size:.77rem; }
+h1,h2,h3 { margin:0; letter-spacing:-.025em; }
+h2 { font-size:1rem; } h3 { font-size:1.1rem; }
+.app-shell { max-width:1920px; min-height:100dvh; margin:auto; border-left:1px solid var(--line); border-right:1px solid var(--line); background:var(--forest-950); }
+.topbar { height:83px; display:flex; align-items:center; gap:22px; padding:12px 22px; background:#122a25; border-bottom:1px solid var(--line); }
+.brand { display:flex; align-items:center; gap:11px; min-width:280px; }
+.brand-mark { display:flex; align-items:center; justify-content:center; width:46px; height:46px; border:1.5px solid var(--gold); color:var(--gold-bright); font-family:Georgia,serif; letter-spacing:-.13em; font-size:1.2rem; font-weight:bold; }
+.brand-mark span { font-size:.9rem; margin-left:2px; }
+.brand strong { display:block; font-family:Georgia,serif; font-size:1.04rem; font-weight:500; letter-spacing:.08em; }
+.brand small { display:block; font-size:.58rem; color:var(--muted); letter-spacing:.11em; margin-top:4px; }
+.top-metrics { display:flex; gap:8px; justify-content:flex-end; margin-left:auto; min-width:0; }
+.metric { padding:7px 20px; border-left:1px solid var(--line); white-space:nowrap; }
+.metric span { display:block; font-size:.63rem; letter-spacing:.16em; color:#9cb1a4; margin-bottom:2px; }
+.metric strong { font-family:Georgia,serif; color:#f2e8d6; font-size:1.22rem; font-weight:normal; }
+.metric-budget strong { color:var(--gold-bright); }
+.button { border:1px solid transparent; border-radius:6px; display:inline-flex; justify-content:center; align-items:center; gap:10px; font-weight:700; font-size:.83rem; min-height:44px; padding:11px 15px; text-decoration:none; transition:filter .16s,transform .16s,background .16s; }
+.button:not(:disabled):hover { filter:brightness(1.1); transform:translateY(-1px); }
+.button-outline { border-color:#607669; color:var(--paper); background:transparent; }
+.button-small { min-height:35px; white-space:nowrap; font-size:.74rem; }
+.button-gold { background:var(--gold); color:#172b25; }
+.button-primary { background:#487b61; color:white; }
+.button-ink { color:white; background:var(--forest-700); }
+.button-paper { color:var(--paper-ink); background:#e1d2b7; }
+.button-approve { width:100%; background:#315e49; color:white; }
+.button-reject { width:100%; background:#6d3a35; color:white; }
+.button-defer { width:100%; border-color:#8f886f; background:transparent; color:var(--paper); }
+.workspace { display:grid; grid-template-columns:235px minmax(0,1fr) 294px; min-height:calc(100dvh - 113px); }
+.sidebar { background:#12251e; padding:25px 18px; min-width:0; }
+.sidebar-left { border-right:1px solid var(--line); background:linear-gradient(140deg,#18362c,#10241e 56%); }
+.sidebar-right { border-left:1px solid var(--line); background:linear-gradient(145deg,#19352a,#13251e 65%); }
+.sidebar-heading { display:flex; align-items:center; gap:12px; color:var(--gold); font-size:.68rem; letter-spacing:.16em; white-space:nowrap; }
+.tiny-line { height:1px; flex:1; background:var(--line); }
+.day-card { margin:20px 0 28px; padding:16px; border:1px solid rgba(198,163,108,.28); background:rgba(255,255,255,.035); }
+.eyebrow { color:var(--gold); font-weight:700; font-size:.66rem; letter-spacing:.15em; }
+.day-number { font-family:Georgia,serif; font-size:5.1rem; line-height:1.05; margin:10px 0; color:var(--paper); }
+.day-card strong { font-family:Georgia,serif; font-size:1rem; font-weight:normal; display:block; }
+.day-time { display:block; margin-top:10px; color:var(--teal); font-family:Georgia,serif; }
+.paperwork { margin-top:10px; } .paperwork h2,.queue-panel h2,.status-panel h2 { font-family:Georgia,serif; font-weight:normal; font-size:1.22rem; margin-bottom:16px; }
+.task { display:flex; gap:11px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line); }
+.task strong { display:block; font-size:.81rem; } .task small { color:#9caea3; display:block; margin-top:3px; }
+.task-dot { border-radius:50%; width:9px; height:9px; margin-top:5px; background:var(--gold-bright); box-shadow:0 0 0 4px rgba(198,163,108,.08); flex:none; }
+.task-dot.muted { background:#567364; box-shadow:none; }
+.sidebar-note { position:relative; margin-top:38px; padding:17px 14px 14px; background:#e5d2ac; color:#4d4b38; transform:rotate(-1.5deg); box-shadow:4px 7px 14px rgba(0,0,0,.18); }
+.sidebar-note .eyebrow { color:#715733; } .sidebar-note p:not(.eyebrow) { font-family:Georgia,serif; font-style:italic; font-size:.96rem; line-height:1.52; margin:9px 0; }
+.sidebar-note small { font-size:.65rem; } .note-pin { position:absolute; background:#895544; width:8px; height:8px; border-radius:50%; top:7px; left:50%; }
+.main-area { display:flex; min-width:0; flex-direction:column; background:#0e211b; }
+.stage-label { display:flex; align-items:center; gap:10px; padding:13px 19px; color:#ddc99b; font-size:.64rem; letter-spacing:.17em; border-bottom:1px solid var(--line); }
+.stage-status-dot { background:#93c3a2; width:7px; height:7px; border-radius:50%; }
+.stage-meta { margin-left:auto; color:#80998b; white-space:nowrap; }
+.office-scene { position:relative; isolation:isolate; overflow:hidden; height:clamp(310px,44vh,540px); background:linear-gradient(180deg,#40604f 0%,#355043 56%,#24392e 57%,#1a2d25 100%); }
+.wall-texture { position:absolute; inset:0; opacity:.26; background:repeating-linear-gradient(0deg,transparent 0px,transparent 4px,rgba(12,28,21,.06) 5px),radial-gradient(circle at 50% 30%,#7f977d,transparent 65%); }
+.office-scene:before { content:""; position:absolute; top:53%; height:5px; width:100%; background:#bc9c64; opacity:.35; }
+.office-scene:after { content:""; position:absolute; bottom:0; height:23%; width:100%; background:repeating-linear-gradient(96deg,#36291c 0 5px,#473426 5px 65px); opacity:.62; }
+.window-frame { position:absolute; left:6%; top:11%; width:24%; height:54%; border:9px solid #543b27; background:#9fb0a8; box-shadow:0 6px 0 #2c3027,0 0 0 2px #9c8054; overflow:hidden; }
+.window-sky { height:100%; background:linear-gradient(#7c9c9d 0%,#bbcaac 55%,#697b63 56%,#3d5649 100%); }
+.cloud { position:absolute; top:28%; left:25%; width:70%; height:10%; background:rgba(237,232,209,.45); border-radius:40px; filter:blur(8px); }
+.window-bars { position:absolute; inset:0; border-left:6px solid transparent; border-right:6px solid transparent; }
+.window-bars:before,.window-bars:after { content:""; position:absolute; background:#503b2c; }
+.window-bars:before { left:48%; height:100%; width:7px; } .window-bars:after { top:53%; height:7px; width:100%; }
+.curtain { position:absolute; width:33%; height:120%; top:-5%; left:-15%; transform:rotate(-3deg); background:#c5b79a; box-shadow:8px 0 18px rgba(0,0,0,.2); }
+.wall-emblem { position:absolute; top:10%; left:42%; width:18%; min-width:120px; border-radius:50% 50% 4px 4px; border:3px double rgba(204,170,113,.65); text-align:center; padding:12px 2px 9px; color:#d1bc8c; background:rgba(13,39,29,.18); box-shadow:0 7px 20px rgba(0,0,0,.08); }
+.wall-emblem span { display:block; font-size:2.2rem; line-height:1; }.wall-emblem strong,.wall-emblem small { display:block; font-family:Georgia,serif; letter-spacing:.12em; font-size:.5rem; }.wall-emblem small {font-size:.43rem;}
+.shelf { position:absolute; top:19%; right:5%; width:23%; height:34%; border-bottom:12px solid #604a32; box-shadow:0 7px 0 #261f19; display:flex; gap:5px; padding:0 8px; align-items:flex-end; }
+.shelf span { display:block; height:55%; width:12%; background:#ba7856; border:3px solid rgba(37,37,25,.25); }
+.shelf span:nth-child(2) { height:81%; background:#c9b37b; }.shelf span:nth-child(3) { height:65%; background:#648076; }.shelf span:nth-child(4) { height:91%; background:#aa5650; }.shelf span:nth-child(5) { height:71%; background:#bdb29a; }.shelf span:nth-child(6) { height:78%; background:#5d7771; }.shelf span:nth-child(7) { height:62%; background:#b18b59; }
+.clock-face { position:absolute; top:9%; right:33%; height:39px; width:39px; border-radius:50%; border:6px solid #a28c62; background:#eee1c7; box-shadow:0 3px 0 #324437; }
+.clock-face:after { content:""; position:absolute; left:45%; top:15%; height:45%; border:1px solid #2c453b; transform:rotate(38deg); transform-origin:bottom; }
+.guest { position:absolute; z-index:2; left:50%; bottom:16%; transform:translateX(-50%); width:174px; height:244px; transition:opacity .3s; }
+.guest-shadow { position:absolute; width:140px; height:27px; border-radius:50%; left:17px; bottom:0; background:rgba(0,0,0,.24); filter:blur(10px); }
+.guest-body { position:absolute; bottom:0; left:2px; width:170px; height:122px; border-radius:46px 46px 10px 10px; background:linear-gradient(110deg,#263c43,#344953 53%,#1b2e34); box-shadow:inset 12px 0 rgba(255,255,255,.025); }
+.guest-shirt { position:absolute; bottom:63px; left:65px; width:44px; height:57px; background:#dbccae; clip-path:polygon(0 0,50% 80%,100% 0,80% 100%,20% 100%); }
+.guest-neck { position:absolute; left:67px; top:88px; width:42px; height:33px; background:#c49370; border-radius:0 0 16px 16px; }
+.guest-head { position:absolute; left:48px; top:20px; width:77px; height:93px; border-radius:36px 37px 40px 38px; background:linear-gradient(130deg,#d8a57d,#b6805e); box-shadow:inset 12px 0 rgba(255,255,255,.05); }
+.guest-head:before { content:""; position:absolute; top:51px; left:23px; width:34px; height:4px; border-radius:5px; background:#805845; opacity:.6; }
+.guest-hair { position:absolute; top:13px; left:43px; width:91px; height:42px; border-radius:50% 50% 23% 16%; background:#3a302e; transform:rotate(-8deg); }
+.guest-hair:before { content:""; position:absolute; top:18px; left:3px; width:18px; height:42px; background:#3a302e; border-radius:10px; }
+.plant { position:absolute; right:8%; bottom:14%; width:90px; height:170px; z-index:3; }.plant-pot { position:absolute; bottom:0; left:28px; width:58px; height:63px; background:linear-gradient(#a97659,#6c4736); clip-path:polygon(0 0,100% 0,89% 100%,13% 100%); }
+.plant-leaf { position:absolute; width:22px; height:94px; bottom:55px; left:48px; background:#537b53; border-radius:90% 0 90% 0; transform-origin:bottom left; box-shadow:inset 4px 0 rgba(0,0,0,.08); }
+.plant-leaf.a { transform:rotate(-48deg); }.plant-leaf.b {transform:rotate(-19deg);height:115px;}.plant-leaf.c {transform:rotate(27deg);height:120px;}.plant-leaf.d {transform:rotate(54deg);height:87px;}
+.desk { position:absolute; bottom:0; left:13%; width:74%; height:37%; z-index:4; }
+.desktop { position:absolute; top:0; height:19px; width:108%; left:-4%; background:linear-gradient(#b68658,#7e4e30); transform:skewX(-9deg); box-shadow:0 10px 9px rgba(0,0,0,.27); }
+.desk-front { position:absolute; top:17px; width:100%; height:100%; background:linear-gradient(98deg,#76543b 0%,#926847 45%,#735038 100%); border:9px solid #644630; box-shadow:inset 0 15px 15px rgba(0,0,0,.16); }
+.desk-front:before,.desk-front:after { content:""; position:absolute; top:4px; width:7px; height:85%; background:#b68a5d; }.desk-front:before {left:12%;}.desk-front:after {right:12%;}
+.desk-logo { position:absolute; left:48%; top:17%; color:rgba(229,183,106,.66); font-size:2.8rem; }
+.document-hotspot { position:absolute; z-index:6; left:54%; bottom:30%; transform:rotate(-6deg); border:none; background:transparent; color:#1c352d; text-align:center; display:flex; flex-direction:column; gap:4px; align-items:center; }
+.document-hotspot span:last-child { background:#efe4c8; padding:5px 7px; border-radius:3px; font-size:.55rem; font-weight:900; letter-spacing:.05em; box-shadow:0 3px 7px #0005; }
+.document-hotspot:hover { filter:brightness(1.1); transform:rotate(-4deg) translateY(-3px); }
+.paper-stack { display:block; width:75px; height:51px; background:linear-gradient(175deg,#f7edcf,#dac7a6); box-shadow:5px 4px 0 #f1dfba,6px 9px 7px #0004; border:1px solid #c3b18e; }
+.paper-stack:after {content:"";display:block;margin:10px 12px; height:17px; border-top:3px solid #79918b;border-bottom:3px solid #79918b;}
+.scene-vignette { position:absolute; inset:0; z-index:5; pointer-events:none; box-shadow:inset 0 0 85px rgba(5,17,14,.45); }
+.dialogue-panel { display:flex; align-items:center; gap:18px; min-height:142px; padding:17px 23px; background:linear-gradient(110deg,#1c3b30,#153027); border-top:3px solid #816b48; }
+.dialogue-identity { display:flex; align-items:center; gap:11px; flex:0 0 197px; }
+.avatar { display:grid; place-items:center; flex:none; width:46px; height:54px; border:2px solid #a48c5e; border-radius:5px; font-family:Georgia,serif; font-weight:bold; color:#d7c8a4; background:#345449; }
+.dialogue-identity h1 { font-family:Georgia,serif; font-size:1.05rem; font-weight:normal; margin-top:3px; }
+.dialogue-identity small { color:#adbfaf; display:block; }
+.dialogue-copy { flex:1; min-width:0; border-left:1px solid var(--line); padding-left:17px; }
+.dialogue-copy p { font-family:Georgia,serif; font-size:1.04rem; line-height:1.5; }
+.dialogue-copy span { margin-top:8px; display:block; color:#9fb5a4; font-size:.72rem; }
+.bottom-strip { display:flex; justify-content:space-between; gap:15px; align-items:center; min-height:66px; padding:10px 19px; border-top:1px solid var(--line); }
+.tip { display:flex; gap:9px; font-size:.75rem; color:#abbcaf; align-items:center; }
+.tip>span:first-child { display:grid; place-items:center; flex:none; width:20px; height:20px; border:1px solid #698576; border-radius:50%; }
+.queue-panel { margin-top:22px; }
+.queue-person { display:flex; align-items:center; gap:10px; background:rgba(237,226,201,.07); padding:10px 8px; border:1px solid rgba(237,226,201,.17); margin-bottom:8px; flex-wrap:wrap; }
+.queue-avatar { flex:none; display:grid; place-items:center; width:32px; height:36px; background:#546b5e; color:#efe4c9; font-family:Georgia,serif; font-size:.8rem; border-radius:3px; }
+.queue-person strong { display:block; font-size:.78rem; }.queue-person small { display:block; color:#a4b4a4; font-size:.68rem; }
+.queue-status { color:#e0c68c; font-size:.54rem; letter-spacing:.09em; font-weight:800; margin-left:auto; white-space:nowrap; }
+.queue-person.waiting { opacity:.56; background:transparent; }
+.status-panel { margin-top:24px; border-top:1px solid var(--line); padding-top:20px; }
+.status-heading { display:flex; justify-content:space-between; gap:12px; align-items:center; font-size:.6rem; letter-spacing:.09em; color:#adbbaa; }
+.status-heading strong { color:var(--gold-bright); font-size:.72rem; }
+.progress-track { width:100%; height:6px; background:#344d3f; margin:12px 0; border-radius:4px; }
+.progress-fill { width:68%; height:100%; background:#c9ab76; border-radius:4px; }
+.status-panel p { color:#b4c0b2; font-size:.77rem; margin-bottom:12px; }
+.link-button { color:var(--gold-bright); background:transparent; border:none; padding:5px 0; font-size:.79rem; font-weight:700; }
+.link-button:hover { text-decoration:underline; }
+.factions { display:grid; gap:15px; }
+.faction-item { display:grid; grid-template-columns:1fr auto; gap:3px; font-size:.78rem; }
+.faction-item span { color:#c7d0c4; } .faction-item strong { color:#e9dcbd; font-size:.8rem; }
+.faction-bar { grid-column:1/-1; height:4px; background:#2e4c3c; border-radius:3px; overflow:hidden; }
+.faction-bar b { display:block; height:100%; background:#c0a16b; }
+.panel-footnote { display:block; margin-top:16px; color:#8fa397; font-size:.64rem; }
+.right-bottom-note { margin-top:35px; border:1px dashed #526d5b; padding:12px; color:#a6baa7; font-size:.6rem; line-height:1.6; letter-spacing:.08em; }
+.footer { display:flex; justify-content:space-between; align-items:center; padding:7px 22px; min-height:30px; color:#739180; font-size:.62rem; letter-spacing:.05em; border-top:1px solid var(--line); background:#0e201a; }
+dialog { padding:0; border:0; color:#e9e1cf; max-width:none; box-shadow:var(--shadow); }
+dialog::backdrop { background:rgba(3,13,11,.83); backdrop-filter:blur(4px); }
+.document-dialog { width:min(1080px,94vw); max-height:94dvh; background:#163328; border:1px solid #94774d; border-radius:9px; overflow:auto; }
+.dialog-head { display:flex; justify-content:space-between; align-items:center; padding:23px 28px; background:#1b3d31; border-bottom:1px solid #52644c; }
+.dialog-head h2 { font-family:Georgia,serif; font-size:1.55rem; margin-top:5px; font-weight:normal; }
+.close-button { display:grid; place-items:center; width:44px; height:44px; border:1px solid #6b8576; color:#e5e0cf; font-size:1.7rem; background:transparent; border-radius:5px; }
+.document-content { display:grid; grid-template-columns:minmax(0,1fr) 238px; grid-template-rows:auto 1fr; gap:0; }
+.document-tabs { grid-column:1/-1; display:flex; gap:6px; border-bottom:1px solid var(--line); padding:10px 28px 0; }
+.tab { padding:9px 16px; color:#b8cbbb; background:transparent; border:0; border-bottom:3px solid transparent; font-size:.81rem; }
+.tab.active { border-bottom-color:var(--gold); color:var(--gold-bright); }
+.document-paper { background:var(--paper); color:var(--paper-ink); margin:22px 17px 22px 28px; padding:27px 32px; min-height:410px; box-shadow:8px 9px 0 #c1ad86; }
+.paper-heading { display:flex; justify-content:space-between; align-items:center; font-size:.63rem; letter-spacing:.13em; color:#5e7166; gap:10px; }
+.ink-stamp { border:2px solid #877154; padding:5px; color:#886e4f; font-size:.58rem; transform:rotate(-3deg); font-weight:bold; }
+.document-paper h3 { font-family:Georgia,serif; font-size:1.55rem; font-weight:normal; margin:25px 0 13px; }
+.paper-line { height:1px; background:#a6a38c; }
+.paper-fields { display:grid; grid-template-columns:1fr 1fr; gap:17px; margin:24px 0; }
+.paper-fields small { display:block; color:#6c7970; letter-spacing:.12em; font-size:.62rem; }.paper-fields strong { font-family:Georgia,serif; display:block; font-size:1.02rem; margin-top:4px; }
+.document-paper p { line-height:1.64; }
+.document-warning { margin-top:20px; border-left:4px solid #b58b4b; background:#e4d3ad; padding:12px 14px; font-size:.82rem; }
+.facts-list,.history-list { padding-left:18px; margin:20px 0; display:grid; gap:12px; line-height:1.6; font-size:.88rem; }
+.tab-section .button { margin:4px 7px 9px 0; }
+#evidence-help { display:block; margin-top:12px; color:#62736a; }
+.signature { display:flex; gap:12px; align-items:center; margin-top:45px; padding-top:20px; border-top:1px solid #b3b2a0; font-size:.56rem; letter-spacing:.08em; color:#78837c; }
+.signature-line { height:1px; flex:1; background:#72867b; }
+.decision-rail { padding:28px 20px; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:12px; }
+.decision-rail h3 { font-family:Georgia,serif; font-weight:normal; font-size:1.2rem; }
+.decision-rail>p:not(.eyebrow) { color:#aebead; font-size:.82rem; margin-bottom:4px; }
+.decision-disclaimer { margin-top:auto; border-top:1px solid var(--line); padding-top:16px; font-size:.71rem; color:#a5baa7; }
+.decision-disclaimer strong { color:#cfbd9a; }.decision-disclaimer p { margin-top:5px; }
+.report-dialog { width:min(770px,94vw); max-height:94dvh; overflow:auto; border:1px solid #a68a64; background:var(--paper-light); color:var(--paper-ink); border-radius:5px; }
+.report-sheet { padding:35px 51px; }
+.report-topline { display:flex; justify-content:space-between; font-size:.6rem; letter-spacing:.16em; color:#617669; border-bottom:1px solid #a6b3a8; padding-bottom:11px; }
+.report-ornament { font-size:2rem; color:#a48e63; text-align:center; margin-top:17px; }
+.report-sheet h2 { text-align:center; font-family:Georgia,serif; font-size:2.3rem; font-weight:normal; }
+.report-subtitle { text-align:center; color:#687a6e; margin:8px 0 26px; }
+.report-metrics { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid #adbaa9; border-bottom:1px solid #adbaa9; padding:18px 0; gap:16px; }
+.report-metrics>div { text-align:center; }.report-metrics>div:first-child {border-right:1px solid #adbaa9;}
+.report-metrics small {display:block;color:#658074;font-size:.64rem;letter-spacing:.08em;}
+.report-metrics strong {display:block;margin-top:8px;font-size:1.45rem;font-family:Georgia,serif;}
+.report-sheet h3 { font-family:Georgia,serif; margin:24px 0 12px; font-weight:normal; font-size:1.27rem; }
+.ledger-row { display:flex; gap:12px; padding:9px 0; justify-content:space-between; border-bottom:1px dotted #b6bfae; font-size:.88rem; }
+.ledger-row strong { white-space:nowrap; }.ledger-row.expense strong {color:#9d4f44;}.ledger-row.neutral strong {color:#446b54;}
+#report-consequence { line-height:1.62; color:#52695b; }
+.report-footer { display:flex; justify-content:space-between; align-items:center; gap:15px; margin-top:30px; padding-top:22px; border-top:1px solid #c3cbb9; }
+.report-footer span { color:#718578; font-size:.7rem; }
+.toast { position:fixed; bottom:22px; right:22px; z-index:25; border:1px solid #a8905d; color:#ede7d9; background:#1d4234; box-shadow:var(--shadow); padding:15px 18px; max-width:min(420px,90vw); font-size:.85rem; }
+@media(max-width:1360px) {
+  .workspace { grid-template-columns:207px minmax(0,1fr) 260px; }
+  .sidebar { padding:18px 12px; }
+  .brand { min-width:245px; }
+  .brand strong {font-size:.87rem;}
+  .metric {padding:6px 11px;}
+  .dialogue-panel {gap:9px;padding:13px;}
+  .dialogue-identity {flex-basis:170px;}
+  .dialogue-copy p {font-size:.91rem;}
+  .dialogue-panel .button {padding:8px 10px;}
+}
+@media(max-width:1110px) {
+  .workspace {grid-template-columns:185px minmax(0,1fr);}
+  .sidebar-right { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; border-left:0; border-top:1px solid var(--line);}
+  .sidebar-right>.sidebar-heading,.right-bottom-note {display:none;}
+  .sidebar-right .queue-panel,.sidebar-right .status-panel {margin:0;padding:0;border:0;}
+  .topbar {gap:8px;}
+  .metric span {font-size:.53rem;} .metric strong {font-size:1rem;}
+  .stage-meta {display:none;}
+}
+@media(max-width:760px) {
+  .topbar {height:auto;flex-wrap:wrap;padding:13px;}
+  .brand {width:100%;}
+  .top-metrics {width:100%;margin:0;justify-content:space-between;}
+  .metric {padding:4px 8px;}
+  .workspace {display:block;min-height:0;}
+  .sidebar-left {display:none;}
+  .sidebar-right {display:block;}
+  .sidebar-right .queue-panel,.sidebar-right .status-panel {margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+  .office-scene {height:330px;}
+  .guest {transform:translateX(-50%) scale(.87);transform-origin:bottom;}
+  .dialogue-panel {flex-wrap:wrap;}
+  .dialogue-identity {flex-basis:100%;}
+  .dialogue-copy {flex-basis:100%;border-left:0;padding:0;}
+  .dialogue-panel .button {width:100%;}
+  .footer {display:none;}
+  .document-content {display:block;}
+  .document-paper {margin:12px;padding:17px;box-shadow:none;min-height:auto;}
+  .decision-rail {border-left:0;border-top:1px solid var(--line);}
+  .dialog-head {padding:16px;}
+  .dialog-head h2 {font-size:1.16rem;}
+  .document-tabs {padding:10px 11px 0;}
+  .tab {padding:8px;}
+  .report-sheet {padding:20px 18px;}
+  .report-metrics strong {font-size:1.1rem;}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+}
+
+
+/* Android touch preview (#20): safe-area and coarse-pointer affordances.
+   Desktop mouse layout is unchanged; this is NOT a validated Android build. */
+@media (pointer:coarse) {
+  button, .button, .tab, .close-button, .link-button {
+    min-height:48px;
+    min-width:48px;
+    touch-action:manipulation;
+  }
+  .document-hotspot {
+    min-width:96px;
+    min-height:64px;
+    touch-action:manipulation;
+  }
+  .document-dialog, .report-dialog {
+    max-height:calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+  .toast {
+    bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+    right:calc(12px + env(safe-area-inset-right, 0px));
+  }
+}
+@media (pointer:coarse) and (orientation:landscape) and (max-height:500px) {
+  .topbar {padding-top:max(8px, env(safe-area-inset-top, 0px));}
+  .app-shell {padding-left:env(safe-area-inset-left, 0px);padding-right:env(safe-area-inset-right, 0px);}
+  .office-scene {height:clamp(180px, 52dvh, 300px);}
+  .dialogue-panel {min-height:0;}
+  .document-dialog, .report-dialog {width:calc(100vw - 16px);}
+}
+
+</style>
+  <script>
+/* UI-only canned read models. These are NOT GameState and contain no economy logic. */
+(function () {
+  "use strict";
+  var base = {
+    dayNumber: "01",
+    date: "Вторник, 1 сентября",
+    clock: "09:20",
+    budget: "1 500 000 ₽",
+    staffTrust: "61 / 100",
+    task: "Оснащение компьютерного класса",
+    visitorName: "Алина Демина",
+    visitorRole: "Преподаватель проектного центра",
+    quote: "«В аудитории Б-204 техника уже не справляется. Если мы ничего не решим сейчас, осенний проектный модуль придётся сокращать».",
+    context: "Посетитель ожидает решения по заявке.",
+    queueStatus: "НА ПРИЁМЕ",
+    deadline: "2 дня",
+    deadlineNote: "Заявку желательно рассмотреть до начала занятий.",
+    docTitle: "Обновление компьютерного класса",
+    author: "Алина Демина · проектный центр",
+    amount: "240 000 ₽",
+    docDeadline: "До 3 сентября",
+    description: "Прошу согласовать выделение средств на обновление рабочих станций в учебной аудитории Б-204. Существующее оборудование не соответствует требованиям планируемых занятий.",
+    warning: "В пакете документов нет подтверждения актуальности коммерческого предложения.",
+    facts: ["Прикреплена предварительная смета поставщика.", "Актуальность цен пока не подтверждена."],
+    history: ["09:20 — заявка поступила в кабинет."],
+    explanation: "Изучите заявку. До подписи можно проверить смету или запросить уточнение.",
+    decisionHelp: "Достоверность сметы пока не проверена. Решение может быть принято с риском.",
+    resolved: false,
+    dayTwo: false,
+    allowInspect: true,
+    allowClarify: true,
+    factions: [{label:"Студенты",value:56},{label:"Сотрудники",value:61},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+  };
+  function snapshot(patch) {
+    return Object.assign({}, base, patch);
+  }
+  var views = {
+    start: snapshot({}),
+    inspected: snapshot({
+      clock:"09:35",
+      context:"Смета проверена. Доступно уточнение условий.",
+      warning:"Проверка выявила расхождение: цены могли измениться с момента составления сметы.",
+      facts:["Проверка выполнена: исходная смета составлена три недели назад.","Один из ценовых пунктов требует актуализации.","Для исправления можно запросить уточнение."],
+      history:["09:20 — заявка поступила в кабинет.","09:35 — выполнена сверка сметы."],
+      explanation:"Смета требует актуализации. Запросите уточнение или примите решение с известным риском.",
+      decisionHelp:"Вы нашли риск устаревших цен. Можно запросить обновлённое предложение.",
+      allowInspect:false
+    }),
+    clarified: snapshot({
+      clock:"09:50",
+      amount:"210 000 ₽",
+      quote:"«Поставщик прислал свежие условия. Можно уложиться в меньшую сумму — теперь решение за вами».",
+      context:"Запрошено уточнение, условия заявки обновлены.",
+      facts:["Поступило обновлённое коммерческое предложение.","Уточнённая сумма заявки: 210 000 ₽.","Подтверждён срок поставки, оставшиеся риски минимизированы в демонстрационном сценарии."],
+      history:["09:20 — заявка поступила в кабинет.","09:50 — получено обновлённое предложение: 210 000 ₽."],
+      warning:"Уточнение получено. Сумма в заявке обновлена.",
+      explanation:"Получен уточнённый документ. Теперь можно принять или отклонить заявку.",
+      decisionHelp:"Обновлённая сумма: 210 000 ₽. Финансовый результат определяет только mock-gateway.",
+      allowInspect:false,allowClarify:false
+    }),
+    approved: snapshot({
+      clock:"10:00",budget:"1 260 000 ₽",staffTrust:"63 / 100",
+      quote:"«Спасибо. Подготовим аудиторию к занятиям и отчитаемся о выполнении».",
+      context:"Заявка согласована. Приём завершён.",
+      queueStatus:"РЕШЕНО",deadline:"Закрыта",deadlineNote:"Решение зарегистрировано.",
+      warning:"СОГЛАСОВАНО. В демонстрационном ответе списано 240 000 ₽.",
+      history:["09:20 — заявка поступила в кабинет.","10:00 — согласовано: 240 000 ₽."],
+      explanation:"−240 000 ₽: согласование заявки. Доверие сотрудников +2. Результат получен от mock-gateway.",
+      decisionHelp:"Решение зарегистрировано. Завершите рабочий день.",
+      resolved:true,factions:[{label:"Студенты",value:56},{label:"Сотрудники",value:63},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+    }),
+    approvedClarified: snapshot({
+      clock:"10:00",budget:"1 290 000 ₽",staffTrust:"63 / 100",amount:"210 000 ₽",
+      quote:"«Спасибо. И за согласование, и за то, что настояли на проверке сметы».",
+      context:"Уточнённая заявка согласована. Приём завершён.",
+      queueStatus:"РЕШЕНО",deadline:"Закрыта",deadlineNote:"Решение зарегистрировано.",
+      warning:"СОГЛАСОВАНО. В демонстрационном ответе списано 210 000 ₽.",
+      facts:["Поступило обновлённое коммерческое предложение.","Итоговая сумма согласования: 210 000 ₽."],
+      history:["09:20 — заявка поступила в кабинет.","09:50 — получено уточнение.","10:00 — согласовано: 210 000 ₽."],
+      explanation:"−210 000 ₽: заявка после уточнения. Доверие сотрудников +2. Mock-ответ.",
+      decisionHelp:"Решение зарегистрировано. Завершите рабочий день.",
+      resolved:true,factions:[{label:"Студенты",value:56},{label:"Сотрудники",value:63},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+    }),
+    rejected: snapshot({
+      clock:"10:00",budget:"1 500 000 ₽",staffTrust:"58 / 100",
+      quote:"«Поняла. Тогда нам придётся пересмотреть планы на осень».",
+      context:"Заявка отклонена. Приём завершён.",
+      queueStatus:"ОТКЛОНЕНО",deadline:"Закрыта",deadlineNote:"Решение зарегистрировано.",
+      warning:"ОТКЛОНЕНО. Средства не выделены.",
+      history:["09:20 — заявка поступила в кабинет.","10:00 — заявка отклонена."],
+      explanation:"Бюджет не изменился. Доверие сотрудников −3. Mock-ответ.",
+      decisionHelp:"Решение зарегистрировано. Завершите рабочий день.",
+      resolved:true,factions:[{label:"Студенты",value:56},{label:"Сотрудники",value:58},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+    }),
+    deferred: snapshot({
+      clock:"10:00",budget:"1 500 000 ₽",staffTrust:"60 / 100",
+      quote:"«Хорошо. Я принесу недостающие бумаги завтра, но времени действительно мало».",
+      context:"Заявка перенесена на следующий день. Приём завершён.",
+      queueStatus:"ОТЛОЖЕНО",deadline:"1 день",deadlineNote:"На завтра остаётся обязательство вернуться к вопросу.",
+      warning:"ОТЛОЖЕНО. В демонстрационном сценарии расходы пока не проведены.",
+      history:["09:20 — заявка поступила в кабинет.","10:00 — решение перенесено."],
+      explanation:"Заявка перенесена. Доверие сотрудников −1. Mock-ответ.",
+      decisionHelp:"Решение зарегистрировано. Завершите рабочий день.",
+      resolved:true,factions:[{label:"Студенты",value:56},{label:"Сотрудники",value:60},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+    }),
+    dayTwo: snapshot({
+      dayNumber:"02",date:"Среда, 2 сентября",clock:"09:00",
+      budget:"1 225 000 ₽",staffTrust:"63 / 100",
+      visitorName:"Представитель студсовета",visitorRole:"Приём на завтра",
+      quote:"«Второй день пока не реализован. Прототип демонстрирует только цикл первого рабочего дня».",
+      context:"Это статичный экран-заглушка для проверки перехода дня.",
+      queueStatus:"СЦЕНАРИЙ ЗАКОНЧЕН",deadline:"—",deadlineNote:"Продолжение — после интеграции Core.",
+      explanation:"Первый игровой день завершён. Для другого решения обновите страницу.",
+      decisionHelp:"Дальнейшие команды в прототипе не предусмотрены.",
+      resolved:true,dayTwo:true,
+      factions:[{label:"Студенты",value:56},{label:"Сотрудники",value:63},{label:"Партнёры",value:48},{label:"Общественное доверие",value:52}]
+    })
+  };
+  var reports = {
+    approved:{
+      balance:"1 225 000 ₽",
+      summary:"Вы поддержали обновление класса без дополнительной проверки.",
+      ledger:[["Согласование заявки Б-204","−240 000 ₽","expense"],["Содержание корпуса (mock)","−35 000 ₽","expense"]],
+      consequence:"Компьютерный класс получит финансирование. В будущем поставщик может потребовать корректировки цены. Это заготовка сюжетного последствия, а не работающий EventDirector."
+    },
+    approvedClarified:{
+      balance:"1 255 000 ₽",
+      summary:"Вы проверили условия и согласовали уточнённую смету.",
+      ledger:[["Согласование уточнённой заявки","−210 000 ₽","expense"],["Содержание корпуса (mock)","−35 000 ₽","expense"]],
+      consequence:"Обновление класса получило финансирование по уточнённой стоимости. Благодаря проверке меньше неопределённости. Фактические последствия впоследствии определит Core."
+    },
+    rejected:{
+      balance:"1 465 000 ₽",
+      summary:"Вы сохранили резерв, отказав в финансировании.",
+      ledger:[["Согласование заявки","0 ₽","neutral"],["Содержание корпуса (mock)","−35 000 ₽","expense"]],
+      consequence:"Резерв сохранён, но преподаватели разочарованы. В будущей игре это может повлиять на доступность проектных занятий."
+    },
+    deferred:{
+      balance:"1 465 000 ₽",
+      summary:"Вы перенесли решение на следующий день.",
+      ledger:[["Выделение средств","0 ₽","neutral"],["Содержание корпуса (mock)","−35 000 ₽","expense"]],
+      consequence:"Заявка остаётся срочной. Реальные дедлайны и отложенные последствия позднее будет обрабатывать Core, а не этот UI."
+    }
+  };
+  var paths = {
+    start:{InspectDocument:"inspected",RequestClarification:"clarified",ApproveProposal:"approved",RejectProposal:"rejected",DeferProposal:"deferred"},
+    inspected:{RequestClarification:"clarified",ApproveProposal:"approved",RejectProposal:"rejected",DeferProposal:"deferred"},
+    clarified:{ApproveProposal:"approvedClarified",RejectProposal:"rejected",DeferProposal:"deferred"}
+  };
+  window.TAU_UI_MOCK = {
+    createGateway:function(){
+      var current = "start";
+      var dayAdvanced = false;
+      return {
+        queryDashboard:function(){ return Promise.resolve(views[current]); },
+        execute:function(command){
+          if(!command || typeof command.type!=="string") return Promise.resolve({ok:false,error:"Некорректная команда."});
+          if(current==="dayTwo") return Promise.resolve({ok:false,error:"День 2 не реализован в демонстрации."});
+          if(command.type==="AdvanceDay") {
+            if(!reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите рассмотрение заявки."});
+            if(dayAdvanced) return Promise.resolve({ok:false,error:"День уже завершён."});
+            dayAdvanced = true;
+            return Promise.resolve({ok:true,view:views[current],report:reports[current]});
+          }
+          if(command.type==="ShowDayTwo") {
+            if(!dayAdvanced || !reports[current]) return Promise.resolve({ok:false,error:"Сначала завершите день."});
+            var report = reports[current];
+            var staffTrust = views[current].staffTrust;
+            var factions = views[current].factions;
+            current="dayTwo";
+            return Promise.resolve({ok:true,view:Object.assign({},views.dayTwo,{budget:report.balance,staffTrust:staffTrust,factions:factions})});
+          }
+          if(dayAdvanced) return Promise.resolve({ok:false,error:"День завершён. Перейдите к следующему дню."});
+          if(command.documentId!=="TAU-001") return Promise.resolve({ok:false,error:"Заявка не найдена."});
+          var next = paths[current] && paths[current][command.type];
+          if(!next) return Promise.resolve({ok:false,error:"Действие недоступно на текущем этапе."});
+          current=next;
+          return Promise.resolve({ok:true,view:views[current],notice:"Ответ mock-gateway получен."});
+        }
+      };
+    }
+  };
+})();
+
+</script>
+  <script>
+/* Presentation controller for the standalone UI concept. No GameState, no economy math. */
+(function () {
+  "use strict";
+  if (!window.TAU_UI_MOCK) {
+    document.body.textContent = "Не удалось загрузить демонстрационные данные.";
+    return;
+  }
+  var gateway = window.TAU_UI_MOCK.createGateway();
+  var vm = null;
+  var activeTab = "overview";
+  var working = false;
+  var dayAdvanced = false;
+  var lastReport = null;
+  var toastTimer = null;
+  var requestSerial = 0;
+  function byId(id) { return document.getElementById(id); }
+  function put(id, value) { var node = byId(id); if(node) node.textContent = value; }
+  function empty(node) { while(node.firstChild) node.removeChild(node.firstChild); }
+  function showToast(message) {
+    var toast=byId("toast");
+    toast.textContent=message;
+    toast.hidden=false;
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){toast.hidden=true;},4600);
+  }
+  function selectTab(name) {
+    activeTab=name;
+    document.querySelectorAll("[data-tab]").forEach(function(button){
+      var selected=button.getAttribute("data-tab")===name;
+      button.classList.toggle("active",selected);
+      button.setAttribute("aria-selected",String(selected));
+    });
+    document.querySelectorAll("[data-section]").forEach(function(section){
+      section.hidden=section.getAttribute("data-section")!==name;
+    });
+  }
+  function renderList(id,items) {
+    var list=byId(id); empty(list);
+    items.forEach(function(text){
+      var li=document.createElement("li");
+      li.textContent=text;
+      list.appendChild(li);
+    });
+  }
+  function renderFactions(rows) {
+    var list=byId("faction-list"); empty(list);
+    rows.forEach(function(row){
+      var div=document.createElement("div"); div.className="faction-item";
+      var caption=document.createElement("span"); caption.textContent=row.label;
+      var value=document.createElement("strong"); value.textContent=row.value+" / 100";
+      var track=document.createElement("div"); track.className="faction-bar";
+      var fill=document.createElement("b"); fill.style.width=Math.max(0,Math.min(100,row.value))+"%";
+      track.appendChild(fill);div.appendChild(caption);div.appendChild(value);div.appendChild(track);list.appendChild(div);
+    });
+  }
+  function render(view) {
+    vm=view;
+    put("hud-date",view.date);
+    put("hud-budget",view.budget);
+    put("hud-reputation",view.staffTrust);
+    put("day-number",view.dayNumber);
+    put("weekday",view.date);
+    put("clock",view.clock);
+    put("task-description",view.task);
+    put("visitor-name",view.visitorName);
+    put("visitor-role",view.visitorRole);
+    put("visitor-quote",view.quote);
+    put("dialogue-context",view.context);
+    put("queue-name",view.visitorName);
+    put("queue-role",view.visitorRole);
+    put("queue-status",view.queueStatus);
+    put("deadline-label",view.deadline);
+    put("deadline-note",view.deadlineNote);
+    put("status-explanation",view.explanation);
+    put("document-title",view.docTitle);
+    put("paper-title",view.docTitle);
+    put("paper-author",view.author);
+    put("paper-amount",view.amount);
+    put("paper-deadline",view.docDeadline);
+    put("paper-description",view.description);
+    put("document-warning",view.warning);
+    put("decision-help",view.decisionHelp);
+    put("paper-stamp",view.resolved ? view.queueStatus : "НА РАССМОТРЕНИИ");
+    put("evidence-help",view.allowInspect ? "Проверка сметы доступна." : view.allowClarify ? "Проверка выполнена. Можно запросить уточнение." : "Дополнительные действия недоступны.");
+    renderList("facts-list",view.facts);
+    renderList("history-list",view.history);
+    renderFactions(view.factions);
+    byId("guest-illustration").style.opacity=view.resolved ? ".6" : "1";
+    byId("inspect-button").disabled=working||!view.allowInspect||view.resolved;
+    byId("clarify-button").disabled=working||!view.allowClarify||view.resolved;
+    ["approve-button","reject-button","defer-button"].forEach(function(id){
+      byId(id).disabled=working||view.resolved||view.dayTwo;
+    });
+    ["scene-document","open-document","quick-document"].forEach(function(id){
+      byId(id).disabled=working||view.dayTwo;
+    });
+    var endButton=byId("end-day");
+    endButton.disabled=working||!view.resolved||view.dayTwo;
+    endButton.textContent=dayAdvanced ? "Открыть отчёт ↗" : "Завершить день →";
+    byId("open-document").textContent=view.resolved ? "Просмотреть решение ↗" : "Изучить заявку ↗";
+    byId("guest-illustration").setAttribute("aria-label",view.visitorName);
+  }
+  function openDocument() {
+    if (!vm||vm.dayTwo) {showToast("Этот экран пока не поддерживает новые заявки.");return;}
+    selectTab("overview");
+    var dialog=byId("document-dialog");
+    if(!dialog.open) dialog.showModal();
+  }
+  async function send(type) {
+    if(working) return;
+    if(!vm||vm.dayTwo) {showToast("Сценарий первого дня уже завершён.");return;}
+    working=true; render(vm);
+    try {
+      var result=await gateway.execute({type:type,documentId:"TAU-001",requestId:"ui-mock-"+(++requestSerial)});
+      if (!result.ok) {showToast(result.error||"Команда отклонена.");return;}
+      if(result.view) render(result.view);
+      if(["ApproveProposal","RejectProposal","DeferProposal"].indexOf(type)>=0){
+        byId("document-dialog").close();
+        showToast(result.view.explanation);
+      } else if(type==="InspectDocument") {
+        selectTab("evidence");
+        showToast("Проверка завершена. Появились новые сведения.");
+      } else if(type==="RequestClarification"){
+        selectTab("overview");
+        showToast("Уточнённая смета получена: 210 000 ₽.");
+      }
+    } catch(error) {
+      showToast("Не удалось выполнить действие: "+(error && error.message ? error.message : "ошибка запроса"));
+    } finally {working=false;render(vm);}
+  }
+  function renderReport(report) {
+    put("report-balance",report.balance);
+    put("report-summary",report.summary);
+    put("report-consequence",report.consequence);
+    var ledger=byId("report-ledger");empty(ledger);
+    report.ledger.forEach(function(entry){
+      var line=document.createElement("div");
+      line.className="ledger-row "+entry[2];
+      var title=document.createElement("span");title.textContent=entry[0];
+      var amount=document.createElement("strong");amount.textContent=entry[1];
+      line.appendChild(title);line.appendChild(amount);ledger.appendChild(line);
+    });
+  }
+  async function endDay() {
+    if(dayAdvanced && lastReport) {
+      renderReport(lastReport);
+      if(!byId("report-dialog").open) byId("report-dialog").showModal();
+      return;
+    }
+    if (!vm || !vm.resolved) {showToast("Сначала примите решение по текущему обращению.");return;}
+    if(working) return;
+    working=true;render(vm);
+    try {
+      var result=await gateway.execute({type:"AdvanceDay",requestId:"mock-end-day-01"});
+      if(!result.ok){showToast(result.error||"Невозможно завершить день.");return;}
+      dayAdvanced=true;lastReport=result.report;
+      renderReport(result.report);
+      byId("report-dialog").showModal();
+    } catch(error){
+      showToast("Ошибка завершения дня: "+(error && error.message ? error.message : "неизвестно"));
+    } finally {working=false;render(vm);}
+  }
+  async function showDayTwo() {
+    if(working) return;
+    working=true;
+    try {
+      var result=await gateway.execute({type:"ShowDayTwo"});
+      if(!result.ok){showToast(result.error||"Переход недоступен.");return;}
+      byId("report-dialog").close();
+      render(result.view);
+      showToast("День 2 — только экран-заглушка. Перезагрузите страницу для нового выбора.");
+    } catch(error){showToast("Переход не выполнен.");}
+    finally{working=false;if(vm)render(vm);}
+  }
+  [["scene-document",openDocument],["open-document",openDocument],["quick-document",openDocument],["document-close",function(){byId("document-dialog").close();}],["inspect-button",function(){send("InspectDocument");}],["clarify-button",function(){send("RequestClarification");}],["approve-button",function(){send("ApproveProposal");}],["reject-button",function(){send("RejectProposal");}],["defer-button",function(){send("DeferProposal");}],["end-day",endDay],["next-day-button",showDayTwo],["help-button",function(){showToast("Кликните документ на столе или «Изучить заявку». В документе есть вкладки «Проверка» и «История». ESC закрывает окно.");}]].forEach(function(binding){
+    byId(binding[0]).addEventListener("click",binding[1]);
+  });
+  document.querySelectorAll("[data-tab]").forEach(function(button){
+    button.addEventListener("click",function(){selectTab(button.getAttribute("data-tab"));});
+  });
+  window.addEventListener("keydown",function(event){
+    if(event.key==="Escape" && !byId("document-dialog").open && !byId("report-dialog").open){
+      byId("toast").hidden=true;
+    }
+  });
+  gateway.queryDashboard().then(function(initial){render(initial);}).catch(function(){
+    showToast("Не удалось загрузить данные интерфейса.");
+  });
+})();
+
+</script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="ТАУ: Президент Академии">
+        <div class="brand-mark" aria-hidden="true">Т<span>А</span>У</div>
+        <div><strong>ПРЕЗИДЕНТ АКАДЕМИИ</strong><small>ПРОТОТИП ПЕРВОГО ДНЯ · ВЫМЫШЛЕННЫЙ СЦЕНАРИЙ</small></div>
+      </div>
+      <div class="top-metrics" aria-label="Показатели академии">
+        <div class="metric"><span>ИГРОВАЯ ДАТА</span><strong id="hud-date">—</strong></div>
+        <div class="metric metric-budget"><span>РЕЗЕРВ БЮДЖЕТА</span><strong id="hud-budget">—</strong></div>
+        <div class="metric"><span>ДОВЕРИЕ СОТРУДНИКОВ</span><strong id="hud-reputation">—</strong></div>
+      </div>
+      <button class="button button-outline button-small" id="help-button" type="button" aria-label="Показать управление">? Помощь</button>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar sidebar-left" aria-label="Календарь и текущие задачи">
+        <div class="sidebar-heading"><span>01 / РАСПОРЯДОК</span><span class="tiny-line"></span></div>
+        <section class="day-card">
+          <p class="eyebrow">ПЕРВЫЙ РАБОЧИЙ ДЕНЬ</p>
+          <div class="day-number" id="day-number">01</div>
+          <strong id="weekday">Вторник, 1 сентября</strong>
+          <span class="day-time" id="clock">09:20</span>
+        </section>
+        <section class="paperwork">
+          <h2>На повестке</h2>
+          <div class="task active"><span class="task-dot"></span><div><strong>Разобрать заявку</strong><small id="task-description">Компьютерный класс</small></div></div>
+          <div class="task"><span class="task-dot muted"></span><div><strong>Проверить расчёты</strong><small>Доступно в документе</small></div></div>
+          <div class="task"><span class="task-dot muted"></span><div><strong>Подвести итоги</strong><small>После принятия решения</small></div></div>
+        </section>
+        <section class="sidebar-note">
+          <div class="note-pin"></div>
+          <p class="eyebrow">ЗАПИСКА СЕКРЕТАРЯ</p>
+          <p>«Бюджет ограничен. Самая удобная подпись не всегда самая правильная».</p>
+          <small>Только художественный игровой сценарий.</small>
+        </section>
+      </aside>
+
+      <main class="main-area">
+        <div class="stage-label"><span class="stage-status-dot"></span> КАБИНЕТ ПРЕЗИДЕНТА <span class="stage-meta">ТАУ / УСЛОВНЫЙ ИГРОВОЙ МИР</span></div>
+        <section class="office-scene" aria-label="Стилизованный двухмерный кабинет">
+          <div class="wall-texture"></div>
+          <div class="window-frame" aria-hidden="true"><div class="window-sky"><div class="cloud"></div></div><div class="window-bars"></div><div class="curtain"></div></div>
+          <div class="wall-emblem" aria-hidden="true"><span>✦</span><strong>АКАДЕМИЯ</strong><small>УПРАВЛЕНИЯ</small></div>
+          <div class="shelf" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="clock-face" aria-hidden="true"></div>
+          <div class="guest" id="guest-illustration" aria-hidden="true">
+            <div class="guest-shadow"></div><div class="guest-body"></div><div class="guest-shirt"></div><div class="guest-neck"></div><div class="guest-head"></div><div class="guest-hair"></div>
+          </div>
+          <div class="plant" aria-hidden="true"><span class="plant-leaf a"></span><span class="plant-leaf b"></span><span class="plant-leaf c"></span><span class="plant-leaf d"></span><span class="plant-pot"></span></div>
+          <div class="desk" aria-hidden="true"><div class="desktop"></div><div class="desk-front"><span class="desk-logo">✦</span></div></div>
+          <button class="document-hotspot" id="scene-document" type="button" title="Открыть заявку"><span class="paper-stack"></span><span>ОТКРЫТЬ ЗАЯВКУ</span></button>
+          <div class="scene-vignette"></div>
+        </section>
+        <section class="dialogue-panel" aria-label="Диалог с посетителем">
+          <div class="dialogue-identity"><div class="avatar">АД</div><div><span class="eyebrow">СЕЙЧАС НА ПРИЁМЕ</span><h1 id="visitor-name">—</h1><small id="visitor-role">—</small></div></div>
+          <div class="dialogue-copy"><p id="visitor-quote">—</p><span id="dialogue-context">Выслушайте просьбу и изучите заявку.</span></div>
+          <button class="button button-gold" id="open-document" type="button">Изучить заявку <span aria-hidden="true">↗</span></button>
+        </section>
+        <div class="bottom-strip"><div class="tip"><span aria-hidden="true">i</span><span id="status-explanation">Решение ещё не принято.</span></div><button class="button button-primary" id="end-day" type="button" disabled>Завершить день →</button></div>
+      </main>
+
+      <aside class="sidebar sidebar-right" aria-label="Приёмная и показатели">
+        <div class="sidebar-heading"><span>02 / ПРИЁМНАЯ</span><span class="tiny-line"></span></div>
+        <section class="queue-panel">
+          <h2>Очередь посетителей</h2>
+          <div class="queue-person"><div class="queue-avatar">01</div><div><strong id="queue-name">—</strong><small id="queue-role">—</small></div><span class="queue-status" id="queue-status">В КАБИНЕТЕ</span></div>
+          <div class="queue-person waiting"><div class="queue-avatar">02</div><div><strong>Представитель студсовета</strong><small>Следующий игровой день</small></div></div>
+        </section>
+        <section class="status-panel">
+          <div class="status-heading"><span>СРОЧНОСТЬ ЗАЯВКИ</span><strong id="deadline-label">—</strong></div>
+          <div class="progress-track"><div class="progress-fill"></div></div>
+          <p id="deadline-note">—</p>
+          <button class="link-button" id="quick-document" type="button">Открыть досье ↗</button>
+        </section>
+        <section class="status-panel">
+          <h2>Интересы сторон</h2>
+          <div id="faction-list" class="factions"></div>
+          <small class="panel-footnote">Показатели иллюстративны. Не данные реальной ТАУ.</small>
+        </section>
+        <section class="right-bottom-note">ИЗМЕНЕНИЯ ПОЯВЛЯЮТСЯ ТОЛЬКО ПОСЛЕ ОТВЕТА ИГРОВОЙ СИСТЕМЫ</section>
+      </aside>
+    </div>
+    <footer class="footer"><span>PROBABLY-TAU · UI / ISSUE #5</span><span>Без Unity Core · mock-сценарий · оригинальная графика CSS</span><span>ESC — ЗАКРЫТЬ ОКНО</span></footer>
+  </div>
+
+  <dialog class="document-dialog" id="document-dialog" aria-labelledby="document-title">
+    <div class="dialog-shell">
+      <header class="dialog-head"><div><span class="eyebrow">ВХОДЯЩИЙ ДОКУМЕНТ / ДЕЛО № TAU-001</span><h2 id="document-title">—</h2></div><button class="close-button" id="document-close" type="button" aria-label="Закрыть документ">×</button></header>
+      <div class="document-content">
+        <nav class="document-tabs" aria-label="Разделы документа">
+          <button type="button" class="tab active" data-tab="overview" aria-selected="true">Содержание</button>
+          <button type="button" class="tab" data-tab="evidence" aria-selected="false">Проверка</button>
+          <button type="button" class="tab" data-tab="history" aria-selected="false">История</button>
+        </nav>
+        <div class="document-paper" id="document-paper">
+          <div class="paper-heading"><span>ВНУТРЕННЯЯ ЗАЯВКА</span><span class="ink-stamp" id="paper-stamp">НА РАССМОТРЕНИИ</span></div>
+          <section class="tab-section" data-section="overview">
+            <h3 id="paper-title">—</h3><div class="paper-line"></div>
+            <div class="paper-fields"><div><small>ЗАЯВИТЕЛЬ</small><strong id="paper-author">—</strong></div><div><small>ЗАПРАШИВАЕМАЯ СУММА</small><strong id="paper-amount">—</strong></div><div><small>СРОК</small><strong id="paper-deadline">—</strong></div><div><small>ТИП ОБРАЩЕНИЯ</small><strong>Инфраструктура</strong></div></div>
+            <p id="paper-description">—</p><div class="document-warning" id="document-warning">—</div>
+          </section>
+          <section class="tab-section" data-section="evidence" hidden>
+            <h3>Сверка и уточнения</h3><p>Перед подписанием можно запросить дополнительные сведения. В настоящей игре проверка выполняется Core; здесь ответ заранее подготовлен.</p>
+            <ul class="facts-list" id="facts-list"></ul>
+            <button class="button button-ink" id="inspect-button" type="button">Проверить смету</button>
+            <button class="button button-paper" id="clarify-button" type="button">Запросить уточнение</button>
+            <small id="evidence-help">Проверка не была выполнена.</small>
+          </section>
+          <section class="tab-section" data-section="history" hidden>
+            <h3>Журнал обращения</h3><ul class="history-list" id="history-list"></ul>
+          </section>
+          <div class="signature"><span>ПОДПИСЬ ПРЕЗИДЕНТА</span><span class="signature-line"></span><span>ПРОЕКТ РЕШЕНИЯ</span></div>
+        </div>
+        <aside class="decision-rail">
+          <p class="eyebrow">ВАШЕ РЕШЕНИЕ</p><h3>От имени академии</h3><p id="decision-help">Изучите факты и выберите действие.</p>
+          <button class="button button-approve" type="button" id="approve-button">Согласовать заявку</button>
+          <button class="button button-reject" type="button" id="reject-button">Отклонить</button>
+          <button class="button button-defer" type="button" id="defer-button">Отложить до завтра</button>
+          <div class="decision-disclaimer"><strong>Важно</strong><p>Все расходы и изменения репутации — только ответы mock-gateway. UI ничего не рассчитывает.</p></div>
+        </aside>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="report-dialog" id="report-dialog" aria-labelledby="report-title">
+    <div class="report-sheet">
+      <div class="report-topline"><span>КОНЕЦ РАБОЧЕГО ДНЯ</span><span>ВНУТРЕННИЙ ОТЧЁТ · MOCK</span></div>
+      <div class="report-ornament" aria-hidden="true">✦</div>
+      <h2 id="report-title">Итоги дня</h2><p class="report-subtitle" id="report-summary">—</p>
+      <div class="report-metrics"><div><small>БЮДЖЕТ В НАЧАЛЕ</small><strong>1 500 000 ₽</strong></div><div><small>БЮДЖЕТ В КОНЦЕ</small><strong id="report-balance">—</strong></div></div>
+      <h3>Откуда изменения</h3><div class="ledger-rows" id="report-ledger"></div>
+      <h3>Решение и последствия</h3><p id="report-consequence">—</p>
+      <div class="report-footer"><span>Это игровая демонстрация. Не отчёт реальной ТАУ.</span><button type="button" class="button button-primary" id="next-day-button">Посмотреть день 2 →</button></div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
