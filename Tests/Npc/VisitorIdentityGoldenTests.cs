@@ -19,6 +19,24 @@ namespace TAU.President.Tests.Npc
                     screen.Inspection.InspectionId != inspectionIds[i] || screen.Choices.Count != 3)
                     throw new Exception("Inspection navigation mismatch: " + inspectionIds[i]);
             }
+            // Inspection navigation must preserve the same ordered choices as its canonical document.
+            for (int inspectionIndex = 0; inspectionIndex < inspectionIds.Length; inspectionIndex++)
+            {
+                Day01Visitors.VisitScreenPreview byInspection;
+                Day01Visitors.VisitScreenPreview byDocument;
+                if (!Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
+                        inspectionIds[inspectionIndex], out byInspection) ||
+                    !Day01Visitors.TryGetVisitScreenPreviewByDocumentId(
+                        inspectionDocs[inspectionIndex], out byDocument) ||
+                    byInspection == null || byDocument == null ||
+                    byInspection.Card.VisitId != byDocument.Card.VisitId ||
+                    byInspection.Inspection.CostTokens != byDocument.Inspection.CostTokens ||
+                    byInspection.Choices.Count != byDocument.Choices.Count)
+                    throw new Exception("Inspection/document screen parity mismatch.");
+                for (int choiceIndex = 0; choiceIndex < byDocument.Choices.Count; choiceIndex++)
+                    if (byInspection.Choices[choiceIndex].ChoiceId != byDocument.Choices[choiceIndex].ChoiceId)
+                        throw new Exception("Inspection choice order mismatch: " + inspectionIds[inspectionIndex]);
+            }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
                 "check_seat_map ", " check_seat_map", "unknown_inspection" })
             {
