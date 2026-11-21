@@ -912,6 +912,25 @@ namespace TAU.President.Tests.Core
                 day01Prepared.Next.Finance.Ledger.Entries.Count == 3,
                 "Day02 payable deferred through Day01");
             var day02Input = day01Prepared.Next.Restore();
+            // A Day03 payable is not due at Day02 close. EndDay must use the
+            // quiet path, preserve the future obligation and append no ledger posting.
+            var futureDay03Input = new DurableGameStateSnapshot(
+                day02Input.Finance, day02Input.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("day03-future", 2, 200L)
+                }));
+            var futureDay03Deferred = DurableDayAdvance.PrepareDay(
+                futureDay03Input, futureDay03Input.Header.Revision, 1);
+            AssertNamed(futureDay03Deferred.Header.DayIndex == 2 &&
+                futureDay03Deferred.Header.BalanceKopecks == 750L &&
+                futureDay03Deferred.Payables.Outstanding.Count == 1 &&
+                futureDay03Deferred.Payables.Outstanding[0].DueKey == "day03-future" &&
+                futureDay03Deferred.Finance.Ledger.Entries.Count == 3 &&
+                futureDay03Deferred.Finance.Receipts.Count == 5 &&
+                futureDay03Input.Header.DayIndex == 1 &&
+                futureDay03Input.Finance.Receipts.Count == 4,
+                "Day03 future payable remains deferred at Day02 EndDay");
+
             var day02Closed = DurableDayAdvance.PrepareDay(day02Input,
                 day02Input.Header.Revision, 1);
             AssertNamed(day02Closed.Header.DayIndex == 2 &&
