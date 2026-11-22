@@ -23,7 +23,8 @@
       "portraitAssetId": "irina_korneeva_portrait_neutral",
       "documentAssetId": "doc01_procurement_blank",
       "visualBrief": "Вымышленная преподавательница: короткие каштановые волосы с серебристой прядью, прямоугольные очки, тёмно-бирюзовый жакет и янтарная брошь; строгий силуэт воротника и спокойная мимика.",
-      "standingAssetId": "irina_korneeva_standing"
+      "standingAssetId": "irina_korneeva_standing",
+      "documentVisualBrief": "Пустой бланк заявки на оснащение: широкий блок для перечня рабочих мест, три строки спецификации, место для визы; без печатного текста, сумм, гербов и логотипов."
     },
     {
       "visitId": "D01_STUDENT",
@@ -32,7 +33,8 @@
       "portraitAssetId": "dasha_polynskaya_portrait_neutral",
       "documentAssetId": "doc02_student_proposal_blank",
       "visualBrief": "Вымышленная студентка: асимметричное рыжее каре, круглая заколка цвета индиго, светло-песочная толстовка и диагональный ремень сумки; энергичная открытая мимика.",
-      "standingAssetId": "dasha_polynskaya_standing"
+      "standingAssetId": "dasha_polynskaya_standing",
+      "documentVisualBrief": "Пустой бланк студенческой инициативы: поле для идеи, сетка этапов проекта и место для эскиза; отдельный визуальный силуэт от закупочной заявки, без надписей и денежных значений."
     },
     {
       "visitId": "D01_PARTNER",
@@ -41,7 +43,8 @@
       "portraitAssetId": "mark_sviridov_portrait_neutral",
       "documentAssetId": "doc03_partner_letter_blank",
       "visualBrief": "Вымышленный представитель партнёра: выбритая голова, короткая борода, сливовый пиджак и светлая водолазка; узкий футляр для бумаг и сдержанная мимика.",
-      "standingAssetId": "mark_sviridov_standing"
+      "standingAssetId": "mark_sviridov_standing",
+      "documentVisualBrief": "Пустой бланк письма о партнёрстве: строгая двухколоночная компоновка с полями условий и подписи; без фирменных знаков, текста, чисел и имитации реального договора."
     }
   ]
 }
