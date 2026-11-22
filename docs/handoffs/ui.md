@@ -1,3 +1,9 @@
+## Update 2026-11-22 — Android TalkBack manual acceptance matrix (#20)
+
+- One bounded documentation task: added six concrete device-level acceptance steps to `prototypes/ui-day-one/README.md`, covering offline load, inspection/error announcement, decision focus, EndDay focus, orientation/200% zoom, and evidence capture. Documentation commit: `b09467ac83ae710145e7174a0f28a0628a4f14eb`.
+- **Actually checked:** current main rules/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible/manifest and UI handoff; README write acknowledged by GitHub. **Not executed:** physical Android, TalkBack, Chromium, Node suite, Unity. Checklist is a test plan, not a passing test result.
+- #20 still requires real device evidence; #21 still requires verified binary PNG upload. No Core/main/merge.
+
 ## Update 2026-11-22 — unique Android viewport declaration (#20)
 
 - One bounded Node source regression in `prototypes/ui-day-one/test-day01-android-touch.cjs`: require exactly one viewport meta declaration in each offline HTML export; prevents conflicting Android zoom and safe-area policies. Test commits: `63b7e24c02865ef5b0631a3c07ded9dbd1792da9` (initial), `e06ae87b753475f2c0f468873b124e555a90c0c2` (corrected regex escapes).
