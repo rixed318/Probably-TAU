@@ -878,3 +878,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` now asserts `DAY01_ART_LINKS.json` keeps `schemaVersion=day01-art-links-1` and `status=planned-art-references-not-PNGs-or-runtime`. This prevents metadata from silently claiming completed PNG delivery/runtime integration or changing its draft schema. No actual PNGs, runtime schema, Core, EventDirector, economy, story decisions, IDs or DayIndex were changed. Windows/Android references remain planned and platform-independent.
 
 **Validator commit:** `0707dd9e6053b8d7f5b2b7ce78b85e16e01ca506`. **Actually checked:** connector-fetched JSON baseline exact schema/status PASS; synthetic changed status rejected PASS; source insertion anchor unique. **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android, actual PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at current feature HEAD, then mutate schema/status to verify rejection. PR #9 C0-v2 and PR #14 ADR govern feature development only. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+
+## AutoDev 04 — Day01 art rules metadata hygiene (22.11.2026)
+
+**Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` rejects empty/non-string and case/whitespace-equivalent duplicate entries in the `DAY01_ART_LINKS.json` rules array. This prevents ambiguous art policy metadata for Windows/Android; it does not inspect PNGs or grant IP rights. Story, Definition IDs, zero-based DayIndex, kopeck amounts, Core, EventDirector and ledger unchanged.
+
+**Validator commit:** `0104a9d1a5dc698064723d4f1ce199b5e7801ec3`. **Actually checked:** isolated JS baseline accepted, synthetic blank rule rejected, case/whitespace duplicate rejected (3/3 PASS). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android, PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at feature HEAD and repeat negative cases. C0-v2 PR #9 / ADR PR #14 apply to feature development only. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST; no main push/merge.
