@@ -878,3 +878,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Validation: local `dotnet` and Unity Editor unavailable; this code commit's CI result must be checked at its exact SHA before calling tests successful. Prior HEAD `f474b54cd807d7f3c0837ffedcddad26052971b0` had Core .NET 8 golden tests success (GitHub Actions run 44966363794).
 - BLOCKED: real Unity 6.3 Editor + Android Build Support/SDK/NDK/OpenJDK toolchain not available in current environment (Java alone is insufficient); Unity/Windows/Android builds and local C# execution not performed. Due-event and weekly EndDay handler integration awaits approved 02/00 contracts and independent QA.
 - Next: verify exact code SHA CI and ask QA/00 to review; never merge to main without owner approval.
+
+
+## 2026-11-22 — Day01 receipt posting-key deterministic replay regression (#19)
+
+- Scope: one C# test-only increment in `Tests/Core/GameStateSnapshotGoldenTests.cs` (`Day01FlowGolden`), commit `3dec925ccfa6a67e20007d3ebc9ce5964893b786` on `feature/core-2`.
+- Replaying the same three Day01 choices against the same immutable input now compares each receipt's `PostingKeys` count and ordered key values, in addition to existing command ID/fingerprint and ledger assertions. No production contract, NPC/UI/Save changes.
+- Local environment checked: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` missing; `java` and `javac` present. Local .NET tests and Unity/Windows/Android builds NOT RUN/BLOCKED. CI of new commit must be checked separately; no claim of success without exact SHA run.
+- Remaining: typed due-NPC event and weekly EndDay settlement require approved 02/00 contract; real Unity 6.3 Android build requires Editor, Android Build Support, SDK/NDK/OpenJDK and QA validation. No main push, merge or issue closure.
