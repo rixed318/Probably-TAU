@@ -610,6 +610,15 @@ namespace TAU.President.Tests.Core
                     result.Next.Finance.Receipts[i].CommandId);
                 Assert(replay.Next.Finance.Receipts[i].Fingerprint ==
                     result.Next.Finance.Receipts[i].Fingerprint);
+                AssertNamed(replay.Next.Finance.Receipts[i].PostingKeys.Count ==
+                    result.Next.Finance.Receipts[i].PostingKeys.Count,
+                    "Day01 replay receipt posting-key count");
+                for (var j = 0; j < result.Next.Finance.Receipts[i].PostingKeys.Count; j++)
+                {
+                    AssertNamed(replay.Next.Finance.Receipts[i].PostingKeys[j] ==
+                        result.Next.Finance.Receipts[i].PostingKeys[j],
+                        "Day01 replay receipt posting-key order");
+                }
             }
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next, 0, 0, choices));
 
