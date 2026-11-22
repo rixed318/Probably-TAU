@@ -930,3 +930,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Code commit: `b40e2e33e02ac624476eca5787cc81398b6416ea` on `feature/core-2`; PR #9 remains Draft. No public API or production implementation changes.
 - Local toolchain probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` present. Therefore local C# execution, Unity Windows build and Android APK are **BLOCKED / NOT RUN**. New SHA CI result not verified at time of handoff.
 - Pending: independent QA/00 review and approved NPC/weekly EndDay integration contract. Do not merge to main or close Issues.
+
+
+## AutoDev 01 — Day01 persisted EndDay ID preflight (22.11.2026)
+
+- Scope #19, one bounded Core change: `DurableDay01Flow.Prepare` rejects a reserved `end-day:<campaign>:0` ID already present in persisted `ProcessedCommandIds`, before staging document choices. No public API change.
+- Production commit `57cd543d0d87635f601558d89d20fcb29d27a7b0`; regression commit `5a2e47c9e22233b4a22c9de1cf05ed328dc51b79` in `feature/core-2` only.
+- `Day01FlowGolden` now constructs a valid restored-like state with the reserved command ID and asserts fail-closed without modifying balance, ledger, day, revision or receipts.
+- Local verification: .NET SDK and Unity Editor unavailable; C# tests and Unity/Windows/Android builds **NOT RUN** locally. Java compiler present, Android SDK/NDK tools unavailable. GitHub Actions for new SHA must be checked separately; no success claimed in advance.
+- EndDay due-event and weekly integration still requires the 02/00 contract; no NPC/UI/Save changes. PR #9 remains draft, no main merge.
