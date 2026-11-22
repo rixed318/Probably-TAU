@@ -894,3 +894,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - GitHub Actions `Core .NET 8 golden tests` run [44981634736](https://github.com/rixed318/Probably-TAU/actions/runs/44981634736) returned `completed/success` for that exact commit SHA. This confirms standalone Core .NET 8 CI only, not Unity compilation, Windows build, or Android APK. Any new handoff commit needs its own CI result.
 - Environment probe: `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build` unavailable on PATH; `java` and `javac` present. Local .NET tests and actual Unity/Android/Windows builds NOT RUN/BLOCKED. Android needs real Unity 6.3 LTS Editor, Android Build Support, SDK/NDK/OpenJDK.
 - Integration remains gated: typed NPC due-event and weekly settlement handlers require agreed 02/00 contract and QA/00 review. Preserve fail-closed C0-v2 / ADR-C0-001 and shared deterministic Core. No main push, PR merge or Issue closure.
+
+## 2026-11-22 — Day01 reserved EndDay command-ID guard (#19)
+
+- Scope: one bounded production Core integration safety fix in `Runtime/Core/DurableDay01Flow.cs`: reject any document choice whose CommandId equals the canonical `end-day:<CampaignId>:0` ID **before** staging three choices. Prevents a document from reserving the durable EndDay receipt ID; no new public API, cross-system contract, or changed successful-path semantics.
+- Code SHA `8a02a41df656296d924a0f3dd5b01d924c9cd250`; golden regression SHA `ad4e28f23ec17e707f3c63777951697f2de7b8e0` in `Tests/Core/GameStateSnapshotGoldenTests.cs` checks rejection and unchanged source revision/day/cash/ledger/receipts. PR #9; branch `feature/core-2` only.
+- Previous exact branch HEAD `51dc7a0b36418c864676f58a00bfc725e01ab07f`: GitHub Actions Core .NET 8 run `44988822125` completed/success; **not** evidence that these new commits pass. New SHA CI requires independent confirmation.
+- Runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` available. Local C# tests, Unity Windows build, Unity Android APK NOT RUN/BLOCKED. Real Unity 6.3 LTS Editor and Android Build Support/SDK/NDK/OpenJDK are required for Android.
+- Remaining: typed NPC due-event and weekly EndDay settlement require approved 02/00 handler contract and QA review; no speculative implementation. No main push, merge, or Issue closure.
