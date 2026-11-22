@@ -299,7 +299,7 @@ assert.ok(artLinks.visits.every(visit => visit !== null && typeof visit === "obj
 const documentBriefs = artLinks.visits.map(visit => {
   assert.ok(typeof visit.documentVisualBrief === "string" && visit.documentVisualBrief.trim().length > 0,
     "missing Day01 document art brief: " + visit.documentId);
-  return visit.documentVisualBrief.trim().replace(/\\s+/g, " ").toLocaleLowerCase("ru-RU");
+  return visit.documentVisualBrief.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru-RU");
 });
 assert.equal(new Set(documentBriefs).size, documentBriefs.length,
   "duplicate Day01 document art briefs");
