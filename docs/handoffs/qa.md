@@ -1915,3 +1915,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 actual PNG binary signatures/dimensions/manifest SHA256 **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor/Android APK/device and integrated Save→Load **NOT RUN**; complete stable persistence DTO contract not confirmed.
 - **Recommended next step:** run actual Chromium mobile touch acceptance on the exact latest single-file HTML from UI PR #12 at `62d54bd4`; capture screenshots and geometry/functional assertions. No READY_FOR_OWNER_TEST, no main writes/merge.
+
+
+## 2026-11-22 — QA 05: exact artifact SHA and assertions from CI logs (Issue #8)
+
+**One bounded independent verification:** inspected GitHub Actions [run 45010201530](https://github.com/rixed318/Probably-TAU/actions/runs/45010201530) for QA commit `54532bdaedf996140c9250c60cc0594905e5199f`, including decoded logs for Android HTML static job `137170655856` and UI/Content static job `137170655990`. Workflow 5/5 jobs completed/success. **Actual log evidence:** distributed single-file HTML job checked out `UI_ARTIFACT_SHA=31f9ee2f6e2bce5b44d9227ef33535027d39643a` against its exact expected pin, and ran `node --test Tests/QA/test_android_offline_artifact.cjs` -> **3 tests, 3 pass, 0 fail**. UI/Content log: Android touch **Node** regression -> **16 tests, 16 pass, 0 fail**; gameplay gateway -> **4/4**; art manifest validator unit tests -> **8/8**; content consistency -> **31 fixture/negative checks**; money wire -> **21 fields, 16 negative mutations, 4 boundary positives**. These are **remote CI executions**, not local execution or Chromium browser/device validation. Logs were checked for these two jobs only; exact source revisions of other checkouts were not extracted. UI artifact SHA above is **the tested pinned artifact revision, not necessarily current UI PR HEAD**.
+
+### Сводка для координатора 00 — 2026-11-22 (run #45010201530)
+
+- **PR heads at review:** #9 Core `d68a1ca3644689740bb2f56d181656bced6da248`; #10 QA `54532bdaedf996140c9250c60cc0594905e5199f` (before this handoff commit); #11 Content `1383b49a112d25139367dec23e5cf9c992d23a67`; #12 UI `64b09479ab6735c233d93c8b43e6ae302f0b1712`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `d16a3b34711d98eedb72afe5434b0eb8b2a2aaf0`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. All open. Tested Android artifact pin `31f9ee2f6e2bce5b44d9227ef33535027d39643a` differs from current UI HEAD; do not attribute CI coverage to latest UI without a new exact-SHA run.
+- **Blocker 1:** Real Chromium touch 360×800 / 800×360, three documents, EndDay, ledger replay, no immediate partner cash, measured 48dp/overflow **NOT RUN**.
+- **Blocker 2:** 3–5 actual PNG binary signatures, dimensions and SHA256 vs manifest **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; stable complete persistence DTO not confirmed.
+- **Recommended next step:** run interactive Chromium touch on exact current UI PR #12 single-file HTML at `64b09479ab6735c233d93c8b43e6ae302f0b1712` and record screenshots/geometry; ensure CI pin follows reviewed artifact SHA. No SaveService, new shared contracts, READY_FOR_OWNER_TEST, main push or merge.
