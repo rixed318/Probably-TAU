@@ -293,3 +293,16 @@ test('viewport zoom guard rejects false and restrictive maximum scale',()=>{
   assert.ok(Number('width=device-width, maximum-scale=2'.match(cap)[1])>=2);
   assert.doesNotMatch('width=device-width, initial-scale=1, viewport-fit=cover',blocked);
 });
+
+// #20: Multiple viewport declarations may be interpreted inconsistently by mobile
+// browsers; ensure a single authoritative zoom/safe-area policy per export.
+test('Android offline variants declare exactly one viewport meta tag',()=>{
+  const viewportTag=/<meta\\b[^>]*\\bname\\s*=\\s*["']viewport["'][^>]*>/gi;
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    const matches=[...source.matchAll(viewportTag)];
+    assert.equal(matches.length,1,filename+' must have exactly one viewport meta tag');
+  }
+  assert.equal([...'<meta name="viewport" content="width=device-width">'.matchAll(viewportTag)].length,1);
+  assert.equal([...'<meta name="viewport"><meta name="viewport">'.matchAll(viewportTag)].length,2);
+});
