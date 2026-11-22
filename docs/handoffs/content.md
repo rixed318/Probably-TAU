@@ -920,3 +920,12 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` now rejects identical `DAY01_ART_LINKS.json.visits[].visualBrief` values after trimming, whitespace collapsing and case folding (`ru` locale). This prevents three NPCs from accidentally sharing an indistinguishable production description. It validates text only, not image originality or actual PNG delivery. No NPC IDs, document IDs, DayIndex, kopeck values, story choices, Core, EventDirector or ledger changed.
 
 **Validator commit:** `c57ba74679428507a206cf5d2ccaf899f6bba107`. **Actually checked:** three isolated JavaScript checks using current GitHub art manifest: canonical three distinct briefs accepted; case/outer-whitespace duplicate rejected; internal-whitespace duplicate rejected (3/3). **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android or PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at branch HEAD; UI 03/owner review actual character art. C0-v2 PR #9 / ADR PR #14 apply; PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge.
+
+
+## AutoDev 04 — art/gameplay boundary metadata guard (22.11.2026)
+
+**One bounded task (#7):** `Content/validate-day01-acceptance.cjs` now asserts the existing `DAY01_ART_LINKS.json` rule `No change to Core, Day01 choices, money, events or ledger`. This protects the content-to-art handoff against silent removal of the platform-independent gameplay boundary. No scenario, money, Definition ID, DayIndex, Core, EventDirector, or PNG changed.
+
+- Code commit: `0f94d07ace892ceff5b3f86ee668830a8111522a` on `feature/content-7`.
+- **Actually checked:** 3 isolated JavaScript assertions on fetched GitHub art JSON and edited source: baseline rule exists, omission is rejected by equivalent predicate, assertion was inserted once. **NOT RUN:** complete `node Content/validate-day01-acceptance.cjs`, Node CLI negative mutation, CI, Unity/Android/Windows, or PNG review. QA 05 must run the full Node validator on actual branch HEAD.
+- **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. No runtime contract approval or owner IP approval implied. PR #9/#14 remain subject to coordinator review; no main merge.
