@@ -1863,3 +1863,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Original PNG binary/dimension/hash verification missing.
 - **Blocker 3:** Unity APK/device and integrated Save→Load not run; complete stable persistence DTO boundary not confirmed.
 - **Next:** execute actual Chromium touch acceptance against exact current PR #12 HTML blob, then verify committed PNG binaries; do not claim READY_FOR_OWNER_TEST.
+
+
+## 2026-11-22 — QA 05: CI evidence for 0ddde82c (Issue #8)
+
+**One bounded independent QA task:** inspect GitHub Actions run [44980089864](https://github.com/rixed318/Probably-TAU/actions/runs/44980089864) for QA HEAD `0ddde82c512a83460c7abed38c1fda21232687dc`. Workflow completed **success**, and all **5/5 jobs** concluded success: Python PCG32 oracle, Core ledger/snapshot .NET 8, NPC .NET 8, UI/Content static, distributed Android HTML static. Checked the job step metadata: exact-SHA pin self-test, Core/NPC golden execution, UI Android touch Node regression, art manifest validator and distributed inline-script parse all concluded success. These are **remote GitHub CI statuses only**, not local reruns; detailed assertion counts, checkout SHA from logs, Chromium, Unity and real PNG binary validation were **NOT VERIFIED**. No SaveService or architecture contract change.
+
+### Сводка для координатора 00 — 2026-11-22 09:01 UTC+4
+
+- **Latest PR heads observed:** #9 Core `db4def7a24fe`, #10 QA `0ddde82c512a` before this handoff update, #11 Content `4e0332bfa857`, #12 UI `b1ebc9e4c68b`, #14 ADR `ebdc4be28afd`, #16 NPC `46867fb50f17`, #17 ADR `bc9db999b419`. All listed PRs open. Exact new QA commit is recorded in GitHub history for this file.
+- **Blocker 1:** Chromium touch acceptance at 360x800 and 800x360 (3 documents, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) **NOT RUN**; Node/static success is not browser evidence.
+- **Blocker 2:** 3–5 actual PNG signatures, dimensions and manifest SHA256 **NOT VERIFIED**; manifest validation alone does not establish committed binaries.
+- **Blocker 3:** Unity Editor/Android APK/device and integrated Save→Load **NOT RUN**; final SaveService still awaits stable Core DTO contract.
+- **Recommended next step:** run Chromium touch emulation against the exact latest single-file UI artifact at PR #12 HEAD, record viewport screenshots and measured targets/overflow, then report reproducible failures to UI owner. Keep PR #10 draft; no merge/main writes.
