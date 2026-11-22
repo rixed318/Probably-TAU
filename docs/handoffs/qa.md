@@ -1941,3 +1941,25 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 actual PNG binary signatures, dimensions, SHA256 against manifest **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; complete stable persistence DTO boundary not established.
 - **Recommended next step:** test exact latest UI PR #12 single-file Day01 HTML at `61e0d15e8a046c00c098823921153c0c794f7a25` in Chromium touch emulation and record geometry and gameplay assertions; compare CI artifact pin to this HEAD. No READY_FOR_OWNER_TEST, main push or merge.
+
+
+## 2026-11-22 — QA 05: exact-SHA CI pin refresh (#8)
+
+**One bounded change:** refreshed read-only cross-branch checkout pins in `.github/workflows/qa-offline.yml` on `feature/save-6`, commit `484edc7c349c73fcc237fca046ed2514027c0562`. No shared contract, runtime or SaveService changed.
+
+- Core #9: `9d9985d3ef5613240f680b51e946b40afad0ac17`
+- UI #12: `7602138120e78dfb11cbcf92de3d663aedcde14a`
+- Content #11: `6718fbee521c86be045a55c2d0b8a2754dd2fe67`
+- NPC #16: `d0a9e89c5d6b254e3e07c71d7dbe28a667703b17`
+
+**Evidence:** GitHub Actions run [45026611564](https://github.com/rixed318/Probably-TAU/actions/runs/45026611564) for *previous* QA HEAD `365cba3c9f43adae6c459a579629f2351e445e73` reports 5/5 jobs success. It tested **older pinned refs**, not the updated refs above. New pin commit `484edc7c` has **CI NOT YET VERIFIED** at writing; local Node/Python/.NET tests **NOT RUN**. Chromium touch 360x800/800x360, 48dp/overflow, actual PNG binary signature/dimensions/SHA, Unity Editor APK/device, and integrated Save→Load are **NOT RUN / NOT VERIFIED**. The exact HTML tested by the previous CI was UI `31f9ee2f`, not current UI HEAD.
+
+### Сводка для координатора 00 — 2026-11-22
+
+- **PR/HEAD at audit:** #9 `9d9985d3`, #10 `365cba3c` before this pass, #11 `6718fbee`, #12 `76021381`, #14 `ebdc4be2`, #16 `d0a9e89c`, #17 `bc9db999`. All open. QA workflow pin refresh `484edc7c`; this handoff update follows.
+- **Blocker 1:** Updated cross-branch CI at new pins not yet verified; prior green result is for old pins.
+- **Blocker 2:** Chromium touch acceptance, 3 docs/EndDay/ledger replay/partner deferred cash, 48dp and overflow still NOT RUN; real 3–5 PNG binaries and SHA NOT VERIFIED.
+- **Blocker 3:** Unity Editor APK/real Android and integrated Save→Load NOT RUN; complete stable DTO/atomic snapshot boundary not independently accepted.
+- **Recommended next step:** inspect new GitHub Actions run for `484edc7c` and failures at the exact new pins, then perform actual Chromium touch acceptance against UI `76021381`. Do not merge or mark ready without evidence.
+
+**Safety:** only `feature/save-6` updated; no main push, merge, branch deletion, or IP/logo approval.
