@@ -49,7 +49,7 @@ namespace TAU.President.Tests.Npc
             // Reject invisible prefixes too: Android text input must not route a visually
             // identical but noncanonical inspection ID to another Day01 document.
             foreach (string canonicalInspectionId in inspectionIds)
-                foreach (string malformedPrefix in new[] { "\\u200B", "\\u200D", "\\u2060", "\\uFEFF" })
+                foreach (string malformedPrefix in new[] { "\u200B", "\u200D", "\u2060", "\uFEFF" })
                 {
                     Day01Visitors.VisitScreenPreview malformedPrefixScreen;
                     if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
