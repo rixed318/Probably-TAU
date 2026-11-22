@@ -1,3 +1,9 @@
+## Update 2026-11-22 — EndDay branch regression regex correction (#20)
+
+- Corrected the over-escaped JavaScript regex literal in `prototypes/ui-day-one/test-day01-android-touch.cjs`: the previous pattern matched literal backslashes rather than the successful EndDay branch. Test-source commit: `c2d57ba35c2ebfaa7dec7a4c72e936bc4ae8c608`.
+- **Actually executed:** JavaScript/V8 regex against current GitHub touch HTML: positive branch matched (1/1), two negative fixtures rejected (2/2). **Not executed:** Node --test, Chromium, Android/TalkBack, Unity; the entire Node test suite is NOT claimed green.
+- Reviewed main README/AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest, and this handoff. No Core/main/merge; physical Android #20 and binary PNG #21 still pending.
+
 ## Update 2026-11-22 — EndDay focus branch-scoped regression (#20)
 
 - Tightened one existing source-level assertion in `prototypes/ui-day-one/test-day01-android-touch.cjs`: report focus must occur **inside** the successful `s.closed` branch, after the report becomes visible. Added negative fixtures for misplaced and absent focus. Test-source commit: `b3e6a09b46fcac40acdad7a24351c1fcea631fcd`.
