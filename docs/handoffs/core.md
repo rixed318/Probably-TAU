@@ -886,3 +886,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Replaying the same three Day01 choices against the same immutable input now compares each receipt's `PostingKeys` count and ordered key values, in addition to existing command ID/fingerprint and ledger assertions. No production contract, NPC/UI/Save changes.
 - Local environment checked: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` missing; `java` and `javac` present. Local .NET tests and Unity/Windows/Android builds NOT RUN/BLOCKED. CI of new commit must be checked separately; no claim of success without exact SHA run.
 - Remaining: typed due-NPC event and weekly EndDay settlement require approved 02/00 contract; real Unity 6.3 Android build requires Editor, Android Build Support, SDK/NDK/OpenJDK and QA validation. No main push, merge or issue closure.
+
+
+## 2026-11-22 — exact-head Day01 receipt replay CI verification (#19)
+
+- Scope: verify the previous Day01 `PostingKeys` deterministic replay regression at exact `feature/core-2` HEAD `db4def7a24fe32a3651c88c1dc2aa31c1bae89cf`; no new C# changes or public contract modifications in this pass.
+- GitHub Actions `Core .NET 8 golden tests` run [44981634736](https://github.com/rixed318/Probably-TAU/actions/runs/44981634736) returned `completed/success` for that exact commit SHA. This confirms standalone Core .NET 8 CI only, not Unity compilation, Windows build, or Android APK. Any new handoff commit needs its own CI result.
+- Environment probe: `dotnet`, `unity`/`Unity`, `adb`, `sdkmanager`, `ndk-build` unavailable on PATH; `java` and `javac` present. Local .NET tests and actual Unity/Android/Windows builds NOT RUN/BLOCKED. Android needs real Unity 6.3 LTS Editor, Android Build Support, SDK/NDK/OpenJDK.
+- Integration remains gated: typed NPC due-event and weekly settlement handlers require agreed 02/00 contract and QA/00 review. Preserve fail-closed C0-v2 / ADR-C0-001 and shared deterministic Core. No main push, PR merge or Issue closure.
