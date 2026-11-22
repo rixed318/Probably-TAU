@@ -970,3 +970,11 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **One bounded task (#7 / PR #11):** moved existing `DAY01_ART_LINKS.json.visits` array/object-entry assertions above `documentBriefs = artLinks.visits.map(...)` in `Content/validate-day01-acceptance.cjs`. Previously malformed `visits` could throw an incidental TypeError before reaching the intended validation. No gameplay, story, art IDs, Definition IDs, DayIndex=0, kopeck amounts, Core, EventDirector, ledger, or PNGs changed.
 
 **Validator commit:** `e708540aa658d5f7d5daad8c615e3f0e393216a9`. **Actually checked:** three static source invariants: guard appears exactly once; guard precedes first document-brief map; all other source bytes remain unchanged (3/3). **NOT RUN:** full Node validator (container GitHub clone failed DNS resolution), CI, Unity, Windows/Android or PNG review. **QA 05:** run `node Content/validate-day01-acceptance.cjs` on branch HEAD and malformed `visits` negatives. PR #9 C0-v2 and PR #14 ADR govern feature-only work. PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge.
+
+
+## Автономный проход 04 — whitespace normalization in document briefs (23.11.2026)
+
+- **Одна задача / Issue #7:** исправлена регулярка в `Content/validate-day01-acceptance.cjs`: `replace(/\\s+/g, " ")` ошибочно искала буквальный `\s`, теперь `replace(/\s+/g, " ")` действительно схлопывает пробелы при проверке уникальности `documentVisualBrief` (включая дубли с различным количеством пробелов).
+- **Commit:** `2fe3758676f249ecd549b055f6f3ad4d02ad95f0` (`feature/content-7`). Только валидатор; данные Дня 01, Core, EventDirector, экономика, IDs, DayIndex и суммы не менялись.
+- **Фактический тест:** локальный Node.js `node -e` на строке `Документ   Один` подтвердил: прежняя регулярка оставляет три пробела, исправленная даёт один. Это изолированная проверка выражения, **не** полный запуск валидатора на checkout. Полный Node CLI, CI, Unity, Windows, Android и реальные PNG не проверялись.
+- **Статус:** DRAFT / NOT READY_FOR_OWNER_TEST. QA 05: запустить `node Content/validate-day01-acceptance.cjs` на HEAD и отрицательный тест дублирования описаний с разным количеством пробелов. PR #9/#14 не слиты; runtime schema остаётся предложением.
