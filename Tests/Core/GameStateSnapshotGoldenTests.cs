@@ -588,6 +588,29 @@ namespace TAU.President.Tests.Core
                 result.Next.Finance.Ledger.Entries[2].PostingId == "decision:doc-3" &&
                 result.Report.Postings.Count == 0);
             Assert(result.Next.Restore().Header.BalanceKopecks == 750L);
+            // Replaying identical choices against the same immutable snapshot must
+            // produce identical durable receipts and ledger posting order.
+            var replay = DurableDay01Flow.Prepare(before, 0, 0, choices);
+            AssertNamed(replay.Next.Header.Revision == result.Next.Header.Revision &&
+                replay.Next.Header.DayIndex == result.Next.Header.DayIndex &&
+                replay.Next.Header.BalanceKopecks == result.Next.Header.BalanceKopecks &&
+                replay.Next.Finance.Ledger.Entries.Count == result.Next.Finance.Ledger.Entries.Count &&
+                replay.Next.Finance.Receipts.Count == result.Next.Finance.Receipts.Count,
+                "Day01 identical replay produces the same durable totals");
+            for (var i = 0; i < result.Next.Finance.Ledger.Entries.Count; i++)
+            {
+                Assert(replay.Next.Finance.Ledger.Entries[i].PostingId ==
+                    result.Next.Finance.Ledger.Entries[i].PostingId);
+                Assert(replay.Next.Finance.Ledger.Entries[i].DeltaKopecks ==
+                    result.Next.Finance.Ledger.Entries[i].DeltaKopecks);
+            }
+            for (var i = 0; i < result.Next.Finance.Receipts.Count; i++)
+            {
+                Assert(replay.Next.Finance.Receipts[i].CommandId ==
+                    result.Next.Finance.Receipts[i].CommandId);
+                Assert(replay.Next.Finance.Receipts[i].Fingerprint ==
+                    result.Next.Finance.Receipts[i].Fingerprint);
+            }
             Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(result.Next, 0, 0, choices));
 
             var unaffordable = new[] {
