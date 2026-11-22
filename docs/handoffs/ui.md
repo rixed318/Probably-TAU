@@ -1,3 +1,9 @@
+## Update 2026-11-22 — EndDay focus branch-scoped regression (#20)
+
+- Tightened one existing source-level assertion in `prototypes/ui-day-one/test-day01-android-touch.cjs`: report focus must occur **inside** the successful `s.closed` branch, after the report becomes visible. Added negative fixtures for misplaced and absent focus. Test-source commit: `b3e6a09b46fcac40acdad7a24351c1fcea631fcd`.
+- **Actually executed:** 4/4 JavaScript/V8 preflight assertions against live GitHub HTML and negative fixtures. **Not executed:** Node test runner, Chromium/DOM, Android/TalkBack, Unity. Source check does not establish physical-device behavior.
+- Read main README/AGENTS/workflow/GDD/DECISIONS/ARCHITECTURE, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest and UI handoff. C0/ADR remain constraints. #20 device acceptance and #21 binary PNG delivery pending. No Core/main/merge.
+
 ## Update 2026-11-22 — EndDay report focus regression (#20)
 
 - Added one source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`: the EndDay report must be visible and focusable, focus is moved to it after a successful close/render, and the failure branch is retained. Initial commit `c1c302487293e5d224328d277b35a3fd20f49020`; corrected JS regex escaping in `27119fe6ec3c8632ba849f4d632f513fd79ff587`.
