@@ -77,6 +77,16 @@ namespace TAU.President.Tests.Npc
                         canonicalInspectionId + "\uFEFF", out bomScreen) || bomScreen != null)
                     throw new Exception("Trailing BOM inspection route accepted.");
             }
+            // An embedded BOM must not be silently removed by Windows/Android routing.
+            foreach (string canonicalInspectionId in inspectionIds)
+            {
+                int split = canonicalInspectionId.IndexOf('_');
+                string malformed = canonicalInspectionId.Insert(split, "\\uFEFF");
+                Day01Visitors.VisitScreenPreview embeddedBomScreen;
+                if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
+                        malformed, out embeddedBomScreen) || embeddedBomScreen != null)
+                    throw new Exception("Embedded BOM inspection route accepted.");
+            }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
                 "check_seat_map ", " check_seat_map", "unknown_inspection" })
             {
