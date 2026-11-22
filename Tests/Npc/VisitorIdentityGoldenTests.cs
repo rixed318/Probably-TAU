@@ -46,6 +46,17 @@ namespace TAU.President.Tests.Npc
                         malformedScreen != null)
                         throw new Exception("Control-character inspection ID accepted: " + canonicalInspection);
                 }
+            // Reject invisible prefixes too: Android text input must not route a visually
+            // identical but noncanonical inspection ID to another Day01 document.
+            foreach (string canonicalInspectionId in inspectionIds)
+                foreach (string malformedPrefix in new[] { "\\u200B", "\\u200D", "\\u2060", "\\uFEFF" })
+                {
+                    Day01Visitors.VisitScreenPreview malformedPrefixScreen;
+                    if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
+                            malformedPrefix + canonicalInspectionId, out malformedPrefixScreen) ||
+                        malformedPrefixScreen != null)
+                        throw new Exception("Invisible-prefix inspection route accepted.");
+                }
             // Invisible Unicode format characters and malformed UTF-16 must never be normalized
             // into a valid inspection route by platform-specific UI text handling.
             foreach (string canonicalInspectionId in inspectionIds)
