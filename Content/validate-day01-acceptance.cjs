@@ -553,6 +553,7 @@ assert.ok(Array.isArray(art.rules) && art.rules.includes("Original fictional cha
 // This is an authored metadata guard, not a check of actual PNG pixel contents.
 assert.ok(Array.isArray(art.rules) && art.rules.includes("All document text and money are rendered dynamically by UI"),
   "Day01 art contract must keep document text and money out of baked-in assets");
+assert.ok(Array.isArray(art.visits), "Day01 art visits must be an array");
 assert.equal(art.visits.length, fixture.visitors.length);
 const artByVisit = new Map(art.visits.map(v => [v.visitId, v]));
 assert.equal(artByVisit.size, art.visits.length);
