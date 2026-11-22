@@ -37,6 +37,23 @@ namespace TAU.President.Tests
                 Require(n < 7U, "Bounded range");
             }
             Require(Pcg32.FromSeed(1UL, 1UL).NextInt(1) == 0, "Single-element range");
+            // Invalid bounds and invalid restored increment must not consume RNG state.
+            var rejected = Pcg32.FromSeed(2026UL, 17UL);
+            ulong stateBeforeReject = rejected.State;
+            ulong incrementBeforeReject = rejected.Increment;
+            ExpectArgument(() => rejected.NextUInt32(0U));
+            ExpectArgument(() => rejected.NextInt(0));
+            ExpectArgument(() => rejected.NextInt(-1));
+            Require(rejected.State == stateBeforeReject &&
+                    rejected.Increment == incrementBeforeReject,
+                "Rejected RNG bounds do not consume draws");
+            var referenceAfterReject = Pcg32.Restore(stateBeforeReject, incrementBeforeReject);
+            Require(rejected.NextUInt32() == referenceAfterReject.NextUInt32(),
+                "Rejected RNG bounds preserve next draw");
+            ExpectArgument(() => Pcg32.Restore(stateBeforeReject, 0UL));
+            Require(rejected.State == referenceAfterReject.State,
+                "Invalid restore does not mutate existing RNG");
+
             ExpectArgument(() => Pcg32.Restore(1UL, 2UL));
             ExpectArgument(() => Pcg32.FromSeed(1UL, 1UL).NextUInt32(0U));
             ExpectArgument(() => Pcg32.FromSeed(1UL, 1UL).NextInt(0));
