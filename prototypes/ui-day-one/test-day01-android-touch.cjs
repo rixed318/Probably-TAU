@@ -244,8 +244,8 @@ test('Android HTML exports use script listeners rather than inline event attribu
 // Source-level contract only; browser and Android TalkBack still require QA.
 test('Android inspection focus follows successful inspect',()=>{
   assert.match(html,/<div id="inspection" tabindex="-1" aria-live="polite">/i);
-  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]);
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   const ui=scripts[2];
-  assert.match(ui,/g\\.inspect\\(g\\.view\\(\\)\\.selected\\);el\\("error"\\)\\.textContent="";render\\(\\);el\\("inspection"\\)\\.focus\\(\\);/);
-  assert.match(ui,/catch\\(e\\)\\{el\\("error"\\)\\.textContent=e\\.message;\\}/);
+  assert.match(ui,/g\.inspect\(g\.view\(\)\.selected\);el\("error"\)\.textContent="";render\(\);el\("inspection"\)\.focus\(\);/);
+  assert.match(ui,/catch\(e\)\{el\("error"\)\.textContent=e\.message;\}/);
 });
