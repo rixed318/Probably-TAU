@@ -1,3 +1,9 @@
+## Update 2026-11-22 — EndDay report focus regression (#20)
+
+- Added one source-level regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`: the EndDay report must be visible and focusable, focus is moved to it after a successful close/render, and the failure branch is retained. Initial commit `c1c302487293e5d224328d277b35a3fd20f49020`; corrected JS regex escaping in `27119fe6ec3c8632ba849f4d632f513fd79ff587`.
+- **Actually checked:** 4 V8 source preconditions against live GitHub HTML (4/4 passed); committed test file re-read from GitHub and corrected. **Not executed:** Node test runner, browser DOM, Android/TalkBack, Unity. This is a source regression, not proof of device focus behavior.
+- Main AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, ART_BIBLE_V0_1 and ASSET_MANIFEST_D01 reviewed. C0-v2/ADR remain integration constraints. #20 real Android device acceptance and #21 verified binary PNG still pending. No GameState/Core/main/merge.
+
 ## Update 2026-11-22 — inspection focus source regression (#20)
 
 - Added one source-level Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` asserting that the persistent inspection result remains focusable and the successful Inspect handler moves focus there after rendering, with the error branch retained. Initial commit: `9b66667320c3b8253b35d9378d4049ffdb2d8012`; regex-escaping correction: `170fef58db96353586da012c4821459cc4cfed0d`.
