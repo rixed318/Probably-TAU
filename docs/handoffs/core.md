@@ -915,3 +915,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Audited `feature/core-2` HEAD `cfb3a065eb8f0ef598aa5ff24b133dd48516be90`: GitHub Actions **Core .NET 8 golden tests** run [45003864299](https://github.com/rixed318/Probably-TAU/actions/runs/45003864299) is `completed/success` (run number 361). This is standalone .NET evidence, **not** Unity Editor, Windows player or Android APK validation.
 - No C# code or public contracts changed in this pass. Local probe found `java`/`javac`, but no `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build`. Local .NET/Unity tests and Android APK are BLOCKED. Android Build Support/SDK/NDK/OpenJDK not verified as an installed complete Unity toolchain.
 - Day01 typed NPC due-event and weekly EndDay production integration remains BLOCKED pending approved 02/00 contract and independent QA. No main push/merge, no Issue closure. The handoff-only commit created by this update needs its own CI confirmation.
+
+
+### Core 01 — CI verification (22.11.2026, Issue #19)
+- Exact previous branch HEAD `d68a1ca3644689740bb2f56d181656bced6da248`: GitHub Actions Core .NET 8 golden tests [run #45011808560](https://github.com/rixed318/Probably-TAU/actions/runs/45011808560) completed/success (run number 363). This is standalone .NET CI, not a Unity/Windows/Android build.
+- This pass changes handoff only. No new C# changes or public contract changes; no independent NPC/weekly EndDay integration without 02/00 approval and QA.
+- Local runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `javac` present. Local .NET tests, Windows Unity build and Android APK NOT RUN/BLOCKED. New documentation HEAD CI not yet verified.
+- No main push, merge or Issue closure.
