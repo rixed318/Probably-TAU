@@ -74,7 +74,7 @@ namespace TAU.President.Tests.Npc
             {
                 Day01Visitors.VisitScreenPreview bomScreen;
                 if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
-                        canonicalInspectionId + "\\uFEFF", out bomScreen) || bomScreen != null)
+                        canonicalInspectionId + "\uFEFF", out bomScreen) || bomScreen != null)
                     throw new Exception("Trailing BOM inspection route accepted.");
             }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
