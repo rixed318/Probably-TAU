@@ -575,6 +575,16 @@ namespace TAU.President.Tests.Core
                 before.Finance.Ledger.Entries.Count == 0 &&
                 before.Finance.Receipts.Count == 0,
                 "Day01 stale revision/day preconditions reject without partial effects");
+            // Malformed Day01 batches fail preflight without staging the first two choices.
+            Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0,
+                new Day01DocumentChoice[] { choices[0], choices[1], null }));
+            Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0,
+                new Day01DocumentChoice[] { choices[0], choices[1] }));
+            AssertNamed(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
+                before.Header.BalanceKopecks == 1000L &&
+                before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0,
+                "Day01 malformed batch rejected without partial effects");
             var result = DurableDay01Flow.Prepare(before, 0, 0, choices);
             Assert(before.Header.Revision == 0 && before.Finance.Ledger.Entries.Count == 0);
             Assert(result.Next.Header.DayIndex == 1 && result.Next.Header.Revision == 4 &&
