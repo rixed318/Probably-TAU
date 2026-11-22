@@ -255,10 +255,10 @@ test('Android inspection focus follows successful inspect',()=>{
 // This is a source contract; Android/TalkBack still needs device validation.
 test('Android end-day transfers focus to the visible report after success',()=>{
   assert.match(html,/<section id="report" hidden tabindex="-1">/i);
-  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]);
+  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   const ui=scripts[2];
-  assert.match(ui,/if\\(s\\.closed\\)\\{el\\("game"\\)\\.hidden=true;el\\("report"\\)\\.hidden=false;/);
-  assert.match(ui,/el\\("report"\\)\\.focus\\(\\);/);
-  assert.match(ui,/g\\.endDay\\(\\);el\\("error"\\)\\.textContent="";render\\(\\);/);
-  assert.match(ui,/catch\\(e\\)\\{el\\("error"\\)\\.textContent=e\\.message;\\}/);
+  assert.match(ui,/if\(s\.closed\)\{el\("game"\)\.hidden=true;el\("report"\)\.hidden=false;/);
+  assert.match(ui,/el\("report"\)\.focus\(\);/);
+  assert.match(ui,/g\.endDay\(\);el\("error"\)\.textContent="";render\(\);/);
+  assert.match(ui,/catch\(e\)\{el\("error"\)\.textContent=e\.message;\}/);
 });
