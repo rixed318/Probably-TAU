@@ -861,3 +861,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Prior exact HEAD `31a6f6f6b82e199cf91409ee217200f28b8df4c3`: Core .NET 8 PR workflow run `44948940279` completed/success. This does NOT verify the new code commit. New SHA CI not yet confirmed.
 - Local environment: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` available. Local .NET tests, Unity/Windows build and Android APK NOT RUN/BLOCKED. No fake Unity project/APK.
 - QA/00: review new exact SHA and its CI. NPC due-event / weekly settlement EndDay integration remains dependent on approved 02/00 contract. No main push/merge or Issue closure.
+
+## Core 01 — exact-head CI audit, 2026-11-22
+
+- Scope: verify the latest Day01 negative precondition regression at exact branch SHA `d62a22bdcdb8df1163f021071384e331f1d3a35d` (Issue #19); no new C# or public contract changes.
+- GitHub Actions PR run [44957751033](https://github.com/rixed318/Probably-TAU/actions/runs/44957751033) returned `completed/success` for that SHA (standalone Core tests only). This is not a Unity compile or Android build.
+- Local environment check: `dotnet`, `Unity`, `unity-editor`, `adb`, `sdkmanager`, `ndk-build` not on PATH; `java` and `javac` present. Local .NET/Unity tests and real Android APK are BLOCKED by unavailable toolchain.
+- Day01 typed NPC due-event and weekly settlement production integration remain gated on approved cross-subsystem handler contracts and QA/00 review. Avoid inventing handlers or mutating foreign subsystems.
+- No main push, merge or Issue closure. This handoff-only commit requires its own exact-SHA CI check; do not attribute prior success to the new HEAD.
