@@ -291,6 +291,9 @@ const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.
 assert.equal(new Set(visualBriefs).size, visualBriefs.length,
   "duplicate fictional Day01 NPC visual descriptions");
 const artLinks = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
+assert.ok(Array.isArray(artLinks.visits), "Day01 art-link visits must be an array before canonical mapping");
+assert.ok(artLinks.visits.every(visit => visit !== null && typeof visit === "object" && !Array.isArray(visit)),
+  "Day01 art-link visit entries must be objects before canonical mapping");
 // Each of the three original blank document templates needs its own usable art brief.
 // Text/amounts remain dynamic UI data; this validates descriptions, not PNGs.
 const documentBriefs = artLinks.visits.map(visit => {
@@ -310,9 +313,6 @@ const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
   return [visit.id, npc.id, doc.id, npc.portraitAssetId, npc.standingAssetId,
     doc.documentAssetId, npc.visualDescription];
 });
-assert.ok(Array.isArray(artLinks.visits), "Day01 art-link visits must be an array before canonical mapping");
-assert.ok(artLinks.visits.every(visit => visit !== null && typeof visit === "object" && !Array.isArray(visit)),
-  "Day01 art-link visit entries must be objects before canonical mapping");
 assert.deepEqual(artLinks.visits.map(visit => [visit.visitId, visit.visitorId,
   visit.documentId, visit.portraitAssetId, visit.standingAssetId,
   visit.documentAssetId, visit.visualBrief]), canonicalArtLinks,
