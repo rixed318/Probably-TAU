@@ -1004,13 +1004,13 @@ namespace TAU.President.Tests.Npc
             if (ReferenceEquals(first[0], replay[0]))
                 throw new Exception("Factory should return fresh immutable objects.");
             // Canonical Content IDs must not admit invisible controls or malformed UTF-16.
-            foreach (string badId in new[] { "D01\nLAB", "D01\0LAB", "D01\uD800LAB", "D01\u200BLAB", "D01\u2060LAB" })
+            foreach (string badId in new[] { "D01\nLAB", "D01\0LAB", "D01\uD800LAB", "D01\u200BLAB", "D01\u2060LAB", "D01\uFEFFLAB" })
             {
                 try { new VisitorInstance(badId, first[0].Archetype, "DOC-01", 0); }
                 catch (ArgumentException) { continue; }
                 throw new Exception("Invalid canonical visit ID accepted.");
             }
-            foreach (string badId in new[] { "npc\tvisitor", "npc\uDC00visitor", "npc\u200Dvisitor" })
+            foreach (string badId in new[] { "npc\tvisitor", "npc\uDC00visitor", "npc\u200Dvisitor", "npc\uFEFFvisitor" })
             {
                 try { new VisitorArchetype(badId, "visitor"); }
                 catch (ArgumentException) { continue; }
