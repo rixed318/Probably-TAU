@@ -1,3 +1,9 @@
+## Update 2026-11-23 — Android dp versus CSS px evidence (#20)
+
+- One bounded QA documentation correction in `prototypes/ui-day-one/ANDROID_DEVICE_EVIDENCE_TEMPLATE.md`: record actual Android display/font scaling and measured hit rectangles; distinguish source-level `48 CSS px` assertions from the required `48 Android dp` physical acceptance. A7 stays BLOCKED without measurement. Commit `b8014bff46565655b6df6956d5f5c77d50066cf0`.
+- **Actually checked:** live main README/AGENTS, workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest and UI handoff; GitHub accepted the template edit. **Not executed:** Node, browser, Android, TalkBack, Unity. No physical-device acceptance or binary PNG delivery claimed.
+- No changes to Core, main, ADR, or other branches; no merge.
+
 ## Update 2026-11-23 — Android device evidence template (#20)
 
 - One bounded documentation deliverable: `prototypes/ui-day-one/ANDROID_DEVICE_EVIDENCE_TEMPLATE.md` records exact tested artifact SHA/hash, device/browser, landscape/portrait, offline, TalkBack, safe-area and touch-target observations; every result starts TODO, never PASS. Commit: `438278f3400f2b7d59e3a3f3313f805409fb277c`.
