@@ -651,6 +651,24 @@ namespace TAU.President.Tests.Core
                 before.Finance.Ledger.Entries.Count == 0 &&
                 before.Finance.Receipts.Count == 0,
                 "Day01 reserved EndDay ID rejected without effects");
+            // Persisted command history can also reserve EndDay's ID before Day01.
+            // Fail at preflight, rather than after staging all three choices.
+            var occupiedHeader = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new[] { "end-day:campaign:0" }, new string[0],
+                new string[0], new string[0]);
+            var occupied = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(occupiedHeader,
+                    new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new[] { new DurableCommandReceipt("end-day:campaign:0",
+                        "prior-command", 1, new string[0]) }),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
+            Throws<InvalidOperationException>(() => DurableDay01Flow.Prepare(occupied, 1, 0, choices));
+            AssertNamed(occupied.Header.Revision == 1 && occupied.Header.DayIndex == 0 &&
+                occupied.Header.BalanceKopecks == 1000L &&
+                occupied.Finance.Ledger.Entries.Count == 0 &&
+                occupied.Finance.Receipts.Count == 1,
+                "Day01 persisted EndDay ID collision rejected without effects");
             var duplicate = new[] { choices[0], choices[1], choices[0] };
             Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicate));
             // A different command ID cannot authorize a second choice for the same decision.
