@@ -946,3 +946,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Core commit `c28f3ba4f65376f69245686f9a50e3624fd6be57`; regression commit `fb48b98e8a35b49ff7c35c923150e0d4616b0645`. Golden regression constructs a valid restored-like DayIndex=0 snapshot with previously processed third-document ID and asserts rejection without changing revision/day/cash/Ledger/receipts.
 - Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java`/`javac` present. Local .NET tests, Unity Windows build and Android APK **NOT RUN / BLOCKED**. New exact-SHA CI status must be checked independently; do not claim it passed before verification.
 - Typed NPC due-event/weekly EndDay settlement still requires approved 02/00 contract and QA review. No main push, merge, or Issue closure.
+
+
+## AutoDev 01 — RNG rejection regression (23.11.2026)
+
+Issue #2: one bounded test-only increment in `Tests/Core/Pcg32GoldenTests.cs`. Invalid `NextUInt32(0)`, `NextInt(0)`, and `NextInt(-1)` must leave `State` and `Increment` unchanged; the next draw must match an exact restored snapshot. Invalid even-increment `Restore` is rejected without mutating an existing instance. No public API, production Core, or foreign subsystem changes.
+
+Test commit: `55b7185d3ce006aba0d3ed6f8667a98f7034a37c` on `feature/core-2`. Local `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. C# tests **NOT RUN locally**; Unity Windows/Android APK **BLOCKED**. Exact-SHA GitHub CI needs separate verification. No main push/merge or issue closure. QA/00: please review this isolated RNG regression and its CI.
