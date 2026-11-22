@@ -1,3 +1,9 @@
+## Update 2026-11-22 — unique Android viewport declaration (#20)
+
+- One bounded Node source regression in `prototypes/ui-day-one/test-day01-android-touch.cjs`: require exactly one viewport meta declaration in each offline HTML export; prevents conflicting Android zoom and safe-area policies. Test commits: `63b7e24c02865ef5b0631a3c07ded9dbd1792da9` (initial), `e06ae87b753475f2c0f468873b124e555a90c0c2` (corrected regex escapes).
+- **Actually checked:** GitHub source read: one viewport declaration in each HTML file (2/2); JavaScript/V8 regex fixtures single/duplicate/absent produced expected counts (3/3). **Not executed:** Node --test, Chromium, physical Android/TalkBack, Unity. The committed Node test is NOT claimed passing.
+- Read main README/AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible and manifest. C0-v2/ADR observed. Device acceptance #20 and real PNG #21 remain pending. No Core/main/merge.
+
 ## Update 2026-11-22 — decimal-zero viewport guard (#20)
 
 - One bounded source-test fix: reject `user-scalable=0.0` and `0.00` in both offline Android HTML viewport declarations, not just `0`/false/no. Source commit: `24d47b806749c8399a1847795e987fe34ff76c7e`.
