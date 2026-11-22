@@ -939,3 +939,10 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - `Day01FlowGolden` now constructs a valid restored-like state with the reserved command ID and asserts fail-closed without modifying balance, ledger, day, revision or receipts.
 - Local verification: .NET SDK and Unity Editor unavailable; C# tests and Unity/Windows/Android builds **NOT RUN** locally. Java compiler present, Android SDK/NDK tools unavailable. GitHub Actions for new SHA must be checked separately; no success claimed in advance.
 - EndDay due-event and weekly integration still requires the 02/00 contract; no NPC/UI/Save changes. PR #9 remains draft, no main merge.
+
+## 2026-11-23 — persisted document command ID preflight (#19)
+
+- Branch `feature/core-2`, PR #9. One bounded production change: `DurableDay01Flow.Prepare` rejects any of the three document CommandIds already present in `current.Header.ProcessedCommandIds` before staging the first document. Existing EndDay reserved ID preflight remains intact; public API and foreign subsystems unchanged.
+- Core commit `c28f3ba4f65376f69245686f9a50e3624fd6be57`; regression commit `fb48b98e8a35b49ff7c35c923150e0d4616b0645`. Golden regression constructs a valid restored-like DayIndex=0 snapshot with previously processed third-document ID and asserts rejection without changing revision/day/cash/Ledger/receipts.
+- Local probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java`/`javac` present. Local .NET tests, Unity Windows build and Android APK **NOT RUN / BLOCKED**. New exact-SHA CI status must be checked independently; do not claim it passed before verification.
+- Typed NPC due-event/weekly EndDay settlement still requires approved 02/00 contract and QA review. No main push, merge, or Issue closure.
