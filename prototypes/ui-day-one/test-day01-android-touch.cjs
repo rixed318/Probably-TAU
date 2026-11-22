@@ -273,10 +273,13 @@ test('Android end-day transfers focus to the visible report after success',()=>{
 test('Android offline variants preserve user viewport zoom',()=>{
   for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
-    const viewport=source.match(/<meta\s+name=["']viewport["']\s+content=["']([^"']+)["']/i);
-    assert.ok(viewport,filename+' must declare viewport');
-    assert.doesNotMatch(viewport[1],/user-scalable\s*=\s*(?:no|false|0(?:\.0+)?)(?:\s*[,;]|$)/i);
-    const cap=viewport[1].match(/(?:^|[,;])\s*maximum-scale\s*=\s*([0-9]+(?:\.[0-9]+)?)(?=\s*[,;]|\s*$)/i);
+    const viewportTag=[...source.matchAll(/<meta\\b[^>]*>/gi)].map(m=>m[0])
+      .find(tag=>/\\bname\\s*=\\s*["']viewport["']/i.test(tag));
+    assert.ok(viewportTag,filename+' must declare viewport');
+    const viewport=viewportTag.match(/\\bcontent\\s*=\\s*(["'])(.*?)\\1/i);
+    assert.ok(viewport,filename+' viewport must declare content');
+    assert.doesNotMatch(viewport[2],/user-scalable\s*=\s*(?:no|false|0(?:\.0+)?)(?:\s*[,;]|$)/i);
+    const cap=viewport[2].match(/(?:^|[,;])\s*maximum-scale\s*=\s*([0-9]+(?:\.[0-9]+)?)(?=\s*[,;]|\s*$)/i);
     if(cap) assert.ok(Number(cap[1])>=2,filename+' must allow at least 200% zoom');
   }
 });
@@ -322,4 +325,18 @@ test('both Android offline pages declare Russian language and a nonempty title',
   assert.match('<title>День 01</title>',title);
   assert.doesNotMatch('<html lang="en">',language);
   assert.doesNotMatch('<title>   </title>',title);
+});
+
+// Regression fixtures: HTML meta attributes may appear in either order.
+// The zoom guard must still inspect the content, not silently skip it.
+test('viewport zoom parser handles reordered attributes',()=>{
+  const extract=tag=>{
+    const isViewport=/\\bname\\s*=\\s*["']viewport["']/i.test(tag);
+    if(!isViewport)return null;
+    const content=tag.match(/\\bcontent\\s*=\\s*(["'])(.*?)\\1/i);
+    return content?.[2]??null;
+  };
+  assert.equal(extract('<meta content="maximum-scale=1" name="viewport">'),'maximum-scale=1');
+  assert.equal(extract('<meta name="viewport" content="maximum-scale=2">'),'maximum-scale=2');
+  assert.equal(extract('<meta name="description" content="maximum-scale=1">'),null);
 });
