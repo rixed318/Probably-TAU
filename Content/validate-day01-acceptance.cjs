@@ -574,6 +574,11 @@ for (const visit of fixture.visitors) {
   }
 }
 assert.equal(artAssetIds.size, 9);
+// Original Day01 NPCs need distinct production briefs, not interchangeable portraits.
+// Authored text only: UI/owner must still review actual generated PNGs.
+const normalizedVisualBriefs = art.visits.map(visit => visit.visualBrief.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru"));
+assert.equal(new Set(normalizedVisualBriefs).size, art.visits.length,
+  "Day01 fictional NPC visual briefs must be distinct");
 // Draft content and planned art links must agree; this does not verify PNG delivery.
 const draftNpcsByVisit = new Map(contentSpec.fictionalNpcs.map(npc => [npc.visitId, npc]));
 const draftDocumentsById = new Map(contentSpec.documentTypes.map(doc => [doc.id, doc]));
