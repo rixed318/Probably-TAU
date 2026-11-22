@@ -1,6 +1,6 @@
 ## Update 2026-11-22 — Android viewport zoom regression (#20)
 
-- Added one Node source regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`: both standalone Android HTML variants must retain a viewport meta tag and must not disable pinch zoom via `user-scalable=no/0` or `maximum-scale=1`. Test-source commit: `4545d672bf00df0ff2b8975df0bf10effd7e6a7d`.
+- Added one Node source regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`: both standalone Android HTML variants must retain a viewport meta tag and must not disable pinch zoom via `user-scalable=no/0` or `maximum-scale=1`. Initial test commit: `4545d672bf00df0ff2b8975df0bf10effd7e6a7d`; corrected over-escaped regex literals in `8fde5f503c36d69c7fb7e06311572e8b1dea9565`.
 - **Actually checked:** GitHub read of both viewport declarations (both have `width=device-width, initial-scale=1, viewport-fit=cover`); local `git ls-remote` failed with DNS `Could not resolve host: github.com`. **Not executed:** Node --test, Chromium, Android/TalkBack, Unity. The test is committed, but its runtime pass is not claimed.
 - Reviewed main README, AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, and role handoff. C0/ADR remain integration constraints. #20 device acceptance and #21 verified PNG delivery still pending. No main/Core/merge.
 
