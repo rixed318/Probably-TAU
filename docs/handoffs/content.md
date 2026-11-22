@@ -929,3 +929,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - Code commit: `0f94d07ace892ceff5b3f86ee668830a8111522a` on `feature/content-7`.
 - **Actually checked:** 3 isolated JavaScript assertions on fetched GitHub art JSON and edited source: baseline rule exists, omission is rejected by equivalent predicate, assertion was inserted once. **NOT RUN:** complete `node Content/validate-day01-acceptance.cjs`, Node CLI negative mutation, CI, Unity/Android/Windows, or PNG review. QA 05 must run the full Node validator on actual branch HEAD.
 - **Status:** DRAFT / NOT READY_FOR_OWNER_TEST. No runtime contract approval or owner IP approval implied. PR #9/#14 remain subject to coordinator review; no main merge.
+
+
+## AutoDev 04 — Day01 art zero-based DayIndex parity (22.11.2026)
+
+**One bounded task (#7 / PR #11):** `Content/validate-day01-acceptance.cjs` now requires `DAY01_ART_LINKS.json.dayIndex` to equal `CONTENT_SPEC_DRAFT.json.day1.dayIndex` (canonical Day01 = 0). This prevents an art handoff from silently using a display-day label as a runtime DayIndex. Windows/Android art IDs and all gameplay, Core, EventDirector, ledger, kopeck values and event choices are unchanged.
+
+**Validator commit:** `5655eb32d728de9427f36afce5edf4403eea2486`. **Actually executed:** local Node isolated strict-equality test, 5/5 cases PASS (0 accepted; 1, -1, null, and string `"0"` rejected). **NOT RUN:** full checked-in Node CLI (attempted clone failed because container DNS cannot resolve github.com), CI, Unity, Windows/Android or PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` on feature HEAD and negative `dayIndex` mutations. C0-v2 PR #9 / ADR PR #14 remain review-only; PR #11 is DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
