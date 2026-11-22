@@ -267,3 +267,15 @@ test('Android end-day transfers focus to the visible report after success',()=>{
   assert.match(ui,/g\.endDay\(\);el\("error"\)\.textContent="";render\(\);/);
   assert.match(ui,/catch\(e\)\{el\("error"\)\.textContent=e\.message;\}/);
 });
+
+// #20: Android users must be able to pinch-zoom text. A viewport that disables
+// scaling makes the landscape document and report inaccessible to low-vision users.
+test('Android offline variants preserve user viewport zoom',()=>{
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    const viewport=source.match(/<meta\\s+name=["']viewport["']\\s+content=["']([^"']+)["']/i);
+    assert.ok(viewport,filename+' must declare viewport');
+    assert.doesNotMatch(viewport[1],/user-scalable\\s*=\\s*(?:no|0)(?:\\s*[,;]|$)/i);
+    assert.doesNotMatch(viewport[1],/maximum-scale\\s*=\\s*1(?:\\.0+)?(?:\\s*[,;]|$)/i);
+  }
+});
