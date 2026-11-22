@@ -1993,3 +1993,21 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** refresh exact-SHA CI pins to current feature HEADs in a separate bounded change, then run Chromium touch against the exact latest Day01 HTML; inspect PNG binaries when committed. Do not mark READY_FOR_OWNER_TEST based on old pins.
 
 **Safety:** QA-only handoff; no main write, merge, branch deletion or shared architecture decision. Unity tests **NOT RUN**.
+
+
+## 2026-11-23 — QA 05: refresh exact-SHA CI pins (#8)
+
+**One bounded change:** updated only `.github/workflows/qa-offline.yml` exact checkout and assertion SHA literals to independently fetched GitHub PR heads (all open). Workflow commit `4a3d2379c0b0ddca31db99b81ec2d8662410e9f5` in `feature/save-6`. Replaced four pins, preserving all jobs, permissions and tests; no Core/UI/Content/NPC modifications. This does **not** mean the updated tests passed.
+
+**New pins:** Core #9 `7fdcace5158d06d8ef24753b16d3201bfdb166c7`; UI #12 `504a753fd2ba8b3c18bec67895ea42c413ff28f6`; Content #11 `f7a4680d489e40ef6b597433dd59f18cb3e25124`; NPC #16 `14b3857df1f424856a7f0cd45990562fc1d4fd55`. Source: GitHub PR metadata read during this run. ADR #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20` and #17 `bc9db999b4190d77b2994588073ff59e456dccdb` remain unmerged, feature-development guidance only.
+
+**Tests in this pass:** no local Python/Node/.NET tests executed; new CI result **NOT YET VERIFIED**. Chromium touch 360×800/800×360 **NOT RUN**; 3 docs/EndDay/ledger/no immediate partner cash and 48dp/overflow **NOT RUN**; actual PNG signature/dimensions/SHA **NOT VERIFIED**; Unity Editor/APK/device and integrated Save→Load **NOT RUN**. Do not mark ready based on previous green runs pinned to older revisions.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR HEADs at read:** #9 `7fdcace5`, #10 `c7524e6d` before workflow/handoff commits, #11 `f7a4680d`, #12 `504a753f`, #14 `ebdc4be2`, #16 `14b3857d`, #17 `bc9db999`. QA workflow commit `4a3d2379`; this handoff commit follows. All these PRs open at read.
+- **Blocker 1:** refreshed exact-SHA CI jobs/results **NOT VERIFIED** after pin update.
+- **Blocker 2:** latest single-file Day01 Chromium touch acceptance 360×800/800×360 **NOT RUN**; actual 3–5 PNG binary validation **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; stable full persistence DTO acceptance still pending.
+- **Recommended next step:** inspect GitHub Actions run for `4a3d2379` / handoff HEAD and exact checkout logs, then perform Chromium touch acceptance against UI `504a753f` and verify actual PNG binaries. No READY_FOR_OWNER_TEST.
+- **Safety:** no main push, merge, foreign branch deletion, IP/logo approval or new architecture contracts.
