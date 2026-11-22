@@ -2026,3 +2026,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Interactive Chromium touch acceptance at 360x800/800x360 and actual PNG signature/dimensions/manifest SHA checks NOT RUN/NOT VERIFIED.
 - **Blocker 3:** Unity Editor/Android APK and full Save→Load integration NOT RUN; stable full snapshot DTO/transaction contract not established for final SaveService.
 - **Recommended next step:** update pins to reviewed dependent heads and re-run CI, then test exact current UI single-file Day01 HTML interactively in Chromium (three docs, EndDay, ledger replay, deferred partner cash, 48dp and overflow). Android signing checklist must keep keystores/secrets out of repository. No merge or READY_FOR_OWNER_TEST.
+
+
+## 2026-11-23 — QA 05: refresh exact-SHA offline regression inputs (#8)
+
+**One bounded change:** updated only `.github/workflows/qa-offline.yml` checkout pins in `feature/save-6` at commit `1acfa342a9b01bbb8e88da21260a6edaaefa941c`: Core `f7cc9c733c35c3c438a34cccbe38745ba2d2d43a`, UI `4826d56a122b182d8dd40b18cc423e6f9e0ff0f6`, Content `8a4c395524522152dd0b4344c1e814fddda21ecb`, NPC `2a2df0d716375433f1528e9adf5b93e8c714a5b4`. These were GitHub PR HEADs observed during this pass; moving heads may change again. This is a CI input update, not an integration or a new contract.
+
+**Evidence:** GitHub reports workflow run [#45064314212](https://github.com/rixed318/Probably-TAU/actions/runs/45064314212) for previous QA commit `fbc2b7773964473c2a5022f3d32ad219ab23153b` as `completed/success`; that run exercised **older pins**. New exact-SHA pins **NOT RUN / NOT VERIFIED** at handoff time. No local Node/Python/.NET execution this pass; Chromium touch 360x800 and 800x360 **NOT RUN**; PNG signature/dimensions/SHA **NOT VERIFIED**; Unity Editor, Android APK/device and integrated Save→Load **NOT RUN**. No SaveService or alternative GameState added.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR/commits observed:** #9 Core `f7cc9c73`, #10 QA previous HEAD `37b94b13` → workflow `1acfa342` → this handoff commit, #11 Content `8a4c3955`, #12 UI `4826d56a`, #14 ADR `ebdc4be2`, #16 NPC `2a2df0d7`, #17 ADR `bc9db999`; all open when checked. Main was read-only.
+- **Blocker 1:** refreshed exact-SHA CI result not yet independently confirmed.
+- **Blocker 2:** no actual Chromium touch/overflow/48dp acceptance on the exact latest single-file Day01 HTML; real PNG binary evidence not verified.
+- **Blocker 3:** Unity Editor/APK/device and stable end-to-end Save→Load snapshot DTO integration not verified.
+- **Recommended next step:** inspect GitHub Actions for the QA handoff HEAD, then execute browser touch acceptance on exact UI HEAD with three documents, EndDay, ledger replay and no immediate partner cash. Gate C0-v2 PR #9 and ADR #14/#17 remain feature-only; no merge or READY_FOR_OWNER_TEST without evidence.
