@@ -922,3 +922,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - This pass changes handoff only. No new C# changes or public contract changes; no independent NPC/weekly EndDay integration without 02/00 approval and QA.
 - Local runtime probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `javac` present. Local .NET tests, Windows Unity build and Android APK NOT RUN/BLOCKED. New documentation HEAD CI not yet verified.
 - No main push, merge or Issue closure.
+
+
+## AutoDev 01 — 22.11.2026: malformed Day01 batch preflight (#19)
+
+- One bounded regression in `Tests/Core/GameStateSnapshotGoldenTests.cs`: exactly-three Day01 choices with a null third item, and an incomplete two-choice batch, must reject with `ArgumentException` before any document effect is staged. Assertions verify source revision/day/cash/ledger/receipts remain unchanged.
+- Code commit: `b40e2e33e02ac624476eca5787cc81398b6416ea` on `feature/core-2`; PR #9 remains Draft. No public API or production implementation changes.
+- Local toolchain probe: `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` unavailable; `java` and `javac` present. Therefore local C# execution, Unity Windows build and Android APK are **BLOCKED / NOT RUN**. New SHA CI result not verified at time of handoff.
+- Pending: independent QA/00 review and approved NPC/weekly EndDay integration contract. Do not merge to main or close Issues.
