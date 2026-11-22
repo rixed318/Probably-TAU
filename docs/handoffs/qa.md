@@ -1848,3 +1848,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Original PNG binary signature/dimensions/manifest SHA verification not yet evidenced.
 - **Blocker 3:** No verified Unity APK/device or integrated Save→Load; stable complete Core DTO/atomic persistence boundary remains prerequisite.
 - **Next:** run actual Chromium portrait/landscape touch acceptance against exact UI HEAD `5a8edc19`; capture test output, dimensions and screenshot/overflow evidence, then inspect committed PNG bytes when available. Keep main protected; no READY_FOR_OWNER_TEST.
+
+
+## 2026-11-22 — QA 05: verify CI run for 60a1d6d6 (#8)
+
+**One bounded task:** independently queried GitHub Actions for QA commit `60a1d6d6cd47b6c1188405d76a6f19956ea76ec0`. [Run #44972228482](https://github.com/rixed318/Probably-TAU/actions/runs/44972228482) is completed/success; all **5/5** latest-attempt jobs are completed/success: NPC standalone .NET 8, Core Ledger/Snapshot .NET 8, Python PCG32, Android HTML static gate, UI/Content static. Individual step metadata also reports success, including exact-SHA pin self-test, Android Touch Node regression and art manifest validator. **Evidence level: remote Actions job/step status metadata**, not downloaded logs, assertion counts, actual dependency checkout SHA or local test execution. No production code or shared architecture contract changed. PR #9 C0-v2 and #14 ADR are not merge authorization.
+
+**NOT RUN:** Chromium touch emulation 360×800 / 800×360, three-document gameplay and EndDay browser acceptance, measured 48dp/overflow, Unity Editor/APK/device, integrated Save→Load. **NOT VERIFIED:** 3–5 real PNG signatures, dimensions and manifest SHA256. Static tests cannot substitute for these checks.
+
+### Сводка для координатора 00 — 2026-11-22 (run #44972228482)
+
+- **QA PR #10:** prior commit `60a1d6d6cd47b6c1188405d76a6f19956ea76ec0` verified by CI; new handoff commit SHA is recorded in PR #10 comment. Other PRs #9 Core, #11 Content, #12 UI, #14 ADR remain open in current GitHub issue metadata; latest exact heads **NOT RECHECKED** in this pass (last previously recorded: #9 `f474b54c`, #11 `94eadd4f`, #12 `5a8edc19`, #14 `ebdc4be2`). No main push/merge.
+- **Blocker 1:** Chromium mobile touch 360×800/800×360 and gameplay/48dp/overflow evidence missing.
+- **Blocker 2:** Original PNG binary/dimension/hash verification missing.
+- **Blocker 3:** Unity APK/device and integrated Save→Load not run; complete stable persistence DTO boundary not confirmed.
+- **Next:** execute actual Chromium touch acceptance against exact current PR #12 HTML blob, then verify committed PNG binaries; do not claim READY_FOR_OWNER_TEST.
