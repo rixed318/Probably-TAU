@@ -31,14 +31,14 @@ jobs:
       - name: Checkout actual Core branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 7fdcace5158d06d8ef24753b16d3201bfdb166c7
+          ref: f7cc9c733c35c3c438a34cccbe38745ba2d2d43a
           path: core-source
           persist-credentials: false
       - name: Record actual Core revision
         run: |
           actual=$(git -C core-source rev-parse HEAD)
           echo "CORE_ORACLE_SHA=$actual"
-          test "$actual" = "7fdcace5158d06d8ef24753b16d3201bfdb166c7"
+          test "$actual" = "f7cc9c733c35c3c438a34cccbe38745ba2d2d43a"
       - name: Audit real Core C# PCG32 source (not C# execution)
         run: python3 Tests/QA/test_pcg32_contract.py --core-source core-source/Runtime/Core/Pcg32.cs
 
@@ -50,13 +50,13 @@ jobs:
       - name: Checkout UI branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 504a753fd2ba8b3c18bec67895ea42c413ff28f6
+          ref: 4826d56a122b182d8dd40b18cc423e6f9e0ff0f6
           path: ui
           persist-credentials: false
       - name: Checkout Content branch read-only
         uses: actions/checkout@v4
         with:
-          ref: f7a4680d489e40ef6b597433dd59f18cb3e25124
+          ref: 8a4c395524522152dd0b4344c1e814fddda21ecb
           path: content
           persist-credentials: false
       - name: Record exact source revisions
@@ -64,10 +64,10 @@ jobs:
         run: |
           ui_sha=$(git -C ui rev-parse HEAD)
           echo "UI_SHA=$ui_sha"
-          test "$ui_sha" = "504a753fd2ba8b3c18bec67895ea42c413ff28f6"
+          test "$ui_sha" = "4826d56a122b182d8dd40b18cc423e6f9e0ff0f6"
           content_sha=$(git -C content rev-parse HEAD)
           echo "CONTENT_SHA=$content_sha"
-          test "$content_sha" = "f7a4680d489e40ef6b597433dd59f18cb3e25124"
+          test "$content_sha" = "8a4c395524522152dd0b4344c1e814fddda21ecb"
       - name: UI Node mock regression
         run: node --test prototypes/ui-day-one/test-fixtures.cjs
         working-directory: ui
@@ -128,7 +128,7 @@ jobs:
       - name: Checkout exact UI artifact revision read-only
         uses: actions/checkout@v4
         with:
-          ref: 504a753fd2ba8b3c18bec67895ea42c413ff28f6
+          ref: 4826d56a122b182d8dd40b18cc423e6f9e0ff0f6
           path: ui-source
           persist-credentials: false
       - name: Assert UI revision and parse distributed inline scripts
@@ -136,7 +136,7 @@ jobs:
         run: |
           actual=$(git -C ui-source rev-parse HEAD)
           echo "UI_ARTIFACT_SHA=$actual"
-          test "$actual" = "504a753fd2ba8b3c18bec67895ea42c413ff28f6"
+          test "$actual" = "4826d56a122b182d8dd40b18cc423e6f9e0ff0f6"
           node --test Tests/QA/test_android_offline_artifact.cjs
 
   core-ledger-regression:
@@ -147,14 +147,14 @@ jobs:
       - name: Checkout actual Core branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 7fdcace5158d06d8ef24753b16d3201bfdb166c7
+          ref: f7cc9c733c35c3c438a34cccbe38745ba2d2d43a
           path: core
           persist-credentials: false
       - name: Record exact Core revision
         run: |
           actual=$(git -C core rev-parse HEAD)
           echo "CORE_SHA=$actual"
-          test "$actual" = "7fdcace5158d06d8ef24753b16d3201bfdb166c7"
+          test "$actual" = "f7cc9c733c35c3c438a34cccbe38745ba2d2d43a"
       - name: Install .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -177,14 +177,14 @@ jobs:
       - name: Checkout NPC branch read-only
         uses: actions/checkout@v4
         with:
-          ref: 14b3857df1f424856a7f0cd45990562fc1d4fd55
+          ref: 2a2df0d716375433f1528e9adf5b93e8c714a5b4
           path: npc
           persist-credentials: false
       - name: Record actual NPC revision
         run: |
           actual=$(git -C npc rev-parse HEAD)
           echo "NPC_SHA=$actual"
-          test "$actual" = "14b3857df1f424856a7f0cd45990562fc1d4fd55"
+          test "$actual" = "2a2df0d716375433f1528e9adf5b93e8c714a5b4"
       - name: Install .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
