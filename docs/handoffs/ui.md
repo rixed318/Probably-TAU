@@ -1,3 +1,9 @@
+## Update 2026-11-23 — Android device evidence template (#20)
+
+- One bounded documentation deliverable: `prototypes/ui-day-one/ANDROID_DEVICE_EVIDENCE_TEMPLATE.md` records exact tested artifact SHA/hash, device/browser, landscape/portrait, offline, TalkBack, safe-area and touch-target observations; every result starts TODO, never PASS. Commit: `438278f3400f2b7d59e3a3f3313f805409fb277c`.
+- **Actually checked:** live main AGENTS/workflow/README, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, existing Android test and README; GitHub accepted the new file. **Not executed:** Node suite, browser, physical Android, TalkBack, Unity, APK. Device acceptance remains BLOCKED pending real device evidence; #21 original PNG binaries remain unverified.
+- No GameState/Core, main, branch deletion or merge. No changes to approved C0-v2/ADR.
+
 ## Update 2026-11-22 — Android viewport meta attribute order (#20)
 
 - One bounded test fix: Android offline zoom guard now finds viewport meta regardless of attribute order (e.g. content before name), then checks the quoted content; missing content fails explicitly. Added three positive/negative parser fixtures. Test commits: `908396e7ed38625d6ca61af5bedad97b6b10f53c` (initial), `db9cdcf4c92f88cdc1aeb5a3835d25cd2981ed3e` (corrected regex literals). An intermediate no-op update `550f3b614d4352b49d1db62a4f639dbbae856e74` did not change the blob.
