@@ -1,6 +1,6 @@
 ## Update 2026-11-22 — inspection focus source regression (#20)
 
-- Added one source-level Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` asserting that the persistent inspection result remains focusable and the successful Inspect handler moves focus there after rendering, with the error branch retained. Commit: `9b66667320c3b8253b35d9378d4049ffdb2d8012`.
+- Added one source-level Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` asserting that the persistent inspection result remains focusable and the successful Inspect handler moves focus there after rendering, with the error branch retained. Initial commit: `9b66667320c3b8253b35d9378d4049ffdb2d8012`; regex-escaping correction: `170fef58db96353586da012c4821459cc4cfed0d`.
 - **Actually executed:** 4 JavaScript source assertions against the live GitHub Android touch HTML before commit (4/4 passed); GitHub file update succeeded. **Not executed:** Node test runner, Chromium/DOM, Android/TalkBack, Unity. The new test is written but not runtime-verified; device behavior is unverified.
 - Main rules/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, D01 asset manifest and handoff reviewed. #20 real device acceptance and #21 verified binary PNG remain pending. No Core/main/merge.
 
