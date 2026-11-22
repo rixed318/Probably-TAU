@@ -260,7 +260,7 @@ test('Android end-day transfers focus to the visible report after success',()=>{
   assert.match(ui,/if\(s\.closed\)\{el\("game"\)\.hidden=true;el\("report"\)\.hidden=false;/);
   // Keep the focus call inside the closed-report branch, after the report is shown.
   // A stray focus call elsewhere must not satisfy this regression.
-  const closedBranch=/if\\(s\\.closed\\)\\{el\\("game"\\)\\.hidden=true;el\\("report"\\)\\.hidden=false;[\\s\\S]*?el\\("report"\\)\\.focus\\(\\);\\s*\\}/;
+  const closedBranch=/if\(s\.closed\)\{el\("game"\)\.hidden=true;el\("report"\)\.hidden=false;[\s\S]*?el\("report"\)\.focus\(\);\s*\}/;
   assert.match(ui,closedBranch);
   assert.doesNotMatch('if(s.closed){el("game").hidden=true;el("report").hidden=false;}el("report").focus();',closedBranch);
   assert.doesNotMatch('if(s.closed){el("game").hidden=true;el("report").hidden=false;}',closedBranch);
