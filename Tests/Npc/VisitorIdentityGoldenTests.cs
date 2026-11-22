@@ -68,6 +68,15 @@ namespace TAU.President.Tests.Npc
                         malformedUnicodeScreen != null)
                         throw new Exception("Invisible/malformed inspection route accepted.");
                 }
+            // Reject a leading UTF-8 BOM represented as a Unicode character, and
+            // trailing BOMs too. Neither Windows nor Android should trim/normalize IDs.
+            foreach (string canonicalInspectionId in inspectionIds)
+            {
+                Day01Visitors.VisitScreenPreview bomScreen;
+                if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
+                        canonicalInspectionId + "\\uFEFF", out bomScreen) || bomScreen != null)
+                    throw new Exception("Trailing BOM inspection route accepted.");
+            }
             foreach (string invalidInspection in new[] { null, "", "CHECK_SEAT_MAP",
                 "check_seat_map ", " check_seat_map", "unknown_inspection" })
             {
