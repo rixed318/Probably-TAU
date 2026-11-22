@@ -1,3 +1,9 @@
+## Update 2026-11-22 — Android viewport 200% zoom guard (#20)
+
+- One bounded regression change to `prototypes/ui-day-one/test-day01-android-touch.cjs`: disallow `user-scalable=false` and `maximum-scale` below 2, while retaining unlimited/default zoom and 200% zoom. Test commit: `efa3afef80624e6b0229adad26c72e0c3262fef2`.
+- **Actually executed:** four JavaScript/V8 preflight fixtures (default accepted; false and 1.5 rejected; 2 accepted), 4/4 expected. **Not executed:** full Node --test, Chromium, physical Android/TalkBack, Unity. Local git transport fails DNS resolution for github.com. Runtime success of committed Node test is NOT claimed.
+- Reviewed live main README/AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest and role handoff. C0/ADR constraints remain. Android device acceptance #20 and binary PNG #21 pending. No Core/main/merge.
+
 ## Update 2026-11-22 — Android viewport zoom regression (#20)
 
 - Added one Node source regression to `prototypes/ui-day-one/test-day01-android-touch.cjs`: both standalone Android HTML variants must retain a viewport meta tag and must not disable pinch zoom via `user-scalable=no/0` or `maximum-scale=1`. Initial test commit: `4545d672bf00df0ff2b8975df0bf10effd7e6a7d`; corrected over-escaped regex literals in `8fde5f503c36d69c7fb7e06311572e8b1dea9565`.
