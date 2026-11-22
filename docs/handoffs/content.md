@@ -885,3 +885,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **Issue #7 / PR #11; one bounded task:** `Content/validate-day01-acceptance.cjs` rejects empty/non-string and case/whitespace-equivalent duplicate entries in the `DAY01_ART_LINKS.json` rules array. This prevents ambiguous art policy metadata for Windows/Android; it does not inspect PNGs or grant IP rights. Story, Definition IDs, zero-based DayIndex, kopeck amounts, Core, EventDirector and ledger unchanged.
 
 **Validator commit:** `0104a9d1a5dc698064723d4f1ce199b5e7801ec3`. **Actually checked:** isolated JS baseline accepted, synthetic blank rule rejected, case/whitespace duplicate rejected (3/3 PASS). **NOT RUN:** checked-in Node CLI, CI, Unity, Windows, Android, PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at feature HEAD and repeat negative cases. C0-v2 PR #9 / ADR PR #14 apply to feature development only. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST; no main push/merge.
+
+
+## AutoDev 04 — malformed Day01 art rules container (22.11.2026)
+
+**Issue #7 / PR #11; one bounded task:** added explicit `Array.isArray(art.rules)` assertion before `.every()` in `Content/validate-day01-acceptance.cjs`. Missing/null/object/string `rules` now produce a clear content-validation failure rather than an incidental JavaScript TypeError. This validates draft metadata only, not real PNGs or runtime assets. No story, Core, EventDirector, economy, Definition IDs, DayIndex or kopeck values changed.
+
+**Validator commit:** `84bdfaa2fc0eb5d7965ada7ce72892bf3f00b78f`. **Actually executed:** isolated JavaScript baseline valid array PASS; negative null, object and string containers rejected with expected validation message (4/4 PASS); exact replacement anchor unique. **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android or PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at branch HEAD and repeat non-array mutations. C0-v2 PR #9 and ADR PR #14 still govern; DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge.
