@@ -48,11 +48,16 @@ namespace TAU.President.Core
                 throw new InvalidOperationException("Day01 flow requires DayIndex 0.");
             if (current.Header.Revision != expectedRevision || current.Header.IsFinished)
                 throw new InvalidOperationException("Stale or finished Day01.");
+            // EndDay owns this command ID. Reject collisions before staging any choice.
+            // Otherwise a document can reserve the ID needed for the atomic day close.
+            string endDayCommandId = "end-day:" + current.Header.CampaignId + ":0";
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var decisionIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (var choice in choices)
             {
                 if (choice == null) throw new ArgumentException("Null document choice.", nameof(choices));
+                if (StringComparer.Ordinal.Equals(choice.CommandId, endDayCommandId))
+                    throw new ArgumentException("Document command ID is reserved for EndDay.", nameof(choices));
                 if (!ids.Add(choice.CommandId) || !decisionIds.Add(choice.Effects.DecisionId))
                     throw new ArgumentException("Duplicate document command or decision.", nameof(choices));
             }
