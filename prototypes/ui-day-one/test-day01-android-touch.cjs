@@ -249,3 +249,16 @@ test('Android inspection focus follows successful inspect',()=>{
   assert.match(ui,/g\.inspect\(g\.view\(\)\.selected\);el\("error"\)\.textContent="";render\(\);el\("inspection"\)\.focus\(\);/);
   assert.match(ui,/catch\(e\)\{el\("error"\)\.textContent=e\.message;\}/);
 });
+
+// #20: EndDay replaces the active game screen with the report. The new screen
+// must receive keyboard focus after a successful close, not on a failed close.
+// This is a source contract; Android/TalkBack still needs device validation.
+test('Android end-day transfers focus to the visible report after success',()=>{
+  assert.match(html,/<section id="report" hidden tabindex="-1">/i);
+  const scripts=[...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)].map(m=>m[1]);
+  const ui=scripts[2];
+  assert.match(ui,/if\\(s\\.closed\\)\\{el\\("game"\\)\\.hidden=true;el\\("report"\\)\\.hidden=false;/);
+  assert.match(ui,/el\\("report"\\)\\.focus\\(\\);/);
+  assert.match(ui,/g\\.endDay\\(\\);el\\("error"\\)\\.textContent="";render\\(\\);/);
+  assert.match(ui,/catch\\(e\\)\\{el\\("error"\\)\\.textContent=e\\.message;\\}/);
+});
