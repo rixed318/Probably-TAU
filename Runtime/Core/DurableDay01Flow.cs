@@ -51,6 +51,11 @@ namespace TAU.President.Core
             // EndDay owns this command ID. Reject collisions before staging any choice.
             // Otherwise a document can reserve the ID needed for the atomic day close.
             string endDayCommandId = "end-day:" + current.Header.CampaignId + ":0";
+            // A previously persisted command must not own the EndDay ID either.
+            // Reject before staging any of the three document decisions.
+            foreach (var processedId in current.Header.ProcessedCommandIds)
+                if (StringComparer.Ordinal.Equals(processedId, endDayCommandId))
+                    throw new InvalidOperationException("EndDay command ID already processed.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var decisionIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (var choice in choices)
