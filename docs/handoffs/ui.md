@@ -1,3 +1,9 @@
+## Update 2026-11-22 — Android offline document-language regression (#20)
+
+- One bounded Node source regression added to `prototypes/ui-day-one/test-day01-android-touch.cjs`: both distributable HTML files must declare `lang="ru"` and a nonempty document `<title>` for browser and assistive-technology context. Test source commit: `44279a52a48ea8d8fdd77d9b48d57487e7269590`.
+- **Actually checked:** fetched both HTML headers from GitHub; each declares Russian language and a nonempty title. Four JavaScript/V8 regex fixtures gave expected results (4/4). **Not executed:** full Node --test, Chromium, physical Android/TalkBack, Unity. This is static accessibility coverage, not verified TalkBack speech.
+- Read main README/AGENTS/workflow, current PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible/manifest and this handoff. C0-v2/ADR respected. Android device evidence #20 and verified binary PNG #21 still pending; no Core/main/merge.
+
 ## Update 2026-11-22 — Android TalkBack manual acceptance matrix (#20)
 
 - One bounded documentation task: added six concrete device-level acceptance steps to `prototypes/ui-day-one/README.md`, covering offline load, inspection/error announcement, decision focus, EndDay focus, orientation/200% zoom, and evidence capture. Documentation commit: `b09467ac83ae710145e7174a0f28a0628a4f14eb`.
