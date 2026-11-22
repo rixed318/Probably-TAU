@@ -669,6 +669,26 @@ namespace TAU.President.Tests.Core
                 occupied.Finance.Ledger.Entries.Count == 0 &&
                 occupied.Finance.Receipts.Count == 1,
                 "Day01 persisted EndDay ID collision rejected without effects");
+            // A restored command ID belonging to any document must be rejected
+            // before earlier choices are staged, even when the collision is third.
+            var processedHeader = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
+                new AcademyMetricsDto(50, 50, 50, 50, 50), 1000L, 1000L,
+                new RandomStreamSnapshotDto[0], new[] { "doc-3" }, new string[0],
+                new string[0], new string[0]);
+            var processedBefore = new DurableGameStateSnapshot(
+                new DurableFinanceSnapshot(processedHeader,
+                    new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                    new[] { new DurableCommandReceipt("doc-3", "previous-decision", 1, new string[0]) }),
+                new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
+            Throws<InvalidOperationException>(() =>
+                DurableDay01Flow.Prepare(processedBefore, 1, 0, choices));
+            AssertNamed(processedBefore.Header.Revision == 1 &&
+                processedBefore.Header.DayIndex == 0 &&
+                processedBefore.Header.BalanceKopecks == 1000L &&
+                processedBefore.Finance.Ledger.Entries.Count == 0 &&
+                processedBefore.Finance.Receipts.Count == 1 &&
+                processedBefore.Finance.Receipts[0].CommandId == "doc-3",
+                "Day01 persisted document ID collision rejected without partial effects");
             var duplicate = new[] { choices[0], choices[1], choices[0] };
             Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicate));
             // A different command ID cannot authorize a second choice for the same decision.
