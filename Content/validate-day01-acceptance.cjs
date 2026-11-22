@@ -301,6 +301,9 @@ const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
   return [visit.id, npc.id, doc.id, npc.portraitAssetId, npc.standingAssetId,
     doc.documentAssetId, npc.visualDescription];
 });
+assert.ok(Array.isArray(artLinks.visits), "Day01 art-link visits must be an array before canonical mapping");
+assert.ok(artLinks.visits.every(visit => visit !== null && typeof visit === "object" && !Array.isArray(visit)),
+  "Day01 art-link visit entries must be objects before canonical mapping");
 assert.deepEqual(artLinks.visits.map(visit => [visit.visitId, visit.visitorId,
   visit.documentId, visit.portraitAssetId, visit.standingAssetId,
   visit.documentAssetId, visit.visualBrief]), canonicalArtLinks,
