@@ -2011,3 +2011,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; stable full persistence DTO acceptance still pending.
 - **Recommended next step:** inspect GitHub Actions run for `4a3d2379` / handoff HEAD and exact checkout logs, then perform Chromium touch acceptance against UI `504a753f` and verify actual PNG binaries. No READY_FOR_OWNER_TEST.
 - **Safety:** no main push, merge, foreign branch deletion, IP/logo approval or new architecture contracts.
+
+
+## 2026-11-23 — QA 05: exact-SHA CI evidence review (#8)
+
+**One bounded task:** independently verified the first CI run after QA pin update, without changing architecture or implementation. [Run #45064314212](https://github.com/rixed318/Probably-TAU/actions/runs/45064314212) for QA HEAD `fbc2b7773964473c2a5022f3d32ad219ab23153b` reports completed/success; GitHub jobs API reports **5/5 success**: Core ledger/snapshot .NET 8, Python PCG32 oracle, NPC standalone .NET 8, UI/Content static, Android HTML static. These are CI job metadata, **not locally rerun tests**; individual assertion counts, full logs and actual checkout revisions were not inspected. Chromium touch emulation and Unity Editor/APK are **NOT RUN**.
+
+**Critical scope:** workflow exact pins are Core `7fdcace5158d06d8ef24753b16d3201bfdb166c7`, UI `504a753fd2ba8b3c18bec67895ea42c413ff28f6`, Content `f7a4680d489e40ef6b597433dd59f18cb3e25124`, NPC `14b3857df1f424856a7f0cd45990562fc1d4fd55`. Newer PR HEADs exist, so this successful run **does not certify latest dependent code**. No new SaveService, no shared contract approved. No changes to main or merges.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR heads independently queried:** #9 Core `f7cc9c733c35c3c438a34cccbe38745ba2d2d43a`; #10 QA before this handoff `fbc2b7773964473c2a5022f3d32ad219ab23153b`; #11 Content `70f36cd69c39b8052dafaaa4b3b81e7704425a9d`; #12 UI `0a79bb1905f50efe1bb00d26dcfd9870c833a8c1`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `2f68cd3c0b296a7cb21538954ca8e555a60dbc0b`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. All open at inspection. New QA handoff commit SHA must be read from the write result.
+- **Blocker 1:** CI exact-SHA pins lag current Core/UI/Content/NPC heads; successful #45064314212 is not latest-head validation.
+- **Blocker 2:** Interactive Chromium touch acceptance at 360x800/800x360 and actual PNG signature/dimensions/manifest SHA checks NOT RUN/NOT VERIFIED.
+- **Blocker 3:** Unity Editor/Android APK and full Save→Load integration NOT RUN; stable full snapshot DTO/transaction contract not established for final SaveService.
+- **Recommended next step:** update pins to reviewed dependent heads and re-run CI, then test exact current UI single-file Day01 HTML interactively in Chromium (three docs, EndDay, ledger replay, deferred partner cash, 48dp and overflow). Android signing checklist must keep keystores/secrets out of repository. No merge or READY_FOR_OWNER_TEST.
