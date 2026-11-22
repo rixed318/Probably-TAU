@@ -1833,3 +1833,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 committed original PNG binary signatures/dimensions/manifest SHA256 — **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor/APK/device and integrated Save→Load — **NOT RUN**; complete stable Core DTO contract still must be confirmed before SaveService.
 - **Recommended next step:** run exact-blob Chromium mobile acceptance on current PR #12 Android Touch HTML, record screenshots, gameplay assertions and measured geometry; separately validate real PNGs when committed. No READY_FOR_OWNER_TEST.
+
+
+## 2026-11-22 — QA 05: independent CI run verification (#8)
+
+**One bounded task:** verify remote GitHub Actions execution for QA head `2e45313122f2da9e92d225498763223cd8068844` (no new production code). Run [#44964419564](https://github.com/rixed318/Probably-TAU/actions/runs/44964419564), workflow `QA offline regression`, is **completed/success**. GitHub job metadata confirms **5/5 successful jobs**: Python PCG32 oracle, Core ledger/snapshot .NET 8, NPC standalone .NET 8, UI/Content static regression, Android HTML static gate. Each named step in these jobs is marked success, including UI Android touch **Node** regression, UI art manifest validator and exact UI revision assertion. This is remote CI metadata only; full logs, individual assertions and checkout SHA values were **NOT VERIFIED**. No local test execution in this pass.
+
+**NOT RUN:** Chromium touch emulation at 360x800 and 800x360, measured 48dp/overflow, Unity Editor tests, Android APK/device, integrated Save→Load. **NOT VERIFIED:** real PNG binaries/signatures/dimensions/SHA256. Static manifest validation is not proof of committed images. Real SaveService still awaits stable Core DTO/atomic snapshot contract. No shared contract approved, no merge.
+
+### Сводка для координатора 00 — 2026-11-22
+
+- **Verified PR heads before this handoff update:** #9 Core `f474b54cd807d7f3c0837ffedcddad26052971b0`; #10 QA `2e45313122f2da9e92d225498763223cd8068844`; #11 Content `94eadd4f0e0fbdd49a0f41344f5e6c76c5bcfbed`; #12 UI `5a8edc1906fa6f142566b8f196db071ab17b88f8`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `4121f02c75913a5003e983c7e4f60ac4fb4224b3`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. Main/base `d673322cd9d0d366a27a57b81056504dfb26c731` per PR metadata. PR #9 C0-v2 and PR #14 ADR remain draft/unmerged.
+- **Blocker 1:** Chromium Android touch acceptance on exact latest UI HTML and actual 48dp/overflow evidence missing.
+- **Blocker 2:** Original PNG binary signature/dimensions/manifest SHA verification not yet evidenced.
+- **Blocker 3:** No verified Unity APK/device or integrated Save→Load; stable complete Core DTO/atomic persistence boundary remains prerequisite.
+- **Next:** run actual Chromium portrait/landscape touch acceptance against exact UI HEAD `5a8edc19`; capture test output, dimensions and screenshot/overflow evidence, then inspect committed PNG bytes when available. Keep main protected; no READY_FOR_OWNER_TEST.
