@@ -553,6 +553,8 @@ assert.ok(Array.isArray(art.rules) && art.rules.includes("Original fictional cha
 // This is an authored metadata guard, not a check of actual PNG pixel contents.
 assert.ok(Array.isArray(art.rules) && art.rules.includes("All document text and money are rendered dynamically by UI"),
   "Day01 art contract must keep document text and money out of baked-in assets");
+assert.ok(art.rules.includes("No change to Core, Day01 choices, money, events or ledger"),
+  "Day01 art contract must forbid gameplay, economy and event changes");
 assert.ok(Array.isArray(art.visits), "Day01 art visits must be an array");
 assert.ok(art.visits.every(visit => visit !== null && typeof visit === "object" && !Array.isArray(visit)),
   "Day01 art visits must contain non-null objects");
