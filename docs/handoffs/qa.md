@@ -1963,3 +1963,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** inspect new GitHub Actions run for `484edc7c` and failures at the exact new pins, then perform actual Chromium touch acceptance against UI `76021381`. Do not merge or mark ready without evidence.
 
 **Safety:** only `feature/save-6` updated; no main push, merge, branch deletion, or IP/logo approval.
+
+
+## 2026-11-22 — QA 05: verify CI after exact-SHA pin refresh (#8)
+
+**One bounded independent verification:** GitHub Actions [run 45036247329](https://github.com/rixed318/Probably-TAU/actions/runs/45036247329) is completed/success for QA handoff SHA `f9e45b507b22e557424274280d724e4915c0bbb2`, after workflow pin update `484edc7c349c73fcc237fca046ed2514027c0562`. Latest-attempt job metadata confirms **5/5 SUCCESS**: distributed Android HTML static, NPC standalone .NET 8, Core ledger/snapshot .NET 8, Python PCG32 oracle, UI/Content static regression. The exact-SHA pin self-test, checkout-revision assertion, Android touch Node regression, gameplay gateway, art manifest validator and source audit steps all report SUCCESS. This is **remote GitHub Actions job/step metadata**, not independently downloaded full logs or a local test run; no assertion counts or checked-out SHA values extracted from logs in this pass. Pins from QA workflow change: Core `9d9985d3ef5613240f680b51e946b40afad0ac17`, UI `7602138120e78dfb11cbcf92de3d663aedcde14a`, Content `6718fbee521c86be045a55c2d0b8a2754dd2fe67`, NPC `d0a9e89c5d6b254e3e07c71d7dbe28a667703b17`. These are pinned revisions, **not independently confirmed current PR HEADs**. No SaveService or architecture changes.
+
+### Сводка для координатора 00 — 2026-11-22 (run 45036247329)
+
+- **PR/commits:** #9 Core pinned `9d9985d3`, #10 QA previously `f9e45b50` (this handoff commit follows), #11 Content pinned `6718fbee`, #12 UI pinned `76021381`, #14 ADR last known `ebdc4be2`, #16 NPC pinned `d0a9e89c`, #17 ADR last known `bc9db999`. Current remote PR HEADs were not independently extracted in this pass; re-query before integration. QA exact-SHA workflow pin commit `484edc7c` now has successful downstream CI on `f9e45b50`.
+- **Blocker 1:** real Chromium touch 360×800/800×360 (3 documents, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) **NOT RUN**. Static/Node tests do not substitute for browser evidence.
+- **Blocker 2:** actual 3–5 PNG binary signatures, dimensions and manifest SHA256 **NOT VERIFIED**; manifest validation success alone is insufficient.
+- **Blocker 3:** Unity Editor/APK/real Android and integrated Save→Load **NOT RUN**; complete stable persistence DTO not independently accepted.
+- **Recommended next step:** run interactive Chromium touch acceptance against the exact latest single-file UI HTML and record screenshot/geometry plus gameplay assertions; independently inspect binary PNGs when committed. Do not claim READY_FOR_OWNER_TEST or merge without evidence.
+
+**Safety:** only QA handoff updated on `feature/save-6`; no main push, merge, branch deletion or third-party IP approval.
