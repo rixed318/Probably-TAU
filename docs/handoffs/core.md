@@ -869,3 +869,12 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 - Local environment check: `dotnet`, `Unity`, `unity-editor`, `adb`, `sdkmanager`, `ndk-build` not on PATH; `java` and `javac` present. Local .NET/Unity tests and real Android APK are BLOCKED by unavailable toolchain.
 - Day01 typed NPC due-event and weekly settlement production integration remain gated on approved cross-subsystem handler contracts and QA/00 review. Avoid inventing handlers or mutating foreign subsystems.
 - No main push, merge or Issue closure. This handoff-only commit requires its own exact-SHA CI check; do not attribute prior success to the new HEAD.
+
+## 2026-11-22 — Day01 deterministic replay regression (#19)
+
+- Branch: `feature/core-2`; code commit `ba19956f31ee8cde0677e2f5c682f85f98177d98`; PR #9.
+- One bounded change in `Tests/Core/GameStateSnapshotGoldenTests.cs`: `Day01FlowGolden` now runs the same three document choices twice from the same immutable starting snapshot and compares durable day/revision/balance, ordered ledger posting IDs and amounts, and command receipt IDs/fingerprints. This is an exact-input deterministic replay assertion, not NPC/weekly integration.
+- No production API or external subsystem modifications; no Unity project or APK generated.
+- Validation: local `dotnet` and Unity Editor unavailable; this code commit's CI result must be checked at its exact SHA before calling tests successful. Prior HEAD `f474b54cd807d7f3c0837ffedcddad26052971b0` had Core .NET 8 golden tests success (GitHub Actions run 44966363794).
+- BLOCKED: real Unity 6.3 Editor + Android Build Support/SDK/NDK/OpenJDK toolchain not available in current environment (Java alone is insufficient); Unity/Windows/Android builds and local C# execution not performed. Due-event and weekly EndDay handler integration awaits approved 02/00 contracts and independent QA.
+- Next: verify exact code SHA CI and ask QA/00 to review; never merge to main without owner approval.
