@@ -290,6 +290,7 @@ for (const npc of contentSpec.fictionalNpcs) {
 const visualBriefs = contentSpec.fictionalNpcs.map(npc => npc.visualDescription.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru-RU"));
 assert.equal(new Set(visualBriefs).size, visualBriefs.length,
   "duplicate fictional Day01 NPC visual descriptions");
+const artLinks = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
 // Each of the three original blank document templates needs its own usable art brief.
 // Text/amounts remain dynamic UI data; this validates descriptions, not PNGs.
 const documentBriefs = artLinks.visits.map(visit => {
@@ -301,7 +302,6 @@ assert.equal(new Set(documentBriefs).size, documentBriefs.length,
   "duplicate Day01 document art briefs");
 // Planned art links must match canonical fictional NPC/document definitions exactly.
 // These are lookup keys for UI on Windows/Android, not generated PNGs or Core instance IDs.
-const artLinks = JSON.parse(fs.readFileSync(path.join(__dirname, "DAY01_ART_LINKS.json"), "utf8"));
 assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
 const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
   const npc = contentSpec.fictionalNpcs.find(item => item.id === visit.npcId);
