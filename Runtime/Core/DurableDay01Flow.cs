@@ -56,6 +56,7 @@ namespace TAU.President.Core
             foreach (var processedId in current.Header.ProcessedCommandIds)
                 if (StringComparer.Ordinal.Equals(processedId, endDayCommandId))
                     throw new InvalidOperationException("EndDay command ID already processed.");
+            var previouslyProcessed = new HashSet<string>(current.Header.ProcessedCommandIds, StringComparer.Ordinal);
             var ids = new HashSet<string>(StringComparer.Ordinal);
             var decisionIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (var choice in choices)
@@ -63,6 +64,8 @@ namespace TAU.President.Core
                 if (choice == null) throw new ArgumentException("Null document choice.", nameof(choices));
                 if (StringComparer.Ordinal.Equals(choice.CommandId, endDayCommandId))
                     throw new ArgumentException("Document command ID is reserved for EndDay.", nameof(choices));
+                if (previouslyProcessed.Contains(choice.CommandId))
+                    throw new InvalidOperationException("Document command ID already processed.");
                 if (!ids.Add(choice.CommandId) || !decisionIds.Add(choice.Effects.DecisionId))
                     throw new ArgumentException("Duplicate document command or decision.", nameof(choices));
             }
