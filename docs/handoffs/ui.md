@@ -1,3 +1,9 @@
+## Update 2026-11-22 — Android viewport meta attribute order (#20)
+
+- One bounded test fix: Android offline zoom guard now finds viewport meta regardless of attribute order (e.g. content before name), then checks the quoted content; missing content fails explicitly. Added three positive/negative parser fixtures. Test commits: `908396e7ed38625d6ca61af5bedad97b6b10f53c` (initial), `db9cdcf4c92f88cdc1aeb5a3835d25cd2981ed3e` (corrected regex literals). An intermediate no-op update `550f3b614d4352b49d1db62a4f639dbbae856e74` did not change the blob.
+- **Actually executed:** three JavaScript/V8 parser fixtures, 3/3 expected. **Not executed:** full Node --test, browser/Chromium, physical Android/TalkBack, Unity. Do not interpret parser fixtures as device acceptance.
+- Read live main README/AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest and pipeline. C0-v2/ADR preserved. #20 device evidence and #21 verified original PNG still pending; no Core/main/merge.
+
 ## Update 2026-11-22 — Android offline document-language regression (#20)
 
 - One bounded Node source regression added to `prototypes/ui-day-one/test-day01-android-touch.cjs`: both distributable HTML files must declare `lang="ru"` and a nonempty document `<title>` for browser and assistive-technology context. Test source commit: `44279a52a48ea8d8fdd77d9b48d57487e7269590`.
