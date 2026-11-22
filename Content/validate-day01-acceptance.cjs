@@ -540,6 +540,10 @@ assert.equal(art.sourceFixture, "Content/DAY01_UI_FIXTURE.json", "Day01 art link
 assert.equal(art.sourceManifest, "feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv", "Day01 art links must cite UI-owned asset manifest");
 assert.ok(Array.isArray(art.platforms), "Day01 art platforms must be an array");
 assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
+// Art handoff must use the same zero-based Day01 index as the content and UI fixture.
+// This is metadata parity only; no runtime clock or event scheduling is changed.
+assert.equal(art.dayIndex, contentSpec.day1.dayIndex,
+  "Day01 art links DayIndex must match canonical content DayIndex 0");
 assert.equal(art.worldLogicalResolution, "320x180");
 assert.equal(art.artDirection, "A");
 // Reject ambiguous or duplicate policy metadata; this does not inspect generated art.
