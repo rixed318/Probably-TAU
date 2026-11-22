@@ -275,7 +275,7 @@ test('Android offline variants preserve user viewport zoom',()=>{
     const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
     const viewport=source.match(/<meta\s+name=["']viewport["']\s+content=["']([^"']+)["']/i);
     assert.ok(viewport,filename+' must declare viewport');
-    assert.doesNotMatch(viewport[1],/user-scalable\s*=\s*(?:no|false|0)(?:\s*[,;]|$)/i);
+    assert.doesNotMatch(viewport[1],/user-scalable\s*=\s*(?:no|false|0(?:\.0+)?)(?:\s*[,;]|$)/i);
     const cap=viewport[1].match(/(?:^|[,;])\s*maximum-scale\s*=\s*([0-9]+(?:\.[0-9]+)?)(?=\s*[,;]|\s*$)/i);
     if(cap) assert.ok(Number(cap[1])>=2,filename+' must allow at least 200% zoom');
   }
@@ -283,9 +283,12 @@ test('Android offline variants preserve user viewport zoom',()=>{
 
 // Zoom guard fixtures: prevent regressions from boolean false and sub-200% caps.
 test('viewport zoom guard rejects false and restrictive maximum scale',()=>{
-  const blocked=/user-scalable\s*=\s*(?:no|false|0)(?:\s*[,;]|$)/i;
+  const blocked=/user-scalable\s*=\s*(?:no|false|0(?:\.0+)?)(?:\s*[,;]|$)/i;
   const cap=/(?:^|[,;])\s*maximum-scale\s*=\s*([0-9]+(?:\.[0-9]+)?)(?=\s*[,;]|\s*$)/i;
   assert.match('width=device-width, user-scalable=false',blocked);
+  assert.match('width=device-width, user-scalable=0.0',blocked);
+  assert.match('width=device-width, user-scalable=0.00',blocked);
+  assert.doesNotMatch('width=device-width, user-scalable=1',blocked);
   assert.ok(Number('width=device-width, maximum-scale=1.5'.match(cap)[1])<2);
   assert.ok(Number('width=device-width, maximum-scale=2'.match(cap)[1])>=2);
   assert.doesNotMatch('width=device-width, initial-scale=1, viewport-fit=cover',blocked);
