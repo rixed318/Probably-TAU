@@ -105,3 +105,14 @@ Tester / date:
 ```
 
 If the browser refuses local-file access, mark O1 and dependent cases BLOCKED and preserve the exact error; do not substitute an online preview for the offline acceptance criterion.
+
+### Android accessibility acceptance — manual, pending device verification
+
+For Issue #20, perform these checks on a physical Android device with TalkBack **on and off**. Record model, Android version, browser, orientation, and PASS/FAIL per action. Source-level Node tests do not replace this evidence.
+
+1. Open `day01-android-touch.html` from local storage with airplane mode enabled. Confirm the three visitor entries and current document are announced in a sensible reading order.
+2. Navigate by swipe and by external keyboard Tab (if available). Activate **Inspect**: the inspection result must be announced without focus falling onto a removed button. Trigger a validation error and confirm it is announced once, not silently lost.
+3. Choose one decision. Confirm focus lands on the persistent document heading, not on an element that was replaced. Confirm the progress status announces the new count without an unexpected navigation jump.
+4. Complete all three documents and activate **End day**. Confirm the report is visible, its heading/content is reachable, and TalkBack does not continue reading hidden game controls.
+5. Rotate portrait ↔ landscape, increase system font size and browser zoom to at least 200%, then repeat the essential Inspect → Decide → Report flow. Check horizontal clipping, focus order, scroll traps and 48 CSS px interactive targets.
+6. Capture screenshot/screen recording and log actual failures under Issue #20. Do not mark Android, TalkBack, or APK acceptance passed until the device run has been performed.
