@@ -1928,3 +1928,16 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** 3–5 actual PNG binary signatures, dimensions and SHA256 vs manifest **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; stable complete persistence DTO not confirmed.
 - **Recommended next step:** run interactive Chromium touch on exact current UI PR #12 single-file HTML at `64b09479ab6735c233d93c8b43e6ae302f0b1712` and record screenshots/geometry; ensure CI pin follows reviewed artifact SHA. No SaveService, new shared contracts, READY_FOR_OWNER_TEST, main push or merge.
+
+
+## 2026-11-22 — QA 05: CI verification for e662e015 (Issue #8)
+
+**One bounded independent check:** GitHub Actions [run 45018812001](https://github.com/rixed318/Probably-TAU/actions/runs/45018812001), associated with exact QA SHA `e662e0155e4ca9c23ea32a167462ca94e572cbb3`, reports completed/success. Latest-attempt job metadata: **5/5 success** — Python PCG32 oracle; distributed Android HTML static gate; NPC standalone .NET 8; UI/Content static regression; Core ledger/snapshot .NET 8. This verifies remote job status only. **Full job logs, assertion counts, dependency checkout SHA, exact UI artifact pin and local tests NOT VERIFIED in this pass.** Chromium touch, real PNG binary inspection, Unity Editor/APK/device, integrated Save→Load **NOT RUN**. No GameState/SaveService or shared contract changes. C0-v2 PR #9 and ADR PR #14 authorize feature development, not merge.
+
+### Сводка для координатора 00 — 2026-11-22 (run #45018812001)
+
+- **PR HEADs observed:** #9 Core `9d9985d3ef5613240f680b51e946b40afad0ac17`; #10 QA `e662e0155e4ca9c23ea32a167462ca94e572cbb3` (before this handoff commit); #11 Content `beaa604ed40839eb3dc1cbcc8adedc3eeae3da37`; #12 UI `61e0d15e8a046c00c098823921153c0c794f7a25`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `971bee5ffa6e53b592a9bf8cbe971dc3f6e0f903`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. All open at read time. QA handoff commit follows; no main changes by QA.
+- **Blocker 1:** actual Chromium touch 360×800 / 800×360, three docs, EndDay, ledger replay, no immediate partner cash, measured 48dp/overflow **NOT RUN**.
+- **Blocker 2:** 3–5 actual PNG binary signatures, dimensions, SHA256 against manifest **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load **NOT RUN**; complete stable persistence DTO boundary not established.
+- **Recommended next step:** test exact latest UI PR #12 single-file Day01 HTML at `61e0d15e8a046c00c098823921153c0c794f7a25` in Chromium touch emulation and record geometry and gameplay assertions; compare CI artifact pin to this HEAD. No READY_FOR_OWNER_TEST, main push or merge.
