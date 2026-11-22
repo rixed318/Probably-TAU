@@ -892,3 +892,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **Issue #7 / PR #11; one bounded task:** added explicit `Array.isArray(art.rules)` assertion before `.every()` in `Content/validate-day01-acceptance.cjs`. Missing/null/object/string `rules` now produce a clear content-validation failure rather than an incidental JavaScript TypeError. This validates draft metadata only, not real PNGs or runtime assets. No story, Core, EventDirector, economy, Definition IDs, DayIndex or kopeck values changed.
 
 **Validator commit:** `84bdfaa2fc0eb5d7965ada7ce72892bf3f00b78f`. **Actually executed:** isolated JavaScript baseline valid array PASS; negative null, object and string containers rejected with expected validation message (4/4 PASS); exact replacement anchor unique. **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android or PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` at branch HEAD and repeat non-array mutations. C0-v2 PR #9 and ADR PR #14 still govern; DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge.
+
+
+## AutoDev 04 — Day01 platform container validation (22.11.2026)
+
+**Issue #7 / PR #11; one bounded task:** validate `DAY01_ART_LINKS.json.platforms` as an array before sorting it; invalid null/object/string values now fail with an explicit assertion rather than incidental TypeError. Exact canonical platform roster remains Windows + Android. This is metadata validation, not runtime or PNG verification. No Core, EventDirector, money, Definition ID, DayIndex or narrative changes.
+
+**Validator commit:** `dcbd3b7b0011dea40e1a925d82a40cf757f17b77`. **Actually checked:** isolated JavaScript equivalent baseline and four negative mutations (null/object/string/missing Android): 5/5 PASS. **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows, Android, PNG inspection. **QA 05:** run `node Content/validate-day01-acceptance.cjs` on current feature HEAD and negative platform mutations. PR #9 C0-v2 / PR #14 ADR apply to feature development only; PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
