@@ -630,6 +630,17 @@ namespace TAU.President.Tests.Core
             Assert(before.Header.BalanceKopecks == 1000L &&
                 before.Finance.Receipts.Count == 0 &&
                 before.Finance.Ledger.Entries.Count == 0);
+            // Document IDs must not collide with the EndDay receipt ID.
+            var reservedEndDayId = new[] {
+                choices[0], choices[1],
+                new Day01DocumentChoice("end-day:campaign:0", choices[2].Effects)
+            };
+            Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, reservedEndDayId));
+            AssertNamed(before.Header.Revision == 0 && before.Header.DayIndex == 0 &&
+                before.Header.BalanceKopecks == 1000L &&
+                before.Finance.Ledger.Entries.Count == 0 &&
+                before.Finance.Receipts.Count == 0,
+                "Day01 reserved EndDay ID rejected without effects");
             var duplicate = new[] { choices[0], choices[1], choices[0] };
             Throws<ArgumentException>(() => DurableDay01Flow.Prepare(before, 0, 0, duplicate));
             // A different command ID cannot authorize a second choice for the same decision.
