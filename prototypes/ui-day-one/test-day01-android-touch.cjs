@@ -306,3 +306,20 @@ test('Android offline variants declare exactly one viewport meta tag',()=>{
   assert.equal([...'<meta name="viewport" content="width=device-width">'.matchAll(viewportTag)].length,1);
   assert.equal([...'<meta name="viewport"><meta name="viewport">'.matchAll(viewportTag)].length,2);
 });
+
+
+// Android accessibility #20: keep a Russian document language and a meaningful
+// page title in both downloadable offline HTML variants (TalkBack context).
+test('both Android offline pages declare Russian language and a nonempty title',()=>{
+  const language=/<html\b[^>]*\blang\s*=\s*["']ru["']/i;
+  const title=/<title\b[^>]*>\s*[^\s<][^<]*<\/title>/i;
+  for(const filename of ['day01-android-touch.html','day01-android-offline.html']){
+    const source=fs.readFileSync(path.join(__dirname,filename),'utf8');
+    assert.match(source,language,filename+' must declare lang=ru');
+    assert.match(source,title,filename+' must have a readable title');
+  }
+  assert.match('<html lang="ru"><head><title>День 01</title>',language);
+  assert.match('<title>День 01</title>',title);
+  assert.doesNotMatch('<html lang="en">',language);
+  assert.doesNotMatch('<title>   </title>',title);
+});
