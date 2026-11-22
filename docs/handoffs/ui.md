@@ -1,3 +1,9 @@
+## Update 2026-11-22 — decimal-zero viewport guard (#20)
+
+- One bounded source-test fix: reject `user-scalable=0.0` and `0.00` in both offline Android HTML viewport declarations, not just `0`/false/no. Source commit: `24d47b806749c8399a1847795e987fe34ff76c7e`.
+- **Actually executed:** 5 JavaScript/V8 regex preflight fixtures (false/0.0/0.00 rejected; 1/0.5 not falsely flagged), 5/5 expected. **Not executed:** full Node --test, Chromium, Android/TalkBack, Unity. This does not prove the committed Node suite passes.
+- Reviewed live main README/AGENTS/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, asset manifest and UI handoff. C0-v2/ADR respected; no Core/main/merge. Android device test #20 and real binary PNG #21 remain pending.
+
 ## Update 2026-11-22 — Android viewport 200% zoom guard (#20)
 
 - One bounded regression change to `prototypes/ui-day-one/test-day01-android-touch.cjs`: disallow `user-scalable=false` and `maximum-scale` below 2, while retaining unlimited/default zoom and 200% zoom. Test commit: `efa3afef80624e6b0229adad26c72e0c3262fef2`.
