@@ -1,3 +1,9 @@
+## Update 2026-11-22 — inspection focus source regression (#20)
+
+- Added one source-level Node regression to `prototypes/ui-day-one/test-day01-android-touch.cjs` asserting that the persistent inspection result remains focusable and the successful Inspect handler moves focus there after rendering, with the error branch retained. Commit: `9b66667320c3b8253b35d9378d4049ffdb2d8012`.
+- **Actually executed:** 4 JavaScript source assertions against the live GitHub Android touch HTML before commit (4/4 passed); GitHub file update succeeded. **Not executed:** Node test runner, Chromium/DOM, Android/TalkBack, Unity. The new test is written but not runtime-verified; device behavior is unverified.
+- Main rules/workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, D01 asset manifest and handoff reviewed. #20 real device acceptance and #21 verified binary PNG remain pending. No Core/main/merge.
+
 ## Update 2026-11-22 — inspection focus continuity (#20)
 
 - Fixed one Android Day01 accessibility issue in `prototypes/ui-day-one/day01-android-touch.html`: a successful Inspect action re-renders the view and removes the active inspect button from the focus flow. The persistent inspection result is now programmatically focusable (`tabindex="-1"`) and receives focus **after** successful inspection/render only; error handling and the existing decision heading focus are unchanged. UI commit: `c330ed9e65fadd6553c1aa5aed7b4ebc1b3e6572`.
