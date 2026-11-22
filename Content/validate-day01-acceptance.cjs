@@ -542,6 +542,7 @@ assert.deepEqual([...art.platforms].sort(), ["Android", "Windows"]);
 assert.equal(art.worldLogicalResolution, "320x180");
 assert.equal(art.artDirection, "A");
 // Reject ambiguous or duplicate policy metadata; this does not inspect generated art.
+assert.ok(Array.isArray(art.rules), "Day01 art rules must be an array");
 assert.ok(art.rules.every(rule => typeof rule === "string" && rule.trim().length > 0), "Day01 art rules must be nonempty strings");
 assert.equal(new Set(art.rules.map(rule => rule.trim().toLowerCase())).size, art.rules.length, "Day01 art rules must be unique");
 // Fictional original art only: metadata guard, not an IP clearance or PNG inspection.
