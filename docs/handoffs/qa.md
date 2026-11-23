@@ -2073,3 +2073,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** exact latest UI single-file Day01 Chromium touch 360×800/800×360 (3 documents, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) **NOT RUN**; actual 3–5 PNG evidence **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor, Android APK/device and complete stable Save→Load DTO/transaction integration **NOT RUN / not confirmed**.
 - **Recommended next step:** verify new QA CI at exact SHA, then run real Chromium touch acceptance and inspect committed PNG signatures/dimensions/SHA256. Keep signing keys outside repository; do not merge or mark READY_FOR_OWNER_TEST without evidence.
+
+
+## 2026-11-23 — QA 05: exact-SHA CI evidence audit (Issue #8)
+
+**One bounded task:** independently verified GitHub Actions run [#45101239420](https://github.com/rixed318/Probably-TAU/actions/runs/45101239420) for QA feature commit `e8bac915cbaa31d248c231dbfb65c34fe67d20bc`. GitHub reported `completed/success` and all five job metadata records reported `completed/success`: Python PCG32 oracle, distributed Android HTML static gate, UI/Content static regression, Core ledger/snapshot .NET 8 regression, NPC standalone .NET 8 regression. **Evidence level:** GitHub job conclusions only; full logs, assertions, checkout logs and source contents were not independently replayed. No local Node/Python/.NET execution in this pass. This does not establish Chromium, Unity or Android acceptance.
+
+**Source-of-truth review:** main README and AGENTS.md, docs/CHAT_WORKFLOW.md, QA handoff, Issues #6/#8/#20/#21 and open PR #9/#10/#11/#12/#14/#16/#17 checked. Current PR heads differ from pinned revisions in the workflow for UI, Content and NPC; Core matches its pin. C0-v2 #9 and ADR #14/#17 are feature-only, not merge approval. No SaveService or architecture change.
+
+### Сводка для координатора 00 — 2026-11-23 (QA evidence audit)
+
+- **PR HEADs observed:** #9 Core `cd13992c24eb29969bf5d2a2156a1780bce48966`; #10 QA before this handoff commit `e8bac915cbaa31d248c231dbfb65c34fe67d20bc`; #11 Content `c97c9c37d7e35a6f09b73171d12a9115dd4d7b52`; #12 UI `b56c600d11876c225e7a27560ed483aa81624aca`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `c3369c0b23ed6b6556e6aa10954b6a39f79198ba`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. All open at inspection. Exact CI pins: Core `cd13992c`, UI `757ef9b3`, Content `399279df`, NPC `bd989691`. This handoff-only commit itself is **CI NOT VERIFIED**.
+- **Blocker 1:** CI success applies to pinned UI/Content/NPC revisions, not latest HEADs; no current-head integration evidence.
+- **Blocker 2:** exact latest UI Day01 Chromium touch at 360×800 and 800×360, 3 docs, EndDay, ledger replay, deferred partner cash, 48dp/overflow **NOT RUN**; 3–5 actual PNG signatures/dimensions/manifest SHA **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor, APK/device, full integrated Save→Load **NOT RUN**; stable complete persistence DTO boundary not confirmed.
+- **Recommended next step:** prioritize Chromium touch acceptance on UI HEAD `b56c600d` with recorded evidence; then verify actual PNG binaries and refresh CI pins for changed heads. Android signing keys stay outside repo. Do not merge or mark READY_FOR_OWNER_TEST.
