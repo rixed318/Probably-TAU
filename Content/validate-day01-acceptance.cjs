@@ -352,6 +352,17 @@ console.log("PASS: stable fictional Day01 portrait/document asset IDs and descri
 // This is static data comparison only: Core remains the sole cash/ledger writer.
 assert.equal(fixture.opening.budgetKopecks, contentSpec.opening.budgetKopecks,
   "Day01 opening budget drift");
+// All five canonical starting scores and inspection capacity must match the UI fixture.
+// This is static authored-data parity, not a second mutable GameState.
+assert.deepEqual(fixture.opening.scores, {
+  Q: contentSpec.opening.quality,
+  S: contentSpec.opening.students,
+  M: contentSpec.opening.staff,
+  E: contentSpec.opening.employers,
+  R: contentSpec.opening.public
+}, "Day01 opening Q/S/M/E/R drift between content and UI fixture");
+assert.equal(fixture.opening.inspectionTokens, contentSpec.opening.inspectionTokens,
+  "Day01 opening inspection token drift between content and UI fixture");
 const draftDocs = new Map(contentSpec.documentTypes.map(d => [d.id, d]));
 assert.equal(draftDocs.size, contentSpec.documentTypes.length, "duplicate canonical document Definition ID");
 assert.deepEqual([...draftDocs.keys()].sort(), fixture.documents.map(d => d.id).sort(),
