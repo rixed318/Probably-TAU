@@ -92,6 +92,29 @@ class OfficeCandidateTests(unittest.TestCase):
         with self.assertRaises((OSError, ValueError, SyntaxError)):
             validator.verify(self.path)
 
+    def test_cli_corrupt_idat_crc_reports_fail_without_traceback(self):
+        """CLI should report a controlled FAIL for a corrupted IDAT CRC."""
+        import struct
+        self.save()
+        raw = bytearray(self.path.read_bytes())
+        offset = 8
+        while offset + 12 <= len(raw):
+            length = struct.unpack('>I', raw[offset:offset + 4])[0]
+            if raw[offset + 4:offset + 8] == b'IDAT' and length:
+                raw[offset + 8] ^= 0x01
+                break
+            offset += 12 + length
+        else:
+            self.fail('fixture PNG has no nonempty IDAT')
+        self.path.write_bytes(raw)
+        result = subprocess.run(
+            [sys.executable, str(MODULE), str(self.path)],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn('FAIL:', result.stderr)
+        self.assertNotIn('Traceback', result.stderr)
+
     def run_cli(self, expected):
         return subprocess.run(
             [sys.executable, str(MODULE), str(self.path), '--expected-sha256', expected],
