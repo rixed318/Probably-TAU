@@ -1,3 +1,9 @@
+## Update 2026-11-23 — truncated PNG payload regression (#21)
+
+- One bounded task: added `test_truncated_png_payload_rejected` to `docs/art/tools/test_verify_office_candidate.py`, source commit `273ab53e11ca3f2b2c3b93bbfc3631244e73682a` on `feature/ui-5`. The test saves a valid RGBA PNG, truncates it after the 33-byte signature/IHDR, and requires Pillow/validator to reject the incomplete payload.
+- **Actually executed:** local Pillow smoke test on a synthetic 320×180 RGBA PNG truncated to 33 bytes: `Image.open(...).load()` raised `UnidentifiedImageError` as expected (1/1). **Not executed:** committed GitHub unittest file or full 10-case suite, CI, Android, TalkBack, Unity.
+- **BLOCKED:** PNG binary delivery still not verified in GitHub (local git DNS failure), G3/G6 approval and physical Android device evidence remain pending. C0-v2 PR #9 and ADR PR #14 are still unmerged; no GameState/Core/main/merge changes.
+
 ## Update 2026-11-23 — CLI SHA-256 regression coverage (#21)
 
 - One bounded task: extended `docs/art/tools/test_verify_office_candidate.py` with three subprocess CLI regression tests: matching checksum PASS, mismatched checksum FAIL, malformed checksum FAIL. Source commit `8aacae81e05f21e173faf89bf23754fc1667fdf6` on `feature/ui-5`.
