@@ -297,7 +297,7 @@ assert.ok(artLinks.visits.every(visit => visit !== null && typeof visit === "obj
 // Each of the three original blank document templates needs its own usable art brief.
 // Text/amounts remain dynamic UI data; this validates descriptions, not PNGs.
 const documentBriefs = artLinks.visits.map(visit => {
-  assert.ok(typeof visit.documentVisualBrief === "string" && visit.documentVisualBrief.trim().length >= 40,
+  assert.ok(typeof visit.documentVisualBrief === "string" && visit.documentVisualBrief.trim().replace(/\s+/g, " ").length >= 40,
     "missing Day01 document art brief: " + visit.documentId);
   return visit.documentVisualBrief.trim().replace(/\s+/g, " ").toLocaleLowerCase("ru-RU");
 });
