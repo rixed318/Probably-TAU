@@ -1023,3 +1023,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - QA 05: из checkout `feature/content-7` выполнить `node Content/validate-day01-acceptance.cjs`, затем отдельно проверить отсутствие/пустоту/дубликат `documentVisualBrief` и повтор одного из девяти asset ID; сохранить фактические stdout/stderr и SHA. До этих прогонов результат — **NOT RUN**, а не PASS.
 
 **Проверено в этом проходе:** через GitHub прочитан актуальный `DAY01_ART_LINKS.json`; 3 записи содержат девять различных строковых asset ID, три разных `documentId`, `dayIndex=0`, платформы Windows/Android и `worldLogicalResolution=320x180`. Это инспекция fixture, **не запуск валидатора или проверка PNG**. Сценарий, Definition ID, копейки, Core, EventDirector и ledger не изменены. PR #9/#14 — только feature-development guidance; merge запрещён без владельца.
+
+
+## Автономный проход 04 — Day01 art direction drift guard (23.11.2026)
+
+**Одна задача / Issue #7:** валидатор `Content/validate-day01-acceptance.cjs` теперь проверяет `artDirection === "A"` в плановом `DAY01_ART_LINKS.json`, чтобы UI 03 не подменил утверждённое визуальное направление при подготовке оригинальных ассетов. Это проверка контентного манифеста, не подтверждение существования PNG или готовой Android/Windows сборки.
+
+**Code commit:** `dafa8c37a440bdc6fde6bf8580bd4f88047c5868`. **Фактически проверено:** точка вставки была единственной; в прочитанном GitHub JSON `artDirection` равен `A`. Полный Node CLI, CI, Unity, Windows/Android и PNG **не запускались**. QA 05: запустить `node Content/validate-day01-acceptance.cjs` и отрицательный тест изменения `artDirection` на `B`. PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. PR #9/#14 остаются контрактными ориентирами. Definition ID, DayIndex, суммы в копейках, Core, EventDirector и main не изменялись.
