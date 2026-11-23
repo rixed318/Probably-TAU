@@ -953,3 +953,11 @@ Added `Runtime/Core/DurableDay01Flow.cs`: exactly three caller-approved document
 Issue #2: one bounded test-only increment in `Tests/Core/Pcg32GoldenTests.cs`. Invalid `NextUInt32(0)`, `NextInt(0)`, and `NextInt(-1)` must leave `State` and `Increment` unchanged; the next draw must match an exact restored snapshot. Invalid even-increment `Restore` is rejected without mutating an existing instance. No public API, production Core, or foreign subsystem changes.
 
 Test commit: `55b7185d3ce006aba0d3ed6f8667a98f7034a37c` on `feature/core-2`. Local `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` absent; `java`/`javac` present. C# tests **NOT RUN locally**; Unity Windows/Android APK **BLOCKED**. Exact-SHA GitHub CI needs separate verification. No main push/merge or issue closure. QA/00: please review this isolated RNG regression and its CI.
+
+
+## Core 01 — 23.11.2026: persisted EndDay ID preflight (#19)
+
+- `DurableDayAdvance.PrepareQuietDay` and `PreparePayablesDay` now reject a canonical `end-day:<campaign>:<day>` ID already present in `ProcessedCommandIds`, even when `ProcessedDayKeys` is missing that key. This prevents staging duplicate EndDay receipts/postings on restored-like snapshots. No public API changes; existing processed-day guard retained.
+- Regression in `GameStateSnapshotGoldenTests.Day01FlowGolden` covers both the quiet and payable direct paths plus canonical `PrepareDay` and verifies the input cash, ledger, receipts, revision and outstanding payable remain unchanged.
+- Core commit `ab7ee3859a2f8389e45fcb2525ea4528ec2ca440`; test commit `5583b4398db42f9e994b5a61872bcd1e29ec8a4a` on `feature/core-2` only. Exact-SHA CI must be checked separately; no local .NET/Unity/Android builds were run.
+- Environment: `java` and `javac` available; `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found. Android APK and Windows Unity build BLOCKED. Typed NPC due-events and weekly settlement still require 02/00 approved integration contract. No main push/merge/Issue closure.
