@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Standalone regression tests for ART-A0.1 office PNG preflight."""
 import importlib.util
+import hashlib
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -51,6 +54,31 @@ class OfficeCandidateTests(unittest.TestCase):
         self.path.write_bytes(b'not a png')
         with self.assertRaisesRegex(ValueError, 'signature'):
             validator.verify(self.path)
+
+    def run_cli(self, expected):
+        return subprocess.run(
+            [sys.executable, str(MODULE), str(self.path), '--expected-sha256', expected],
+            capture_output=True, text=True, check=False,
+        )
+
+    def test_cli_matching_sha256_passes(self):
+        self.save()
+        expected = hashlib.sha256(self.path.read_bytes()).hexdigest()
+        result = self.run_cli(expected)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('PASS preflight', result.stdout)
+
+    def test_cli_wrong_sha256_rejected(self):
+        self.save()
+        result = self.run_cli('0' * 64)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('SHA-256 mismatch', result.stderr)
+
+    def test_cli_malformed_sha256_rejected(self):
+        self.save()
+        result = self.run_cli('not-a-checksum')
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('64 hexadecimal', result.stderr)
 
 
 if __name__ == '__main__':
