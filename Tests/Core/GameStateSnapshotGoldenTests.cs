@@ -669,6 +669,29 @@ namespace TAU.President.Tests.Core
                 occupied.Finance.Ledger.Entries.Count == 0 &&
                 occupied.Finance.Receipts.Count == 1,
                 "Day01 persisted EndDay ID collision rejected without effects");
+            // A persisted receipt may occupy today's EndDay ID even when the
+            // processed-day key is absent. Both direct EndDay paths must fail
+            // before appending a duplicate receipt or staging payable postings.
+            Throws<InvalidOperationException>(() =>
+                DurableDayAdvance.PrepareDay(occupied, 1, 0));
+            Throws<InvalidOperationException>(() =>
+                DurableDayAdvance.PrepareQuietDay(occupied, 1, 0));
+            var occupiedPayable = new DurableGameStateSnapshot(
+                occupied.Finance, occupied.Events,
+                new DurablePayablesSnapshot(new[] {
+                    new DurablePayable("occupied-day-rent", 0, 200L)
+                }));
+            Throws<InvalidOperationException>(() =>
+                DurableDayAdvance.PrepareDay(occupiedPayable, 1, 0));
+            Throws<InvalidOperationException>(() =>
+                DurableDayAdvance.PreparePayablesDay(occupiedPayable, 1, 0));
+            AssertNamed(occupiedPayable.Header.Revision == 1 &&
+                occupiedPayable.Header.DayIndex == 0 &&
+                occupiedPayable.Header.BalanceKopecks == 1000L &&
+                occupiedPayable.Payables.Outstanding.Count == 1 &&
+                occupiedPayable.Finance.Ledger.Entries.Count == 0 &&
+                occupiedPayable.Finance.Receipts.Count == 1,
+                "EndDay persisted command collision fails closed for quiet and payable paths");
             // A restored command ID belonging to any document must be rejected
             // before earlier choices are staged, even when the collision is third.
             var processedHeader = new GameStateSnapshotDto(1, "campaign", 42UL, "normal", "dayone", 0, false,
