@@ -1,3 +1,9 @@
+## Update 2026-11-23 — PNG chunk CRC integrity preflight (#21)
+
+- One bounded task: office validator now runs Pillow `Image.verify()` before decoding, to reject malformed PNG chunk CRCs; regression `test_corrupt_ihdr_crc_rejected` flips a byte in the IHDR CRC. Source commits `c24e5b2f67348bc8afee6f847dc7f7f01379b1d2` and `ed2aee3b380425372bad397134f69583d5f9669e` on `feature/ui-5`.
+- **Actually executed locally:** Pillow synthetic 320×180 RGBA PNG: intact file passed `verify()` and `load()`; corrupted IHDR CRC raised `UnidentifiedImageError` as expected (2/2 smoke cases). This was a standalone reproduction of the new verification path, **not** a checkout or execution of the committed unittest suite. CI, Android, TalkBack, Unity not run.
+- **BLOCKED:** office PNG binary still not verified in GitHub; art G3/G6 approval and physical Android playtest pending. PR #9 C0-v2 and PR #14 ADR remain unmerged; no Core/main/merge changes.
+
 ## Update 2026-11-23 — truncated PNG payload regression (#21)
 
 - One bounded task: added `test_truncated_png_payload_rejected` to `docs/art/tools/test_verify_office_candidate.py`, source commit `273ab53e11ca3f2b2c3b93bbfc3631244e73682a` on `feature/ui-5`. The test saves a valid RGBA PNG, truncates it after the 33-byte signature/IHDR, and requires Pillow/validator to reject the incomplete payload.
