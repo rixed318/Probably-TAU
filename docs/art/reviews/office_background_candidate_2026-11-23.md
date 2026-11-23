@@ -15,3 +15,13 @@ Status: **GENERATED LOCALLY / NOT COMMITTED AS PNG / REVIEW PENDING**. This is a
 **Blocker:** generated PNG bytes exist in this run's local working container, but authenticated GitHub Git Data API cannot directly read that container file; container git network access fails DNS resolution for github.com. No binary upload, blob/tree verification, or production manifest promotion was performed. The GitHub text record alone does not constitute asset delivery.
 
 **Next:** use an authenticated binary-capable upload path with actual PNG bytes, verify PNG signature/dimensions/SHA256 after fetching from `feature/ui-5`, request art-direction review and only then promote manifest status. Preserve the previously documented 2026-11-19 candidate as a separate revision.
+
+## Pixel QA preflight — 2026-11-23
+
+Measured against the **actual local** `office_day01_candidate_20261123.png` using Pillow (not a GitHub blob):
+
+- Raster: **320×180**, RGBA; all pixels have alpha **255** (fully opaque; acceptable for a single full-screen background, not a separated prop).
+- **22,129 distinct RGBA colors** across 57,600 pixels. This is far above ART-A0.1's target of **24 working scene colors + alpha**. Consequently the candidate **fails G3 pixel-cleanup/palette review**; nearest-neighbor resizing alone did not turn the AI illustration into palette-constrained source pixel art.
+- These are source-image measurements, **not** a manual edge-cluster/1× visual acceptance, GitHub binary verification, Unity import or license approval.
+- **Decision:** keep status `candidate / review pending`, do **not** promote to approved/production or replace the existing manifest rows. Next art iteration should manually simplify clusters, quantize to a reviewed palette, and compare at 1× and integer 4× before review; do not silently overwrite the generated source.
+
