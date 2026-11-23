@@ -1,3 +1,9 @@
+## Update 2026-11-23 — Pillow deprecation cleanup in office preflight (#21)
+
+- One bounded maintenance task: replace deprecated `Image.getdata()` with `Image.getcolors(maxcolors=320 * 180)` in `docs/art/tools/verify_office_candidate.py`; preserve RGBA, opacity, 24-color palette and SHA-256 checks. Source commit `e289e2524cbc6f76a650b3ae9b70cb678b12ad1b` in `feature/ui-5`.
+- **Actually executed:** three local Pillow synthetic 320×180 RGBA fixtures (opaque valid color, transparent color, out-of-palette color) verified `getcolors()` counts and values (3/3 PASS). These are API smoke checks only; the full committed validator unittest suite and CI were **not** run in this pass.
+- **BLOCKED:** office PNG binary remains unverified in GitHub, physical Android/TalkBack and Unity tests not performed; art approval G3/G6 pending. No GameState/Core, main, merge or third-party IP changes. PR #9 C0-v2 and PR #14 ADR remain unmerged constraints.
+
 ## Update 2026-11-23 — six synthetic PNG validator regression cases (#21)
 
 - One bounded task: added `docs/art/tools/test_verify_office_candidate.py` in `feature/ui-5`, commit `96810f68821426b00292a55b30dcecae6bd32827`. Covers valid opaque palette PNG and five invalid cases (dimensions, alpha, palette, RGB mode, corrupt signature). No GameState/Core or Unity changes.
