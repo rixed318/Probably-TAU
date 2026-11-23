@@ -307,6 +307,10 @@ assert.equal(new Set(documentBriefs).size, documentBriefs.length,
 // These are lookup keys for UI on Windows/Android, not generated PNGs or Core instance IDs.
 // Planned art references must be portable across both owner-approved targets.
 // This does not claim that actual PNGs or Android/Windows builds exist.
+assert.equal(artLinks.schemaVersion, "day01-art-links-1",
+  "Day01 art-link schema version drift");
+assert.equal(artLinks.status, "planned-art-references-not-PNGs-or-runtime",
+  "Day01 art links must not claim delivered PNGs or runtime readiness");
 assert.deepEqual(artLinks.platforms, ["Windows", "Android"],
   "Day01 art links must declare both Windows and Android targets");
 assert.equal(artLinks.worldLogicalResolution, "320x180",
