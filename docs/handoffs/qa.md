@@ -2205,3 +2205,18 @@ Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляе�
 - **Recommended next step:** run Chromium touch acceptance on exact UI `08b541f0323fc2ec0179ae73d5402597cc4a5926`, then validate real PNG binaries and refresh exact-SHA CI pins. Keep Unity/Android device tests NOT RUN until actual APK. No secrets in repo; no owner IP/logo approval.
 
 **Evidence boundary:** workflow and job status verified through GitHub API; full job logs and local Python/Node/.NET/Unity tests NOT RUN in this pass. New handoff-only commit CI NOT VERIFIED. READY_FOR_OWNER_TEST not assigned.
+
+
+## 2026-11-23 — QA 05: exact-SHA CI refresh (#8)
+
+One bounded change: updated four read-only dependency pins in `.github/workflows/qa-offline.yml` on `feature/save-6`, commit `0f1d8620c0942c64e2788eb5fb73b5751bceb270`. Core `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9` (4 occurrences), UI `8709770a59bf7c4fcda2e1e74ea8a3b7d844d278` (4), Content `983d958383d8e7bc1cebe873f940ea09bb3e5393` (2), NPC `353351a5812571a8b330bf6b4e94f94751915c81` (2). Verified by string replacement assertions: 12 occurrences changed, all four old pins absent, exactly four distinct new 40-hex pins present. **This is static JS string validation only, not YAML parser, CI execution, or source tests.** CI after commit: NOT VERIFIED; Node/Python/.NET/Unity tests: NOT RUN in this pass. Existing C0-v2 PR #9, ADR PR #14 and ADR-C0-002 PR #17 remain feature-only and unmerged. No SaveService or new GameState model.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR heads read from GitHub before update:** #9 Core `7b9ff45c053b`; #10 QA `25be2c4ec05f` before CI refresh `0f1d8620c094` and this handoff commit; #11 Content `983d958383d8`; #12 UI `8709770a59bf`; #14 ADR `ebdc4be28afd`; #16 NPC `353351a581`; #17 ADR `bc9db999b419`. All open at read time. Query GitHub again before integration.
+- **Blocker 1:** CI on new pinned commits has not yet completed/been inspected; no green claim for new SHA set.
+- **Blocker 2:** Chromium touch acceptance of exact latest Day01 artifact at 360x800/800x360 (three documents, EndDay, ledger replay, partner deferred cash, 48dp/overflow) and actual PNG signatures/dimensions/manifest SHA: NOT RUN/NOT VERIFIED.
+- **Blocker 3:** Unity Editor APK/device and integrated Save→Load: NOT RUN; complete stable Core snapshot DTO/atomic boundary not independently confirmed.
+- **Recommended next step:** inspect Actions run for QA refresh SHA and full job logs; then Chromium touch acceptance and real PNG verification on UI exact SHA, without merging. Android build/signing checklist must avoid storing keystores/secrets in repo.
+
+**Safety:** only QA feature branch updated; main untouched, no merge, no approval of third-party IP.
