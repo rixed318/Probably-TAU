@@ -44,6 +44,9 @@ namespace TAU.President.Core
             foreach (var key in h.ProcessedDayKeys)
                 if (StringComparer.Ordinal.Equals(key, dayKey))
                     throw new InvalidOperationException("Day already processed.");
+            foreach (var commandId in h.ProcessedCommandIds)
+                if (StringComparer.Ordinal.Equals(commandId, dayKey))
+                    throw new InvalidOperationException("EndDay command ID already processed.");
 
             var selected = current.Payables.CaptureAffordableDueStage(
                 expectedDayIndex, h.BalanceKopecks);
@@ -107,6 +110,9 @@ namespace TAU.President.Core
             foreach (var processed in h.ProcessedDayKeys)
                 if (StringComparer.Ordinal.Equals(processed, key))
                     throw new InvalidOperationException("Day already processed.");
+            foreach (var commandId in h.ProcessedCommandIds)
+                if (StringComparer.Ordinal.Equals(commandId, key))
+                    throw new InvalidOperationException("EndDay command ID already processed.");
             var keys = new List<string>(h.ProcessedDayKeys);
             keys.Add(key);
             var commandIds = new List<string>(h.ProcessedCommandIds);
