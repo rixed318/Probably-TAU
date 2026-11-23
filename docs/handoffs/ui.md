@@ -1,3 +1,9 @@
+## Update 2026-11-23 — optional office PNG SHA-256 provenance gate (#21)
+
+- One bounded task: `docs/art/tools/verify_office_candidate.py` now accepts `--expected-sha256 <64-hex>` and fails on malformed or mismatched checksums; the existing palette/dimension validation remains unchanged. Commit `45794e7aaa8ff4436d787f973df606c69cceeb38`.
+- **Actually tested locally:** four checksum comparison scenarios (matching, uppercase, wrong 64-hex, malformed) using Python against the existing 320×180 local PNG, all behaved as expected; digest `d6b9b9e1bfb7bc352a50ed457b1145fe99a2ca78cf80f4d98450c361476d36b0`. This was a standalone checksum logic test, **not** execution of the GitHub-hosted script or full PNG validator.
+- **BLOCKED:** PNG binary still not verified in GitHub; no Android device/TalkBack or Unity playtest. Art approval and manifest promotion pending. No main/Core edits or merge. C0-v2 PR #9 and ADR PR #14 respected.
+
 ## Update 2026-11-23 — reproducible ART-A0.1 office PNG preflight (#21)
 
 - One bounded task: added `docs/art/tools/verify_office_candidate.py` to validate a local office candidate's 320×180 PNG RGBA8 header, opaque alpha, exact 24-color master palette membership, and SHA-256; does NOT approve art or upload binary. Commit `e526055e45990202be5bf134acd6619d771d5119`.
