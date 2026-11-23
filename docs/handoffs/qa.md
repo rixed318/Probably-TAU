@@ -2118,3 +2118,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** Chromium touch acceptance on exact latest single-file Day01 artifact (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) NOT RUN; actual PNG binaries and manifest SHA NOT VERIFIED.
 - **Blocker 3:** Unity Editor, real Android APK/device and integrated Save→Load NOT RUN; stable complete DTO boundary not confirmed.
 - **Recommended next step:** execute real Chromium mobile touch acceptance on latest UI single-file artifact with recorded viewport/tap/ledger evidence; verify 3–5 PNG signatures/dimensions/SHA when committed. Android signing secrets must stay outside repository. No READY_FOR_OWNER_TEST, no main push/merge.
+
+
+## 2026-11-23 — QA 05: независимая проверка CI для c24ed4a5 (Issue #8)
+
+**Одна задача:** проверить фактический GitHub Actions run на QA HEAD до новых изменений. Для commit `c24ed4a54af788d5e9564555ea724bee6ed17d55` обнаружен [run #45132992536](https://github.com/rixed318/Probably-TAU/actions/runs/45132992536), status=completed, conclusion=success. Через API jobs проверены **5/5 completed/success**: Python PCG32 oracle; UI/Content static; NPC .NET 8; Core .NET 8; Android HTML static. Это подтверждение GitHub Actions job conclusions, **не** самостоятельный прогон тестов и **не** проверка логов/assertions.
+
+Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляет Core `cd13992c`, Content `2bc491aa`, UI `1e9b6bc4` и NPC (старый SHA); они **не совпадают** с текущими PR HEAD ниже. Поэтому 5/5 SUCCESS нельзя переносить на новые версии зависимостей. Локальные Node/Python/.NET: **NOT RUN**; Chromium touch 360x800 и 800x360: **NOT RUN**; PNG binary signature/dimensions/manifest SHA: **NOT VERIFIED**; Unity Editor/Android APK/устройство/интегрированный Save→Load: **NOT RUN**. SaveService не реализован: не вводить альтернативный GameState до стабильных Core DTO. Никакие новые общие контракты не утверждались.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **Последние проверенные PR HEAD до этого handoff-коммита:** #9 Core `27bac98da049`; #10 QA `c24ed4a54af7` (этот handoff создаст новый SHA); #11 Content `870f4d57b290`; #12 UI `083aa702773d`; #14 ADR `ebdc4be28afd`; #16 NPC `b8f15dcef772`; #17 ADR `bc9db999b419`. Все семь PR open на момент API-чтения. C0-v2/ADR — только для feature-разработки, не merge.
+- **Blocker 1:** exact-SHA CI pins устарели относительно #9/#11/#12/#16; новый HEAD не подтверждён интеграционным CI.
+- **Blocker 2:** Chromium touch acceptance Day01 (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) и реальная PNG проверка не выполнены.
+- **Blocker 3:** Unity Editor/APK/device и end-to-end Save→Load не проверены; окончательный DTO boundary не подтверждён QA.
+- **Рекомендуемый следующий шаг:** Chromium touch на exact UI HEAD `083aa702773d` и бинарная проверка 3–5 PNG при наличии; затем обновить exact-SHA pins и повторить CI. Android build/signing checklist: Unity 6 LTS Android Build Support + SDK/NDK/OpenJDK, package identifier, ARM64, orientation, development build, install/logcat, reproducible commit SHA; signing secrets хранить только вне репозитория. **READY_FOR_OWNER_TEST: NO**.
