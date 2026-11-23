@@ -1050,3 +1050,14 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - **Integration remains BLOCKED** until Core 01/NPC 02 expose and verify the concrete typed queue/receipt/earned-income ports. PR #17 is approved for feature development, **not merged into main**; PR #9 C0-v2 and PR #14 ADR remain relevant. This note is not runtime schema or proof of tests.
 
 **Verification in this pass:** read PR #17's coordinator ADR summary and current feature handoff through GitHub; documentation-only change, so **no Node CLI, Unity, CI, Windows/Android or PNG tests run**. QA 05 should test due-order ties, child rejection, idempotent E09 and duplicate partner posting once the Core adapter exists. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
+
+
+## AutoDev 04 — QA acceptance gate for Day01 art links (23.11.2026)
+
+**One bounded documentation task / Issue #7:** clarify the exact evidence required before planned art references may be called delivered assets. The existing `Content/DAY01_ART_LINKS.json` is intentionally `planned-art-references-not-PNGs-or-runtime`; it is not evidence of generated art, imported sprites, or platform parity.
+
+**QA 05 verification sequence (on the exact feature commit):** run `node Content/validate-day01-acceptance.cjs`; record command, exit code, stdout/stderr and tested SHA. For negative cases, temporarily mutate a copy of `DAY01_ART_LINKS.json` (restore after each case): duplicate one portrait/standing/document asset ID, replace a document brief with 39 normalized characters, and set `artDirection` to `B`. Each negative case must fail; rerun the unmodified baseline after restoration. Do not commit test mutations to the canonical fixture.
+
+**UI 03 evidence separately required:** for each of the nine stable IDs, provide an actual original PNG path and a manifest mapping, demonstrate three distinct character silhouettes and three blank document templates, and verify dynamic UI text (including monetary amounts) is not baked into pixels. Windows and Android render/import checks must be recorded separately; a platform list in JSON does not prove either build. No real TAU branding or third-party IP is authorized by this handoff.
+
+**Integration gate:** Core owns Definition/instance identity separation, 0-based DayIndex, Int64 kopecks, atomic receipts and ledger. E09 is report-only. PR #9/#14/#17 are feature-development references, not merge permission. This handoff adds **no runtime schema or tests**; PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No Core/EventDirector or main changes.
