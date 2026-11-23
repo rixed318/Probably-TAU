@@ -1030,3 +1030,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **Одна задача / Issue #7:** валидатор `Content/validate-day01-acceptance.cjs` теперь проверяет `artDirection === "A"` в плановом `DAY01_ART_LINKS.json`, чтобы UI 03 не подменил утверждённое визуальное направление при подготовке оригинальных ассетов. Это проверка контентного манифеста, не подтверждение существования PNG или готовой Android/Windows сборки.
 
 **Code commit:** `dafa8c37a440bdc6fde6bf8580bd4f88047c5868`. **Фактически проверено:** точка вставки была единственной; в прочитанном GitHub JSON `artDirection` равен `A`. Полный Node CLI, CI, Unity, Windows/Android и PNG **не запускались**. QA 05: запустить `node Content/validate-day01-acceptance.cjs` и отрицательный тест изменения `artDirection` на `B`. PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. PR #9/#14 остаются контрактными ориентирами. Definition ID, DayIndex, суммы в копейках, Core, EventDirector и main не изменялись.
+
+
+## AutoDev 04 — normalized document art brief minimum (23.11.2026)
+
+**One bounded task (#7 / PR #11):** `Content/validate-day01-acceptance.cjs` now collapses internal whitespace before checking the minimum 40-character `documentVisualBrief` length. Previously a short phrase padded with many spaces could pass. This only tightens draft art brief metadata, not game logic or runtime schema.
+
+**Code commit:** `5abdfae5527a8fa9768653601ac2ed4d4ad2d1d0`. **Actually checked:** four isolated JS predicates PASS — all three current briefs pass, whitespace-padded short phrase fails, 39 normalized characters fail, 40 normalized characters pass. **NOT RUN:** full `node Content/validate-day01-acceptance.cjs` on checkout (GitHub clone failed: DNS resolution of github.com), CI, Unity, Windows/Android builds, or PNG inspection. QA 05: run full validator and mutate one `documentVisualBrief` to a short whitespace-padded phrase; capture SHA/stdout/stderr. PR #9/#14 remain feature-only contract guidance; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No Core, EventDirector, ledger, IDs, DayIndex, kopeck amounts, main push or merge.
