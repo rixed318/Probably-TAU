@@ -1,3 +1,9 @@
+## Update 2026-11-23 — malformed PNG CRC CLI failure handling (#21)
+
+- One bounded task: docs/art/tools/verify_office_candidate.py now catches Pillow SyntaxError from malformed PNG chunks, prints FAIL and exits with status 1 rather than an unhandled traceback. Source commit d03c7fdb1846a3569509dcd522bb65e011ad139b on feature/ui-5.
+- Actually executed: local Pillow synthetic 320x180 RGBA fixture with one mutated IDAT byte and unchanged CRC; Image.verify() raised SyntaxError: broken PNG file (bad header checksum in b'IDAT'). This verifies the exception type, NOT a full CLI run of the committed script. GitHub acknowledged source commit. No full unittest/CI, Android/TalkBack or Unity tests run.
+- BLOCKED: binary office PNG not verified in GitHub; owner art G3/G6 approval and physical Android playtest pending. C0-v2 PR #9 and ADR PR #14 not assumed merged. No main/Core changes or merge.
+
 ## Update 2026-11-23 — IDAT payload CRC regression (#21)
 
 - One bounded task: added `test_corrupt_idat_crc_rejected` to `docs/art/tools/test_verify_office_candidate.py` on `feature/ui-5`, source commit `74796dbbb07b0bf14fd3645446d14fedfeadbfec`. Test locates a nonempty IDAT chunk, flips one compressed-data byte without updating CRC, and expects the existing validator to reject the PNG.
