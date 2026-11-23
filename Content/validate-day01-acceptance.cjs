@@ -316,6 +316,11 @@ assert.deepEqual(artLinks.platforms, ["Windows", "Android"],
 assert.equal(artLinks.worldLogicalResolution, "320x180",
   "Day01 planned pixel-art logical resolution drift");
 assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
+// Keep provenance pointers explicit: these are draft source references, not delivered PNGs.
+assert.equal(artLinks.sourceFixture, "Content/DAY01_UI_FIXTURE.json",
+  "Day01 art links must reference the canonical platform-independent UI fixture");
+assert.equal(artLinks.sourceManifest, "feature/ui-5/docs/art/ASSET_MANIFEST_D01.csv",
+  "Day01 art links must reference the UI-owned planned art manifest");
 // Stable asset lookup keys must be unique across all three fictional visitors/documents.
 // A shared key could silently display the wrong portrait, standing sprite or blank form.
 const plannedAssetIds = artLinks.visits.flatMap(visit => [
