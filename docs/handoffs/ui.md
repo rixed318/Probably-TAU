@@ -1,3 +1,9 @@
+## Update 2026-11-23 — six synthetic PNG validator regression cases (#21)
+
+- One bounded task: added `docs/art/tools/test_verify_office_candidate.py` in `feature/ui-5`, commit `96810f68821426b00292a55b30dcecae6bd32827`. Covers valid opaque palette PNG and five invalid cases (dimensions, alpha, palette, RGB mode, corrupt signature). No GameState/Core or Unity changes.
+- **Actually executed locally:** `python -m unittest discover -s /mnt/data/tau -p 'test_*.py' -v` — 6/6 PASS in 0.049 s using a local copy of the GitHub validator's `verify()` logic. Pillow emitted a non-fatal `getdata` deprecation warning. This is **not** a run of the newly committed test file checked out from GitHub, and not a full CI/Unity/Android run.
+- **BLOCKED:** PNG binary remains unverified in GitHub, physical Android/TalkBack and Unity playtest not performed; G3/G6 art approval pending. C0-v2 PR #9 and ADR PR #14 remain unmerged; no main push/merge.
+
 ## Update 2026-11-23 — optional office PNG SHA-256 provenance gate (#21)
 
 - One bounded task: `docs/art/tools/verify_office_candidate.py` now accepts `--expected-sha256 <64-hex>` and fails on malformed or mismatched checksums; the existing palette/dimension validation remains unchanged. Commit `45794e7aaa8ff4436d787f973df606c69cceeb38`.
