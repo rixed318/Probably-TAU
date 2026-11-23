@@ -283,7 +283,7 @@ for (const assetId of assetIds) {
   assert.match(assetId, /^[a-z0-9]+(?:_[a-z0-9]+)*$/, "invalid platform-independent asset ID");
 }
 for (const npc of contentSpec.fictionalNpcs) {
-  assert.ok(typeof npc.visualDescription === "string" && npc.visualDescription.trim().length > 0,
+  assert.ok(typeof npc.visualDescription === "string" && npc.visualDescription.trim().replace(/\s+/g, " ").length >= 40,
     "missing original character visual description: " + npc.id);
 }
 // Original art prompts must remain visually distinguishable across the three fictional visitors.
