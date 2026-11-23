@@ -1,3 +1,9 @@
+## Update 2026-11-23 — reproducible ART-A0.1 office PNG preflight (#21)
+
+- One bounded task: added `docs/art/tools/verify_office_candidate.py` to validate a local office candidate's 320×180 PNG RGBA8 header, opaque alpha, exact 24-color master palette membership, and SHA-256; does NOT approve art or upload binary. Commit `e526055e45990202be5bf134acd6619d771d5119`.
+- **Actually executed locally:** `python verify_office_candidate.py /mnt/data/office_day01_palette24_preview_20261123.png` PASS (24 colors; SHA256 `d6b9b9e1bfb7bc352a50ed457b1145fe99a2ca78cf80f4d98450c361476d36b0`); original non-quantized candidate correctly FAIL (out-of-palette). Pillow issued a non-fatal getdata deprecation warning. GitHub accepted script commit.
+- **BLOCKED:** actual PNG binary still not in feature branch; container git DNS cannot resolve github.com. No GitHub blob/tree or art approval; no Android/TalkBack, Node suite, Chromium or Unity run. Main/Core untouched; no merge. C0-v2 PR #9 and ADR PR #14 remain integration constraints.
+
 ## Update 2026-11-23 — local ART-A0.1 palette preview (#21)
 
 - One bounded task: produced a **local** 320×180 RGBA 24-color preview of the existing office candidate using exact master palette nearest-RGB mapping, without dithering; original source preserved. Preview SHA-256 `d6b9b9e1bfb7bc352a50ed457b1145fe99a2ca78cf80f4d98450c361476d36b0`, 21,089 bytes. Review record commit `b00267bc8e162c37b22dafede7c7215989bd53c4`.
