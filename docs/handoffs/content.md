@@ -1061,3 +1061,18 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **UI 03 evidence separately required:** for each of the nine stable IDs, provide an actual original PNG path and a manifest mapping, demonstrate three distinct character silhouettes and three blank document templates, and verify dynamic UI text (including monetary amounts) is not baked into pixels. Windows and Android render/import checks must be recorded separately; a platform list in JSON does not prove either build. No real TAU branding or third-party IP is authorized by this handoff.
 
 **Integration gate:** Core owns Definition/instance identity separation, 0-based DayIndex, Int64 kopecks, atomic receipts and ledger. E09 is report-only. PR #9/#14/#17 are feature-development references, not merge permission. This handoff adds **no runtime schema or tests**; PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No Core/EventDirector or main changes.
+
+
+## AutoDev 04 — Day01 three-document deterministic acceptance vectors (23.11.2026)
+
+**One bounded documentation task / Issues #1/#7 / PR #11.** Three fixture-level reference vectors for Core 01 and QA 05, based on `Content/DAY_01.md` and `Content/CONTENT_SPEC_DRAFT.json`. These are *expected outcomes*, not a new executor or an assertion that typed C0 integration exists. Initial DayIndex=0, cash=200000000 kopecks, Q/S/M/E/R=52/48/50/45/47; no weekly settlement on closing DayIndex=0.
+
+| Vector | Three document choices | Required inspections | ROOM display | Expected cash (kopecks) | Expected Q/S/M/E/R |
+|---|---|---|---|---:|---|
+| A / maximum initial spend | LAB-1, STUDENT-1, PARTNER-1 | none | ROOM-1/2/3/4 available (3 claims) | 171500000 | 55/51/52/47/48 |
+| B / checked alternatives | LAB-2, STUDENT-2, PARTNER-2 | DOC-01 and DOC-03 (exactly 2) | ROOM-AUTO (1 claim) | 180500000 | 54/49/51/46/47 |
+| C / all deferred | LAB-3, STUDENT-3, PARTNER-3 | none | ROOM-AUTO (0 claims) | 200000000 | 52/46/49/43/47 |
+
+For all three: exactly three document decisions, no cash/metric mutation from ROOM, no partner income on signing, E02 is a DayIndex=1 **definition** rather than a content-created event instance; future mentor costs and settlements are excluded. A repeated command/EndDay must not duplicate a ledger posting or day advancement. UI renders cash from Core read models, not a Content-side cash engine. Vectors are platform-neutral for Windows and Android; art remains planned, not delivered.
+
+**Actually checked this run:** fetched both canonical draft source files and this handoff through GitHub; three independent integer-kopeck cash calculations from the listed document choices matched 171500000, 180500000, and 200000000 (3/3 PASS). Metric expectations were manually cross-referenced to the documented deltas; **not** executed against Core. **NOT RUN:** checked-in Node CLI, CI, Core/Unity golden tests, Android/Windows builds, PNG inspection. QA 05: implement/run these vectors against the eventual typed Core three-document flow, including negative duplicate-command/EndDay cases; record tested SHA and actual output. PR #9/#14/#17 remain contract references, not permission to merge. PR #11 stays DRAFT / NOT READY_FOR_OWNER_TEST. No changes to IDs, money definitions, JSON schema, Core, EventDirector, ledger or main.
