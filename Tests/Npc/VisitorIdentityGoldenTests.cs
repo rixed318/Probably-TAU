@@ -100,7 +100,7 @@ namespace TAU.President.Tests.Npc
             foreach (string canonicalDocumentId in new[] { "DOC-01", "DOC-02", "DOC-03" })
             {
                 Day01Visitors.VisitScreenPreview malformedDocumentScreen;
-                string malformedDocumentId = canonicalDocumentId.Insert(3, "\\uFEFF");
+                string malformedDocumentId = canonicalDocumentId.Insert(3, "\uFEFF");
                 if (Day01Visitors.TryGetVisitScreenPreviewByDocumentId(
                         malformedDocumentId, out malformedDocumentScreen) || malformedDocumentScreen != null)
                     throw new Exception("Embedded BOM document route accepted.");
