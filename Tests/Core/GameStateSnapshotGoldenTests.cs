@@ -40,6 +40,7 @@ namespace TAU.President.Tests.Core
             DurablePayablesRoundTrip();
             RejectSettledOutstandingPayableGolden();
             QuietDayAdvanceGolden();
+            DueEventEndDayFailClosedGolden();
             WeeklyPayableFailClosedGolden();
             WeeklyQuietFailClosedGolden();
             SecondWeekQuietFailClosedGolden();
@@ -399,6 +400,36 @@ namespace TAU.President.Tests.Core
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(weekly, 0, 4));
             Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(weekly, 0, 4));
+        }
+
+        private static void DueEventEndDayFailClosedGolden()
+        {
+            // A due NPC event must never be skipped by canonical or direct EndDay entrypoints.
+            var header = new GameStateSnapshotDto(0, "due-event-campaign", 42UL, "normal",
+                "dayone", 0, false, new AcademyMetricsDto(50, 50, 50, 50, 50),
+                1000L, 1000L, new RandomStreamSnapshotDto[0], new string[0],
+                new string[0], new[] { "npc-due" }, new string[0]);
+            var finance = new DurableFinanceSnapshot(header,
+                new LedgerSnapshot(1000L, new LedgerEntry[0]),
+                new DurableCommandReceipt[0]);
+            var events = new ScheduledEventQueueSnapshot(
+                new[] { new ScheduledEventOccurrence("npc-due", "event.npc", 0, 1) },
+                new string[0]);
+            var current = new DurableGameStateSnapshot(finance, events,
+                new DurablePayablesSnapshot(new[] { new DurablePayable("rent", 0, 100L) }));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareDay(current, 0, 0));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PrepareQuietDay(current, 0, 0));
+            Throws<InvalidOperationException>(() => DurableDayAdvance.PreparePayablesDay(current, 0, 0));
+            AssertNamed(current.Header.Revision == 0 && current.Header.DayIndex == 0 &&
+                current.Header.BalanceKopecks == 1000L &&
+                current.Header.ProcessedCommandIds.Count == 0 &&
+                current.Header.ProcessedDayKeys.Count == 0 &&
+                current.Finance.Ledger.Entries.Count == 0 &&
+                current.Finance.Receipts.Count == 0 &&
+                current.Events.Pending.Count == 1 &&
+                current.Events.Pending[0].InstanceId == "npc-due" &&
+                current.Payables.Outstanding.Count == 1,
+                "due NPC event blocks all EndDay entrypoints without state mutation");
         }
 
         private static void AffordablePayablesGolden()
