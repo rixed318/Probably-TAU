@@ -1,3 +1,9 @@
+## Update 2026-11-23 — original office pixel-art candidate (#21)
+
+- One bounded art task: generated a **new original** fictional office backdrop via ChatGPT ImageGen (generation ID `9d524018-a68b-48c9-839a-ee0920b7794d`), center-cropped and nearest-neighbor resized to a local 320×180 RGBA PNG (89,090 bytes; SHA256 `95322760313ff6831a96385d0c38dcbc59e51c99d6d51c479d1fffb5e30bb374`). Review/provenance: `docs/art/reviews/office_background_candidate_2026-11-23.md`, commit `1efc995f142ab51abd969cb86287e8c620ee432f`.
+- **BLOCKED — binary GitHub delivery:** PNG exists in this run's local workspace but was **not** committed to GitHub. Container git DNS lookup failed; GitHub connector text operations cannot directly read local PNG bytes. No GitHub blob/tree/PNG verification. No manifest promotion or art approval. Candidate is not pixel-cleaned or production-ready.
+- **Actually checked:** live main README/AGENTS/workflow/DECISIONS, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible/manifest/pipeline, UI handoff; local image dimensions and SHA256; GitHub acknowledged provenance commit. **Not run:** Node suite, browser, Android, TalkBack, Unity, physical pixel review. Android #20 remains device-BLOCKED. No Core/main/merge.
+
 ## Update 2026-11-23 — Android dp versus CSS px evidence (#20)
 
 - One bounded QA documentation correction in `prototypes/ui-day-one/ANDROID_DEVICE_EVIDENCE_TEMPLATE.md`: record actual Android display/font scaling and measured hit rectangles; distinguish source-level `48 CSS px` assertions from the required `48 Android dp` physical acceptance. A7 stays BLOCKED without measurement. Commit `b8014bff46565655b6df6956d5f5c77d50066cf0`.
