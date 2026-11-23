@@ -316,6 +316,17 @@ assert.deepEqual(artLinks.platforms, ["Windows", "Android"],
 assert.equal(artLinks.worldLogicalResolution, "320x180",
   "Day01 planned pixel-art logical resolution drift");
 assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
+// Stable asset lookup keys must be unique across all three fictional visitors/documents.
+// A shared key could silently display the wrong portrait, standing sprite or blank form.
+const plannedAssetIds = artLinks.visits.flatMap(visit => [
+  visit.portraitAssetId, visit.standingAssetId, visit.documentAssetId
+]);
+assert.ok(plannedAssetIds.every(assetId => typeof assetId === "string" &&
+  /^[a-z][a-z0-9_]*$/.test(assetId)),
+  "Day01 planned asset IDs must be nonempty portable lowercase keys");
+assert.equal(new Set(plannedAssetIds).size, plannedAssetIds.length,
+  "duplicate Day01 portrait/standing/document asset ID");
+
 const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
   const npc = contentSpec.fictionalNpcs.find(item => item.id === visit.npcId);
   const doc = contentSpec.documentTypes.find(item => item.id === visit.documentId);
