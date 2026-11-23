@@ -52,7 +52,7 @@ if __name__ == '__main__':
         count, digest = verify(args.png)
         if args.expected_sha256 is not None and digest != expected:
             raise ValueError(f'SHA-256 mismatch: got {digest}, expected {expected}')
-    except (OSError, ValueError, ImportError) as e:
+    except (OSError, ValueError, SyntaxError, ImportError) as e:
         print(f'FAIL: {e}', file=sys.stderr)
         sys.exit(1)
     print(f'PASS preflight: 320x180 RGBA8; {count} palette colors; SHA256 {digest}')
