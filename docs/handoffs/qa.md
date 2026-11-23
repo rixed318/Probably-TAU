@@ -2088,3 +2088,20 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Blocker 2:** exact latest UI Day01 Chromium touch at 360×800 and 800×360, 3 docs, EndDay, ledger replay, deferred partner cash, 48dp/overflow **NOT RUN**; 3–5 actual PNG signatures/dimensions/manifest SHA **NOT VERIFIED**.
 - **Blocker 3:** Unity Editor, APK/device, full integrated Save→Load **NOT RUN**; stable complete persistence DTO boundary not confirmed.
 - **Recommended next step:** prioritize Chromium touch acceptance on UI HEAD `b56c600d` with recorded evidence; then verify actual PNG binaries and refresh CI pins for changed heads. Android signing keys stay outside repo. Do not merge or mark READY_FOR_OWNER_TEST.
+
+## 2026-11-23 — QA 05: refresh exact-SHA regression pins (#8)
+
+**One bounded change:** updated read-only UI/Content/NPC source pins in `.github/workflows/qa-offline.yml` to independently fetched PR heads. Core already matched its PR head. Workflow commit: `8ce003951b6dcc4f487443a6be7f3d378f28f7c6`. This handoff update follows in a separate QA-only commit. No cross-subsystem code, DTO, SaveService or contract changes.
+
+**Actual evidence:** GitHub Actions [run 45101239420](https://github.com/rixed318/Probably-TAU/actions/runs/45101239420), for previous QA commit `e8bac915`, reports five completed/success jobs (Python PCG32, Android HTML static, UI/Content static, Core .NET 8, NPC .NET 8). Job statuses were fetched; logs and assertion counts were NOT independently inspected. This is **not** a green result for the newly pinned revisions or this handoff commit. Local Python/Node/.NET: NOT RUN. Chromium 360x800/800x360 interactive touch: NOT RUN. Unity Editor, Android APK/device, integrated Save→Load: NOT RUN.
+
+**CI source pins after update:** Core `cd13992c24eb29969bf5d2a2156a1780bce48966`; UI `1e9b6bc46665a1a19c5ce5794996b3a6b905d521`; Content `2bc491aa7d3188c0536669ac1d9d7ded4bf3b6d0`; NPC `82336294922273453c2a040f401266ff1c6810ed`. All pins are exact commit IDs, not floating branches. Existing workflow checks assert checked-out revisions. Text replacement validation passed for all three old full SHAs; **new CI NOT VERIFIED**.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PRs checked:** #9 Core `cd13992c`; #10 QA previous `bb01a81d`, new workflow `8ce00395` plus this handoff commit; #11 Content `2bc491aa`; #12 UI `1e9b6bc4`; #14 ADR `ebdc4be2`; #16 NPC `82336294`; #17 ADR `bc9db999`. All open at inspection. PR base/main `d673322c`. C0-v2 / ADR permission remains feature-only, not merge approval.
+- **Blocker 1:** new exact-SHA workflow CI not yet verified.
+- **Blocker 2:** no real Chromium touch acceptance of latest single-file Day01 HTML (three documents, EndDay, ledger replay, partner cash, 48dp, overflow) and no independent binary PNG signature/dimension/manifest-SHA evidence.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load remain NOT RUN; no stable fully integrated DTO confirmation for production SaveService.
+- **Next:** inspect Actions run for workflow commit, then prioritize actual Chromium touch acceptance of the exact UI artifact; verify 3–5 committed PNG binaries when present. Android build/signing checklist must avoid storing keystores/secrets in repo. No READY_FOR_OWNER_TEST.
+- **Safety:** only `feature/save-6` updated, no merge or main write; no new architecture or third-party IP approval.
