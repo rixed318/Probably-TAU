@@ -1,3 +1,9 @@
+## Update 2026-11-23 — measured office candidate palette QA (#21)
+
+- One bounded task: measured the existing locally generated 320×180 RGBA office PNG with Pillow: 22,129 distinct colors, fully opaque alpha=255. This exceeds ART-A0.1's 24-color target, so **G3 FAIL / candidate not approved**. Documented in `docs/art/reviews/office_background_candidate_2026-11-23.md`, commit `a75d7cc1bca9a6a8e22e7053ff8605dbe36f4b4d`.
+- **Actually run:** Pillow dimensions/mode/color-count/alpha inspection on the local PNG; live GitHub main AGENTS/workflow/README, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, UI handoff read. **Not run:** Node suite, browser, Android/TalkBack, Unity, pixel-cleanup, GitHub PNG blob verification.
+- **BLOCKED binary delivery:** container git still cannot resolve github.com; GitHub connector cannot ingest local PNG bytes. Source candidate stays local, no manifest promotion, no Core/main/merge.
+
 ## Update 2026-11-23 — original office pixel-art candidate (#21)
 
 - One bounded art task: generated a **new original** fictional office backdrop via ChatGPT ImageGen (generation ID `9d524018-a68b-48c9-839a-ee0920b7794d`), center-cropped and nearest-neighbor resized to a local 320×180 RGBA PNG (89,090 bytes; SHA256 `95322760313ff6831a96385d0c38dcbc59e51c99d6d51c479d1fffb5e30bb374`). Review/provenance: `docs/art/reviews/office_background_candidate_2026-11-23.md`, commit `1efc995f142ab51abd969cb86287e8c620ee432f`.
