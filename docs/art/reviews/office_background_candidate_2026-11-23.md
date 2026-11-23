@@ -25,3 +25,13 @@ Measured against the **actual local** `office_day01_candidate_20261123.png` usin
 - These are source-image measurements, **not** a manual edge-cluster/1× visual acceptance, GitHub binary verification, Unity import or license approval.
 - **Decision:** keep status `candidate / review pending`, do **not** promote to approved/production or replace the existing manifest rows. Next art iteration should manually simplify clusters, quantize to a reviewed palette, and compare at 1× and integer 4× before review; do not silently overwrite the generated source.
 
+
+## Palette-constrained local preview — 2026-11-23 (not approved)
+
+One bounded iteration of the same original ImageGen candidate: nearest RGB squared-distance mapping to the **24 exact ART-A0.1 master colors**, without dithering, from the preserved source PNG. No repaint, no new generator output, no change to the approved art direction. Preview file (local only): `office_day01_palette24_preview_20261123.png`.
+
+- Actual local Pillow/NumPy inspection: **320×180 RGBA**, alpha 255 throughout; **24 distinct RGBA colors**, every RGB value belongs to the art-bible palette; valid PNG signature `89504e470d0a1a0a`.
+- Output **21,089 bytes**, SHA-256 `d6b9b9e1bfb7bc352a50ed457b1145fe99a2ca78cf80f4d98450c361476d36b0`.
+- Original remains unchanged: SHA-256 `95322760313ff6831a96385d0c38dcbc59e51c99d6d51c479d1fffb5e30bb374`.
+- **Palette-count preflight PASS only.** Pixel cluster cleanup, 1× and 4× readability, compositional/UI occlusion, art-direction approval, rights review, Unity import, and binary GitHub verification **NOT DONE**. The 24-color preview may show posterization; do not call it production-ready.
+- **BLOCKED GitHub binary upload:** local git still fails DNS resolution for github.com; connector cannot read local binary. Neither preview nor original is committed. Keep manifest status unchanged; do not mark G3 overall PASS.
