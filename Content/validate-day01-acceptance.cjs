@@ -611,7 +611,8 @@ for (const visit of fixture.visitors) {
   assert.ok(link, "missing art mapping: " + visit.visitId);
   assert.equal(link.visitorId, visit.visitorId);
   assert.equal(link.documentId, visit.documentId);
-  assert.ok(typeof link.visualBrief === "string" && link.visualBrief.trim().length >= 40);
+  assert.ok(typeof link.visualBrief === "string" && link.visualBrief.trim().replace(/\s+/g, " ").length >= 40,
+    "missing or too short normalized Day01 NPC visual brief: " + visit.visitId);
   for (const field of ["portraitAssetId", "standingAssetId", "documentAssetId"]) {
     const id = link[field];
     assert.match(id, /^[a-z][a-z0-9_]*$/);
