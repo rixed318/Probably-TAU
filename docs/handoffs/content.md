@@ -1010,3 +1010,16 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - Issue #7, одна ограниченная задача: в `Content/validate-day01-acceptance.cjs` добавлены строгие проверки `DAY01_ART_LINKS.json.sourceFixture` и `sourceManifest` на канонический UI fixture и UI-owned плановый manifest. Это не утверждение существования PNG и не runtime-контракт.
 - Кодовый commit: `d0b83e641d9949990a8426d0a692ab14c8799b3d`. Перед записью проверено единственное место вставки; полный Node CLI, CI, Unity, Android/Windows и PNG **не запускались**. QA 05: выполнить `node Content/validate-day01-acceptance.cjs`, затем отрицательные проверки изменения обоих указателей.
 - Definition ID, DayIndex=0, Int64-копейки, Core/ledger/EventDirector и сценарные решения не изменены. Статус DRAFT / NOT READY_FOR_OWNER_TEST. Merge в main не выполнялся.
+
+
+## AutoDev 04 — Day01 art handoff acceptance checklist (23.11.2026)
+
+**Одна ограниченная задача (#7 / #20 / #21):** зафиксировать для UI 03 и QA 05 критерии приёмки девяти плановых ассетов без объявления их готовыми. Источник — `Content/DAY01_ART_LINKS.json`; это только документация, не новый runtime-контракт.
+
+- Три визита `D01_LAB`, `D01_STUDENT`, `D01_PARTNER` имеют по одному portrait, standing и document ID (итого 9 уникальных ID). Каждый ID должен соответствовать одному оригинальному ресурсу; отсутствие PNG не заменять заглушкой с заявлением о готовности.
+- `DOC-01` — бланк оснащения со строками спецификации; `DOC-02` — инициативный бланк с этапами и эскизом; `DOC-03` — двухколоночное письмо с условиями и подписью. Текст, цифры, суммы и статусы отрисовывает UI, не растровый бланк.
+- Визуальные образы трёх вымышленных NPC различимы по силуэту, причёске и одежде; никаких реальных гербов, логотипов, узнаваемых сотрудников или копирования чужих ассетов.
+- Базовая логическая сетка `320x180`; ресурсы не должны зависеть от платформы. Проверять отображение отдельно на Windows и Android, не считать указание обеих платформ доказательством сборки.
+- QA 05: из checkout `feature/content-7` выполнить `node Content/validate-day01-acceptance.cjs`, затем отдельно проверить отсутствие/пустоту/дубликат `documentVisualBrief` и повтор одного из девяти asset ID; сохранить фактические stdout/stderr и SHA. До этих прогонов результат — **NOT RUN**, а не PASS.
+
+**Проверено в этом проходе:** через GitHub прочитан актуальный `DAY01_ART_LINKS.json`; 3 записи содержат девять различных строковых asset ID, три разных `documentId`, `dayIndex=0`, платформы Windows/Android и `worldLogicalResolution=320x180`. Это инспекция fixture, **не запуск валидатора или проверка PNG**. Сценарий, Definition ID, копейки, Core, EventDirector и ledger не изменены. PR #9/#14 — только feature-development guidance; merge запрещён без владельца.
