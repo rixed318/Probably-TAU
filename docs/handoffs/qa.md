@@ -2058,3 +2058,18 @@ UI PR #12 changed-file list currently contains **zero PNG files** (30 paths retu
 - **Recommended next step:** run Chromium touch against the exact current UI HTML SHA and capture viewport, interaction and overflow evidence; separately verify committed PNG binaries and refresh CI pins when necessary. Android build/signing requires actual Unity Editor, non-repository keystore storage, protected CI secrets and SHA-identified APK; never commit credentials. Do not merge or mark READY_FOR_OWNER_TEST.
 
 **Safety:** QA-only documentation; no main push, merge, other branch modification or IP/logo approval.
+
+
+## 2026-11-23 — QA 05: exact-SHA pin refresh (#8)
+
+**One bounded task:** refreshed four dependent commit pins in `.github/workflows/qa-offline.yml` only on `feature/save-6`, workflow commit `25b2b08c90ff4e7f8f34072ceb2e164148259d42`. GitHub PR metadata confirmed open heads at inspection: Core #9 `cd13992c24eb29969bf5d2a2156a1780bce48966`, UI #12 `757ef9b35dc22020aa4d16490497da4d3c470ba7`, Content #11 `399279df552afef71ab880a576266b306d7040e2`, NPC #16 `bd989691159babcb61d31055dfdaa944bf0c020e`. All 12 old SHA occurrences replaced, retaining per-checkout equality assertions and read-only checkout. No architectural contract changed.
+
+**Actual verification:** GitHub file fetched and updated successfully, commit SHA returned. The replacement counts were checked programmatically (Core 4, UI 4, Content 2, NPC 2). This is **static edit verification**, NOT a Node/Python/.NET/Chromium test run. New workflow CI **NOT VERIFIED** at handoff. Unity Editor, Android APK/device, integrated Save→Load **NOT RUN**; real PNG signatures/dimensions/manifest hashes **NOT VERIFIED**. No SaveService implemented.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR heads at inspection:** #9 `cd13992c`, #10 before changes `2c7d8236` → workflow `25b2b08c` → handoff commit (see GitHub), #11 `399279df`, #12 `757ef9b3`, #14 `ebdc4be2`, #16 `bd989691`, #17 `bc9db999`; all open. C0-v2 #9 / ADR #14/#17 permit feature work, not merge.
+- **Blocker 1:** refreshed workflow exact-SHA CI has not yet been confirmed green; moving PR heads may invalidate freshness.
+- **Blocker 2:** exact latest UI single-file Day01 Chromium touch 360×800/800×360 (3 documents, EndDay, ledger replay, no immediate partner cash, 48dp/overflow) **NOT RUN**; actual 3–5 PNG evidence **NOT VERIFIED**.
+- **Blocker 3:** Unity Editor, Android APK/device and complete stable Save→Load DTO/transaction integration **NOT RUN / not confirmed**.
+- **Recommended next step:** verify new QA CI at exact SHA, then run real Chromium touch acceptance and inspect committed PNG signatures/dimensions/SHA256. Keep signing keys outside repository; do not merge or mark READY_FOR_OWNER_TEST without evidence.
