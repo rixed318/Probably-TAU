@@ -1,3 +1,9 @@
+## Update 2026-11-23 — local ART-A0.1 palette preview (#21)
+
+- One bounded task: produced a **local** 320×180 RGBA 24-color preview of the existing office candidate using exact master palette nearest-RGB mapping, without dithering; original source preserved. Preview SHA-256 `d6b9b9e1bfb7bc352a50ed457b1145fe99a2ca78cf80f4d98450c361476d36b0`, 21,089 bytes. Review record commit `b00267bc8e162c37b22dafede7c7215989bd53c4`.
+- **Actually executed:** Pillow/NumPy quantization and local verification of 320×180, RGBA, 24 distinct colors, exact palette membership, PNG signature, SHA-256; live GitHub main rules, workflow, PR #9/#11/#12/#14, Issues #5/#13/#20/#21, art bible, manifest, review, handoff read.
+- **Not executed:** visual 1×/4× manual approval, GitHub PNG blob upload, Android/TalkBack, Node suite, Unity. Binary delivery **BLOCKED** by container git DNS and connector-local-file boundary. Preview is NOT approved, G3 remains pending; no manifest promotion. No Core/main/merge.
+
 ## Update 2026-11-23 — measured office candidate palette QA (#21)
 
 - One bounded task: measured the existing locally generated 320×180 RGBA office PNG with Pillow: 22,129 distinct colors, fully opaque alpha=255. This exceeds ART-A0.1's 24-color target, so **G3 FAIL / candidate not approved**. Documented in `docs/art/reviews/office_background_candidate_2026-11-23.md`, commit `a75d7cc1bca9a6a8e22e7053ff8605dbe36f4b4d`.
