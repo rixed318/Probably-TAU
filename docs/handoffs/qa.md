@@ -2237,3 +2237,18 @@ One bounded change: updated four read-only dependency pins in `.github/workflows
 - **Blocker 2:** no Chromium touch/device interaction evidence and no independently checked committed PNG binaries.
 - **Blocker 3:** Unity Editor/APK and integrated Save→Load NOT RUN; stable end-to-end DTO snapshot boundary still requires verification before implementing SaveService.
 - **Recommended next step:** perform actual Chromium touch acceptance against exact current UI Day01 single-file artifact (portrait/landscape, 3 docs, EndDay, ledger, partner deferred cash, target size and overflow), then validate PNG bytes and refresh exact-SHA CI. Never push/merge main without owner approval.
+
+
+## 2026-11-24 — QA 05: independent CI status audit (#8)
+
+**One bounded task:** verify the existing QA exact-SHA workflow run on previous QA HEAD `658e30a5b99547e6ef895260074fdcb0a7b0df6d`. GitHub Actions run [#45265577295](https://github.com/rixed318/Probably-TAU/actions/runs/45265577295) is `completed/success`; its five jobs each report `success`. Individual steps for Python PCG32/exact-SHA, Core .NET 8 ledger/snapshot, NPC .NET 8, UI/Content Node/art validators and distributed Android HTML static parsing also report `success`. **This checks GitHub job/step statuses, not full assertion logs or new local execution.** The CI is pinned to revisions configured in the workflow, not necessarily today's moving branch heads.
+
+**NOT RUN:** interactive Chromium touch emulation at 360x800 / 800x360, 3-document/EndDay/ledger replay and 48dp/overflow browser acceptance, actual PNG binary signature/dimension/manifest SHA inspection, Unity Editor/EditMode/PlayMode, physical Android/APK, integrated Save→Load. No SaveService implemented; C0-v2 in PR #9 and ADR PR #14 remain feature-development authority only, not merged approval. No architecture contract changed.
+
+### Сводка для координатора 00 — 2026-11-24 02:40 UTC+4
+
+- **Latest observed open PR heads:** #9 Core `7b9ff45c053b`; #10 QA before this handoff `658e30a5b995` (handoff commit follows); #11 Content `39a5af708052`; #12 UI `d5c9225e3cdc`; #14 ADR `ebdc4be28afd`; #16 NPC `eb68f6c767c1`; #17 ADR `bc9db999b419`. No merge/main writes.
+- **Blocker 1:** successful CI run is for previous QA HEAD and pinned dependencies; current moving UI/Content/NPC heads are not thereby verified.
+- **Blocker 2:** no actual Chromium touch/browser evidence or 3–5 PNG binary verification; Node/static success does not replace it.
+- **Blocker 3:** Unity Editor/APK and complete stable persistence DTO/Save→Load integration are unverified / NOT RUN.
+- **Recommended next step:** execute Chromium touch acceptance of exact latest UI single-file Day01 at 360x800 and 800x360, inspect 48dp/overflow and three docs/EndDay/ledger/partner-cash behavior; then verify actual PNG signatures/dimensions/SHA and refresh exact-SHA CI. Do not mark READY_FOR_OWNER_TEST without evidence.
