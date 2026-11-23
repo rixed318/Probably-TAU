@@ -55,6 +55,14 @@ class OfficeCandidateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'signature'):
             validator.verify(self.path)
 
+    def test_truncated_png_payload_rejected(self):
+        """A valid PNG signature/IHDR is not proof that IDAT data is intact."""
+        self.save()
+        raw = self.path.read_bytes()
+        self.path.write_bytes(raw[:33])
+        with self.assertRaises((OSError, ValueError)):
+            validator.verify(self.path)
+
     def run_cli(self, expected):
         return subprocess.run(
             [sys.executable, str(MODULE), str(self.path), '--expected-sha256', expected],
