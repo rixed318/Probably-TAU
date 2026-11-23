@@ -128,6 +128,14 @@ class OfficeCandidateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('PASS preflight', result.stdout)
 
+    def test_cli_uppercase_sha256_passes(self):
+        """CLI accepts uppercase hexadecimal provenance digests."""
+        self.save()
+        expected = hashlib.sha256(self.path.read_bytes()).hexdigest().upper()
+        result = self.run_cli(expected)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('PASS preflight', result.stdout)
+
     def test_cli_wrong_sha256_rejected(self):
         self.save()
         result = self.run_cli('0' * 64)
