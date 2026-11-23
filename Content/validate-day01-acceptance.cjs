@@ -305,6 +305,12 @@ assert.equal(new Set(documentBriefs).size, documentBriefs.length,
   "duplicate Day01 document art briefs");
 // Planned art links must match canonical fictional NPC/document definitions exactly.
 // These are lookup keys for UI on Windows/Android, not generated PNGs or Core instance IDs.
+// Planned art references must be portable across both owner-approved targets.
+// This does not claim that actual PNGs or Android/Windows builds exist.
+assert.deepEqual(artLinks.platforms, ["Windows", "Android"],
+  "Day01 art links must declare both Windows and Android targets");
+assert.equal(artLinks.worldLogicalResolution, "320x180",
+  "Day01 planned pixel-art logical resolution drift");
 assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
 const canonicalArtLinks = contentSpec.day1.visits.map(visit => {
   const npc = contentSpec.fictionalNpcs.find(item => item.id === visit.npcId);
