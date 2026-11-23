@@ -2159,3 +2159,17 @@ Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляе�
 - **Blocker 2:** Chromium touch acceptance on exact latest single-file Day01 (three docs, EndDay, ledger replay, deferred partner cash, 48dp/overflow) and independent real PNG binary verification remain NOT RUN.
 - **Blocker 3:** Unity Editor, real Android APK/device, end-to-end Save→Load and stable complete snapshot DTO boundary remain unverified.
 - **Recommended next step:** execute Chromium 360x800 portrait and 800x360 landscape touch acceptance on UI `aa11f1594caf`, verify actual PNG signatures/dimensions/SHA when committed, then refresh CI pins and rerun. Keep signing keys/passwords out of repo; record source SHA for APK. **READY_FOR_OWNER_TEST: NO**.
+
+
+## 2026-11-23 — QA 05: independent CI status audit (#8)
+
+**Scope (one bounded task):** independently inspected GitHub Actions run [45177107668](https://github.com/rixed318/Probably-TAU/actions/runs/45177107668) for QA PR #10 previous HEAD `679a847b3a6bd278c830c04bac28d59f18c4bb4f`. GitHub API reports workflow completed/success and **5/5 jobs completed/success**: NPC standalone .NET 8, Android HTML static, Core ledger/snapshot .NET 8, UI/Content static, Python PCG32 oracle. **Evidence is job conclusions only**; individual assertions/logs were not independently inspected. No local tests executed. Unity Editor/EditMode/PlayMode, Chromium touch emulation (360x800 and 800x360), real Android APK/device, PNG signature/dimensions/manifest SHA, integrated Save→Load: **NOT RUN / NOT VERIFIED**.
+
+**Fresh PR HEAD audit:** #9 `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`, #10 pre-update `679a847b3a6bd278c830c04bac28d59f18c4bb4f`, #11 `57b54869c1ab1375afbaea37d62625ec631f2bb7`, #12 `150699852f42ef5608243a40d657aae646ae8054`, #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`, #16 `9162486a8875f8137dce0f319c6a17232b4f4d8f`, #17 `bc9db999b4190d77b2994588073ff59e456dccdb`. All open/draft when fetched. CI does not establish coverage of these latest dependency HEADs. C0-v2 / ADR apply to feature work only, no merge authorization.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **PR HEADs:** #9 `7b9ff45c`; #10 `679a847b` before this handoff-only commit (see current PR #10 HEAD for new SHA); #11 `57b54869`; #12 `15069985`; #14 `ebdc4be2`; #16 `9162486a`; #17 `bc9db999`.
+- **Evidence:** run #45177107668, previous QA HEAD `679a847b`, 5/5 jobs SUCCESS by GitHub status; **not** latest-HEAD end-to-end validation.
+- **Blockers (max 3):** (1) latest cross-PR SHA coverage unproven; (2) Chromium touch 360x800/800x360 and real PNG verification NOT RUN; (3) Unity APK/device and integrated Save→Load NOT RUN, stable full DTO integration not demonstrated.
+- **Next:** run interactive Chromium touch acceptance on exact UI #12 `15069985` single-file Day01 artifact (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp and overflow); then verify actual PNG binaries and refresh exact-SHA CI pins. **READY_FOR_OWNER_TEST: NO**. No main push/merge.
