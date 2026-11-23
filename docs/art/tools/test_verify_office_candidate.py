@@ -72,6 +72,26 @@ class OfficeCandidateTests(unittest.TestCase):
         with self.assertRaises((OSError, ValueError, SyntaxError)):
             validator.verify(self.path)
 
+    def test_corrupt_idat_crc_rejected(self):
+        """A complete PNG with an altered IDAT payload must fail CRC preflight."""
+        import struct
+        self.save()
+        raw = bytearray(self.path.read_bytes())
+        offset = 8  # PNG signature
+        found = False
+        while offset + 12 <= len(raw):
+            length = struct.unpack('>I', raw[offset:offset + 4])[0]
+            chunk_type = raw[offset + 4:offset + 8]
+            if chunk_type == b'IDAT' and length > 0:
+                raw[offset + 8] ^= 0x01  # Change payload without updating CRC.
+                found = True
+                break
+            offset += 12 + length
+        self.assertTrue(found, 'fixture PNG has no nonempty IDAT chunk')
+        self.path.write_bytes(raw)
+        with self.assertRaises((OSError, ValueError, SyntaxError)):
+            validator.verify(self.path)
+
     def run_cli(self, expected):
         return subprocess.run(
             [sys.executable, str(MODULE), str(self.path), '--expected-sha256', expected],
