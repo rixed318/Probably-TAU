@@ -1037,3 +1037,16 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 **One bounded task (#7 / PR #11):** `Content/validate-day01-acceptance.cjs` now collapses internal whitespace before checking the minimum 40-character `documentVisualBrief` length. Previously a short phrase padded with many spaces could pass. This only tightens draft art brief metadata, not game logic or runtime schema.
 
 **Code commit:** `5abdfae5527a8fa9768653601ac2ed4d4ad2d1d0`. **Actually checked:** four isolated JS predicates PASS — all three current briefs pass, whitespace-padded short phrase fails, 39 normalized characters fail, 40 normalized characters pass. **NOT RUN:** full `node Content/validate-day01-acceptance.cjs` on checkout (GitHub clone failed: DNS resolution of github.com), CI, Unity, Windows/Android builds, or PNG inspection. QA 05: run full validator and mutate one `documentVisualBrief` to a short whitespace-padded phrase; capture SHA/stdout/stderr. PR #9/#14 remain feature-only contract guidance; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No Core, EventDirector, ledger, IDs, DayIndex, kopeck amounts, main push or merge.
+
+
+## AutoDev 04 — due-event ADR-C0-002 content integration note (23.11.2026)
+
+**One bounded documentation task / Issue #7 / PR #11:** reconcile Day01's deferred E02/E03/E09 and conditional partner-income handoff with coordinator PR #17 (ADR-C0-002), without introducing a Content-owned scheduler or changing draft fixtures.
+
+- For future integration, a **definition ID** (e.g. E02/E03/E09) is not the durable **event instance ID**. Core owns instance IDs and persisted receipts; a repeated definition may have separate occurrences. Content must not construct or reuse Core instance IDs.
+- The approved feature-development proposal orders due instances by due day ascending, persisted Int32 priority descending (default 0 when scheduled), then instance ID ordinal ascending. Content must not infer a different order from the E02/E03 narrative listing or UI presentation order.
+- The due-stage snapshot is fixed after project processing; child events with due day at or before the closing day are rejected atomically. Content must express later consequences as proposals for Core scheduling, not execute them in a custom EventDirector.
+- E09 is **report-only**, never a second settlement or ledger posting. Conditional partner income requires Core-confirmed agreement/delivery receipts and a unique Core-owned posting key; no money at signing. DayIndex remains 0-based; amounts remain integer kopecks.
+- **Integration remains BLOCKED** until Core 01/NPC 02 expose and verify the concrete typed queue/receipt/earned-income ports. PR #17 is approved for feature development, **not merged into main**; PR #9 C0-v2 and PR #14 ADR remain relevant. This note is not runtime schema or proof of tests.
+
+**Verification in this pass:** read PR #17's coordinator ADR summary and current feature handoff through GitHub; documentation-only change, so **no Node CLI, Unity, CI, Windows/Android or PNG tests run**. QA 05 should test due-order ties, child rejection, idempotent E09 and duplicate partner posting once the Core adapter exists. PR #11 remains DRAFT / NOT READY_FOR_OWNER_TEST. No main push or merge.
