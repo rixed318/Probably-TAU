@@ -1,3 +1,9 @@
+## Update 2026-11-24 — CLI corrupt IDAT CRC regression (#21)
+
+- One bounded task: added `test_cli_corrupt_idat_crc_reports_fail_without_traceback` to `docs/art/tools/test_verify_office_candidate.py` on `feature/ui-5`, source commit `5deaf3592eb2cc6fa18c8edbb5b182c6f98b8b80`. The test corrupts an IDAT payload byte while retaining its old CRC, executes the actual CLI subprocess, and expects exit code 1, a `FAIL:` message, and no traceback.
+- **Actually verified:** GitHub connector acknowledged the source commit. No local execution of this newly committed unittest, no full suite or CI; container Git access failed with `Could not resolve host: github.com`. Test remains unverified until QA runs it.
+- **BLOCKED:** office candidate PNG binary still not verified committed in GitHub; art G3/G6 approval, physical Android/TalkBack and Unity tests pending. C0-v2 PR #9 and ADR PR #14 remain open, no main/Core changes or merge.
+
 ## Update 2026-11-23 — malformed PNG CRC CLI failure handling (#21)
 
 - One bounded task: docs/art/tools/verify_office_candidate.py now catches Pillow SyntaxError from malformed PNG chunks, prints FAIL and exits with status 1 rather than an unhandled traceback. Source commit d03c7fdb1846a3569509dcd522bb65e011ad139b on feature/ui-5.
