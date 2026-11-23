@@ -39,6 +39,10 @@ namespace TAU.President.Core
             if ((expectedDayIndex + 1) % 5 == 0 ||
                 current.Events.CaptureDueStage(expectedDayIndex).Count != 0)
                 throw new InvalidOperationException("Event or weekly settlement handler required.");
+            // Direct callers must not use the payable path to bypass the canonical
+            // quiet-day receipt fingerprint when no liability is due.
+            if (current.Payables.CaptureDueStage(expectedDayIndex).Count == 0)
+                throw new InvalidOperationException("No due payable; use canonical quiet EndDay.");
             string dayKey = "end-day:" + h.CampaignId + ":" +
                 expectedDayIndex.ToString(CultureInfo.InvariantCulture);
             foreach (var key in h.ProcessedDayKeys)
