@@ -961,3 +961,11 @@ Test commit: `55b7185d3ce006aba0d3ed6f8667a98f7034a37c` on `feature/core-2`. Loc
 - Regression in `GameStateSnapshotGoldenTests.Day01FlowGolden` covers both the quiet and payable direct paths plus canonical `PrepareDay` and verifies the input cash, ledger, receipts, revision and outstanding payable remain unchanged.
 - Core commit `ab7ee3859a2f8389e45fcb2525ea4528ec2ca440`; test commit `5583b4398db42f9e994b5a61872bcd1e29ec8a4a` on `feature/core-2` only. Exact-SHA CI must be checked separately; no local .NET/Unity/Android builds were run.
 - Environment: `java` and `javac` available; `dotnet`, Unity Editor, `adb`, `sdkmanager`, `ndk-build` not found. Android APK and Windows Unity build BLOCKED. Typed NPC due-events and weekly settlement still require 02/00 approved integration contract. No main push/merge/Issue closure.
+
+
+## Core 01 — 23.11.2026: direct payable EndDay must have due liabilities (#19)
+
+- Scope: `DurableDayAdvance.PreparePayablesDay` now rejects a direct call when `CaptureDueStage(dayIndex)` is empty. This prevents a caller bypassing the canonical quiet-day `end-day-quiet-v1` receipt fingerprint via a payable-path `end-day-payables-v1:` receipt. `PrepareDay` still chooses the appropriate path; an unaffordable *due* payable is still processed through the payable path and remains outstanding. No public signature or NPC/weekly contract changes.
+- Production commit: `c18b5fc05f938fb6d16779c42fb441b5bc384d36`; regression commit: `29064084234f74cdca8e0a5906a121b9010a119e`; branch `feature/core-2`, PR #9. Regression in `QuietDayAdvanceGolden` checks rejection and unchanged original revision, day, cash, ledger, receipts, command/day keys.
+- Validation: local `dotnet` unavailable, so C# golden tests NOT RUN locally. Exact-SHA GitHub Actions CI for these new commits must be checked separately. Unity Editor/Android Build Support/SDK/NDK unavailable in this runtime; Windows Unity build and Android APK BLOCKED/NOT RUN. No fabricated Unity project or APK.
+- Remaining: typed NPC due-event and weekly EndDay settlement need 02/00-approved contract and QA; Unity 6.3 LTS Android/Windows build needs a real Editor toolchain. No `main` push, merge or Issue closure.
