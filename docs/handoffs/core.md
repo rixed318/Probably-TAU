@@ -969,3 +969,12 @@ Test commit: `55b7185d3ce006aba0d3ed6f8667a98f7034a37c` on `feature/core-2`. Loc
 - Production commit: `c18b5fc05f938fb6d16779c42fb441b5bc384d36`; regression commit: `29064084234f74cdca8e0a5906a121b9010a119e`; branch `feature/core-2`, PR #9. Regression in `QuietDayAdvanceGolden` checks rejection and unchanged original revision, day, cash, ledger, receipts, command/day keys.
 - Validation: local `dotnet` unavailable, so C# golden tests NOT RUN locally. Exact-SHA GitHub Actions CI for these new commits must be checked separately. Unity Editor/Android Build Support/SDK/NDK unavailable in this runtime; Windows Unity build and Android APK BLOCKED/NOT RUN. No fabricated Unity project or APK.
 - Remaining: typed NPC due-event and weekly EndDay settlement need 02/00-approved contract and QA; Unity 6.3 LTS Android/Windows build needs a real Editor toolchain. No `main` push, merge or Issue closure.
+
+
+## Core 01 — due-event EndDay fail-closed regression (23.11.2026)
+
+- **Issue:** #19; **branch:** `feature/core-2`; **PR:** #9.
+- **Scope:** one standalone golden regression, no production/API/contract changes. `Tests/Core/GameStateSnapshotGoldenTests.cs` adds `DueEventEndDayFailClosedGolden` to `RunAll`. A persisted due NPC event with a simultaneously due payable must reject canonical `PrepareDay` and both direct EndDay entrypoints; checks unchanged day/revision/cash, command/day keys, ledger, receipts, pending event and payable.
+- **Test commit:** `390f6e6688577ae1bafc7ede4f686aef53ed58e8`. This handoff update follows as a separate commit.
+- **Verification:** local .NET tests **NOT RUN** (.NET SDK unavailable); no Unity Editor or Android SDK/NDK, so Windows Unity/Android APK **BLOCKED**. Exact-SHA GitHub Actions result must be checked separately; do not infer success from earlier runs.
+- **Dependencies:** typed NPC due-event and weekly settlement still require approved 02/00 integration contracts. No NPC/UI/Save edits, no `main` push, PR merge or issue closure.
