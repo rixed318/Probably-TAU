@@ -2220,3 +2220,20 @@ One bounded change: updated four read-only dependency pins in `.github/workflows
 - **Recommended next step:** inspect Actions run for QA refresh SHA and full job logs; then Chromium touch acceptance and real PNG verification on UI exact SHA, without merging. Android build/signing checklist must avoid storing keystores/secrets in repo.
 
 **Safety:** only QA feature branch updated; main untouched, no merge, no approval of third-party IP.
+
+
+## 2026-11-24 — QA 05: independent exact-SHA CI result audit (#8)
+
+**One bounded task:** verified GitHub Actions run [45247743333](https://github.com/rixed318/Probably-TAU/actions/runs/45247743333) for QA commit `62acde6a60d999e9202c5d43c5c9e7f7ccdbe734`. GitHub API reports **completed/success for all 5/5 jobs**, and all listed test steps completed/success: Python PCG32 + exact-SHA pin self-test; Core .NET 8 ledger/snapshot; NPC .NET 8 golden; UI/Content Node + art validator; Android HTML static. This is **GitHub job/step status evidence**, not a local reproduction or independent inspection of assertion logs. No new test code or contract introduced.
+
+**Exact source pins from workflow:** Core `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`, UI `8709770a59bf7c4fcda2e1e74ea8a3b7d844d278`, Content `983d958383d8e7bc1cebe873f940ea09bb3e5393`, NPC `353351a5812571a8b330bf6b4e94f94751915c81`. Current observed PR heads: #9 `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`, #11 `21db4f9bc3823fea720a1de69f19f473b9b8810f`, #12 `d17586a4c058678420c6fc3930b974ba584f4129`, #14 `ebdc4be28afd56e82bc14ca397af88376ae59d20`, #16 `9d9d17030590ce83ca2e9003d67ecce97b469fec`, #17 `bc9db999b4190d77b2994588073ff59e456dccdb`; #10 pre-handoff head `62acde6a60d999e9202c5d43c5c9e7f7ccdbe734`. CI does **not** certify newer UI/Content/NPC heads.
+
+**NOT RUN:** local Node/Python/.NET; Chromium touch 360x800 and 800x360, 3 documents, EndDay, ledger replay, 48dp/overflow; physical PNG signature/dimension/SHA checks; Unity Editor, APK/device, integrated Save→Load. No READY_FOR_OWNER_TEST claim. C0-v2 PR #9 and ADR PR #14 are feature-development guidance only; no architecture approval/merge.
+
+### Сводка для координатора 00 — 2026-11-24
+
+- **PRs/commits:** #9 `7b9ff45c`, #10 `62acde6a` before this handoff commit, #11 `21db4f9b`, #12 `d17586a4`, #14 `ebdc4be2`, #16 `9d9d1703`, #17 `bc9db999`; all observed OPEN. New QA handoff commit SHA is reported in PR #10 comment after push.
+- **Blocker 1:** exact-SHA CI is green only on older UI/Content/NPC commits; update pins and rerun before treating current branches as verified.
+- **Blocker 2:** no Chromium touch/device interaction evidence and no independently checked committed PNG binaries.
+- **Blocker 3:** Unity Editor/APK and integrated Save→Load NOT RUN; stable end-to-end DTO snapshot boundary still requires verification before implementing SaveService.
+- **Recommended next step:** perform actual Chromium touch acceptance against exact current UI Day01 single-file artifact (portrait/landscape, 3 docs, EndDay, ledger, partner deferred cash, target size and overflow), then validate PNG bytes and refresh exact-SHA CI. Never push/merge main without owner approval.
