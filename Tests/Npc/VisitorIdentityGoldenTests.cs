@@ -96,6 +96,15 @@ namespace TAU.President.Tests.Npc
                     throw new Exception("Invalid inspection navigation accepted.");
             }
 
+            // Canonical document navigation must not normalize an embedded BOM on Android/Windows.
+            foreach (string canonicalDocumentId in new[] { "DOC-01", "DOC-02", "DOC-03" })
+            {
+                Day01Visitors.VisitScreenPreview malformedDocumentScreen;
+                string malformedDocumentId = canonicalDocumentId.Insert(3, "\\uFEFF");
+                if (Day01Visitors.TryGetVisitScreenPreviewByDocumentId(
+                        malformedDocumentId, out malformedDocumentScreen) || malformedDocumentScreen != null)
+                    throw new Exception("Embedded BOM document route accepted.");
+            }
             // Document-scoped art routing must reject cross-document images on both platforms.
             string[][] artByDocument =
             {
