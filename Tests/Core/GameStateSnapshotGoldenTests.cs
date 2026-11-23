@@ -359,6 +359,16 @@ namespace TAU.President.Tests.Core
                 new LedgerSnapshot(10000L, new LedgerEntry[0]), new DurableCommandReceipt[0]);
             var quiet = new DurableGameStateSnapshot(finance,
                 new ScheduledEventQueueSnapshot(new ScheduledEventOccurrence[0], new string[0]));
+            // A direct payable entrypoint must not create a payables receipt for a quiet day.
+            Throws<InvalidOperationException>(() =>
+                DurableDayAdvance.PreparePayablesDay(quiet, 0, 0));
+            AssertNamed(quiet.Header.Revision == 0 && quiet.Header.DayIndex == 0 &&
+                quiet.Header.BalanceKopecks == 10000L &&
+                quiet.Finance.Ledger.Entries.Count == 0 &&
+                quiet.Finance.Receipts.Count == 0 &&
+                quiet.Header.ProcessedCommandIds.Count == 0 &&
+                quiet.Header.ProcessedDayKeys.Count == 0,
+                "direct payable EndDay rejects quiet day without mutating input");
             var next = DurableDayAdvance.PrepareDay(quiet, 0, 0);
             Assert(quiet.Header.DayIndex == 0 && quiet.Header.Revision == 0);
             Assert(next.Header.DayIndex == 1 && next.Header.Revision == 1);
