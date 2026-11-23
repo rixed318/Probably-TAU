@@ -1,3 +1,9 @@
+## Update 2026-11-23 — CLI SHA-256 regression coverage (#21)
+
+- One bounded task: extended `docs/art/tools/test_verify_office_candidate.py` with three subprocess CLI regression tests: matching checksum PASS, mismatched checksum FAIL, malformed checksum FAIL. Source commit `8aacae81e05f21e173faf89bf23754fc1667fdf6` on `feature/ui-5`.
+- **Actual verification:** GitHub acknowledged test file commit. Automated Python test suite was **not executed** against GitHub checkout in this pass; local container cannot resolve raw.githubusercontent.com. These cases are added, not reported as green.
+- **BLOCKED:** office PNG binary still not confirmed in GitHub; physical Android/TalkBack and Unity import remain untested, art G3/G6 unapproved. PR #9 C0-v2 and PR #14 ADR remain open. No main/Core edits or merge.
+
 ## Update 2026-11-23 — Pillow deprecation cleanup in office preflight (#21)
 
 - One bounded maintenance task: replace deprecated `Image.getdata()` with `Image.getcolors(maxcolors=320 * 180)` in `docs/art/tools/verify_office_candidate.py`; preserve RGBA, opacity, 24-color palette and SHA-256 checks. Source commit `e289e2524cbc6f76a650b3ae9b70cb678b12ad1b` in `feature/ui-5`.
