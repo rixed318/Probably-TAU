@@ -20,6 +20,9 @@ def verify(path):
         raise ValueError('expected 320x180 PNG IHDR')
     from PIL import Image
     from io import BytesIO
+    # Validate PNG chunk CRCs before decoding pixel data.
+    with Image.open(BytesIO(raw)) as check:
+        check.verify()
     with Image.open(BytesIO(raw)) as im:
         im.load()
         if im.format != 'PNG' or im.mode != 'RGBA':
