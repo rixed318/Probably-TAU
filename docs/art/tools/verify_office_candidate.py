@@ -36,9 +36,16 @@ def verify(path):
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('png', type=Path)
+    p.add_argument('--expected-sha256', help='Optional SHA-256 provenance checksum')
     args = p.parse_args()
     try:
+        if args.expected_sha256 is not None:
+            expected = args.expected_sha256.lower()
+            if len(expected) != 64 or any(c not in '0123456789abcdef' for c in expected):
+                raise ValueError('expected SHA-256 must be 64 hexadecimal characters')
         count, digest = verify(args.png)
+        if args.expected_sha256 is not None and digest != expected:
+            raise ValueError(f'SHA-256 mismatch: got {digest}, expected {expected}')
     except (OSError, ValueError, ImportError) as e:
         print(f'FAIL: {e}', file=sys.stderr)
         sys.exit(1)
