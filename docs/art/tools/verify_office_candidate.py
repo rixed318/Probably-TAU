@@ -24,7 +24,10 @@ def verify(path):
         im.load()
         if im.format != 'PNG' or im.mode != 'RGBA':
             raise ValueError('expected PNG RGBA8')
-        colors = set(im.getdata())
+        histogram = im.getcolors(maxcolors=320 * 180)
+        if histogram is None:
+            raise ValueError('cannot enumerate office colors')
+        colors = {rgba for _, rgba in histogram}
     if any(a != 255 for *_,a in colors):
         raise ValueError('office background must be fully opaque')
     if any(bytes(rgb) not in PALETTE for *rgb,_ in colors):
