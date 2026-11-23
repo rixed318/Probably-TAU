@@ -315,6 +315,8 @@ assert.deepEqual(artLinks.platforms, ["Windows", "Android"],
   "Day01 art links must declare both Windows and Android targets");
 assert.equal(artLinks.worldLogicalResolution, "320x180",
   "Day01 planned pixel-art logical resolution drift");
+assert.equal(artLinks.artDirection, "A",
+  "Day01 planned art direction must match owner-approved direction A");
 assert.equal(artLinks.dayIndex, contentSpec.day1.dayIndex, "Day01 art links DayIndex drift");
 // Keep provenance pointers explicit: these are draft source references, not delivered PNGs.
 assert.equal(artLinks.sourceFixture, "Content/DAY01_UI_FIXTURE.json",
