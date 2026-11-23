@@ -2146,3 +2146,16 @@ Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляе�
 - **Blocker 2:** interactive Chromium touch acceptance and independent verification of 3–5 actual committed PNG binaries remain unperformed.
 - **Blocker 3:** Unity Editor, real Android APK/device and integrated Save→Load remain NOT RUN; no stable complete Core DTO integration independently established.
 - **Recommended next step:** prioritize Chromium touch acceptance of exact UI `4cce6a07` single-file Day01 artifact, then refresh exact-SHA CI pins and verify the new run. For Android Unity build, keep signing keystores/passwords out of git; record reproducible source SHA. READY_FOR_OWNER_TEST: NO. No main writes or merges.
+
+
+## 2026-11-23 — QA 05: exact-SHA CI status audit (Issue #8)
+
+**One bounded task:** GitHub Actions run [#45161286424](https://github.com/rixed318/Probably-TAU/actions/runs/45161286424) for prior QA HEAD `3c98e0fc642bc5d045776ebb1e83eb123c4da13a` returned completed/success. Independently queried jobs API: **5/5 completed/success** — NPC .NET 8, Core ledger/snapshot .NET 8, Android HTML static, Python PCG32 oracle, UI/Content static. These are *job conclusions only*, not independently replayed assertions or browser/Unity tests. Workflow exact pins in QA branch at audit: Core `cd13992c24eb29969bf5d2a2156a1780bce48966`, UI `1e9b6bc46665a1a19c5ce5794996b3a6b905d521`, Content `2bc491aa7d3188c0536669ac1d9d7ded4bf3b6d0`, NPC `82336294` (short prefix). All are older than freshly fetched dependent PR HEADs. Local Node/Python/.NET: **NOT RUN**. Chromium touch 360x800 / 800x360 and PNG binary signature/dimensions/manifest SHA: **NOT RUN / NOT VERIFIED**. Unity Editor/APK/device and integrated Save→Load: **NOT RUN**. No new architecture contracts or SaveService. No merge/main changes.
+
+### Сводка для координатора 00 — 2026-11-23 (run #45161286424)
+
+- **Fresh PR HEADs before this handoff commit (all OPEN):** #9 Core `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`; #10 QA `3c98e0fc642bc5d045776ebb1e83eb123c4da13a` (handoff update creates a new SHA); #11 Content `1020e5577485420719b097eba887865654c69b16`; #12 UI `aa11f1594caf870fa867f99296bbc68d6bba4c21`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `d4e70ef090cd5ab9b37b8595bc81cb422c2453c3`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. C0-v2 and ADR permit feature work only, not merge.
+- **Blocker 1:** 5/5 CI validates older exact pins, not the latest Core/UI/Content/NPC heads or integrated runtime.
+- **Blocker 2:** Chromium touch acceptance on exact latest single-file Day01 (three docs, EndDay, ledger replay, deferred partner cash, 48dp/overflow) and independent real PNG binary verification remain NOT RUN.
+- **Blocker 3:** Unity Editor, real Android APK/device, end-to-end Save→Load and stable complete snapshot DTO boundary remain unverified.
+- **Recommended next step:** execute Chromium 360x800 portrait and 800x360 landscape touch acceptance on UI `aa11f1594caf`, verify actual PNG signatures/dimensions/SHA when committed, then refresh CI pins and rerun. Keep signing keys/passwords out of repo; record source SHA for APK. **READY_FOR_OWNER_TEST: NO**.
