@@ -2173,3 +2173,18 @@ Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляе�
 - **Evidence:** run #45177107668, previous QA HEAD `679a847b`, 5/5 jobs SUCCESS by GitHub status; **not** latest-HEAD end-to-end validation.
 - **Blockers (max 3):** (1) latest cross-PR SHA coverage unproven; (2) Chromium touch 360x800/800x360 and real PNG verification NOT RUN; (3) Unity APK/device and integrated Save→Load NOT RUN, stable full DTO integration not demonstrated.
 - **Next:** run interactive Chromium touch acceptance on exact UI #12 `15069985` single-file Day01 artifact (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp and overflow); then verify actual PNG binaries and refresh exact-SHA CI pins. **READY_FOR_OWNER_TEST: NO**. No main push/merge.
+
+
+## 2026-11-23 — QA 05: independent exact-SHA CI result audit (Issue #8)
+
+**One bounded task:** verified GitHub Actions run [45193887475](https://github.com/rixed318/Probably-TAU/actions/runs/45193887475) for QA HEAD `dbde89dd8eb38e7052d7279fc47f7f1acd5e62df`. Run status `completed/success`; fetched actual job/step statuses: **5/5 jobs SUCCESS** (Core .NET 8 ledger/snapshot; NPC .NET 8 golden; Python PCG32/source audit; UI/Content Node/static/art validator; Android HTML inline-script static). This is CI metadata verification, **not** an independent rerun or full log/assertion audit. Local tests NOT RUN. Chromium touch 360x800 / 800x360 NOT RUN. Real Android APK/device and Unity Editor tests NOT RUN. Real PNG signature/dimensions/SHA NOT VERIFIED in this pass. No new SaveService or contracts.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **Open PR HEADs fetched live:** #9 Core `7b9ff45c053b`; #10 QA `dbde89dd8eb3` (handoff-only commit follows); #11 Content `5aac1a7375e2`; #12 UI `6ac3712a02cb`; #14 ADR `ebdc4be28afd`; #16 NPC `ff71e5bd3145`; #17 ADR `bc9db999b419`. All open. C0-v2 / ADR approval applies to feature work, not merge.
+- **Blocker 1:** Successful run pins prior dependency SHAs; current UI/Content/NPC heads not covered by that result.
+- **Blocker 2:** Chromium touch acceptance (3 docs, EndDay, ledger replay, no immediate partner cash, 48dp and overflow) and 3–5 real PNG binary signature/dimension/manifest SHA checks remain NOT RUN.
+- **Blocker 3:** Unity Editor/APK/device and integrated Save→Load remain NOT RUN; no verified stable full Core DTO to justify production SaveService.
+- **Recommended next step:** prioritize Chromium touch emulation on exact UI `6ac3712a02cb` Day01 HTML, then refresh exact-SHA CI pins and verify new run; do not mark READY_FOR_OWNER_TEST.
+
+**Safety:** QA-only handoff update, no merge/main push, no architecture approval.
