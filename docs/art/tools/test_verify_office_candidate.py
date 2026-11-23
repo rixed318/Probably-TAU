@@ -63,6 +63,15 @@ class OfficeCandidateTests(unittest.TestCase):
         with self.assertRaises((OSError, ValueError)):
             validator.verify(self.path)
 
+    def test_corrupt_ihdr_crc_rejected(self):
+        """Valid signature and dimensions must not bypass PNG chunk CRC."""
+        self.save()
+        raw = bytearray(self.path.read_bytes())
+        raw[29] ^= 0x01  # First byte of IHDR CRC, not image pixels.
+        self.path.write_bytes(raw)
+        with self.assertRaises((OSError, ValueError, SyntaxError)):
+            validator.verify(self.path)
+
     def run_cli(self, expected):
         return subprocess.run(
             [sys.executable, str(MODULE), str(self.path), '--expected-sha256', expected],
