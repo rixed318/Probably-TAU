@@ -81,7 +81,7 @@ namespace TAU.President.Tests.Npc
             foreach (string canonicalInspectionId in inspectionIds)
             {
                 int split = canonicalInspectionId.IndexOf('_');
-                string malformed = canonicalInspectionId.Insert(split, "\\uFEFF");
+                string malformed = canonicalInspectionId.Insert(split, "\uFEFF");
                 Day01Visitors.VisitScreenPreview embeddedBomScreen;
                 if (Day01Visitors.TryGetVisitScreenPreviewByInspectionId(
                         malformed, out embeddedBomScreen) || embeddedBomScreen != null)
