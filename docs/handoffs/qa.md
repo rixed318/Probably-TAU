@@ -2188,3 +2188,20 @@ Workflow `.github/workflows/qa-offline.yml` в QA ветке закрепляе�
 - **Recommended next step:** prioritize Chromium touch emulation on exact UI `6ac3712a02cb` Day01 HTML, then refresh exact-SHA CI pins and verify new run; do not mark READY_FOR_OWNER_TEST.
 
 **Safety:** QA-only handoff update, no merge/main push, no architecture approval.
+
+
+## 2026-11-23 — QA 05: independent CI status audit (#8)
+
+**One bounded verification:** GitHub Actions run [#45212806324](https://github.com/rixed318/Probably-TAU/actions/runs/45212806324) associated with previous QA head `7956d3313465b109d88d3c4a0e212adf413d3cb7` reports `completed/success`. Independently fetched job statuses: five completed/success jobs — NPC standalone .NET 8, Core ledger/snapshot .NET 8, UI/Content static, Python PCG32 oracle, distributed Android HTML static. This verifies GitHub job conclusions, **not** full assertions/logs, current dependent HEADs, Chromium, Unity or an integrated game. No local tests executed in this pass.
+
+**Scope:** read-only CI audit and handoff update. No new shared contract, no SaveService, no main write/merge. Latest dependent PR heads below are metadata observed in this pass, **not CI-verified heads**.
+
+### Сводка для координатора 00 — 2026-11-23
+
+- **Open PR heads at audit:** #9 Core `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`; #10 QA previous `7956d3313465b109d88d3c4a0e212adf413d3cb7` (this handoff update adds a new commit); #11 Content `27891b912fdac8f561c68e10b0c58ad2063cff0c`; #12 UI `08b541f0323fc2ec0179ae73d5402597cc4a5926`; #14 ADR `ebdc4be28afd56e82bc14ca397af88376ae59d20`; #16 NPC `c54dca44d5d5b6c98f1e21203ac255cf4d6d00a7`; #17 ADR `bc9db999b4190d77b2994588073ff59e456dccdb`. All were open. Main README/DECISIONS and main AGENTS/CHAT_WORKFLOW fetched; C0-v2/ADR remain feature-only, no merge authority.
+- **Blocker 1:** successful CI is for older pinned dependencies, not current UI/Content/NPC heads; refresh exact-SHA gate and verify a new run.
+- **Blocker 2:** actual Chromium touch acceptance at 360x800 and 800x360 (3 documents, EndDay, ledger replay, partner cash, 48dp, overflow) and 3–5 binary PNG signature/dimension/manifest SHA verification are **NOT RUN**.
+- **Blocker 3:** real Unity Editor Android APK/device and integrated Save→Load remain **NOT RUN**; stable approved DTO snapshot boundary not independently confirmed here.
+- **Recommended next step:** run Chromium touch acceptance on exact UI `08b541f0323fc2ec0179ae73d5402597cc4a5926`, then validate real PNG binaries and refresh exact-SHA CI pins. Keep Unity/Android device tests NOT RUN until actual APK. No secrets in repo; no owner IP/logo approval.
+
+**Evidence boundary:** workflow and job status verified through GitHub API; full job logs and local Python/Node/.NET/Unity tests NOT RUN in this pass. New handoff-only commit CI NOT VERIFIED. READY_FOR_OWNER_TEST not assigned.
