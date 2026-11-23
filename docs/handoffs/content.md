@@ -990,3 +990,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 ## AutoDev 04 — art-link draft status guard (23.11.2026)
 
 **Issue #7 / PR #11:** validator now checks `DAY01_ART_LINKS.json.schemaVersion` (`day01-art-links-1`) and `status` (`planned-art-references-not-PNGs-or-runtime`), preventing silent draft schema drift or false claims of generated art/runtime readiness. Validator commit `e93fee5a9030242445086e6db05004748df88fc2`. Static checks only: unique insertion anchor, baseline JSON matches, assertions inserted once. NOT RUN: full Node CLI, CI, Unity, Windows/Android, PNG inspection. QA 05: run `node Content/validate-day01-acceptance.cjs` and negative mutations of these two fields. No gameplay, asset IDs, money, DayIndex, Core, EventDirector, ledger changes. PR #9/#14 contract references; PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No main push/merge.
+
+
+## AutoDev 04 — unique portable Day01 art asset keys (23.11.2026)
+
+**One bounded task (#7 / PR #11):** Added a draft-only validator check requiring every planned Day01 portrait, standing and blank-document asset ID to be a nonempty portable lowercase snake_case key and unique across all nine references. This prevents accidental UI sprite collisions on Windows/Android; it does not assert that PNGs exist or define a runtime asset loader.
+
+**Validator commit:** `a7f2b1ab71e0c96585dd76acd0ac3b280f3a5464`. **Actually checked:** 5/5 isolated JavaScript assertions: current nine IDs accepted, duplicate ID rejected, uppercase/space key rejected, new guard present once, unchanged source outside insertion. **NOT RUN:** full checked-in Node CLI, CI, Unity, Windows/Android builds or PNG review. **QA 05:** run `node Content/validate-day01-acceptance.cjs` on branch HEAD and mutate a planned asset ID to a duplicate/invalid key. C0-v2 PR #9 and ADR PR #14 remain integration gates. PR #11 DRAFT / NOT READY_FOR_OWNER_TEST. No Core, EventDirector, economy, Definition IDs, DayIndex, kopeck values, main push or merge.
