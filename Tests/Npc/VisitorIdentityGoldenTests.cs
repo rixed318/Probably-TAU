@@ -189,6 +189,16 @@ namespace TAU.President.Tests.Npc
                     throw new Exception("Invalid asset for choice route accepted.");
             }
 
+            // Format characters in a choice/art tap must not normalize to another Day01 card.
+            foreach (string canonicalChoice in new[] { "LAB-1", "STUDENT-1", "PARTNER-1" })
+            {
+                Day01Visitors.VisitScreenPreview malformedChoiceScreen;
+                if (Day01Visitors.TryGetVisitScreenPreviewForChoiceAsset(
+                    canonicalChoice.Insert(3, "\uFEFF"), artByDocument[0][0],
+                    out malformedChoiceScreen) || malformedChoiceScreen != null)
+                    throw new Exception("Embedded BOM choice/art route accepted.");
+            }
+
             // A document-scoped art tap must preserve the complete canonical screen,
             // including inspection hint and ordered choices, not just the visitor card.
             for (int scopedIndex = 0; scopedIndex < artDocuments.Length; scopedIndex++)
