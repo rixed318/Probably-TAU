@@ -978,3 +978,10 @@ Validator commit: `15d2186d0903ac570c6fb6fde68f3d5b29f41ce8`. Actually executed 
 - **Commit:** `2fe3758676f249ecd549b055f6f3ad4d02ad95f0` (`feature/content-7`). Только валидатор; данные Дня 01, Core, EventDirector, экономика, IDs, DayIndex и суммы не менялись.
 - **Фактический тест:** локальный Node.js `node -e` на строке `Документ   Один` подтвердил: прежняя регулярка оставляет три пробела, исправленная даёт один. Это изолированная проверка выражения, **не** полный запуск валидатора на checkout. Полный Node CLI, CI, Unity, Windows, Android и реальные PNG не проверялись.
 - **Статус:** DRAFT / NOT READY_FOR_OWNER_TEST. QA 05: запустить `node Content/validate-day01-acceptance.cjs` на HEAD и отрицательный тест дублирования описаний с разным количеством пробелов. PR #9/#14 не слиты; runtime schema остаётся предложением.
+
+
+## Автономный проход 04 — platform target guard (23.11.2026)
+
+**Одна задача / Issue #7:** в `Content/validate-day01-acceptance.cjs` добавлены декларативные проверки `DAY01_ART_LINKS.json.platforms === ["Windows", "Android"]` и `worldLogicalResolution === "320x180"`. Это проверка переносимости ссылок на планируемые оригинальные ассеты, **не** проверка существования PNG или сборок. Core, EventDirector, экономика, Definition ID и DayIndex не менялись.
+
+**Content commit:** `eb1aa970d6ead9b927d42b5ec721ddf9f80dbb7d`. **Фактически проверено:** единственность места вставки и точное присутствие двух новых assert в тексте обновления; GitHub подтвердил commit. Полный Node CLI, CI, Unity, Windows/Android builds и реальные PNG **не запускались и не проверялись**. QA 05: запустить `node Content/validate-day01-acceptance.cjs` на HEAD и отрицательные варианты (удалить Android / изменить 320x180). Статус: **DRAFT / NOT READY_FOR_OWNER_TEST**. PR #11 остаётся открытым; merge в main запрещён без владельца.
