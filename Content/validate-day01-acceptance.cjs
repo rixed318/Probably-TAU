@@ -626,7 +626,7 @@ for (const visit of fixture.visitors) {
     "missing or too short normalized Day01 NPC visual brief: " + visit.visitId);
   for (const field of ["portraitAssetId", "standingAssetId", "documentAssetId"]) {
     const id = link[field];
-    assert.match(id, /^[a-z][a-z0-9_]*$/);
+    assert.match(id, /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/, "invalid normalized Day01 art asset ID: " + id);
     assert.ok(!artAssetIds.has(id), "duplicate asset ID: " + id);
     artAssetIds.add(id);
   }
