@@ -1,3 +1,9 @@
+## Update 2026-11-24 — missing office PNG CLI regression (#21)
+
+- One bounded task: added `test_cli_missing_png_reports_fail_without_traceback` to `docs/art/tools/test_verify_office_candidate.py` in `feature/ui-5`. Source commit: `f421b16db0848a5b5a461e3ff4f6d71f40818565`.
+- Expected behavior: missing PNG path produces CLI exit 1, `FAIL:` on stderr, and no traceback. This is a regression **added, not executed**; no unittest/CI, Android/TalkBack or Unity run claimed.
+- BLOCKED: office PNG binary not verified in GitHub, art G3/G6 review and physical Android playtest remain pending. PR #9 C0-v2 and PR #14 ADR still treated as unmerged. No main/Core changes or merge.
+
 ## Update 2026-11-24 — CLI corrupt IDAT CRC regression (#21)
 
 - One bounded task: added `test_cli_corrupt_idat_crc_reports_fail_without_traceback` to `docs/art/tools/test_verify_office_candidate.py` on `feature/ui-5`, source commit `5deaf3592eb2cc6fa18c8edbb5b182c6f98b8b80`. The test corrupts an IDAT payload byte while retaining its old CRC, executes the actual CLI subprocess, and expects exit code 1, a `FAIL:` message, and no traceback.
