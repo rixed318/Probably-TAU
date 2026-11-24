@@ -1,0 +1,194 @@
+name: QA offline regression
+
+on:
+  push:
+    branches: [feature/save-6]
+  pull_request:
+    paths:
+      - 'Tests/QA/**'
+      - 'Runtime/Core/Pcg32.cs'
+      - '.github/workflows/qa-offline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pcg32-oracle:
+    name: Python PCG32 oracle (not C# or Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python syntax check
+        run: python3 -m py_compile Tests/QA/test_pcg32_contract.py
+      - name: Independent reference tests
+        run: python3 Tests/QA/test_pcg32_contract.py
+      - name: Validate exact-SHA checkout pins (QA self-test)
+        run: python3 -m unittest discover -s Tests/QA -p 'test_workflow_pins.py' -v
+      - name: Checkout actual Core branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9
+          path: core-source
+          persist-credentials: false
+      - name: Record actual Core revision
+        run: |
+          actual=$(git -C core-source rev-parse HEAD)
+          echo "CORE_ORACLE_SHA=$actual"
+          test "$actual" = "7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9"
+      - name: Audit real Core C# PCG32 source (not C# execution)
+        run: python3 Tests/QA/test_pcg32_contract.py --core-source core-source/Runtime/Core/Pcg32.cs
+
+  cross-branch-offline:
+    name: UI and Content static regression (not integration)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout UI branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 8709770a59bf7c4fcda2e1e74ea8a3b7d844d278
+          path: ui
+          persist-credentials: false
+      - name: Checkout Content branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 983d958383d8e7bc1cebe873f940ea09bb3e5393
+          path: content
+          persist-credentials: false
+      - name: Record exact source revisions
+        shell: bash
+        run: |
+          ui_sha=$(git -C ui rev-parse HEAD)
+          echo "UI_SHA=$ui_sha"
+          test "$ui_sha" = "8709770a59bf7c4fcda2e1e74ea8a3b7d844d278"
+          content_sha=$(git -C content rev-parse HEAD)
+          echo "CONTENT_SHA=$content_sha"
+          test "$content_sha" = "983d958383d8e7bc1cebe873f940ea09bb3e5393"
+      - name: UI Node mock regression
+        run: node --test prototypes/ui-day-one/test-fixtures.cjs
+        working-directory: ui
+      - name: UI canonical Day 01 read-model regression
+        run: node --test prototypes/ui-day-one/test-day01-read-model.cjs
+        working-directory: ui
+      - name: UI canonical Day 01 preview regression
+        run: node --test prototypes/ui-day-one/test-day01-preview.cjs
+        working-directory: ui
+      - name: UI playable Day 01 gameplay gateway regression (Issue #18, not browser launch)
+        run: node --test prototypes/ui-day-one/test-day01-gameplay.cjs
+        working-directory: ui
+      - name: UI offline entrypoint dependency closure (static; not browser launch)
+        working-directory: ui/prototypes/ui-day-one
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('day01-playable.html', 'utf8');
+          const scripts = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/gi)].map(m => m[1]);
+          if (scripts.length !== 3) throw new Error('Expected exactly three local gameplay scripts, found ' + scripts.length);
+          for (const script of scripts) {
+            if (!/^\.\/[a-z0-9-]+\.(?:js|cjs)$/i.test(script)) throw new Error('Nonlocal script reference: ' + script);
+            if (!fs.statSync(script).isFile()) throw new Error('Missing local script: ' + script);
+          }
+          if (/<(?:link|img|iframe|source)\b[^>]*(?:href|src)=["'](?:https?:|\/\/)/i.test(html)) throw new Error('External asset reference');
+          if (/\b(?:fetch\s*\(|XMLHttpRequest|WebSocket|import\s*\()/i.test(html)) throw new Error('Potential network or dynamic import in HTML');
+          console.log('PASS: offline HTML has 3 present local script dependencies (static check only)');
+          NODE
+      - name: UI Android touch Node regression (not Chromium or APK)
+        run: node --test prototypes/ui-day-one/test-day01-android-touch.cjs
+        working-directory: ui
+      - name: UI art manifest validation
+        run: python3 tools/art/validate_manifest.py
+        working-directory: ui
+      - name: UI art validator unit tests
+        run: python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
+        working-directory: ui
+      - name: Content typed event hooks validation
+        run: node Content/validate-event-hooks.cjs
+        working-directory: content
+      - name: Content cross-file consistency validation
+        run: node Content/validate-content-consistency.cjs
+        working-directory: content
+      - name: Content canonical money wire validation
+        run: node Content/validate-money-wire.cjs
+        working-directory: content
+
+  android-offline-artifact-static:
+    name: Distributed Android HTML static gate (not Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout QA test code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout exact UI artifact revision read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 8709770a59bf7c4fcda2e1e74ea8a3b7d844d278
+          path: ui-source
+          persist-credentials: false
+      - name: Assert UI revision and parse distributed inline scripts
+        shell: bash
+        run: |
+          actual=$(git -C ui-source rev-parse HEAD)
+          echo "UI_ARTIFACT_SHA=$actual"
+          test "$actual" = "8709770a59bf7c4fcda2e1e74ea8a3b7d844d278"
+          node --test Tests/QA/test_android_offline_artifact.cjs
+
+  core-ledger-regression:
+    name: Core ledger and snapshot .NET 8 regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout actual Core branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9
+          path: core
+          persist-credentials: false
+      - name: Record exact Core revision
+        run: |
+          actual=$(git -C core rev-parse HEAD)
+          echo "CORE_SHA=$actual"
+          test "$actual" = "7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9"
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Compile and execute Core golden suites including Ledger
+        working-directory: core
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet run --project Tests/Core/Standalone/TAU.Core.GoldenRunner.csproj --configuration Release | tee core-golden.log
+          # Fail closed if a Core refactor silently drops the fifth suite from the runner.
+          grep -Fx 'PASS: Financial command atomic prepare/commit and replay' core-golden.log
+          grep -Fx 'PASS: all 5 Core golden suites.' core-golden.log
+
+  npc-conditions-regression:
+    name: NPC standalone .NET 8 regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout NPC branch read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 353351a5812571a8b330bf6b4e94f94751915c81
+          path: npc
+          persist-credentials: false
+      - name: Record actual NPC revision
+        run: |
+          actual=$(git -C npc rev-parse HEAD)
+          echo "NPC_SHA=$actual"
+          test "$actual" = "353351a5812571a8b330bf6b4e94f94751915c81"
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Compile and run NPC golden assertions
+        working-directory: npc
+        run: dotnet run --project Tests/Npc/Standalone/NpcConditionGolden.csproj --configuration Release
