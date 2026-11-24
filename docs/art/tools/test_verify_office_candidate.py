@@ -121,6 +121,17 @@ class OfficeCandidateTests(unittest.TestCase):
             capture_output=True, text=True, check=False,
         )
 
+    def test_cli_missing_png_reports_fail_without_traceback(self):
+        """Missing input file should be a controlled CLI failure."""
+        missing = Path(self.temp.name) / 'missing-office.png'
+        result = subprocess.run(
+            [sys.executable, str(MODULE), str(missing)],
+            capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn('FAIL:', result.stderr)
+        self.assertNotIn('Traceback', result.stderr)
+
     def test_cli_matching_sha256_passes(self):
         self.save()
         expected = hashlib.sha256(self.path.read_bytes()).hexdigest()
