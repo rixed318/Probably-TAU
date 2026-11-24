@@ -1,0 +1,91 @@
+name: UI standalone smoke tests
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/ui-day-one/**'
+      - 'tools/art/**'
+      - 'docs/art/ASSET_MANIFEST_D01.csv'
+      - '.github/workflows/ui-smoke.yml'
+  push:
+    branches:
+      - feature/ui-5
+    paths:
+      - 'prototypes/ui-day-one/**'
+      - 'tools/art/**'
+      - 'docs/art/ASSET_MANIFEST_D01.csv'
+      - '.github/workflows/ui-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standalone-ui:
+    name: Node UI and art manifest regression (not Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout UI branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Node UI mock and canonical Day 01 tests
+        run: |
+          node --test prototypes/ui-day-one/test-fixtures.cjs
+          node --test prototypes/ui-day-one/test-day01-read-model.cjs
+          node --test prototypes/ui-day-one/test-day01-selection.cjs
+          node --test prototypes/ui-day-one/test-day01-preview.cjs
+          node --test prototypes/ui-day-one/test-day01-gameplay.cjs
+          node --test prototypes/ui-day-one/test-day01-android-touch.cjs
+      - name: Validate art manifest
+        run: python3 tools/art/validate_manifest.py
+      - name: Art manifest regression tests
+        run: python3 -m unittest discover -s tools/art -p 'test_validate_manifest.py' -v
+
+      - name: Install PNG audit test dependency
+        run: python3 -m pip install 'Pillow>=10,<13'
+      - name: PNG candidate audit regression tests (synthetic fixtures)
+        run: python3 -m unittest discover -s tools/art -p 'test_audit_candidate.py' -v
+
+      - name: Stage offline demo
+        run: |
+          mkdir -p dist/day01-web-demo
+          cp prototypes/ui-day-one/day01-playable.html prototypes/ui-day-one/day01-playable.js prototypes/ui-day-one/day01-gameplay-gateway.cjs prototypes/ui-day-one/day01-read-model.cjs prototypes/ui-day-one/HOW_TO_PLAY.txt dist/day01-web-demo/
+      - name: Stage single-file Android touch demo
+        run: |
+          mkdir -p dist/day01-android-touch
+          cp prototypes/ui-day-one/day01-android-touch.html prototypes/ui-day-one/day01-android-offline.html dist/day01-android-touch/
+      - name: Verify staged Android artifact files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          source = Path('prototypes/ui-day-one')
+          staged = Path('dist/day01-android-touch')
+          expected = {'day01-android-touch.html', 'day01-android-offline.html'}
+          actual = {p.name for p in staged.iterdir() if p.is_file()}
+          assert actual == expected, f'Unexpected Android artifact files: {actual}'
+          for name in sorted(expected):
+              original = (source / name).read_bytes()
+              packaged = (staged / name).read_bytes()
+              assert packaged == original, f'Staged bytes differ: {name}'
+              assert packaged.lstrip().lower().startswith(b'<!doctype html>'), name
+              print(f'{name}: {len(packaged)} bytes sha256={hashlib.sha256(packaged).hexdigest()}')
+          PY
+      - name: Upload Android touch HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: day01-android-touch
+          path: dist/day01-android-touch/
+          if-no-files-found: error
+      - name: Upload playable offline demo
+        uses: actions/upload-artifact@v4
+        with:
+          name: day01-web-demo
+          path: dist/day01-web-demo/
+          if-no-files-found: error
