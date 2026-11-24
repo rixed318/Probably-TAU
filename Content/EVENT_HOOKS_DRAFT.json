@@ -1,0 +1,146 @@
+{
+  "$comment": "PROPOSED declarative content fixtures; fictional narrative only, not executable Core API. Scheduling semantics aligned for feature development with coordinator ADR-C0-002 (PR #17); actual runtime DTO and integration remain pending.",
+  "schemaVersion": "event-hooks-draft-0.1",
+  "runtimeReady": false,
+  "dayIndexBase": 0,
+  "moneyWireFormat": "signed Int64 decimal string kopecks",
+  "definitions": [
+    {
+      "definitionId": "E02",
+      "dueDayIndex": 1,
+      "dispatch": "content",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "presentEvent",
+          "definitionId": "E02"
+        }
+      ],
+      "fallbackDefinitionId": "E02"
+    },
+    {
+      "definitionId": "E03",
+      "dueDayIndex": 1,
+      "dispatch": "content",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "presentEvent",
+          "definitionId": "E03"
+        }
+      ],
+      "fallbackDefinitionId": "E03"
+    },
+    {
+      "definitionId": "E09",
+      "dueDayIndex": 4,
+      "dispatch": "settlement-report-only",
+      "condition": {
+        "op": "always"
+      },
+      "effects": [
+        {
+          "type": "showSettlementReport",
+          "reportForDayIndex": 4
+        }
+      ],
+      "fallbackDefinitionId": "E09"
+    },
+    {
+      "definitionId": "PARTNER_REVENUE_ONSITE",
+      "dueDayIndex": 4,
+      "dispatch": "core-earned-income-intent",
+      "condition": {
+        "op": "all",
+        "items": [
+          {
+            "op": "flagEquals",
+            "key": "PARTNER",
+            "value": "onsite"
+          },
+          {
+            "op": "factExists",
+            "factId": "E03_mentor_paid"
+          },
+          {
+            "op": "factExists",
+            "factId": "E07_delivered"
+          },
+          {
+            "op": "dayIndexAtLeast",
+            "value": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "proposeEarnedIncome",
+          "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
+          "postingKeyTemplate": "earned/{earnedId}",
+          "deltaKopecks": "12000000"
+        }
+      ],
+      "fallbackDefinitionId": null
+    },
+    {
+      "definitionId": "PARTNER_REVENUE_REMOTE",
+      "dueDayIndex": 4,
+      "dispatch": "core-earned-income-intent",
+      "condition": {
+        "op": "all",
+        "items": [
+          {
+            "op": "flagEquals",
+            "key": "PARTNER",
+            "value": "remote"
+          },
+          {
+            "op": "factExists",
+            "factId": "E03_mentor_paid"
+          },
+          {
+            "op": "factExists",
+            "factId": "E07_delivered"
+          },
+          {
+            "op": "dayIndexAtLeast",
+            "value": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "proposeEarnedIncome",
+          "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
+          "postingKeyTemplate": "earned/{earnedId}",
+          "deltaKopecks": "9000000"
+        }
+      ],
+      "fallbackDefinitionId": null
+    }
+  ],
+  "instanceContract": {
+    "instanceId": "Core-owned stable unique ID per scheduled occurrence; distinct from reusable definitionId; persisted immutable and used as StableEventId",
+    "definitionId": "Immutable content lookup key; multiple scheduled instances may reference one definition",
+    "priority": "Core persists signed Int32 priority per occurrence; when definition omits priority Core assigns 0 once at scheduling time, never recalculates on load",
+    "receiptKey": "Core-owned durable instanceId/resolutionKind; replay must not reapply effects",
+    "postingKey": "Core ledger enforces unique earnedId and posting key after verified delivery; content only proposes income",
+    "queueOrdering": "Core due outcomes: dueDayIndex ascending, priority descending, instanceId ascending (ordinal case-sensitive); neither phase nor creationOrdinal is a tie-break",
+    "dueSnapshot": "Core freezes eligible due instances at start of due-outcomes stage after project ticks",
+    "sameDayChildren": "During closing DayIndex n, new child with dueDayIndex <= n rejects entire prepared transaction atomically; persisted overdue instances remain eligible",
+    "earnedIncomeSourceInstanceId": "For PARTNER_REVENUE_ONSITE and PARTNER_REVENUE_REMOTE, {sourceInstanceId} is the same canonical Core-owned stable instanceId of the original D01_PARTNER agreement occurrence (not the revenue branch, event definition, or retry); immutable across Save/Load; Core validates provenance and prevents duplicate earnedId/postingKey."
+  },
+  "notes": [
+    "E02 and E03 share DayIndex=1; content does not assign priority, Core default 0 applies once at scheduling; stable instanceId breaks ties",
+    "E09 is presentation of Core settlement, not a second billing instruction",
+    "Conditional revenue requires actual delivery, not signature, and Core verifies eligibility before posting",
+    "Int64 wire amounts are decimal strings, not JSON numbers; runtime DTO adapter pending",
+    "ADR-C0-002 is approved for feature development only (PR #17); not merged, not a finalized runtime DTO",
+    "NPC 02 review (PR #11): E03_mentor_paid and E07_delivered are durable Core-verified fact IDs, not free-text predicates; exact fact emission/ownership awaits Core adapter and NPC agreement.",
+    "Onsite and remote branches share partner/{sourceInstanceId}/delivery intentionally: one agreement occurrence can earn income only once even if flags/branches are replayed; Core owns deduplication."
+  ]
+}

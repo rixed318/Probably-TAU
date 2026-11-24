@@ -1,0 +1,466 @@
+{
+  "$comment": "FICTIONAL Probably-TAU Day01 UI mock fixture; content-only; NOT Core GameState or runtime schema. Source: CONTENT_SPEC_DRAFT.json. Money is signed Int64 decimal strings in kopecks.",
+  "schemaVersion": "day01-ui-fixture-1",
+  "sourceSpecVersion": "content-draft-0.3",
+  "dayIndex": 0,
+  "displayDay": 1,
+  "opening": {
+    "budgetKopecks": "200000000",
+    "scores": {
+      "Q": 52,
+      "S": 48,
+      "M": 50,
+      "E": 45,
+      "R": 47
+    },
+    "inspectionTokens": 2
+  },
+  "roomConflict": {
+    "roomId": "L-204",
+    "displayRoom": "Л-204",
+    "dayIndex": 3,
+    "displayDay": 4,
+    "slot": "14:00-17:00",
+    "status": "requests-only",
+    "noAutomaticReservation": true,
+    "claimFlags": [
+      "LAB:full-or-phased",
+      "STUDENT:full",
+      "PARTNER:onsite"
+    ],
+    "resolution": "Requires explicit ROOM-1/ROOM-2/ROOM-3/ROOM-4 if more than one claimant; ROOM-AUTO is only a non-booking display outcome when <=1 claimant."
+  },
+  "documents": [
+    {
+      "id": "DOC-01",
+      "type": "procurement_request",
+      "visible": {
+        "amountKopecks": "22000000",
+        "seats": 35,
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00",
+        "dayIndex": 3
+      },
+      "inspection": {
+        "id": "check_seat_map",
+        "costTokens": 1,
+        "reveals": {
+          "realSeats": 20,
+          "phasedPriceKopecks": "16000000"
+        },
+        "repeatCostTokens": 0
+      }
+    },
+    {
+      "id": "DOC-02",
+      "type": "student_project_proposal",
+      "visible": {
+        "amountKopecks": "6500000",
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00",
+        "status": "request-not-booking",
+        "dayIndex": 3
+      },
+      "inspection": {
+        "id": "check_room_calendar",
+        "costTokens": 1,
+        "reveals": {
+          "roomReserved": false,
+          "mobilePriceKopecks": "3500000"
+        },
+        "repeatCostTokens": 0
+      }
+    },
+    {
+      "id": "DOC-03",
+      "type": "partner_offer",
+      "visible": {
+        "conditionalRevenueKopecks": "12000000",
+        "room": "Л-204",
+        "day": 4,
+        "slot": "14:00-17:00",
+        "dayIndex": 3
+      },
+      "inspection": {
+        "id": "check_contract_appendix",
+        "costTokens": 1,
+        "reveals": {
+          "onsiteMentorCostKopecks": "4000000",
+          "remoteMentorCostKopecks": "2500000",
+          "remoteConditionalRevenueKopecks": "9000000"
+        },
+        "repeatCostTokens": 0
+      }
+    }
+  ],
+  "visitors": [
+    {
+      "visitId": "D01_LAB",
+      "visitorId": "npc_irina_korneeva",
+      "role": "координатор цифровых дисциплин",
+      "documentId": "DOC-01",
+      "choices": [
+        {
+          "choiceId": "LAB-1",
+          "requiresInspection": null,
+          "flags": {
+            "LAB": "full"
+          },
+          "effects": [
+            {
+              "kind": "cashDelta",
+              "deltaKopecks": "-22000000"
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "Q",
+              "delta": 3
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "M",
+              "delta": 2
+            }
+          ]
+        },
+        {
+          "choiceId": "LAB-2",
+          "requiresInspection": "DOC-01",
+          "flags": {
+            "LAB": "phased"
+          },
+          "effects": [
+            {
+              "kind": "cashDelta",
+              "deltaKopecks": "-16000000"
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "Q",
+              "delta": 2
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "M",
+              "delta": 1
+            }
+          ]
+        },
+        {
+          "choiceId": "LAB-3",
+          "requiresInspection": null,
+          "flags": {
+            "LAB": "hold"
+          },
+          "effects": [
+            {
+              "kind": "scoreDelta",
+              "score": "M",
+              "delta": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "visitId": "D01_STUDENT",
+      "visitorId": "npc_dasha_polynskaya",
+      "role": "студенческий организатор",
+      "documentId": "DOC-02",
+      "choices": [
+        {
+          "choiceId": "STUDENT-1",
+          "requiresInspection": null,
+          "flags": {
+            "STUDENT": "full"
+          },
+          "effects": [
+            {
+              "kind": "cashDelta",
+              "deltaKopecks": "-6500000"
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "S",
+              "delta": 3
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "R",
+              "delta": 1
+            }
+          ]
+        },
+        {
+          "choiceId": "STUDENT-2",
+          "requiresInspection": null,
+          "flags": {
+            "STUDENT": "mobile"
+          },
+          "effects": [
+            {
+              "kind": "cashDelta",
+              "deltaKopecks": "-3500000"
+            },
+            {
+              "kind": "scoreDelta",
+              "score": "S",
+              "delta": 1
+            }
+          ]
+        },
+        {
+          "choiceId": "STUDENT-3",
+          "requiresInspection": null,
+          "flags": {
+            "STUDENT": "hold"
+          },
+          "effects": [
+            {
+              "kind": "scoreDelta",
+              "score": "S",
+              "delta": -2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "visitId": "D01_PARTNER",
+      "visitorId": "npc_mark_sviridov",
+      "role": "представитель вымышленной фирмы «Пульс Инжиниринг»",
+      "documentId": "DOC-03",
+      "choices": [
+        {
+          "choiceId": "PARTNER-1",
+          "requiresInspection": null,
+          "flags": {
+            "PARTNER": "onsite"
+          },
+          "effects": [
+            {
+              "kind": "scoreDelta",
+              "score": "E",
+              "delta": 2
+            }
+          ],
+          "deferredPartnerRevenue": {
+            "amountKopecks": "12000000",
+            "earliestDayIndex": 4,
+            "requiredFacts": [
+              "E03_mentor_paid",
+              "E07_delivered"
+            ],
+            "earnedOnlyAfterDelivery": true,
+            "signingCashDeltaKopecks": "0"
+          }
+        },
+        {
+          "choiceId": "PARTNER-2",
+          "requiresInspection": "DOC-03",
+          "flags": {
+            "PARTNER": "remote"
+          },
+          "effects": [
+            {
+              "kind": "scoreDelta",
+              "score": "E",
+              "delta": 1
+            }
+          ],
+          "deferredPartnerRevenue": {
+            "amountKopecks": "9000000",
+            "earliestDayIndex": 4,
+            "requiredFacts": [
+              "E03_mentor_paid",
+              "E07_delivered"
+            ],
+            "earnedOnlyAfterDelivery": true,
+            "signingCashDeltaKopecks": "0"
+          }
+        },
+        {
+          "choiceId": "PARTNER-3",
+          "requiresInspection": null,
+          "flags": {
+            "PARTNER": "decline"
+          },
+          "effects": [
+            {
+              "kind": "scoreDelta",
+              "score": "E",
+              "delta": -2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roomResolutionChoices": {
+    "ifMultiple": [
+      {
+        "id": "ROOM-1",
+        "priority": "lab"
+      },
+      {
+        "id": "ROOM-2",
+        "priority": "student"
+      },
+      {
+        "id": "ROOM-3",
+        "priority": "partner"
+      },
+      {
+        "id": "ROOM-4",
+        "priority": "unresolved"
+      }
+    ],
+    "ifAtMostOne": [
+      {
+        "id": "ROOM-AUTO",
+        "priority": "only-request-or-none"
+      }
+    ]
+  },
+  "endDayReport": {
+    "dayIndex": 0,
+    "weeklySettlementApplied": false,
+    "partnerEarnedIncomeKopecks": "0",
+    "nextDefinitionId": "E02",
+    "reportScoreKeys": [
+      "Q",
+      "S",
+      "M",
+      "E",
+      "R"
+    ],
+    "ledgerRule": "One posting per chosen immediate cashDelta; no extra posting for partner signature or E09; actual EndDay/receipt owned by Core.",
+    "summaryRule": "Show opening budget, three decisions, inspection usage, immediate cash deltas, resulting budget and five resulting scores; no deferred cash credited."
+  },
+  "deferredFactProvenance": {
+    "requiredFacts": [
+      "E03_mentor_paid",
+      "E07_delivered"
+    ],
+    "earnedIdTemplate": "partner/{sourceInstanceId}/delivery",
+    "status": "proposal; NPC 02/Core to confirm typed fact producer and unique instance mapping; do not synthesize facts in UI"
+  },
+  "acceptanceExamples": [
+    {
+      "id": "DAY01-P0-TRIPLE-CLAIM",
+      "dayIndex": 0,
+      "selectedChoiceIds": [
+        "LAB-1",
+        "STUDENT-1",
+        "PARTNER-1"
+      ],
+      "inspectionDocumentIds": [],
+      "roomResolutionChoiceId": "ROOM-4",
+      "roomStatus": "unresolved-no-booking",
+      "expected": {
+        "inspectionTokensUsed": 0,
+        "openingBudgetKopecks": "200000000",
+        "immediateLedgerPostings": [
+          {
+            "choiceId": "LAB-1",
+            "deltaKopecks": "-22000000"
+          },
+          {
+            "choiceId": "STUDENT-1",
+            "deltaKopecks": "-6500000"
+          }
+        ],
+        "closingBudgetKopecks": "171500000",
+        "closingScores": {
+          "Q": 55,
+          "S": 51,
+          "M": 52,
+          "E": 47,
+          "R": 48
+        },
+        "partnerEarnedIncomeKopecks": "0",
+        "weeklySettlementApplied": false,
+        "nextDefinitionId": "E02"
+      }
+    },
+    {
+      "id": "DAY01-P0-INSPECTED-ALTERNATIVE",
+      "dayIndex": 0,
+      "selectedChoiceIds": [
+        "LAB-2",
+        "STUDENT-2",
+        "PARTNER-2"
+      ],
+      "inspectionDocumentIds": [
+        "DOC-01",
+        "DOC-03"
+      ],
+      "roomResolutionChoiceId": "ROOM-AUTO",
+      "roomStatus": "requests-only-no-booking",
+      "expected": {
+        "inspectionTokensUsed": 2,
+        "openingBudgetKopecks": "200000000",
+        "immediateLedgerPostings": [
+          {
+            "choiceId": "LAB-2",
+            "deltaKopecks": "-16000000"
+          },
+          {
+            "choiceId": "STUDENT-2",
+            "deltaKopecks": "-3500000"
+          }
+        ],
+        "closingBudgetKopecks": "180500000",
+        "closingScores": {
+          "Q": 54,
+          "S": 49,
+          "M": 51,
+          "E": 46,
+          "R": 47
+        },
+        "partnerEarnedIncomeKopecks": "0",
+        "weeklySettlementApplied": false,
+        "nextDefinitionId": "E02"
+      }
+    },
+    {
+      "id": "DAY01-P0-EXPLICIT-LAB-PRIORITY",
+      "dayIndex": 0,
+      "selectedChoiceIds": [
+        "LAB-1",
+        "STUDENT-1",
+        "PARTNER-1"
+      ],
+      "inspectionDocumentIds": [],
+      "roomResolutionChoiceId": "ROOM-1",
+      "roomStatus": "priority-lab-no-booking",
+      "expected": {
+        "inspectionTokensUsed": 0,
+        "openingBudgetKopecks": "200000000",
+        "immediateLedgerPostings": [
+          {
+            "choiceId": "LAB-1",
+            "deltaKopecks": "-22000000"
+          },
+          {
+            "choiceId": "STUDENT-1",
+            "deltaKopecks": "-6500000"
+          }
+        ],
+        "closingBudgetKopecks": "171500000",
+        "closingScores": {
+          "Q": 55,
+          "S": 51,
+          "M": 52,
+          "E": 47,
+          "R": 48
+        },
+        "partnerEarnedIncomeKopecks": "0",
+        "weeklySettlementApplied": false,
+        "nextDefinitionId": "E02"
+      }
+    }
+  ]
+}
