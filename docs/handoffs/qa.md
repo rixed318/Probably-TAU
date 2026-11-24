@@ -2252,3 +2252,18 @@ One bounded change: updated four read-only dependency pins in `.github/workflows
 - **Blocker 2:** no actual Chromium touch/browser evidence or 3–5 PNG binary verification; Node/static success does not replace it.
 - **Blocker 3:** Unity Editor/APK and complete stable persistence DTO/Save→Load integration are unverified / NOT RUN.
 - **Recommended next step:** execute Chromium touch acceptance of exact latest UI single-file Day01 at 360x800 and 800x360, inspect 48dp/overflow and three docs/EndDay/ledger/partner-cash behavior; then verify actual PNG signatures/dimensions/SHA and refresh exact-SHA CI. Do not mark READY_FOR_OWNER_TEST without evidence.
+
+
+## 2026-11-24 — QA 05: independent exact-run CI status audit (#8)
+
+**One bounded task:** read-only verification of GitHub Actions run [#45281958281](https://github.com/rixed318/Probably-TAU/actions/runs/45281958281), associated with QA HEAD before this handoff update `5ca38a7fe3e574691b25b1918418ffde8cf04aea`. GitHub reports completed/success for all five jobs: Python PCG32 oracle, Core .NET 8 ledger/snapshot, NPC .NET 8 golden, UI/Content static, Android HTML static. Queried individual job steps: named test/validation steps report success. **Full assertion logs NOT inspected; no local tests executed in this pass.** The Android job is static, **not Chromium touch emulation**.
+
+Workflow checkout pins observed in `.github/workflows/qa-offline.yml`: Core `7b9ff45c053b9dad3298c1fd21b7eac02cdd65d9`, UI `8709770a59bf7c4fcda2e1e74ea8a3b7d844d278`, Content `983d958383d8e7bc1cebe873f940ea09bb3e5393`, NPC `353351a5812571a8b330bf6b4e94f94751915c81`. Only Core pin matches latest inspected PR head; other three are stale. No changes to workflow or shared contracts in this pass. SaveService deferred pending stable Core DTO. Unity Editor, real Android APK/device, integrated Save→Load, Chromium touch 360x800/800x360, real PNG signature/dimension/SHA validation: **NOT RUN**.
+
+### Сводка для координатора 00 — 2026-11-24
+
+- **Latest inspected PR heads (all open):** #9 Core `7b9ff45c`; #10 QA `5ca38a7f` before this handoff-only commit; #11 Content `36061c32`; #12 UI `a8b0ef6e`; #14 ADR `ebdc4be2`; #16 NPC `3d5ef865`; #17 ADR `bc9db999`. This handoff commit will advance #10; obtain its exact SHA from GitHub before integration.
+- **Blocker 1:** UI/Content/NPC workflow pins lag latest PR HEADs; successful CI does not establish latest-branch integration parity.
+- **Blocker 2:** No observed Chromium touch acceptance of latest single-file Day01 (3 docs, EndDay, ledger replay, no partner immediate cash, 48dp/overflow) or actual committed PNG binary verification.
+- **Blocker 3:** No confirmed stable Core snapshot DTO integration/Unity Editor APK; Save→Load, Unity and device tests remain NOT RUN.
+- **Recommended next step:** run latest Day01 single-file HTML under Chromium touch at 360x800 and 800x360, record exact UI SHA and assertions; then refresh exact-SHA CI pins separately. Keep PR #10 draft, no main push or merge, no READY_FOR_OWNER_TEST claim.
